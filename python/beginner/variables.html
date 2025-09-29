@@ -10,8 +10,14 @@
     nav { background: #f4f4f4; padding: 10px; text-align: center; }
     nav a { margin: 0 15px; text-decoration: none; color: #2c3e50; font-weight: bold; }
     nav a:hover { color: #0077cc; }
-    .container { max-width: 900px; margin: 20px auto; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-    h1, h2, h3 { color: #2c3e50; }
+    .container { display: flex; max-width: 1100px; margin: 20px auto; padding: 20px; }
+    .content { flex: 3; padding-right: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .sidebar { flex: 1; background: #f9f9f9; padding: 15px; border-left: 2px solid #eee; border-radius: 8px; }
+    .sidebar h3 { margin-top: 0; color: #2c3e50; }
+    .sidebar ul { list-style: none; padding: 0; }
+    .sidebar li { margin: 6px 0; }
+    .sidebar a { text-decoration: none; color: #0077cc; }
+    .sidebar a:hover { text-decoration: underline; }
     pre { background: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; }
     code { font-family: monospace; }
     footer { text-align: center; margin: 30px 0; padding: 20px; background: #f4f4f4; }
@@ -20,7 +26,7 @@
 <body>
   <header>
     <h1>Variables & Data Types</h1>
-    <p>Python me data store karna aur samajhna</p>
+    <p>Python me data ko store karne ka tareeka</p>
   </header>
 
   <nav>
@@ -31,78 +37,57 @@
   </nav>
 
   <div class="container">
-    <h2>Variables kya hote hain?</h2>
-    <p>
-      Variable ek <strong>naam</strong> hota hai jisme hum data store karte hain.  
-      Isse hum program ke alag-alag parts me use kar sakte hain.
-    </p>
+    <!-- LEFT: Main content -->
+    <div class="content">
+      <h2>Variables kya hote hain?</h2>
+      <p>Variables ek tarah ke containers hote hain jo data ko store karte hain. Python me variable banane ke liye bas value assign karte hain, type declare karne ki zarurat nahi hoti.</p>
 
-    <h3>Example:</h3>
-    <pre><code>x = 10
-name = "Ravi"
-pi = 3.14
+      <h3>Example:</h3>
+      <pre><code>x = 10
+y = "AIkiPadhai"
+print(x, y)</code></pre>
 
-print(x)
-print(name)
-print(pi)</code></pre>
+      <p><strong>Output:</strong></p>
+      <pre><code>10 AIkiPadhai</code></pre>
 
-    <p>Output:</p>
-    <pre><code>10
-Ravi
-3.14</code></pre>
+      <h2>Data Types</h2>
+      <p>Python me basic data types hote hain:</p>
+      <ul>
+        <li><code>int</code> → Integer numbers (jaise 5, 42, -10)</li>
+        <li><code>float</code> → Decimal numbers (jaise 3.14, -0.5)</li>
+        <li><code>str</code> → Strings (jaise "Python", "AI")</li>
+        <li><code>bool</code> → Boolean (True ya False)</li>
+      </ul>
 
-    <h2>Python me Data Types</h2>
-    <p>
-      Python me common data types ye hote hain:
-    </p>
-    <ul>
-      <li><strong>int</strong> → Integer numbers (e.g. 5, 100, -42)</li>
-      <li><strong>float</strong> → Decimal numbers (e.g. 3.14, -2.5)</li>
-      <li><strong>str</strong> → String / Text (e.g. "Hello")</li>
-      <li><strong>bool</strong> → True ya False values</li>
-    </ul>
+      <h3>Example:</h3>
+      <pre><code>num = 42        # int
+pi = 3.14       # float
+name = "Python" # str
+is_easy = True  # bool
 
-    <h3>Examples:</h3>
-    <pre><code>age = 25          # int
-price = 19.99     # float
-greeting = "Hi!"  # str
-is_student = True # bool
+print(num, pi, name, is_easy)</code></pre>
 
-print(type(age))
-print(type(price))
-print(type(greeting))
-print(type(is_student))</code></pre>
+      <p><strong>Output:</strong></p>
+      <pre><code>42 3.14 Python True</code></pre>
 
-    <p>Output:</p>
-    <pre><code>&lt;class 'int'&gt;
-&lt;class 'float'&gt;
-&lt;class 'str'&gt;
-&lt;class 'bool'&gt;</code></pre>
+      <h2>Next Step</h2>
+      <p>Ab seekhte hain <a href="operators.html">Operators & Input</a> ke baare me.</p>
+    </div>
 
-    <h2>Variable Naming Rules</h2>
-    <p>Python me variable banate waqt kuch rules follow karne hote hain:</p>
-    <ul>
-      <li>Variable name me spaces nahi hote (use <code>_</code> instead)</li>
-      <li>Sirf letters, numbers aur underscore allowed hai</li>
-      <li>Name number se start nahi hona chahiye</li>
-      <li>Case-sensitive hote hain (e.g. <code>Age</code> aur <code>age</code> alag hai)</li>
-    </ul>
-
-    <h3>Valid Examples:</h3>
-    <pre><code>my_name = "Amit"
-age2 = 30
-is_active = True</code></pre>
-
-    <h3>Invalid Examples (error aayega):</h3>
-    <pre><code>2age = 25
-my name = "Rahul"
-class = "Python"</code></pre>
-
-    <h2>Next Step</h2>
-    <p>
-      Ab hum seekhenge <a href="/AIkiPadhai/python/beginner/operators.html">Basic Operators & Input</a>,  
-      jisme hum numbers aur strings pe operations karenge.
-    </p>
+    <!-- RIGHT: Sidebar navigation -->
+    <div class="sidebar">
+      <h3>Beginner Tutorials</h3>
+      <ul>
+        <li><a href="intro.html">Overview & Installation</a></li>
+        <li><a href="variables.html">Variables & Data Types</a></li>
+        <li><a href="operators.html">Operators & Input</a></li>
+        <li><a href="conditions.html">Conditions</a></li>
+        <li><a href="loops.html">Loops</a></li>
+        <li><a href="functions.html">Functions</a></li>
+        <li><a href="file-io.html">File IO</a></li>
+        <li><a href="oop-basics.html">Classes & Objects</a></li>
+      </ul>
+    </div>
   </div>
 
   <footer>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Python Overview and Installation - AIkiPadhai</title>
+  <title>Operators & Input - AIkiPadhai</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 0; padding: 0; line-height: 1.6; background: #fafafa; color: #333; }
     header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
@@ -25,8 +25,8 @@
 </head>
 <body>
   <header>
-    <h1>Python Overview and Installation 🐍</h1>
-    <p>Python setup karna aur basics samajhna</p>
+    <h1>Operators & Input</h1>
+    <p>Python me calculations aur user se data lena</p>
   </header>
 
   <nav>
@@ -37,14 +37,41 @@
   </nav>
 
   <div class="container">
+    <!-- LEFT: Main content -->
     <div class="content">
-      <h2>Python kya hai?</h2>
-      <p>Python ek <strong>high-level, general-purpose programming language</strong> hai jo easy aur beginner-friendly hai...</p>
-      <!-- (keep all your intro + VS Code + Hello World content here as before) -->
+      <h2>Operators</h2>
+      <p>Python me alag-alag tarah ke operators hote hain jo hume calculations aur comparisons karne dete hain:</p>
+      <ul>
+        <li><strong>Arithmetic Operators</strong>: +, -, *, /, %</li>
+        <li><strong>Comparison Operators</strong>: ==, !=, &lt;, &gt;, &lt;=, &gt;=</li>
+        <li><strong>Logical Operators</strong>: and, or, not</li>
+      </ul>
+
+      <h3>Example:</h3>
+      <pre><code>a = 10
+b = 3
+
+print(a + b)   # 13
+print(a - b)   # 7
+print(a * b)   # 30
+print(a / b)   # 3.333...
+print(a % b)   # 1</code></pre>
+
+      <h2>User Input</h2>
+      <p>User se input lene ke liye <code>input()</code> function use hota hai. By default ye string deta hai, agar number chahiye to convert karna padta hai.</p>
+
+      <h3>Example:</h3>
+      <pre><code>name = input("Apka naam kya hai? ")
+print("Namaste", name)
+
+age = int(input("Apki age bataiye: "))
+print("Next year aap honge:", age + 1)</code></pre>
+
       <h2>Next Step</h2>
-      <p>Ab jab Python install ho gaya hai, chalo start karte hain with <a href="/AIkiPadhai/python/beginner/variables.html">Variables & Data Types</a>.</p>
+      <p>Ab seekhte hain <a href="conditions.html">Conditions (if/elif/else)</a> ke baare me.</p>
     </div>
 
+    <!-- RIGHT: Sidebar navigation -->
     <div class="sidebar">
       <h3>Beginner Tutorials</h3>
       <ul>
