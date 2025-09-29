@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Variables & Data Types - AIkiPadhai</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; line-height: 1.6; background: #fafafa; color: #333; }
+    header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
+    nav { background: #f4f4f4; padding: 10px; text-align: center; }
+    nav a { margin: 0 15px; text-decoration: none; color: #2c3e50; font-weight: bold; }
+    nav a:hover { color: #0077cc; }
+    .container { max-width: 900px; margin: 20px auto; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    h1, h2, h3 { color: #2c3e50; }
+    pre { background: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    code { font-family: monospace; }
+    footer { text-align: center; margin: 30px 0; padding: 20px; background: #f4f4f4; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Variables & Data Types</h1>
+    <p>Python me data store karna aur samajhna</p>
+  </header>
+
+  <nav>
+    <a href="/AIkiPadhai/index.html">Home</a>
+    <a href="/AIkiPadhai/python/index.html">Python</a>
+    <a href="/AIkiPadhai/ai/intro.html">AI</a>
+    <a href="/AIkiPadhai/about.html">About</a>
+  </nav>
+
+  <div class="container">
+    <h2>Variables kya hote hain?</h2>
+    <p>
+      Variable ek <strong>naam</strong> hota hai jisme hum data store karte hain.  
+      Isse hum program ke alag-alag parts me use kar sakte hain.
+    </p>
+
+    <h3>Example:</h3>
+    <pre><code>x = 10
+name = "Ravi"
+pi = 3.14
+
+print(x)
+print(name)
+print(pi)</code></pre>
+
+    <p>Output:</p>
+    <pre><code>10
+Ravi
+3.14</code></pre>
+
+    <h2>Python me Data Types</h2>
+    <p>
+      Python me common data types ye hote hain:
+    </p>
+    <ul>
+      <li><strong>int</strong> → Integer numbers (e.g. 5, 100, -42)</li>
+      <li><strong>float</strong> → Decimal numbers (e.g. 3.14, -2.5)</li>
+      <li><strong>str</strong> → String / Text (e.g. "Hello")</li>
+      <li><strong>bool</strong> → True ya False values</li>
+    </ul>
+
+    <h3>Examples:</h3>
+    <pre><code>age = 25          # int
+price = 19.99     # float
+greeting = "Hi!"  # str
+is_student = True # bool
+
+print(type(age))
+print(type(price))
+print(type(greeting))
+print(type(is_student))</code></pre>
+
+    <p>Output:</p>
+    <pre><code>&lt;class 'int'&gt;
+&lt;class 'float'&gt;
+&lt;class 'str'&gt;
+&lt;class 'bool'&gt;</code></pre>
+
+    <h2>Variable Naming Rules</h2>
+    <p>Python me variable banate waqt kuch rules follow karne hote hain:</p>
+    <ul>
+      <li>Variable name me spaces nahi hote (use <code>_</code> instead)</li>
+      <li>Sirf letters, numbers aur underscore allowed hai</li>
+      <li>Name number se start nahi hona chahiye</li>
+      <li>Case-sensitive hote hain (e.g. <code>Age</code> aur <code>age</code> alag hai)</li>
+    </ul>
+
+    <h3>Valid Examples:</h3>
+    <pre><code>my_name = "Amit"
+age2 = 30
+is_active = True</code></pre>
+
+    <h3>Invalid Examples (error aayega):</h3>
+    <pre><code>2age = 25
+my name = "Rahul"
+class = "Python"</code></pre>
+
+    <h2>Next Step</h2>
+    <p>
+      Ab hum seekhenge <a href="/AIkiPadhai/python/beginner/operators.html">Basic Operators & Input</a>,  
+      jisme hum numbers aur strings pe operations karenge.
+    </p>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ in Roman Hindi</p>
+  </footer>
+</body>
+</html>
