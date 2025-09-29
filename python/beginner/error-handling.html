@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Error Handling - AIkiPadhai</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; line-height: 1.6; background: #fafafa; color: #333; }
+    header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
+    nav { background: #f4f4f4; padding: 10px; text-align: center; }
+    nav a { margin: 0 15px; text-decoration: none; color: #2c3e50; font-weight: bold; }
+    nav a:hover { color: #0077cc; }
+    .container { display: flex; max-width: 1100px; margin: 20px auto; padding: 20px; }
+    .content { flex: 3; padding-right: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .sidebar { flex: 1; background: #f9f9f9; padding: 15px; border-left: 2px solid #eee; border-radius: 8px; }
+    .sidebar h3 { margin-top: 0; color: #2c3e50; }
+    .sidebar ul { list-style: none; padding: 0; }
+    .sidebar li { margin: 6px 0; }
+    .sidebar a { text-decoration: none; color: #0077cc; }
+    .sidebar a:hover { text-decoration: underline; }
+    pre { background: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    code { font-family: monospace; }
+    footer { text-align: center; margin: 30px 0; padding: 20px; background: #f4f4f4; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Error Handling in Python</h1>
+    <p>Python me exceptions aur errors ko handle karna sikhiye</p>
+  </header>
+
+  <nav>
+    <a href="/AIkiPadhai/index.html">Home</a>
+    <a href="/AIkiPadhai/python/index.html">Python</a>
+    <a href="/AIkiPadhai/ai/intro.html">AI</a>
+    <a href="/AIkiPadhai/about.html">About</a>
+  </nav>
+
+  <div class="container">
+    <div class="content">
+      <h2>1. Basic try/except</h2>
+      <pre><code>try:
+    num = int(input("Enter a number: "))
+    print(10 / num)
+except ZeroDivisionError:
+    print("Number cannot be zero!")
+except ValueError:
+    print("Please enter a valid integer!")</code></pre>
+
+      <h2>2. Handling multiple exceptions in one block</h2>
+      <pre><code>try:
+    x = int(input("Enter number: "))
+    y = int(input("Enter another number: "))
+    print(x / y)
+except (ZeroDivisionError, ValueError) as e:
+    print("Error occurred:", e)</code></pre>
+
+      <h2>3. Using else and finally</h2>
+      <pre><code>try:
+    file = open("example.txt", "r")
+except FileNotFoundError:
+    print("File not found!")
+else:
+    content = file.read()
+    print(content)
+    file.close()
+finally:
+    print("Execution complete!")</code></pre>
+
+      <h2>4. Raising custom exceptions</h2>
+      <pre><code>age = int(input("Enter your age: "))
+if age < 18:
+    raise Exception("You must be 18 or older!")</code></pre>
+
+      <h2>Next Step</h2>
+      <p>
+        Ab hum seekhenge <a href="scope.html">Global vs Local Variables</a>, jisme variables ke scope aur accessibility ko samjhenge.
+      </p>
+    </div>
+
+    <div class="sidebar">
+      <h3>Beginner Tutorials</h3>
+      <ul>
+        <li><a href="intro.html">Overview & Installation</a></li>
+        <li><a href="variables.html">Variables & Data Types</a></li>
+        <li><a href="operators.html">Operators & Input</a></li>
+        <li><a href="conditions.html">Conditions</a></li>
+        <li><a href="loops.html">Loops</a></li>
+        <li><a href="lists-tuples.html">Lists & Tuples</a></li>
+        <li><a href="dictionaries.html">Dictionaries</a></li>
+        <li><a href="iteration.html">Iteration on Collections</a></li>
+        <li><a href="slice.html">Slice Operator</a></li>
+        <li><a href="strings.html">String Methods</a></li>
+        <li><a href="functions.html">Functions Intro</a></li>
+        <li><a href="functions-examples.html">Functions with Examples</a></li>
+        <li><a href="file-io-read.html">File IO (Reading)</a></li>
+        <li><a href="file-io-write.html">File IO (Writing)</a></li>
+        <li><a href="list-methods.html">List Methods</a></li>
+        <li><a href="modular.html">Introduction to Modular Programming</a></li>
+        <li><a href="error-handling.html">Error Handling</a></li>
+        <li><a href="scope.html">Global vs Local</a></li>
+        <li><a href="oop-basics.html">Classes & Objects</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ in Roman Hindi</p>
+  </footer>
+</body>
+</html>

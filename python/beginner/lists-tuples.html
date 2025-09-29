@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lists & Tuples - AIkiPadhai</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; line-height: 1.6; background: #fafafa; color: #333; }
+    header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
+    nav { background: #f4f4f4; padding: 10px; text-align: center; }
+    nav a { margin: 0 15px; text-decoration: none; color: #2c3e50; font-weight: bold; }
+    nav a:hover { color: #0077cc; }
+    .container { display: flex; max-width: 1100px; margin: 20px auto; padding: 20px; }
+    .content { flex: 3; padding-right: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .sidebar { flex: 1; background: #f9f9f9; padding: 15px; border-left: 2px solid #eee; border-radius: 8px; }
+    .sidebar h3 { margin-top: 0; color: #2c3e50; }
+    .sidebar ul { list-style: none; padding: 0; }
+    .sidebar li { margin: 6px 0; }
+    .sidebar a { text-decoration: none; color: #0077cc; }
+    .sidebar a:hover { text-decoration: underline; }
+    pre { background: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    code { font-family: monospace; }
+    footer { text-align: center; margin: 30px 0; padding: 20px; background: #f4f4f4; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Lists & Tuples</h1>
+    <p>Multiple values store karne ka Python ka tareeka</p>
+  </header>
+
+  <nav>
+    <a href="/AIkiPadhai/index.html">Home</a>
+    <a href="/AIkiPadhai/python/index.html">Python</a>
+    <a href="/AIkiPadhai/ai/intro.html">AI</a>
+    <a href="/AIkiPadhai/about.html">About</a>
+  </nav>
+
+  <div class="container">
+    <!-- LEFT: Main content -->
+    <div class="content">
+      <h2>Lists</h2>
+      <p>
+        <strong>List</strong> ek ordered collection hai jisme multiple values store kar sakte hain.  
+        Lists ko <code>[]</code> (square brackets) se banaya jata hai.
+      </p>
+      <pre><code># Example of a list
+fruits = ["apple", "banana", "mango"]
+print(fruits)</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <pre><code>['apple', 'banana', 'mango']</code></pre>
+
+      <h3>List ke elements access karna</h3>
+      <pre><code>print(fruits[0])   # apple
+print(fruits[1])   # banana</code></pre>
+
+      <h3>List ke elements update karna</h3>
+      <pre><code>fruits[1] = "orange"
+print(fruits)</code></pre>
+      <p><strong>Output:</strong></p>
+      <pre><code>['apple', 'orange', 'mango']</code></pre>
+
+      <h3>List me element add karna</h3>
+      <pre><code>fruits.append("grapes")
+print(fruits)</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <pre><code>['apple', 'orange', 'mango', 'grapes']</code></pre>
+
+      <h2>Tuples</h2>
+      <p>
+        <strong>Tuple</strong> bhi list jaisa hota hai, lekin <em>immutable</em> (change nahi kar sakte).  
+        Tuple ko <code>()</code> (round brackets) se banaya jata hai.
+      </p>
+
+      <pre><code># Example of a tuple
+coordinates = (10, 20, 30)
+print(coordinates)</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <pre><code>(10, 20, 30)</code></pre>
+
+      <h3>Tuple access karna</h3>
+      <pre><code>print(coordinates[0])   # 10</code></pre>
+
+      <h3>Tuple change karne ki koshish</h3>
+      <pre><code>coordinates[0] = 50   # Error aayega</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <pre><code>TypeError: 'tuple' object does not support item assignment</code></pre>
+
+      <h2>Lists vs Tuples</h2>
+      <ul>
+        <li>List → mutable (badal sakte hain)</li>
+        <li>Tuple → immutable (fix ho jata hai)</li>
+        <li>List use hota hai jab data change hoga</li>
+        <li>Tuple use hota hai jab data fix hai (jaise coordinates, constants)</li>
+      </ul>
+
+      <h2>Next Step</h2>
+      <p>
+        Ab seekhte hain <a href="dictionaries.html">Dictionaries</a>, jahan hum key-value pairs store karenge.
+      </p>
+    </div>
+
+    <!-- RIGHT: Sidebar navigation -->
+    <div class="sidebar">
+      <h3>Beginner Tutorials</h3>
+      <ul>
+        <li><a href="intro.html">Overview & Installation</a></li>
+        <li><a href="variables.html">Variables & Data Types</a></li>
+        <li><a href="operators.html">Operators & Input</a></li>
+        <li><a href="conditions.html">Conditions</a></li>
+        <li><a href="loops.html">Loops</a></li>
+        <li><a href="lists-tuples.html">Lists & Tuples</a></li>
+        <li><a href="dictionaries.html">Dictionaries</a></li>
+        <li><a href="iteration.html">Iteration on Collections</a></li>
+        <li><a href="slice.html">Slice Operator</a></li>
+        <li><a href="strings.html">String Methods</a></li>
+        <li><a href="functions.html">Functions</a></li>
+        <li><a href="file-io-read.html">File IO (Reading)</a></li>
+        <li><a href="file-io-write.html">File IO (Writing)</a></li>
+        <li><a href="list-methods.html">List Methods</a></li>
+        <li><a href="modular.html">Modular Programming</a></li>
+        <li><a href="error-handling.html">Error Handling</a></li>
+        <li><a href="scope.html">Global vs Local</a></li>
+        <li><a href="oop-basics.html">Classes & Objects</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ in Roman Hindi</p>
+  </footer>
+</body>
+</html>

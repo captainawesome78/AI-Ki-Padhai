@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dictionaries - AIkiPadhai</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; line-height: 1.6; background: #fafafa; color: #333; }
+    header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
+    nav { background: #f4f4f4; padding: 10px; text-align: center; }
+    nav a { margin: 0 15px; text-decoration: none; color: #2c3e50; font-weight: bold; }
+    nav a:hover { color: #0077cc; }
+    .container { display: flex; max-width: 1100px; margin: 20px auto; padding: 20px; }
+    .content { flex: 3; padding-right: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .sidebar { flex: 1; background: #f9f9f9; padding: 15px; border-left: 2px solid #eee; border-radius: 8px; }
+    .sidebar h3 { margin-top: 0; color: #2c3e50; }
+    .sidebar ul { list-style: none; padding: 0; }
+    .sidebar li { margin: 6px 0; }
+    .sidebar a { text-decoration: none; color: #0077cc; }
+    .sidebar a:hover { text-decoration: underline; }
+    pre { background: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    code { font-family: monospace; }
+    footer { text-align: center; margin: 30px 0; padding: 20px; background: #f4f4f4; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Dictionaries in Python</h1>
+    <p>Data ko key-value pairs me store karne ka tareeka</p>
+  </header>
+
+  <nav>
+    <a href="/AIkiPadhai/index.html">Home</a>
+    <a href="/AIkiPadhai/python/index.html">Python</a>
+    <a href="/AIkiPadhai/ai/intro.html">AI</a>
+    <a href="/AIkiPadhai/about.html">About</a>
+  </nav>
+
+  <div class="container">
+    <!-- LEFT: Main content -->
+    <div class="content">
+      <h2>Dictionary kya hai?</h2>
+      <p>
+        Python me <strong>dictionary</strong> ek aisa collection hai jisme data <strong>key-value pairs</strong> ke form me store hota hai.  
+        Matlab har value ka ek naam (key) hota hai.
+      </p>
+
+      <h3>Dictionary banane ka example:</h3>
+      <pre><code># Example of a dictionary
+student = {
+    "name": "Amit",
+    "age": 21,
+    "course": "Python"
+}
+print(student)</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <pre><code>{'name': 'Amit', 'age': 21, 'course': 'Python'}</code></pre>
+
+      <h2>Dictionary ke elements access karna</h2>
+      <pre><code>print(student["name"])   # Amit
+print(student["age"])    # 21</code></pre>
+
+      <h2>Dictionary update karna</h2>
+      <pre><code>student["age"] = 22
+print(student)</code></pre>
+      <p><strong>Output:</strong></p>
+      <pre><code>{'name': 'Amit', 'age': 22, 'course': 'Python'}</code></pre>
+
+      <h2>Naya key-value add karna</h2>
+      <pre><code>student["grade"] = "A"
+print(student)</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <pre><code>{'name': 'Amit', 'age': 22, 'course': 'Python', 'grade': 'A'}</code></pre>
+
+      <h2>Key ko remove karna</h2>
+      <pre><code>del student["course"]
+print(student)</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <pre><code>{'name': 'Amit', 'age': 22, 'grade': 'A'}</code></pre>
+
+      <h2>Useful Dictionary Methods</h2>
+      <pre><code>print(student.keys())    # dict_keys(['name', 'age', 'grade'])
+print(student.values())  # dict_values(['Amit', 22, 'A'])
+print(student.items())   # dict_items([('name', 'Amit'), ('age', 22), ('grade', 'A')])</code></pre>
+
+      <h2>Loop through Dictionary</h2>
+      <pre><code>for key, value in student.items():
+    print(key, ":", value)</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <pre><code>name : Amit
+age : 22
+grade : A</code></pre>
+
+      <h2>Next Step</h2>
+      <p>
+        Ab seekhte hain <a href="iteration.html">Iteration on Lists, Tuples & Dictionaries</a>, jahan hum collections ko loop ke saath traverse karenge.
+      </p>
+    </div>
+
+    <!-- RIGHT: Sidebar navigation -->
+    <div class="sidebar">
+      <h3>Beginner Tutorials</h3>
+      <ul>
+        <li><a href="intro.html">Overview & Installation</a></li>
+        <li><a href="variables.html">Variables & Data Types</a></li>
+        <li><a href="operators.html">Operators & Input</a></li>
+        <li><a href="conditions.html">Conditions</a></li>
+        <li><a href="loops.html">Loops</a></li>
+        <li><a href="lists-tuples.html">Lists & Tuples</a></li>
+        <li><a href="dictionaries.html">Dictionaries</a></li>
+        <li><a href="iteration.html">Iteration on Collections</a></li>
+        <li><a href="slice.html">Slice Operator</a></li>
+        <li><a href="strings.html">String Methods</a></li>
+        <li><a href="functions.html">Functions</a></li>
+        <li><a href="file-io-read.html">File IO (Reading)</a></li>
+        <li><a href="file-io-write.html">File IO (Writing)</a></li>
+        <li><a href="list-methods.html">List Methods</a></li>
+        <li><a href="modular.html">Modular Programming</a></li>
+        <li><a href="error-handling.html">Error Handling</a></li>
+        <li><a href="scope.html">Global vs Local</a></li>
+        <li><a href="oop-basics.html">Classes & Objects</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ in Roman Hindi</p>
+  </footer>
+</body>
+</html>

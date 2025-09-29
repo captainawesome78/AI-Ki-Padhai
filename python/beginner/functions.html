@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Functions in Python - AIkiPadhai</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; line-height: 1.6; background: #fafafa; color: #333; }
+    header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
+    nav { background: #f4f4f4; padding: 10px; text-align: center; }
+    nav a { margin: 0 15px; text-decoration: none; color: #2c3e50; font-weight: bold; }
+    nav a:hover { color: #0077cc; }
+    .container { display: flex; max-width: 1100px; margin: 20px auto; padding: 20px; }
+    .content { flex: 3; padding-right: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .sidebar { flex: 1; background: #f9f9f9; padding: 15px; border-left: 2px solid #eee; border-radius: 8px; }
+    .sidebar h3 { margin-top: 0; color: #2c3e50; }
+    .sidebar ul { list-style: none; padding: 0; }
+    .sidebar li { margin: 6px 0; }
+    .sidebar a { text-decoration: none; color: #0077cc; }
+    .sidebar a:hover { text-decoration: underline; }
+    pre { background: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    code { font-family: monospace; }
+    footer { text-align: center; margin: 30px 0; padding: 20px; background: #f4f4f4; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Functions in Python</h1>
+    <p>Apna khud ka code block banane ka tareeka</p>
+  </header>
+
+  <nav>
+    <a href="/AIkiPadhai/index.html">Home</a>
+    <a href="/AIkiPadhai/python/index.html">Python</a>
+    <a href="/AIkiPadhai/ai/intro.html">AI</a>
+    <a href="/AIkiPadhai/about.html">About</a>
+  </nav>
+
+  <div class="container">
+    <!-- LEFT: Main content -->
+    <div class="content">
+      <h2>Functions kya hote hain?</h2>
+      <p>
+        Function ek aisa block of code hai jo ek <strong>specific task</strong> karta hai.  
+        Matlab aap apna khud ka <em>command</em> bana sakte ho jisko baad me bar-bar use kar sakte ho.
+      </p>
+
+      <h2>Function Define karna</h2>
+      <p>Python me function banane ke liye <code>def</code> keyword use hota hai:</p>
+      <pre><code>def say_hello():
+    print("Hello, welcome to AIkiPadhai!")</code></pre>
+
+      <p>Function ko call karne ke liye:</p>
+      <pre><code>say_hello()</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <pre><code>Hello, welcome to AIkiPadhai!</code></pre>
+
+      <h2>Function Arguments</h2>
+      <p>Function input le sakta hai jise <strong>arguments</strong> kehte hain:</p>
+      <pre><code>def greet(name):
+    print("Hello", name)
+
+greet("Amit")
+greet("Neha")</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <pre><code>Hello Amit
+Hello Neha</code></pre>
+
+      <h2>Default Arguments</h2>
+      <pre><code>def greet(name="Guest"):
+    print("Hello", name)
+
+greet()
+greet("Rahul")</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <pre><code>Hello Guest
+Hello Rahul</code></pre>
+
+      <h2>Return Values</h2>
+      <p>Function value return bhi kar sakta hai:</p>
+      <pre><code>def add(a, b):
+    return a + b
+
+result = add(5, 3)
+print("Result:", result)</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <pre><code>Result: 8</code></pre>
+
+      <h2>Why Functions?</h2>
+      <ul>
+        <li>Code reuse hota hai (bar-bar likhne ki zarurat nahi)</li>
+        <li>Code clean aur organized hota hai</li>
+        <li>Debug karna easy hota hai</li>
+      </ul>
+
+      <h2>Next Step</h2>
+      <p>
+        Ab seekhte hain <a href="file-io.html">File Input/Output</a> ke baare me, jahan hum Python se files read aur write karenge.
+      </p>
+    </div>
+
+    <!-- RIGHT: Sidebar navigation -->
+    <div class="sidebar">
+      <h3>Beginner Tutorials</h3>
+      <ul>
+        <li><a href="intro.html">Overview & Installation</a></li>
+        <li><a href="variables.html">Variables & Data Types</a></li>
+        <li><a href="operators.html">Operators & Input</a></li>
+        <li><a href="conditions.html">Conditions</a></li>
+        <li><a href="loops.html">Loops</a></li>
+        <li><a href="functions.html">Functions</a></li>
+        <li><a href="file-io.html">File IO</a></li>
+        <li><a href="oop-basics.html">Classes & Objects</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ in Roman Hindi</p>
+  </footer>
+</body>
+</html>

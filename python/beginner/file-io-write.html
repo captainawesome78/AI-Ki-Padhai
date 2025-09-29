@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File IO (Writing) - AIkiPadhai</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; line-height: 1.6; background: #fafafa; color: #333; }
+    header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
+    nav { background: #f4f4f4; padding: 10px; text-align: center; }
+    nav a { margin: 0 15px; text-decoration: none; color: #2c3e50; font-weight: bold; }
+    nav a:hover { color: #0077cc; }
+    .container { display: flex; max-width: 1100px; margin: 20px auto; padding: 20px; }
+    .content { flex: 3; padding-right: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .sidebar { flex: 1; background: #f9f9f9; padding: 15px; border-left: 2px solid #eee; border-radius: 8px; }
+    .sidebar h3 { margin-top: 0; color: #2c3e50; }
+    .sidebar ul { list-style: none; padding: 0; }
+    .sidebar li { margin: 6px 0; }
+    .sidebar a { text-decoration: none; color: #0077cc; }
+    .sidebar a:hover { text-decoration: underline; }
+    pre { background: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    code { font-family: monospace; }
+    footer { text-align: center; margin: 30px 0; padding: 20px; background: #f4f4f4; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>File IO (Writing)</h1>
+    <p>Python se files me data write karna seekhiye</p>
+  </header>
+
+  <nav>
+    <a href="/AIkiPadhai/index.html">Home</a>
+    <a href="/AIkiPadhai/python/index.html">Python</a>
+    <a href="/AIkiPadhai/ai/intro.html">AI</a>
+    <a href="/AIkiPadhai/about.html">About</a>
+  </nav>
+
+  <div class="container">
+    <!-- LEFT: Main content -->
+    <div class="content">
+      <h2>1. File open in write mode ("w")</h2>
+      <pre><code>file = open("example.txt", "w")  # "w" = write mode
+file.write("Hello AIkiPadhai!\n")
+file.close()</code></pre>
+
+      <h2>2. File open in append mode ("a")</h2>
+      <pre><code>file = open("example.txt", "a")  # "a" = append mode
+file.write("This is new line.\n")
+file.close()</code></pre>
+
+      <h2>3. Writing multiple lines</h2>
+      <pre><code>lines = ["Line 1\n", "Line 2\n", "Line 3\n"]
+with open("example.txt", "w") as file:
+    file.writelines(lines)</code></pre>
+
+      <h2>4. Using with statement (recommended)</h2>
+      <pre><code>with open("example.txt", "a") as file:
+    file.write("Appended using with statement.\n")</code></pre>
+
+      <h2>Next Step</h2>
+      <p>
+        Ab hum seekhenge <a href="list-methods.html">List Methods</a>, jisme Python ke useful list functions ko use karenge.
+      </p>
+    </div>
+
+    <!-- RIGHT: Sidebar navigation -->
+    <div class="sidebar">
+      <h3>Beginner Tutorials</h3>
+      <ul>
+        <li><a href="intro.html">Overview & Installation</a></li>
+        <li><a href="variables.html">Variables & Data Types</a></li>
+        <li><a href="operators.html">Operators & Input</a></li>
+        <li><a href="conditions.html">Conditions</a></li>
+        <li><a href="loops.html">Loops</a></li>
+        <li><a href="lists-tuples.html">Lists & Tuples</a></li>
+        <li><a href="dictionaries.html">Dictionaries</a></li>
+        <li><a href="iteration.html">Iteration on Collections</a></li>
+        <li><a href="slice.html">Slice Operator</a></li>
+        <li><a href="strings.html">String Methods</a></li>
+        <li><a href="functions.html">Functions Intro</a></li>
+        <li><a href="functions-examples.html">Functions with Examples</a></li>
+        <li><a href="file-io-read.html">File IO (Reading)</a></li>
+        <li><a href="file-io-write.html">File IO (Writing)</a></li>
+        <li><a href="list-methods.html">List Methods</a></li>
+        <li><a href="modular.html">Modular Programming</a></li>
+        <li><a href="error-handling.html">Error Handling</a></li>
+        <li><a href="scope.html">Global vs Local</a></li>
+        <li><a href="oop-basics.html">Classes & Objects</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ in Roman Hindi</p>
+  </footer>
+</body>
+</html>
