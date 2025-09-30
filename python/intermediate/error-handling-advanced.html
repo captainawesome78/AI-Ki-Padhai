@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Error Handling - AIkiPadhai</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; line-height: 1.6; background: #fafafa; color: #333; }
+    header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
+    nav { background: #f4f4f4; padding: 10px; text-align: center; }
+    nav a { margin: 0 15px; text-decoration: none; color: #2c3e50; font-weight: bold; }
+    nav a:hover { color: #0077cc; }
+    .container { display: flex; max-width: 1100px; margin: 20px auto; padding: 20px; }
+    .content { flex: 3; padding-right: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .sidebar { flex: 1; background: #f9f9f9; padding: 15px; border-left: 2px solid #eee; border-radius: 8px; }
+    .sidebar h3 { margin-top: 0; color: #2c3e50; }
+    .sidebar ul { list-style: none; padding: 0; }
+    .sidebar li { margin: 6px 0; }
+    .sidebar a { text-decoration: none; color: #0077cc; }
+    .sidebar a:hover { text-decoration: underline; }
+    pre { background: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    code { font-family: monospace; }
+    footer { text-align: center; margin: 30px 0; padding: 20px; background: #f4f4f4; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Advanced Error Handling</h1>
+    <p>Robust programs likhne ke liye exceptions ka use seekhein</p>
+  </header>
+
+  <nav>
+    <a href="/AIkiPadhai/index.html">Home</a>
+    <a href="/AIkiPadhai/python/beginner/intro.html">Beginner</a>
+    <a href="/AIkiPadhai/python/intermediate/index.html">Intermediate</a>
+    <a href="/AIkiPadhai/python/expert/index.html">Expert</a>
+    <a href="/AIkiPadhai/ai/intro.html">AI</a>
+    <a href="/AIkiPadhai/about.html">About</a>
+  </nav>
+
+  <div class="container">
+    <div class="content">
+      <h2>1. Basic Try/Except</h2>
+      <pre><code>try:
+    x = int("abc")
+except ValueError:
+    print("Invalid input!")</code></pre>
+      <p><strong>Output:</strong></p>
+      <pre><code>Invalid input!</code></pre>
+
+      <h2>2. Catching Multiple Exceptions</h2>
+      <pre><code>try:
+    num = 10 / 0
+except ZeroDivisionError:
+    print("Cannot divide by zero!")
+except ValueError:
+    print("Invalid number!")</code></pre>
+      <p><strong>Output:</strong></p>
+      <pre><code>Cannot divide by zero!</code></pre>
+
+      <h2>3. Using Else Block</h2>
+      <p><code>else</code> block sirf tab run hota hai jab koi exception nahi aata.</p>
+      <pre><code>try:
+    num = int("123")
+except ValueError:
+    print("Invalid input")
+else:
+    print("Success! Number =", num)</code></pre>
+      <p><strong>Output:</strong></p>
+      <pre><code>Success! Number = 123</code></pre>
+
+      <h2>4. Using Finally Block</h2>
+      <p><code>finally</code> block hamesha run hota hai, chahe error aaye ya na aaye.</p>
+      <pre><code>try:
+    f = open("data.txt", "w")
+    f.write("Hello")
+except Exception as e:
+    print("Error:", e)
+finally:
+    f.close()
+    print("File closed")</code></pre>
+      <p><strong>Output:</strong></p>
+      <pre><code>File closed</code></pre>
+
+      <h2>5. Raising Exceptions</h2>
+      <p>Kabhi kabhi hume khud exceptions raise karna padta hai.</p>
+      <pre><code>def withdraw(amount):
+    if amount > 5000:
+        raise ValueError("Amount exceeds limit!")
+    else:
+        print("Withdraw successful:", amount)
+
+withdraw(6000)</code></pre>
+      <p><strong>Output:</strong></p>
+      <pre><code>ValueError: Amount exceeds limit!</code></pre>
+
+      <h2>6. Custom Exceptions</h2>
+      <p>Hum apne khud ke exception classes bana sakte hain.</p>
+      <pre><code>class NegativeNumberError(Exception):
+    pass
+
+def square_root(n):
+    if n < 0:
+        raise NegativeNumberError("Negative numbers not allowed!")
+    return n ** 0.5
+
+try:
+    print(square_root(-9))
+except NegativeNumberError as e:
+    print("Error:", e)</code></pre>
+      <p><strong>Output:</strong></p>
+      <pre><code>Error: Negative numbers not allowed!</code></pre>
+
+      <h2>Summary</h2>
+      <ul>
+        <li><strong>try-except:</strong> handle exceptions</li>
+        <li><strong>else:</strong> runs only if no error</li>
+        <li><strong>finally:</strong> always runs</li>
+        <li><strong>raise:</strong> manually throw exception</li>
+        <li><strong>Custom exceptions:</strong> create your own error types</li>
+      </ul>
+    </div>
+
+    <div class="sidebar">
+      <h3>Intermediate Topics</h3>
+      <ul>
+        <li><a href="oop.html">OOP Advanced</a></li>
+        <li><a href="file-handling.html">File Handling (CSV, JSON)</a></li>
+        <li><a href="modules.html">Modules and Packages</a></li>
+        <li><a href="error-handling-advanced.html"><strong>Advanced Error Handling</strong></a></li>
+        <li><a href="iterators-generators.html">Iterators and Generators</a></li>
+        <li><a href="decorators.html">Decorators</a></li>
+        <li><a href="multithreading.html">Multithreading & Multiprocessing</a></li>
+        <li><a href="projects.html">Intermediate Projects</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ in Roman Hindi</p>
+  </footer>
+</body>
+</html>

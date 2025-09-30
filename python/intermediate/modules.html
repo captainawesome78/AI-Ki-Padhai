@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modules and Packages - AIkiPadhai</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; line-height: 1.6; background: #fafafa; color: #333; }
+    header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
+    nav { background: #f4f4f4; padding: 10px; text-align: center; }
+    nav a { margin: 0 15px; text-decoration: none; color: #2c3e50; font-weight: bold; }
+    nav a:hover { color: #0077cc; }
+    .container { display: flex; max-width: 1100px; margin: 20px auto; padding: 20px; }
+    .content { flex: 3; padding-right: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .sidebar { flex: 1; background: #f9f9f9; padding: 15px; border-left: 2px solid #eee; border-radius: 8px; }
+    .sidebar h3 { margin-top: 0; color: #2c3e50; }
+    .sidebar ul { list-style: none; padding: 0; }
+    .sidebar li { margin: 6px 0; }
+    .sidebar a { text-decoration: none; color: #0077cc; }
+    .sidebar a:hover { text-decoration: underline; }
+    pre { background: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    code { font-family: monospace; }
+    footer { text-align: center; margin: 30px 0; padding: 20px; background: #f4f4f4; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Modules and Packages</h1>
+    <p>Code ko reuse karne aur organize karne ka professional tareeka</p>
+  </header>
+
+  <nav>
+    <a href="/AIkiPadhai/index.html">Home</a>
+    <a href="/AIkiPadhai/python/beginner/intro.html">Beginner</a>
+    <a href="/AIkiPadhai/python/intermediate/index.html">Intermediate</a>
+    <a href="/AIkiPadhai/python/expert/index.html">Expert</a>
+    <a href="/AIkiPadhai/ai/intro.html">AI</a>
+    <a href="/AIkiPadhai/about.html">About</a>
+  </nav>
+
+  <div class="container">
+    <div class="content">
+      <h2>1. What is a Module?</h2>
+      <p>Module ek Python file hoti hai jisme functions, classes ya variables hote hain. Hum modules ko import karke reuse karte hain.</p>
+      
+      <pre><code># mymodule.py
+def greet(name):
+    return f"Hello {name}, welcome to AIkiPadhai!"
+
+# main.py
+import mymodule
+
+print(mymodule.greet("Rahul"))</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <pre><code>Hello Rahul, welcome to AIkiPadhai!</code></pre>
+
+      <h2>2. Built-in Modules</h2>
+      <p>Python ke sath bahut sare built-in modules aate hain, jaise <code>math</code>, <code>datetime</code>, <code>os</code>.</p>
+      <pre><code>import math
+
+print(math.sqrt(25))   # 5.0
+print(math.pi)         # 3.14159...</code></pre>
+
+      <h2>3. Installing External Packages</h2>
+      <p>Python me hum <code>pip</code> ka use karke external libraries install karte hain.</p>
+      <pre><code># Install requests package
+pip install requests
+
+# Use the package
+import requests
+
+response = requests.get("https://api.github.com")
+print(response.status_code)</code></pre>
+
+      <h2>4. What is a Package?</h2>
+      <p>Package ek collection hota hai modules ka, jo ek folder me organized hote hain aur jisme ek <code>__init__.py</code> file hoti hai.</p>
+
+      <pre><code>mypackage/
+│
+├── __init__.py
+├── module1.py
+└── module2.py</code></pre>
+
+      <pre><code># module1.py
+def add(a, b):
+    return a + b
+
+# main.py
+from mypackage import module1
+
+print(module1.add(5, 3))</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <pre><code>8</code></pre>
+
+      <h2>Summary</h2>
+      <ul>
+        <li><strong>Module:</strong> Single Python file (functions, classes)</li>
+        <li><strong>Built-in Modules:</strong> Already available (math, datetime, os)</li>
+        <li><strong>Packages:</strong> Collection of modules inside a folder</li>
+        <li><strong>pip:</strong> Install external libraries</li>
+      </ul>
+    </div>
+
+    <div class="sidebar">
+      <h3>Intermediate Topics</h3>
+      <ul>
+        <li><a href="oop.html">OOP Advanced</a></li>
+        <li><a href="file-handling.html">File Handling (CSV, JSON)</a></li>
+        <li><a href="modules.html"><strong>Modules and Packages</strong></a></li>
+        <li><a href="error-handling-advanced.html">Advanced Error Handling</a></li>
+        <li><a href="iterators-generators.html">Iterators and Generators</a></li>
+        <li><a href="decorators.html">Decorators</a></li>
+        <li><a href="multithreading.html">Multithreading & Multiprocessing</a></li>
+        <li><a href="projects.html">Intermediate Projects</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ in Roman Hindi</p>
+  </footer>
+</body>
+</html>

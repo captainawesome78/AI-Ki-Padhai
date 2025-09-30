@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multithreading & Multiprocessing - AIkiPadhai</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; line-height: 1.6; background: #fafafa; color: #333; }
+    header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
+    nav { background: #f4f4f4; padding: 10px; text-align: center; }
+    nav a { margin: 0 15px; text-decoration: none; color: #2c3e50; font-weight: bold; }
+    nav a:hover { color: #0077cc; }
+    .container { display: flex; max-width: 1100px; margin: 20px auto; padding: 20px; }
+    .content { flex: 3; padding-right: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .sidebar { flex: 1; background: #f9f9f9; padding: 15px; border-left: 2px solid #eee; border-radius: 8px; }
+    .sidebar h3 { margin-top: 0; color: #2c3e50; }
+    .sidebar ul { list-style: none; padding: 0; }
+    .sidebar li { margin: 6px 0; }
+    .sidebar a { text-decoration: none; color: #0077cc; }
+    .sidebar a:hover { text-decoration: underline; }
+    pre { background: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    code { font-family: monospace; }
+    footer { text-align: center; margin: 30px 0; padding: 20px; background: #f4f4f4; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Multithreading & Multiprocessing</h1>
+    <p>Speed up Python programs with concurrency</p>
+  </header>
+
+  <nav>
+    <a href="/AIkiPadhai/index.html">Home</a>
+    <a href="/AIkiPadhai/python/beginner/intro.html">Beginner</a>
+    <a href="/AIkiPadhai/python/intermediate/index.html">Intermediate</a>
+    <a href="/AIkiPadhai/python/expert/index.html">Expert</a>
+    <a href="/AIkiPadhai/ai/intro.html">AI</a>
+    <a href="/AIkiPadhai/about.html">About</a>
+  </nav>
+
+  <div class="container">
+    <div class="content">
+      <h2>1. Why Multithreading and Multiprocessing?</h2>
+      <p>
+        Python programs by default sequentially execute hote hain. Agar ek task time consuming ho (jaise I/O, API calls, ya heavy computation), to dusra task uska wait karta hai. 
+        Multithreading aur multiprocessing concurrency laate hain, jisse tasks parallel ya concurrent chal sakte hain.
+      </p>
+
+      <h2>2. Multithreading</h2>
+      <p>
+        Multithreading ek process ke andar multiple <strong>threads</strong> run karta hai. Ye mainly <em>I/O-bound tasks</em> ke liye useful hai (jaise file download, API calls, DB queries).
+      </p>
+
+      <pre><code>import threading
+import time
+
+def worker(name):
+    print(f"Thread {name} starting")
+    time.sleep(2)
+    print(f"Thread {name} finished")
+
+# Create threads
+t1 = threading.Thread(target=worker, args=("A",))
+t2 = threading.Thread(target=worker, args=("B",))
+
+t1.start()
+t2.start()
+
+t1.join()
+t2.join()
+print("All threads completed!")</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <pre><code>Thread A starting
+Thread B starting
+Thread A finished
+Thread B finished
+All threads completed!</code></pre>
+
+      <h2>3. Multiprocessing</h2>
+      <p>
+        Multiprocessing me multiple <strong>processes</strong> run hote hain, jo alag-alag CPU cores pe execute karte hain. Ye <em>CPU-bound tasks</em> ke liye useful hai (jaise heavy calculations).
+      </p>
+
+      <pre><code>import multiprocessing
+import time
+
+def square(n):
+    print(f"Square of {n}: {n*n}")
+    time.sleep(1)
+
+if __name__ == "__main__":
+    numbers = [1, 2, 3, 4]
+    processes = []
+
+    for num in numbers:
+        p = multiprocessing.Process(target=square, args=(num,))
+        processes.append(p)
+        p.start()
+
+    for p in processes:
+        p.join()
+
+    print("All processes completed!")</code></pre>
+
+      <h2>4. Threading vs Multiprocessing</h2>
+      <ul>
+        <li><strong>Threading:</strong> Best for I/O-bound tasks (file read/write, network requests).</li>
+        <li><strong>Multiprocessing:</strong> Best for CPU-bound tasks (math-heavy computations, ML training).</li>
+        <li>Multiprocessing uses more memory but fully utilizes multiple CPU cores.</li>
+      </ul>
+
+      <h2>5. ThreadPool and ProcessPool Executors</h2>
+      <p>
+        Python me <code>concurrent.futures</code> library easy way deti hai thread pool aur process pool use karne ka.
+      </p>
+
+      <pre><code>from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
+
+def task(n):
+    return n*n
+
+# Thread Pool
+with ThreadPoolExecutor() as executor:
+    results = executor.map(task, [1, 2, 3, 4])
+    print(list(results))
+
+# Process Pool
+with ProcessPoolExecutor() as executor:
+    results = executor.map(task, [1, 2, 3, 4])
+    print(list(results))</code></pre>
+
+      <h2>Summary</h2>
+      <ul>
+        <li><strong>Threading:</strong> Lightweight, shared memory, I/O tasks.</li>
+        <li><strong>Multiprocessing:</strong> Multiple processes, full CPU utilization, heavy computation.</li>
+        <li><strong>Executors:</strong> Simplify threading and multiprocessing.</li>
+      </ul>
+    </div>
+
+    <div class="sidebar">
+      <h3>Intermediate Topics</h3>
+      <ul>
+        <li><a href="oop.html">OOP Advanced</a></li>
+        <li><a href="file-handling.html">File Handling (CSV, JSON)</a></li>
+        <li><a href="modules.html">Modules and Packages</a></li>
+        <li><a href="error-handling-advanced.html">Advanced Error Handling</a></li>
+        <li><a href="iterators-generators.html">Iterators and Generators</a></li>
+        <li><a href="decorators.html">Decorators</a></li>
+        <li><a href="multithreading.html"><strong>Multithreading & Multiprocessing</strong></a></li>
+        <li><a href="projects.html">Intermediate Projects</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ in Roman Hindi</p>
+  </footer>
+</body>
+</html>

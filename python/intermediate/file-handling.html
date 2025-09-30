@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Handling (CSV & JSON) - AIkiPadhai</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; line-height: 1.6; background: #fafafa; color: #333; }
+    header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
+    nav { background: #f4f4f4; padding: 10px; text-align: center; }
+    nav a { margin: 0 15px; text-decoration: none; color: #2c3e50; font-weight: bold; }
+    nav a:hover { color: #0077cc; }
+    .container { display: flex; max-width: 1100px; margin: 20px auto; padding: 20px; }
+    .content { flex: 3; padding-right: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .sidebar { flex: 1; background: #f9f9f9; padding: 15px; border-left: 2px solid #eee; border-radius: 8px; }
+    .sidebar h3 { margin-top: 0; color: #2c3e50; }
+    .sidebar ul { list-style: none; padding: 0; }
+    .sidebar li { margin: 6px 0; }
+    .sidebar a { text-decoration: none; color: #0077cc; }
+    .sidebar a:hover { text-decoration: underline; }
+    pre { background: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    code { font-family: monospace; }
+    footer { text-align: center; margin: 30px 0; padding: 20px; background: #f4f4f4; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>File Handling (CSV & JSON)</h1>
+    <p>Data ko files se read/write karna sikhein</p>
+  </header>
+
+  <nav>
+    <a href="/AIkiPadhai/index.html">Home</a>
+    <a href="/AIkiPadhai/python/beginner/intro.html">Beginner</a>
+    <a href="/AIkiPadhai/python/intermediate/index.html">Intermediate</a>
+    <a href="/AIkiPadhai/python/expert/index.html">Expert</a>
+    <a href="/AIkiPadhai/ai/intro.html">AI</a>
+    <a href="/AIkiPadhai/about.html">About</a>
+  </nav>
+
+  <div class="container">
+    <div class="content">
+      <h2>1. Reading and Writing Text Files</h2>
+      <p>Pehle basic text file read aur write ka example dekhte hain:</p>
+      <pre><code># Writing to a text file
+with open("sample.txt", "w") as f:
+    f.write("Hello AIkiPadhai!\n")
+    f.write("Python file handling is easy.")
+
+# Reading from a text file
+with open("sample.txt", "r") as f:
+    content = f.read()
+    print(content)</code></pre>
+      <p><strong>Output:</strong></p>
+      <pre><code>Hello AIkiPadhai!
+Python file handling is easy.</code></pre>
+
+      <h2>2. Working with CSV Files</h2>
+      <p><code>csv</code> module ka use structured data handle karne ke liye hota hai.</p>
+      <pre><code>import csv
+
+# Writing CSV file
+with open("students.csv", "w", newline="") as f:
+    writer = csv.writer(f)
+    writer.writerow(["Name", "Age"])
+    writer.writerow(["Rahul", 20])
+    writer.writerow(["Priya", 22])
+
+# Reading CSV file
+with open("students.csv", "r") as f:
+    reader = csv.reader(f)
+    for row in reader:
+        print(row)</code></pre>
+      <p><strong>Output:</strong></p>
+      <pre><code>['Name', 'Age']
+['Rahul', '20']
+['Priya', '22']</code></pre>
+
+      <h2>3. Working with JSON Files</h2>
+      <p>JSON format widely used hai APIs aur web development me.</p>
+      <pre><code>import json
+
+data = {
+    "name": "Ravi",
+    "age": 25,
+    "skills": ["Python", "AI", "ML"]
+}
+
+# Writing JSON file
+with open("data.json", "w") as f:
+    json.dump(data, f)
+
+# Reading JSON file
+with open("data.json", "r") as f:
+    loaded_data = json.load(f)
+    print(loaded_data)</code></pre>
+      <p><strong>Output:</strong></p>
+      <pre><code>{'name': 'Ravi', 'age': 25, 'skills': ['Python', 'AI', 'ML']}</code></pre>
+
+      <h2>Summary</h2>
+      <ul>
+        <li><strong>Text Files:</strong> open(), read(), write()</li>
+        <li><strong>CSV Files:</strong> csv.reader, csv.writer</li>
+        <li><strong>JSON Files:</strong> json.load, json.dump</li>
+      </ul>
+    </div>
+
+    <div class="sidebar">
+      <h3>Intermediate Topics</h3>
+      <ul>
+        <li><a href="oop.html">OOP Advanced</a></li>
+        <li><a href="file-handling.html"><strong>File Handling (CSV, JSON)</strong></a></li>
+        <li><a href="modules.html">Modules and Packages</a></li>
+        <li><a href="error-handling-advanced.html">Advanced Error Handling</a></li>
+        <li><a href="iterators-generators.html">Iterators and Generators</a></li>
+        <li><a href="decorators.html">Decorators</a></li>
+        <li><a href="multithreading.html">Multithreading & Multiprocessing</a></li>
+        <li><a href="projects.html">Intermediate Projects</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ in Roman Hindi</p>
+  </footer>
+</body>
+</html>

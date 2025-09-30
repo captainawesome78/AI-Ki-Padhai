@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intermediate Python Projects - AIkiPadhai</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; line-height: 1.6; background: #fafafa; color: #333; }
+    header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
+    nav { background: #f4f4f4; padding: 10px; text-align: center; }
+    nav a { margin: 0 15px; text-decoration: none; color: #2c3e50; font-weight: bold; }
+    nav a:hover { color: #0077cc; }
+    .container { display: flex; max-width: 1100px; margin: 20px auto; padding: 20px; }
+    .content { flex: 3; padding-right: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .sidebar { flex: 1; background: #f9f9f9; padding: 15px; border-left: 2px solid #eee; border-radius: 8px; }
+    .sidebar h3 { margin-top: 0; color: #2c3e50; }
+    .sidebar ul { list-style: none; padding: 0; }
+    .sidebar li { margin: 6px 0; }
+    .sidebar a { text-decoration: none; color: #0077cc; }
+    .sidebar a:hover { text-decoration: underline; }
+    pre { background: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    code { font-family: monospace; }
+    footer { text-align: center; margin: 30px 0; padding: 20px; background: #f4f4f4; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Intermediate Python Projects</h1>
+    <p>Apply your skills to real-world mini projects</p>
+  </header>
+
+  <nav>
+    <a href="/AIkiPadhai/index.html">Home</a>
+    <a href="/AIkiPadhai/python/beginner/intro.html">Beginner</a>
+    <a href="/AIkiPadhai/python/intermediate/index.html">Intermediate</a>
+    <a href="/AIkiPadhai/python/expert/index.html">Expert</a>
+    <a href="/AIkiPadhai/ai/intro.html">AI</a>
+    <a href="/AIkiPadhai/about.html">About</a>
+  </nav>
+
+  <div class="container">
+    <div class="content">
+      <h2>1. To-Do List App (File Handling + OOP)</h2>
+      <p>
+        Ek simple CLI app jisme user tasks add/remove/mark complete kar sakta hai. Data ko <code>tasks.txt</code> file me save karein.
+      </p>
+      <pre><code>class TodoApp:
+    def __init__(self, filename="tasks.txt"):
+        self.filename = filename
+
+    def add_task(self, task):
+        with open(self.filename, "a") as f:
+            f.write(task + "\n")
+
+    def show_tasks(self):
+        with open(self.filename, "r") as f:
+            for i, line in enumerate(f, start=1):
+                print(f"{i}. {line.strip()}")
+
+app = TodoApp()
+app.add_task("Finish Python project")
+app.show_tasks()</code></pre>
+
+      <h2>2. Weather Fetcher (API + JSON)</h2>
+      <p>
+        API requests ka use karke weather data fetch karein (OpenWeatherMap API). JSON parsing seekhenge.
+      </p>
+      <pre><code>import requests
+
+API_KEY = "your_api_key_here"
+city = "Delhi"
+url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"
+
+response = requests.get(url)
+data = response.json()
+
+print("Temperature:", data["main"]["temp"], "°C")</code></pre>
+
+      <h2>3. Multi-threaded Downloader</h2>
+      <p>
+        Ek program jo multiple files ek saath download kare using <code>threading</code>.
+      </p>
+      <pre><code>import threading, requests
+
+def download_file(url, filename):
+    r = requests.get(url)
+    with open(filename, "wb") as f:
+        f.write(r.content)
+    print(f"Downloaded {filename}")
+
+urls = [
+    ("https://example.com/file1.jpg", "file1.jpg"),
+    ("https://example.com/file2.jpg", "file2.jpg")
+]
+
+threads = []
+for url, fname in urls:
+    t = threading.Thread(target=download_file, args=(url, fname))
+    threads.append(t)
+    t.start()
+
+for t in threads:
+    t.join()</code></pre>
+
+      <h2>4. Simple Chatbot (Functions + Dictionaries)</h2>
+      <p>
+        Ek basic chatbot jo keyword matching use kare responses ke liye.
+      </p>
+      <pre><code>responses = {
+    "hi": "Hello! Kaise ho?",
+    "bye": "Goodbye! Fir milte hain.",
+    "python": "Python ek powerful programming language hai."
+}
+
+def chatbot():
+    while True:
+        msg = input("You: ").lower()
+        if msg == "exit":
+            break
+        print("Bot:", responses.get(msg, "Mujhe samajh nahi aaya."))
+
+chatbot()</code></pre>
+
+      <h2>5. Expense Tracker (Modules + CSV)</h2>
+      <p>
+        Ek CLI app jo expenses ko CSV file me record kare aur monthly report generate kare.
+      </p>
+      <pre><code>import csv
+from datetime import datetime
+
+def add_expense(amount, category):
+    with open("expenses.csv", "a", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow([datetime.now().date(), amount, category])
+
+def view_expenses():
+    with open("expenses.csv", "r") as f:
+        reader = csv.reader(f)
+        for row in reader:
+            print(row)
+
+add_expense(200, "Food")
+view_expenses()</code></pre>
+
+      <h2>Next Steps</h2>
+      <p>
+        Ab aap in projects me aur features add karke practice kar sakte ho — jaise GUI (Tkinter), database (SQLite), ya Flask/Django se web app banana.
+      </p>
+    </div>
+
+    <div class="sidebar">
+      <h3>Intermediate Topics</h3>
+      <ul>
+        <li><a href="oop.html">OOP Advanced</a></li>
+        <li><a href="file-handling.html">File Handling (CSV, JSON)</a></li>
+        <li><a href="modules.html">Modules and Packages</a></li>
+        <li><a href="error-handling-advanced.html">Advanced Error Handling</a></li>
+        <li><a href="iterators-generators.html">Iterators and Generators</a></li>
+        <li><a href="decorators.html">Decorators</a></li>
+        <li><a href="multithreading.html">Multithreading & Multiprocessing</a></li>
+        <li><a href="projects.html"><strong>Intermediate Projects</strong></a></li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ in Roman Hindi</p>
+  </footer>
+</body>
+</html>

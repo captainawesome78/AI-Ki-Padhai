@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decorators in Python - AIkiPadhai</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; line-height: 1.6; background: #fafafa; color: #333; }
+    header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
+    nav { background: #f4f4f4; padding: 10px; text-align: center; }
+    nav a { margin: 0 15px; text-decoration: none; color: #2c3e50; font-weight: bold; }
+    nav a:hover { color: #0077cc; }
+    .container { display: flex; max-width: 1100px; margin: 20px auto; padding: 20px; }
+    .content { flex: 3; padding-right: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .sidebar { flex: 1; background: #f9f9f9; padding: 15px; border-left: 2px solid #eee; border-radius: 8px; }
+    .sidebar h3 { margin-top: 0; color: #2c3e50; }
+    .sidebar ul { list-style: none; padding: 0; }
+    .sidebar li { margin: 6px 0; }
+    .sidebar a { text-decoration: none; color: #0077cc; }
+    .sidebar a:hover { text-decoration: underline; }
+    pre { background: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    code { font-family: monospace; }
+    footer { text-align: center; margin: 30px 0; padding: 20px; background: #f4f4f4; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Decorators in Python</h1>
+    <p>Functions that modify other functions</p>
+  </header>
+
+  <nav>
+    <a href="/AIkiPadhai/index.html">Home</a>
+    <a href="/AIkiPadhai/python/beginner/intro.html">Beginner</a>
+    <a href="/AIkiPadhai/python/intermediate/index.html">Intermediate</a>
+    <a href="/AIkiPadhai/python/expert/index.html">Expert</a>
+    <a href="/AIkiPadhai/ai/intro.html">AI</a>
+    <a href="/AIkiPadhai/about.html">About</a>
+  </nav>
+
+  <div class="container">
+    <div class="content">
+      <h2>1. What is a Decorator?</h2>
+      <p>
+        Decorator ek function hota hai jo doosre function ko modify/add functionality karta hai bina uske code ko directly change kiye.
+      </p>
+
+      <h2>2. Functions as First-Class Citizens</h2>
+      <p>Python me functions ko variables me assign kar sakte hain aur unhe dusre functions ko pass kar sakte hain.</p>
+      <pre><code>def greet(name):
+    return f"Hello, {name}"
+
+say_hello = greet
+print(say_hello("AIkiPadhai"))  # Hello, AIkiPadhai</code></pre>
+
+      <h2>3. Simple Decorator Example</h2>
+      <pre><code>def my_decorator(func):
+    def wrapper():
+        print("Before function runs")
+        func()
+        print("After function runs")
+    return wrapper
+
+@my_decorator
+def say_hello():
+    print("Hello!")
+
+say_hello()</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <pre><code>Before function runs
+Hello!
+After function runs</code></pre>
+
+      <h2>4. Decorator with Arguments</h2>
+      <pre><code>def log_arguments(func):
+    def wrapper(*args, **kwargs):
+        print(f"Arguments: {args}, {kwargs}")
+        return func(*args, **kwargs)
+    return wrapper
+
+@log_arguments
+def add(a, b):
+    return a + b
+
+print(add(3, 5))</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <pre><code>Arguments: (3, 5), {}
+8</code></pre>
+
+      <h2>5. Real World Example</h2>
+      <p>Decorators ka use logging, authentication, timing aur caching me hota hai.</p>
+
+      <pre><code>import time
+
+def timer(func):
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        result = func(*args, **kwargs)
+        end = time.time()
+        print(f"{func.__name__} took {end-start:.4f} seconds")
+        return result
+    return wrapper
+
+@timer
+def slow_function():
+    time.sleep(2)
+    print("Finished!")
+
+slow_function()</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <pre><code>Finished!
+slow_function took 2.0003 seconds</code></pre>
+
+      <h2>Summary</h2>
+      <ul>
+        <li>Decorators ek function ko enhance karte hain.</li>
+        <li><code>@decorator</code> syntax se apply karte hain.</li>
+        <li>Arguments handle karne ke liye <code>*args</code> aur <code>**kwargs</code> use karte hain.</li>
+        <li>Use cases: logging, authentication, timing, caching.</li>
+      </ul>
+    </div>
+
+    <div class="sidebar">
+      <h3>Intermediate Topics</h3>
+      <ul>
+        <li><a href="oop.html">OOP Advanced</a></li>
+        <li><a href="file-handling.html">File Handling (CSV, JSON)</a></li>
+        <li><a href="modules.html">Modules and Packages</a></li>
+        <li><a href="error-handling-advanced.html">Advanced Error Handling</a></li>
+        <li><a href="iterators-generators.html">Iterators and Generators</a></li>
+        <li><a href="decorators.html"><strong>Decorators</strong></a></li>
+        <li><a href="multithreading.html">Multithreading & Multiprocessing</a></li>
+        <li><a href="projects.html">Intermediate Projects</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ in Roman Hindi</p>
+  </footer>
+</body>
+</html>

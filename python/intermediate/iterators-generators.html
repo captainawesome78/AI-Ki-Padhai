@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iterators and Generators - AIkiPadhai</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; line-height: 1.6; background: #fafafa; color: #333; }
+    header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
+    nav { background: #f4f4f4; padding: 10px; text-align: center; }
+    nav a { margin: 0 15px; text-decoration: none; color: #2c3e50; font-weight: bold; }
+    nav a:hover { color: #0077cc; }
+    .container { display: flex; max-width: 1100px; margin: 20px auto; padding: 20px; }
+    .content { flex: 3; padding-right: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .sidebar { flex: 1; background: #f9f9f9; padding: 15px; border-left: 2px solid #eee; border-radius: 8px; }
+    .sidebar h3 { margin-top: 0; color: #2c3e50; }
+    .sidebar ul { list-style: none; padding: 0; }
+    .sidebar li { margin: 6px 0; }
+    .sidebar a { text-decoration: none; color: #0077cc; }
+    .sidebar a:hover { text-decoration: underline; }
+    pre { background: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    code { font-family: monospace; }
+    footer { text-align: center; margin: 30px 0; padding: 20px; background: #f4f4f4; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Iterators and Generators</h1>
+    <p>Efficient looping techniques in Python</p>
+  </header>
+
+  <nav>
+    <a href="/AIkiPadhai/index.html">Home</a>
+    <a href="/AIkiPadhai/python/beginner/intro.html">Beginner</a>
+    <a href="/AIkiPadhai/python/intermediate/index.html">Intermediate</a>
+    <a href="/AIkiPadhai/python/expert/index.html">Expert</a>
+    <a href="/AIkiPadhai/ai/intro.html">AI</a>
+    <a href="/AIkiPadhai/about.html">About</a>
+  </nav>
+
+  <div class="container">
+    <div class="content">
+      <h2>1. What is an Iterator?</h2>
+      <p>Iterator ek object hota hai jo ek time pe ek value return karta hai. Isme <code>__iter__()</code> aur <code>__next__()</code> methods hote hain.</p>
+      
+      <pre><code>my_list = [1, 2, 3]
+it = iter(my_list)
+
+print(next(it))  # 1
+print(next(it))  # 2
+print(next(it))  # 3</code></pre>
+
+      <h2>2. Custom Iterator</h2>
+      <p>Hum apna custom iterator class bana sakte hain.</p>
+      <pre><code>class CountDown:
+    def __init__(self, start):
+        self.num = start
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.num <= 0:
+            raise StopIteration
+        current = self.num
+        self.num -= 1
+        return current
+
+for val in CountDown(5):
+    print(val)</code></pre>
+      <p><strong>Output:</strong></p>
+      <pre><code>5
+4
+3
+2
+1</code></pre>
+
+      <h2>3. What is a Generator?</h2>
+      <p>Generator ek function hota hai jo <code>yield</code> ka use karta hai. Ye ek iterator return karta hai automatically.</p>
+      <pre><code>def my_generator():
+    yield 1
+    yield 2
+    yield 3
+
+for val in my_generator():
+    print(val)</code></pre>
+      <p><strong>Output:</strong></p>
+      <pre><code>1
+2
+3</code></pre>
+
+      <h2>4. Infinite Generators</h2>
+      <p>Generators ka use infinite series generate karne ke liye bhi hota hai.</p>
+      <pre><code>def even_numbers():
+    n = 0
+    while True:
+        yield n
+        n += 2
+
+gen = even_numbers()
+
+print(next(gen))  # 0
+print(next(gen))  # 2
+print(next(gen))  # 4</code></pre>
+
+      <h2>5. Generator Expressions</h2>
+      <p>List comprehensions ki tarah hi generator expressions bhi hote hain.</p>
+      <pre><code>squares = (x*x for x in range(5))
+for val in squares:
+    print(val)</code></pre>
+      <p><strong>Output:</strong></p>
+      <pre><code>0
+1
+4
+9
+16</code></pre>
+
+      <h2>Summary</h2>
+      <ul>
+        <li><strong>Iterator:</strong> Object with <code>__iter__</code> & <code>__next__</code></li>
+        <li><strong>Generator:</strong> Function using <code>yield</code></li>
+        <li><strong>Generator Expressions:</strong> Short-hand syntax</li>
+        <li><strong>Advantage:</strong> Memory efficient, useful for large datasets</li>
+      </ul>
+    </div>
+
+    <div class="sidebar">
+      <h3>Intermediate Topics</h3>
+      <ul>
+        <li><a href="oop.html">OOP Advanced</a></li>
+        <li><a href="file-handling.html">File Handling (CSV, JSON)</a></li>
+        <li><a href="modules.html">Modules and Packages</a></li>
+        <li><a href="error-handling-advanced.html">Advanced Error Handling</a></li>
+        <li><a href="iterators-generators.html"><strong>Iterators and Generators</strong></a></li>
+        <li><a href="decorators.html">Decorators</a></li>
+        <li><a href="multithreading.html">Multithreading & Multiprocessing</a></li>
+        <li><a href="projects.html">Intermediate Projects</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ in Roman Hindi</p>
+  </footer>
+</body>
+</html>
