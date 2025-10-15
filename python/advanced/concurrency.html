@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Concurrency & Async Programming | AIkiPadhai</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #fafafa; margin: 0; color: #333; }
+    header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
+    nav { background: #f4f4f4; padding: 10px; text-align: center; }
+    nav a { margin: 0 15px; text-decoration: none; color: #2c3e50; font-weight: bold; }
+    nav a:hover { color: #0077cc; }
+    .content { max-width: 900px; margin: 20px auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    pre { background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 6px; overflow-x: auto; }
+    h2, h3 { color: #2c3e50; }
+    footer { text-align: center; margin: 30px 0; padding: 20px; background: #f4f4f4; }
+    .sidebar { position: fixed; right: 0; top: 100px; width: 220px; background: #f9f9f9; border-left: 1px solid #ddd; height: 80%; padding: 15px; overflow-y: auto; }
+    .sidebar a { display: block; margin: 8px 0; text-decoration: none; color: #0077cc; }
+    .sidebar a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Concurrency & Async Programming</h1>
+    <p>Python me parallel aur asynchronous ka magic samjho ⚙️</p>
+  </header>
+
+  <nav>
+    <a href="/AIkiPadhai/index.html">Home</a>
+    <a href="/AIkiPadhai/python/beginner/index.html">Beginner</a>
+    <a href="/AIkiPadhai/python/intermediate/index.html">Intermediate</a>
+    <a href="/AIkiPadhai/python/advanced/index.html">Advanced</a>
+    <a href="/AIkiPadhai/ai/intro.html">AI</a>
+  </nav>
+
+  <div class="content">
+    <h2>1️⃣ Concurrency kya hoti hai?</h2>
+    <p>
+      Concurrency ka matlab hai ek hi samay par multiple tasks ko manage karna — jaise ek program ek saath multiple users ko serve kare.  
+      Python me concurrency achieve karne ke main tareeke hain:
+    </p>
+    <ul>
+      <li>Threads (Lightweight parallel tasks)</li>
+      <li>Multiprocessing (Real parallelism using multiple CPU cores)</li>
+      <li>Asyncio (Single-threaded but non-blocking async tasks)</li>
+    </ul>
+
+    ---
+
+    <h2>2️⃣ Threading — Ek hi process ke andar multiple lightweight threads</h2>
+    <p>
+      Threading use karte hain jab aapko I/O bound tasks perform karne hote hain — jaise file read/write, network calls, etc.
+    </p>
+
+<pre><code class="python">
+import threading
+import time
+
+def task(name):
+    print(f"Task {name} start ho gaya ⏳")
+    time.sleep(2)
+    print(f"Task {name} complete ✅")
+
+t1 = threading.Thread(target=task, args=("A",))
+t2 = threading.Thread(target=task, args=("B",))
+
+t1.start()
+t2.start()
+
+t1.join()
+t2.join()
+
+print("Sab threads complete 🎉")
+</code></pre>
+
+<p>👉 Output me dono threads parallel run karenge (2 seconds total lagne chahiye, 4 nahi).</p>
+
+---
+
+<h2>3️⃣ Multiprocessing — True Parallelism 💪</h2>
+<p>
+  Threading me Python’s GIL (Global Interpreter Lock) ki wajah se ek samay me sirf ek thread execute hota hai.  
+  <b>Multiprocessing</b> is limitation ko todta hai — multiple processes use karta hai jo alag CPU cores par run hote hain.
+</p>
+
+<pre><code class="python">
+from multiprocessing import Process
+import os
+import time
+
+def work():
+    print(f"Process {os.getpid()} start hua")
+    time.sleep(2)
+    print(f"Process {os.getpid()} khatam hua")
+
+if __name__ == "__main__":
+    p1 = Process(target=work)
+    p2 = Process(target=work)
+    p1.start()
+    p2.start()
+    p1.join()
+    p2.join()
+    print("Done ✅")
+</code></pre>
+
+---
+
+<h2>4️⃣ Asyncio — Modern Asynchronous Python ⚡</h2>
+<p>
+  Asyncio ek single-threaded, single-process event loop hota hai jisme aap asynchronous functions likh sakte ho jo non-blocking hote hain.
+</p>
+
+<pre><code class="python">
+import asyncio
+
+async def fetch_data(id):
+    print(f"Fetching data {id}...")
+    await asyncio.sleep(2)
+    print(f"Data {id} ready ✅")
+
+async def main():
+    await asyncio.gather(fetch_data(1), fetch_data(2), fetch_data(3))
+
+asyncio.run(main())
+</code></pre>
+
+<p>👉 Output: sab 3 tasks parallelly run karenge using async await.</p>
+
+---
+
+<h2>5️⃣ Threading vs Multiprocessing vs Asyncio</h2>
+<table border="1" cellpadding="8" style="border-collapse: collapse;">
+  <tr><th>Feature</th><th>Threading</th><th>Multiprocessing</th><th>Asyncio</th></tr>
+  <tr><td>Type</td><td>Concurrent</td><td>Parallel</td><td>Asynchronous</td></tr>
+  <tr><td>Best for</td><td>I/O Bound Tasks</td><td>CPU Bound Tasks</td><td>Network / I/O Bound</td></tr>
+  <tr><td>GIL Affected?</td><td>Yes</td><td>No</td><td>Yes (but single-thread)</td></tr>
+  <tr><td>Complexity</td><td>Medium</td><td>High</td><td>Low/Medium</td></tr>
+</table>
+
+---
+
+<h2>6️⃣ Real-life Example: Concurrent Web Scraper</h2>
+<p>
+  Ye ek simple asyncio-based web scraper example hai jo ek saath multiple URLs fetch karta hai.
+</p>
+
+<pre><code class="python">
+import asyncio
+import aiohttp
+
+urls = [
+    "https://example.com",
+    "https://python.org",
+    "https://aikipadhai.com"
+]
+
+async def fetch(session, url):
+    async with session.get(url) as response:
+        print(f"{url} => {response.status}")
+
+async def main():
+    async with aiohttp.ClientSession() as session:
+        tasks = [fetch(session, url) for url in urls]
+        await asyncio.gather(*tasks)
+
+asyncio.run(main())
+</code></pre>
+
+---
+
+<h2>💡 Summary</h2>
+<ul>
+  <li><b>Threading</b>: Lightweight, great for I/O-bound work.</li>
+  <li><b>Multiprocessing</b>: Heavy-duty, true CPU parallelism.</li>
+  <li><b>Asyncio</b>: Modern async code with simple syntax.</li>
+</ul>
+
+<p>
+  Har method apne use case ke hisaab se best hai — aur aap inhe combine bhi kar sakte ho large-scale apps me ⚙️
+</p>
+
+  </div>
+
+  <div class="sidebar">
+    <h3>Advanced Topics</h3>
+    <a href="oop-advanced.html">OOP & Design Patterns</a>
+    <a href="iterators-generators.html">Iterators & Generators</a>
+    <a href="decorators-context.html">Decorators & Context Managers</a>
+    <a href="concurrency.html">Concurrency & Async</a>
+    <a href="file-data.html">File & Data Handling</a>
+    <a href="networking.html">Networking & APIs</a>
+    <a href="testing.html">Testing</a>
+    <a href="performance.html">Performance</a>
+    <a href="packaging.html">Packaging</a>
+    <a href="security.html">Security</a>
+    <a href="projects.html">Projects</a>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn Python the Roman Hindi Way 🇮🇳</p>
+  </footer>
+</body>
+</html>

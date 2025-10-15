@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Networking & APIs in Python | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+</head>
+<body>
+  <header>
+    <h1>Networking & APIs in Python</h1>
+    <nav>
+      <a href="../../index.html">Home</a> |
+      <a href="../index.html">Python</a> |
+      <a href="../../ai/index.html">AI</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <h2>Introduction</h2>
+    <p>
+      Python me hum web ke sath interact karne ke liye APIs use karte hain.  
+      API ka matlab hota hai <b>Application Programming Interface</b> — ye ek tarika hai jisse do programs aapas me data exchange karte hain, usually <b>HTTP</b> protocol ke through.
+    </p>
+
+    <h3>1️⃣ <code>requests</code> Library</h3>
+    <p>
+      Python me web se data lene (GET) ya bhejne (POST) ke liye sabse famous library hai <code>requests</code>.  
+      Isse install karne ke liye likhiye:
+    </p>
+    <pre><code>pip install requests</code></pre>
+
+    <h3>Example: Simple GET Request</h3>
+    <pre><code>import requests
+
+response = requests.get("https://api.github.com")
+
+print(response.status_code)   # 200 ka matlab OK
+print(response.headers)
+print(response.text[:200])    # sirf pehle 200 characters print karega</code></pre>
+
+    <p>
+      Yahaan humne GitHub ke API ko ek GET request bheji hai.  
+      Agar status code <b>200</b> milta hai to iska matlab request sahi se gayi aur data aa gaya.
+    </p>
+
+    <h3>2️⃣ JSON Data ke sath kaam karna</h3>
+    <p>
+      Aaj kal zyada APIs data ko <b>JSON format</b> me bhejti hain.  
+      Python me hum JSON ko seedha dictionary me convert kar sakte hain:
+    </p>
+    <pre><code>import requests
+
+url = "https://api.github.com/users/octocat"
+response = requests.get(url)
+
+data = response.json()
+print(data["login"])
+print(data["public_repos"])
+print(data["followers"])</code></pre>
+
+    <p>
+      Yahaan <code>response.json()</code> response text ko Python dictionary me badal deta hai.  
+      Ab hum us data me se specific cheezen nikaal sakte hain jaise username, repos ya followers.
+    </p>
+
+    <h3>3️⃣ POST Request (Server ko data bhejna)</h3>
+    <p>
+      Jab hume server ko koi information bhejni hoti hai (form fill karna, record banana), to hum <b>POST request</b> use karte hain:
+    </p>
+    <pre><code>import requests
+
+url = "https://httpbin.org/post"
+data = {"name": "AIkiPadhai", "language": "Python"}
+
+response = requests.post(url, json=data)
+print(response.json())</code></pre>
+
+    <p>
+      Yahaan humne ek dictionary ko JSON format me bheja hai. Server ne hume wahi data wapas bhej diya.
+    </p>
+
+    <h3>4️⃣ Error Handling aur Timeouts</h3>
+    <p>
+      Internet connection kabhi kabhi slow ya down hota hai.  
+      Isliye hamesha apni request me <b>error handling</b> aur <b>timeout</b> lagana chahiye:
+    </p>
+    <pre><code>import requests
+
+try:
+    response = requests.get("https://example.com", timeout=5)
+    response.raise_for_status()
+except requests.exceptions.Timeout:
+    print("Request time out ho gaya!")
+except requests.exceptions.RequestException as e:
+    print("Error:", e)</code></pre>
+
+    <p>
+      <b>timeout=5</b> ka matlab hai request 5 seconds tak wait karegi.  
+      Agar us time me reply nahi aaya to program error dega, par hang nahi karega.
+    </p>
+
+    <h3>5️⃣ Mini Project: Live Weather Data Fetcher 🌦️</h3>
+    <p>
+      Ab ek chhoti si project banate hain jo kisi city ka live weather data fetch karega  
+      (Open-Meteo API se).
+    </p>
+    <pre><code>import requests
+
+city = "New Delhi"
+url = f"https://geocoding-api.open-meteo.com/v1/search?name={city}"
+geo_data = requests.get(url).json()
+lat = geo_data["results"][0]["latitude"]
+lon = geo_data["results"][0]["longitude"]
+
+weather_url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current_weather=true"
+weather_data = requests.get(weather_url).json()
+
+print(f"Current temperature in {city}: {weather_data['current_weather']['temperature']}°C")</code></pre>
+
+    <p>
+      Yahaan hum pehle ek API se <b>city ke coordinates</b> nikaal rahe hain,  
+      phir un coordinates se doosri API se <b>current temperature</b> fetch kar rahe hain.  
+      Ye ek simple aur practical example hai API chaining ka.
+    </p>
+
+    <h3>6️⃣ Bonus: Socket Programming ka Intro</h3>
+    <p>
+      Agar aapko low-level network programs banana pasand hai (jaise chat apps),  
+      to aap <code>socket</code> module ka use kar sakte ho.
+    </p>
+    <pre><code>import socket
+
+s = socket.socket()
+s.connect(("example.com", 80))
+print("Connected to example.com on port 80")</code></pre>
+
+    <p>
+      Ye code ek basic TCP connection banata hai server ke sath.  
+      Isko hum detail me Networking Projects section me aur dekhenge.
+    </p>
+
+    <hr />
+    <div class="navigation">
+    <a href="oop-advanced.html">OOP & Design Patterns</a>
+    <a href="iterators-generators.html">Iterators & Generators</a>
+    <a href="decorators-context.html">Decorators & Context Managers</a>
+    <a href="concurrency.html">Concurrency & Async</a>
+    <a href="file-data.html">File & Data Handling</a>
+    <a href="networking.html">Networking & APIs</a>
+    <a href="testing.html">Testing</a>
+    <a href="performance.html">Performance</a>
+    <a href="packaging.html">Packaging</a>
+    <a href="security.html">Security</a>
+    <a href="projects.html">Projects</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn Python & AI in Roman Hindi</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decorators & Context Managers | AIkiPadhai</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #fafafa; color: #333; }
+    header { background: #2c3e50; color: #fff; padding: 20px; text-align: center; }
+    nav { background: #f4f4f4; padding: 10px; text-align: center; }
+    nav a { margin: 0 15px; text-decoration: none; color: #2c3e50; font-weight: bold; }
+    nav a:hover { color: #0077cc; }
+    .content { max-width: 900px; margin: 20px auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    pre { background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 6px; overflow-x: auto; }
+    h2, h3 { color: #2c3e50; }
+    footer { text-align: center; margin: 30px 0; padding: 20px; background: #f4f4f4; }
+    .sidebar { position: fixed; right: 0; top: 100px; width: 220px; background: #f9f9f9; border-left: 1px solid #ddd; height: 80%; padding: 15px; overflow-y: auto; }
+    .sidebar a { display: block; margin: 8px 0; text-decoration: none; color: #0077cc; }
+    .sidebar a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Decorators & Context Managers</h1>
+    <p>Code ko smart aur reusable banane ke Python ke secret tools 🔥</p>
+  </header>
+
+  <nav>
+    <a href="/AIkiPadhai/index.html">Home</a>
+    <a href="/AIkiPadhai/python/beginner/index.html">Beginner</a>
+    <a href="/AIkiPadhai/python/intermediate/index.html">Intermediate</a>
+    <a href="/AIkiPadhai/python/advanced/index.html">Advanced</a>
+    <a href="/AIkiPadhai/ai/intro.html">AI</a>
+  </nav>
+
+  <div class="content">
+    <h2>1️⃣ Function Decorators</h2>
+    <p>
+      Python me decorator ek function hota hai jo kisi dusre function ke behavior ko modify karta hai bina uske code ko directly change kiye.
+      Ye <code>@</code> symbol ke saath use hota hai.
+    </p>
+
+<pre><code class="python">
+def greet_decorator(func):
+    def wrapper():
+        print("👋 Hello!")
+        func()
+        print("🎉 Goodbye!")
+    return wrapper
+
+@greet_decorator
+def say_name():
+    print("Mera naam AIkiPadhai hai!")
+
+say_name()
+</code></pre>
+
+<p>👉 Output:</p>
+<pre><code>
+👋 Hello!
+Mera naam AIkiPadhai hai!
+🎉 Goodbye!
+</code></pre>
+
+---
+
+<h2>2️⃣ Decorator with Arguments</h2>
+<p>
+  Kabhi kabhi function me arguments hote hain — decorator ko unhe handle karna hota hai using <code>*args</code> aur <code>**kwargs</code>.
+</p>
+
+<pre><code class="python">
+def log_decorator(func):
+    def wrapper(*args, **kwargs):
+        print(f"Function '{func.__name__}' called with {args} {kwargs}")
+        result = func(*args, **kwargs)
+        print(f"Result: {result}")
+        return result
+    return wrapper
+
+@log_decorator
+def add(a, b):
+    return a + b
+
+add(5, 10)
+</code></pre>
+
+---
+
+<h2>3️⃣ Chaining Multiple Decorators</h2>
+<p>
+  Multiple decorators ek function par lagaye ja sakte hain.  
+  Ye upar se neeche tak apply hote hain (top-down order me).
+</p>
+
+<pre><code class="python">
+def star(func):
+    def wrapper():
+        print("⭐" * 10)
+        func()
+        print("⭐" * 10)
+    return wrapper
+
+def smile(func):
+    def wrapper():
+        print("😊")
+        func()
+        print("😊")
+    return wrapper
+
+@star
+@smile
+def greet():
+    print("Namaste!")
+
+greet()
+</code></pre>
+
+---
+
+<h2>4️⃣ Class Decorators</h2>
+<p>
+  Class decorators tab use karte hain jab aap kisi class ke behavior ko modify karna chahte ho.
+</p>
+
+<pre><code class="python">
+def add_method(cls):
+    cls.greet = lambda self: print("Hello from", self.__class__.__name__)
+    return cls
+
+@add_method
+class Student:
+    pass
+
+s = Student()
+s.greet()
+</code></pre>
+
+---
+
+<h2>5️⃣ Context Managers (with Statement)</h2>
+<p>
+  Context managers resource management ke liye hote hain — jaise file handle, network connection, ya database.  
+  <code>with</code> statement ensure karta hai ki resource safely open aur close ho.
+</p>
+
+<pre><code class="python">
+with open("data.txt", "w") as f:
+    f.write("AIkiPadhai Rocks!")
+# file automatically closed yahan
+</code></pre>
+
+---
+
+<h2>6️⃣ Custom Context Manager</h2>
+<p>
+  Apna khud ka context manager banana easy hai using <code>__enter__()</code> aur <code>__exit__()</code>.
+</p>
+
+<pre><code class="python">
+class FileManager:
+    def __init__(self, filename, mode):
+        self.filename = filename
+        self.mode = mode
+
+    def __enter__(self):
+        print("Opening file...")
+        self.file = open(self.filename, self.mode)
+        return self.file
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        print("Closing file...")
+        self.file.close()
+
+with FileManager("sample.txt", "w") as f:
+    f.write("Hello from context manager!")
+</code></pre>
+
+---
+
+<h2>7️⃣ contextlib Module</h2>
+<p>
+  <code>contextlib</code> decorator ke saath ek function ko context manager bana sakte hain — short aur clean syntax me.
+</p>
+
+<pre><code class="python">
+from contextlib import contextmanager
+
+@contextmanager
+def simple_manager():
+    print("Enter...")
+    yield
+    print("Exit...")
+
+with simple_manager():
+    print("Working inside block...")
+</code></pre>
+
+<p>👉 Output:</p>
+<pre><code>
+Enter...
+Working inside block...
+Exit...
+</code></pre>
+
+---
+
+<h2>💡 Summary</h2>
+<ul>
+  <li>Decorators functions ke behavior ko enhance karte hain without touching original code.</li>
+  <li>Multiple decorators ko chain kar sakte ho.</li>
+  <li>Context managers resources ko safely handle karte hain.</li>
+  <li><code>contextlib</code> se short aur readable managers bana sakte ho.</li>
+</ul>
+
+  </div>
+
+  <div class="sidebar">
+    <h3>Advanced Topics</h3>
+    <a href="oop-advanced.html">OOP & Design Patterns</a>
+    <a href="iterators-generators.html">Iterators & Generators</a>
+    <a href="decorators-context.html">Decorators & Context Managers</a>
+    <a href="concurrency.html">Concurrency & Async</a>
+    <a href="file-data.html">File & Data Handling</a>
+    <a href="networking.html">Networking & APIs</a>
+    <a href="testing.html">Testing</a>
+    <a href="performance.html">Performance</a>
+    <a href="packaging.html">Packaging</a>
+    <a href="security.html">Security</a>
+    <a href="projects.html">Projects</a>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ in Roman Hindi</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Networking & APIs in Python | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    /* small local tweaks so page looks fine even without global stylesheet */
+    body{font-family:Arial, Helvetica, sans-serif; background:#fafafa; color:#333; margin:0;}
+    header{background:#2c3e50;color:#fff;padding:18px 16px;}
+    header h1{margin:0;font-size:20px;}
+    nav a{color:#dfe8ef;text-decoration:none;margin-right:10px;font-weight:600;}
+    main.content{max-width:900px;margin:20px auto;background:#fff;padding:22px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.06);}
+    pre{background:#f4f4f4;padding:12px;border-radius:6px;overflow-x:auto;}
+    .navigation, .advanced-nav{margin-top:20px; display:flex; flex-wrap:wrap; gap:8px;}
+    .advanced-nav a, .navigation a{background:#f1f6fb;padding:8px 10px;border-radius:6px;color:#0a66a3;text-decoration:none;}
+    .advanced-nav a:hover, .navigation a:hover{background:#e6f0fb;}
+    footer{margin:30px 0;text-align:center;padding:14px;background:#f4f4f4;}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Networking & APIs in Python</h1>
+    <nav>
+      <a href="../../index.html">Home</a>
+      <a href="../index.html">Python</a>
+      <a href="../../ai/index.html">AI</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <h2>Introduction</h2>
+    <p>
+      Python me hum web se data lene aur bhejne ke liye <strong>APIs</strong> use karte hain. API = <em>Application Programming Interface</em> — ek tarika jisse do programs aapas me data exchange karte hain, usually <strong>HTTP</strong> ke through.
+    </p>
+
+    <h3>1️⃣ <code>requests</code> Library</h3>
+    <p>
+      Web se GET/POST requests bhejne ke liye sabse popular library hai <code>requests</code>. Isko install karne ke liye:
+    </p>
+    <pre><code>pip install requests</code></pre>
+
+    <h3>Example: Simple GET Request</h3>
+    <pre><code>import requests
+
+response = requests.get("https://api.github.com")
+
+print(response.status_code)   # 200 ka matlab OK
+print(response.headers)
+print(response.text[:200])    # sirf pehle 200 characters</code></pre>
+
+    <p>
+      <strong>Roman Hindi:</strong> Yahaan humne GitHub ke API par GET request bheji. Agar <code>200</code> mile to request successful hai — phir hum response ka content aur headers dekh sakte hain.
+    </p>
+
+    <h3>2️⃣ JSON Data ke sath kaam karna</h3>
+    <p>
+      Aaj kal APIs aksar JSON return karti hain. <code>response.json()</code> se hum JSON ko Python dictionary me convert kar lete hain.
+    </p>
+    <pre><code>import requests
+
+url = "https://api.github.com/users/octocat"
+response = requests.get(url)
+
+data = response.json()
+print(data["login"])
+print(data["public_repos"])
+print(data["followers"])</code></pre>
+
+    <p>
+      <strong>Roman Hindi:</strong> <code>response.json()</code> response ko parse karke Python dict banata hai — jisse hum keys se values nikal sakte hain (jaise username, repos, followers).
+    </p>
+
+    <h3>3️⃣ POST Request (Server ko data bhejna)</h3>
+    <p>
+      Form submit karna ya koi naya record create karna ho to <code>POST</code> request bhejte hain.
+    </p>
+    <pre><code>import requests
+
+url = "https://httpbin.org/post"
+data = {"name": "AIkiPadhai", "language": "Python"}
+
+response = requests.post(url, json=data)
+print(response.json())</code></pre>
+
+    <p>
+      <strong>Roman Hindi:</strong> Yahaan humne server ko JSON data bheja aur server ne wohi data wapas kar diya (test endpoint use kiya hai).
+    </p>
+
+    <h3>4️⃣ Error Handling aur Timeouts</h3>
+    <p>
+      Network unreliable ho sakta hai — isliye <code>timeout</code> aur exception handling zaroori hai.
+    </p>
+    <pre><code>import requests
+
+try:
+    response = requests.get("https://example.com", timeout=5)
+    response.raise_for_status()
+except requests.exceptions.Timeout:
+    print("Request time out ho gaya!")
+except requests.exceptions.RequestException as e:
+    print("Error:", e)</code></pre>
+
+    <p>
+      <strong>Roman Hindi:</strong> <code>timeout=5</code> se request 5 seconds se zyada wait nahi karegi. <code>raise_for_status()</code> 4xx/5xx responses ko exception me convert kar deta hai.
+    </p>
+
+    <h3>5️⃣ Mini Project: Live Weather Data Fetcher 🌦️</h3>
+    <p>
+      Ek simple program jo city ka current temperature fetch karega (Open-Meteo API use karke).
+    </p>
+    <pre><code>import requests
+
+city = "New Delhi"
+url = f"https://geocoding-api.open-meteo.com/v1/search?name={city}"
+geo_resp = requests.get(url, timeout=5)
+geo_data = geo_resp.json()
+
+lat = geo_data["results"][0]["latitude"]
+lon = geo_data["results"][0]["longitude"]
+
+weather_url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current_weather=true"
+weather_data = requests.get(weather_url, timeout=5).json()
+
+print(f"Current temperature in {city}: {weather_data['current_weather']['temperature']}°C")</code></pre>
+
+    <p>
+      <strong>Roman Hindi:</strong> Pehle hum city ka latitude/longitude nikal rahe hain (geocoding API se), phir us coordinates ke basis par current weather API se temperature le rahe hain — ye technique API chaining kehlati hai.
+    </p>
+
+    <h3>6️⃣ Bonus: Socket Programming Intro</h3>
+    <p>
+      Agar aap low-level network programs banana chahte ho (jaise chat server), to <code>socket</code> module use karte hain.
+    </p>
+    <pre><code>import socket
+
+s = socket.socket()
+s.connect(("example.com", 80))
+print("Connected to example.com on port 80")</code></pre>
+
+    <p>
+      <strong>Roman Hindi:</strong> Ye code ek TCP connection establish karta hai server ke saath. Iske upar aap HTTP requests manually bhejne ya custom protocol banana seekh sakte ho.
+    </p>
+
+    <hr />
+
+    <!-- page-level prev/next navigation -->
+    <div class="navigation">
+      <a href="decorators-context.html">&lt; Previous: Decorators & Context Managers</a>
+      <a href="concurrency.html" style="margin-left:auto">Next: Concurrency & Async &gt;</a>
+    </div>
+
+    <!-- full advanced-section navigation (user requested block included) -->
+    <div class="advanced-nav" style="margin-top:18px;">
+      <a href="oop-advanced.html">OOP & Design Patterns</a>
+      <a href="iterators-generators.html">Iterators & Generators</a>
+      <a href="decorators-context.html">Decorators & Context Managers</a>
+      <a href="concurrency.html">Concurrency & Async</a>
+      <a href="file-data.html">File & Data Handling</a>
+      <a href="networking.html">Networking & APIs</a>
+      <a href="testing.html">Testing</a>
+      <a href="performance.html">Performance</a>
+      <a href="packaging.html">Packaging</a>
+      <a href="security.html">Security</a>
+      <a href="projects.html">Projects</a>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn Python & AI in Roman Hindi</p>
+  </footer>
+</body>
+</html>

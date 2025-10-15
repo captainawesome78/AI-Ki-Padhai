@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File & Data Handling | AIkiPadhai</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #fafafa; margin: 0; color: #333; }
+    header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
+    nav { background: #f4f4f4; padding: 10px; text-align: center; }
+    nav a { margin: 0 15px; text-decoration: none; color: #2c3e50; font-weight: bold; }
+    nav a:hover { color: #0077cc; }
+    .content { max-width: 900px; margin: 20px auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    pre { background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 6px; overflow-x: auto; }
+    h2, h3 { color: #2c3e50; }
+    footer { text-align: center; margin: 30px 0; padding: 20px; background: #f4f4f4; }
+    .sidebar { position: fixed; right: 0; top: 100px; width: 220px; background: #f9f9f9; border-left: 1px solid #ddd; height: 80%; padding: 15px; overflow-y: auto; }
+    .sidebar a { display: block; margin: 8px 0; text-decoration: none; color: #0077cc; }
+    .sidebar a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>File & Data Handling</h1>
+    <p>Python me data ke saath kaam karne ke advanced tareeke 📂</p>
+  </header>
+
+  <nav>
+    <a href="/AIkiPadhai/index.html">Home</a>
+    <a href="/AIkiPadhai/python/beginner/index.html">Beginner</a>
+    <a href="/AIkiPadhai/python/intermediate/index.html">Intermediate</a>
+    <a href="/AIkiPadhai/python/advanced/index.html">Advanced</a>
+    <a href="/AIkiPadhai/ai/intro.html">AI</a>
+  </nav>
+
+  <div class="content">
+    <h2>1️⃣ File I/O Recap</h2>
+    <p>
+      Humne beginner section me basic file read aur write dekha tha.  
+      Advanced level par hum zyada data formats aur efficient handling seekhenge.
+    </p>
+
+<pre><code class="python">
+# Simple text file write
+with open("notes.txt", "w") as f:
+    f.write("AIkiPadhai is awesome!")
+
+# Simple text file read
+with open("notes.txt", "r") as f:
+    content = f.read()
+    print(content)
+</code></pre>
+
+---
+
+<h2>2️⃣ CSV Files (Comma Separated Values)</h2>
+<p>
+  CSV files tab use hoti hain jab data tabular form me hota hai — jaise Excel ya Google Sheets.  
+  Python me inke liye built-in <code>csv</code> module milta hai.
+</p>
+
+<pre><code class="python">
+import csv
+
+# Writing CSV
+with open("students.csv", "w", newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(["Name", "Age"])
+    writer.writerow(["Rohan", 20])
+    writer.writerow(["Aisha", 22])
+
+# Reading CSV
+with open("students.csv", "r") as file:
+    reader = csv.reader(file)
+    for row in reader:
+        print(row)
+</code></pre>
+
+<p>👉 Output:</p>
+<pre><code>
+['Name', 'Age']
+['Rohan', '20']
+['Aisha', '22']
+</code></pre>
+
+---
+
+<h2>3️⃣ JSON Files (JavaScript Object Notation)</h2>
+<p>
+  JSON ek popular format hai web data ke liye.  
+  Python ke <code>json</code> module se aap easily JSON read aur write kar sakte ho.
+</p>
+
+<pre><code class="python">
+import json
+
+data = {
+    "name": "AIkiPadhai",
+    "topics": ["Python", "AI", "LLM"],
+    "active": True
+}
+
+# Write JSON
+with open("data.json", "w") as f:
+    json.dump(data, f, indent=4)
+
+# Read JSON
+with open("data.json", "r") as f:
+    info = json.load(f)
+    print(info["topics"])
+</code></pre>
+
+---
+
+<h2>4️⃣ Pickle — Python Object Serialization 🧠</h2>
+<p>
+  Pickle ka use hota hai Python objects (jaise list, dict, class objects) ko file me save karne ke liye.  
+  Baad me unhe directly load kar sakte ho bina recreate kiye.
+</p>
+
+<pre><code class="python">
+import pickle
+
+user = {"name": "Ravi", "score": 95}
+
+# Save object
+with open("user.pkl", "wb") as f:
+    pickle.dump(user, f)
+
+# Load object
+with open("user.pkl", "rb") as f:
+    loaded_user = pickle.load(f)
+
+print(loaded_user)
+</code></pre>
+
+<p>⚠️ Note: Pickle files Python-specific hote hain — dusre languages ke saath compatible nahi.</p>
+
+---
+
+<h2>5️⃣ Working with Binary Files</h2>
+<p>
+  Binary mode me hum non-text data handle karte hain jaise images, audio, ya custom binary data.
+</p>
+
+<pre><code class="python">
+with open("image.jpg", "rb") as img:
+    data = img.read(100)
+    print(data[:20])  # first 20 bytes
+</code></pre>
+
+---
+
+<h2>6️⃣ Using pathlib for Modern File Handling</h2>
+<p>
+  <code>pathlib</code> ek modern module hai jo file paths ke saath object-oriented way me kaam karta hai.
+</p>
+
+<pre><code class="python">
+from pathlib import Path
+
+# Path object banana
+p = Path("notes.txt")
+
+# File exists check karna
+if p.exists():
+    print("File present hai ✅")
+
+# Naya folder banana
+new_dir = Path("backup")
+new_dir.mkdir(exist_ok=True)
+</code></pre>
+
+---
+
+<h2>7️⃣ Real-life Example: Merge CSV Data</h2>
+<p>
+  Maan lo aapke paas multiple CSV files hain aur aap unhe ek combined file me merge karna chahte ho.
+</p>
+
+<pre><code class="python">
+import csv
+from pathlib import Path
+
+folder = Path("data")
+output_file = Path("merged.csv")
+
+with open(output_file, "w", newline="") as out:
+    writer = csv.writer(out)
+    writer.writerow(["Name", "Age"])
+
+    for file in folder.glob("*.csv"):
+        with open(file, "r") as f:
+            reader = csv.reader(f)
+            next(reader)  # skip header
+            for row in reader:
+                writer.writerow(row)
+
+print("All CSV files merged ✅")
+</code></pre>
+
+---
+
+<h2>💡 Summary</h2>
+<ul>
+  <li><b>CSV</b> – tabular data</li>
+  <li><b>JSON</b> – structured web data</li>
+  <li><b>Pickle</b> – Python object storage</li>
+  <li><b>pathlib</b> – modern file handling</li>
+</ul>
+
+<p>
+  Ye sab data handling tools aapko real-world automation aur AI projects ke liye ready karte hain 🚀
+</p>
+
+  </div>
+
+  <div class="sidebar">
+    <h3>Advanced Topics</h3>
+    <a href="oop-advanced.html">OOP & Design Patterns</a>
+    <a href="iterators-generators.html">Iterators & Generators</a>
+    <a href="decorators-context.html">Decorators & Context Managers</a>
+    <a href="concurrency.html">Concurrency & Async</a>
+    <a href="file-data.html">File & Data Handling</a>
+    <a href="networking.html">Networking & APIs</a>
+    <a href="testing.html">Testing</a>
+    <a href="performance.html">Performance</a>
+    <a href="packaging.html">Packaging</a>
+    <a href="security.html">Security</a>
+    <a href="projects.html">Projects</a>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn Python the Roman Hindi Way 🇮🇳</p>
+  </footer>
+</body>
+</html>
