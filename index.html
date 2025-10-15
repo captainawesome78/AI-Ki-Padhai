@@ -3,72 +3,166 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Python Tutorials - AIkiPadhai</title>
+  <title>AIkiPadhai - Learn Python & AI in Roman Hindi</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 0; line-height: 1.6; background: #fafafa; color: #333; }
-    header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
-    nav { background: #f4f4f4; padding: 10px; text-align: center; }
-    nav a { margin: 0 15px; text-decoration: none; color: #2c3e50; font-weight: bold; }
-    nav a:hover { color: #0077cc; }
-    .container { max-width: 900px; margin: 20px auto; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-    h1, h2 { color: #2c3e50; }
-    ul { list-style-type: none; padding: 0; }
-    ul li { margin: 8px 0; }
-    ul li a { text-decoration: none; color: #0077cc; font-weight: bold; }
-    ul li a:hover { text-decoration: underline; }
-    footer { text-align: center; margin: 30px 0; padding: 20px; background: #f4f4f4; }
-    .level { margin-bottom: 30px; }
+    :root {
+      --primary: #0077cc;
+      --dark: #1e293b;
+      --light: #f8fafc;
+      --accent: #38bdf8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Roboto, sans-serif; background: var(--light); color: var(--dark); line-height: 1.6; }
+
+    header {
+      background: linear-gradient(135deg, #0077cc, #38bdf8);
+      color: white;
+      text-align: center;
+      padding: 60px 20px;
+    }
+    header h1 { font-size: 2.8rem; margin-bottom: 10px; letter-spacing: 0.5px; }
+    header p { font-size: 1.1rem; opacity: 0.95; }
+
+    nav {
+      background: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      padding: 14px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    nav a {
+      color: var(--dark);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+    nav a:hover { color: var(--primary); }
+
+    .container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .intro {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .intro h2 {
+      font-size: 1.8rem;
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+    .intro p {
+      color: #475569;
+      font-size: 1rem;
+    }
+
+    .levels {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+    }
+
+    .card h3 {
+      color: var(--primary);
+      margin-bottom: 12px;
+      font-size: 1.3rem;
+    }
+    .card ul { list-style: none; margin-top: 8px; }
+    .card ul li { margin: 8px 0; }
+    .card ul li a {
+      color: var(--dark);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    .card ul li a:hover {
+      color: var(--primary);
+      text-decoration: underline;
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px;
+      background: var(--dark);
+      color: white;
+      margin-top: 50px;
+    }
+    footer p { font-size: 0.95rem; }
   </style>
 </head>
 <body>
   <header>
-    <h1>Python Tutorials 🐍</h1>
-    <p>Python Programming ko step by step seekho – Beginner se Expert tak, Roman Hindi mein</p>
+    <h1>AIkiPadhai 🧠</h1>
+    <p>Python aur AI ko seekho step by step — Roman Hindi mein, easy examples ke sath 🚀</p>
   </header>
 
   <nav>
     <a href="/AIkiPadhai/index.html">Home</a>
     <a href="/AIkiPadhai/python/index.html">Python</a>
-    <a href="/AIkiPadhai/ai/intro.html">AI</a>
+    <a href="/AIkiPadhai/ai/index.html">AI</a>
     <a href="/AIkiPadhai/about.html">About</a>
   </nav>
 
-
   <div class="container">
-    <h2>Learning Path</h2>
-    <p>Python ko humne 3 levels mein divide kiya hai: <strong>Beginner</strong>, <strong>Intermediate</strong>, aur <strong>Expert</strong>. Aap apne level ke hisaab se start kar sakte ho.</p>
-
-    <div class="level">
-      <h2>👶 Beginner</h2>
-      <ul>
-        <li><a href="/AIkiPadhai/python/beginner/intro.html">Python Introduction</a></li>
-        <li><a href="/AIkiPadhai/python/beginner/variables.html">Variables</a></li>
-        <li><a href="/AIkiPadhai/python/beginner/loops.html">Loops</a></li>
-        <li><a href="/AIkiPadhai/python/beginner/functions.html">Functions</a></li>
-      </ul>
+    <div class="intro">
+      <h2>🧭 Learning Path</h2>
+      <p>Python ko humne 3 levels mein divide kiya hai — Beginner, Intermediate, aur Advanced.  
+         Apne comfort level ke hisaab se start karo aur step-by-step expert bano.</p>
     </div>
 
-    <div class="level">
-      <h2>🧑 Intermediate</h2>
-      <ul>
-        <li><a href="/AIkiPadhai/python/intermediate/oop.html">Object-Oriented Programming</a></li>
-        <li><a href="/AIkiPadhai/python/intermediate/file-handling.html">File Handling</a></li>
-        <li><a href="/AIkiPadhai/python/intermediate/modules.html">Modules aur Libraries</a></li>
-      </ul>
-    </div>
+    <div class="levels">
+      <div class="card">
+        <h3>👶 Beginner</h3>
+        <ul>
+          <li><a href="/AIkiPadhai/python/beginner/intro.html">Python Introduction</a></li>
+          <li><a href="/AIkiPadhai/python/beginner/variables.html">Variables & Data Types</a></li>
+          <li><a href="/AIkiPadhai/python/beginner/loops.html">Loops & Conditionals</a></li>
+          <li><a href="/AIkiPadhai/python/beginner/functions.html">Functions</a></li>
+        </ul>
+      </div>
 
-    <div class="level">
-      <h2>👨‍💻 Expert</h2>
-      <ul>
-        <li><a href="/AIkiPadhai/python/expert/decorators.html">Decorators</a></li>
-        <li><a href="/AIkiPadhai/python/expert/generators.html">Generators</a></li>
-        <li><a href="/AIkiPadhai/python/expert/multithreading.html">Multithreading</a></li>
-      </ul>
+      <div class="card">
+        <h3>🧑 Intermediate</h3>
+        <ul>
+          <li><a href="/AIkiPadhai/python/intermediate/oop.html">Object-Oriented Programming</a></li>
+          <li><a href="/AIkiPadhai/python/intermediate/file-handling.html">File Handling</a></li>
+          <li><a href="/AIkiPadhai/python/intermediate/modules.html">Modules aur Libraries</a></li>
+          <li><a href="/AIkiPadhai/python/intermediate/error-handling.html">Error Handling</a></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>👨‍💻 Advanced</h3>
+        <ul>
+          <li><a href="/AIkiPadhai/python/advanced/decorators.html">Decorators & Context Managers</a></li>
+          <li><a href="/AIkiPadhai/python/advanced/networking.html">Networking & APIs</a></li>
+          <li><a href="/AIkiPadhai/python/advanced/testing.html">Testing & Debugging</a></li>
+          <li><a href="/AIkiPadhai/python/advanced/projects.html">Final Projects</a></li>
+        </ul>
+      </div>
     </div>
   </div>
 
   <footer>
-    <p>© 2025 AIkiPadhai | Made with ❤️ in Roman Hindi</p>
+    <p>© 2025 AIkiPadhai | Made with ❤️ to teach Python & AI in Roman Hindi</p>
   </footer>
 </body>
 </html>
