@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Security & Safe Coding Practices in Python | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body{font-family:Arial, Helvetica, sans-serif;background:#fafafa;color:#333;margin:0;}
+    header{background:#2c3e50;color:#fff;padding:18px 16px;}
+    header h1{margin:0;font-size:20px;}
+    nav a{color:#dfe8ef;text-decoration:none;margin-right:10px;font-weight:600;}
+    main.content{max-width:900px;margin:20px auto;background:#fff;padding:22px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.06);}
+    pre{background:#f4f4f4;padding:12px;border-radius:6px;overflow-x:auto;}
+    .navigation, .advanced-nav{margin-top:20px; display:flex; flex-wrap:wrap; gap:8px;}
+    .advanced-nav a, .navigation a{background:#f1f6fb;padding:8px 10px;border-radius:6px;color:#0a66a3;text-decoration:none;}
+    .advanced-nav a:hover, .navigation a:hover{background:#e6f0fb;}
+    footer{margin:30px 0;text-align:center;padding:14px;background:#f4f4f4;}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Security & Safe Coding Practices in Python</h1>
+    <nav>
+      <a href="../../index.html">Home</a>
+      <a href="../index.html">Python</a>
+      <a href="../../ai/index.html">AI</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <h2>Introduction</h2>
+    <p>
+      Security ek bahut important topic hai jab hum production-level Python apps likhte hain.  
+      Chahe wo web app ho, API ho ya CLI tool — galat code likhne se sensitive data leak ho sakta hai ya hackers system me ghus sakte hain.  
+      Yahaan hum seekhenge kuch best practices jo aapke code ko safe aur reliable banayenge.
+    </p>
+
+    <h3>1️⃣ Input Validation</h3>
+    <p>
+      Kabhi bhi user se directly input lene par blindly trust mat karo.  
+      Pehle check karo ki input valid hai ya nahi — warna injection attacks ho sakte hain.
+    </p>
+
+    <pre><code># Unsafe example
+username = input("Enter username: ")
+print("Welcome " + username)
+
+# Safe example
+import re
+username = input("Enter username: ")
+if re.match("^[A-Za-z0-9_]+$", username):
+    print("Welcome", username)
+else:
+    print("Invalid username!")</code></pre>
+
+    <p>
+      Hamne regular expression se ensure kiya ki input me sirf alphanumeric characters ho.  
+      Isse code injection ka risk kam hota hai.
+    </p>
+
+    <h3>2️⃣ Avoid Using <code>eval()</code> and <code>exec()</code></h3>
+    <p>
+      <code>eval()</code> aur <code>exec()</code> user input execute karte hain — ye bahut dangerous ho sakta hai agar input trusted nahi hai.
+    </p>
+    <pre><code># Extremely unsafe
+user_input = input("Enter code: ")
+eval(user_input)  # can run anything!</code></pre>
+
+    <p>
+      Aise code me koi bhi harmful command run ho sakti hai, jaise files delete karna ya system access karna.  
+      Hamesha alternatives use karo — jaise predefined commands aur if-else logic.
+    </p>
+
+    <h3>3️⃣ Secure Password Handling</h3>
+    <p>
+      Kabhi bhi passwords plain text me store mat karo.  
+      Hamesha hashing use karo taaki even agar database leak ho jaye to passwords secure rahein.
+    </p>
+
+    <pre><code>import hashlib
+
+password = "mysecret123"
+hashed = hashlib.sha256(password.encode()).hexdigest()
+print("Hashed password:", hashed)</code></pre>
+
+    <p>
+      Hashing irreversible hoti hai — original password recover nahi hota.  
+      Production me aur secure hashing ke liye <code>bcrypt</code> ya <code>argon2</code> library use karo.
+    </p>
+
+    <h3>4️⃣ Environment Variables for Secrets</h3>
+    <p>
+      API keys, database passwords, aur secret tokens kabhi bhi code ke andar hardcode mat karo.  
+      Iske liye <code>dotenv</code> ya <code>os.environ</code> ka use karo.
+    </p>
+
+    <pre><code># .env file
+API_KEY=abcd1234xyz
+
+# main.py
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+api_key = os.getenv("API_KEY")
+print(api_key)</code></pre>
+
+    <p>
+      Ye method secrets ko code ke bahar rakhta hai, jo security ke liye best practice hai.
+    </p>
+
+    <h3>5️⃣ File Handling Safely</h3>
+    <p>
+      File open karte waqt user input se file path directly mat lo — warna directory traversal attacks possible hain.
+    </p>
+
+    <pre><code>import os
+
+filename = input("Enter file name: ")
+safe_dir = "/safe_folder/"
+filepath = os.path.join(safe_dir, os.path.basename(filename))
+
+with open(filepath, "r") as f:
+    print(f.read())</code></pre>
+
+    <p>
+      <code>os.path.basename()</code> ensure karta hai ki sirf file name use ho, path traversal nahi.
+    </p>
+
+    <h3>6️⃣ Use HTTPS for Network Requests</h3>
+    <p>
+      Jab bhi APIs ya web requests use karo, ensure karo ki URL <code>https://</code> se start ho.  
+      <code>http://</code> se data plain text me transmit hota hai jo intercept ho sakta hai.
+    </p>
+
+    <pre><code>import requests
+
+response = requests.get("https://api.github.com")
+print(response.status_code)</code></pre>
+
+    <p>
+      HTTPS data ko encrypt karta hai, isliye secure communication ke liye mandatory hai.
+    </p>
+
+    <h3>7️⃣ Keep Dependencies Updated</h3>
+    <p>
+      Outdated libraries me known vulnerabilities hoti hain.  
+      Isliye regularly update karte raho:
+    </p>
+
+    <pre><code>pip list --outdated
+pip install --upgrade package_name</code></pre>
+
+    <p>
+      Aap <code>pip-audit</code> ya <code>safety</code> tools bhi use kar sakte ho dependency security check ke liye.
+    </p>
+
+    <h3>8️⃣ Principle of Least Privilege</h3>
+    <p>
+      Apne application ko sirf utni permissions do jitni zarurat ho.  
+      For example, agar app ko sirf read access chahiye, to write/delete permission mat do.
+    </p>
+
+    <p>
+      Ye principle aapke system ke damage ko limit karta hai agar kabhi koi vulnerability exploit hoti hai.
+    </p>
+
+    <hr />
+    <div class="navigation">
+      <a href="packaging.html">&lt; Previous: Packaging & Deployment</a>
+      <a href="projects.html" style="margin-left:auto">Next: Projects &gt;</a>
+    </div>
+
+    <div class="advanced-nav" style="margin-top:18px;">
+      <a href="oop-advanced.html">OOP & Design Patterns</a>
+      <a href="iterators-generators.html">Iterators & Generators</a>
+      <a href="decorators-context.html">Decorators & Context Managers</a>
+      <a href="concurrency.html">Concurrency & Async</a>
+      <a href="file-data.html">File & Data Handling</a>
+      <a href="networking.html">Networking & APIs</a>
+      <a href="testing.html">Testing</a>
+      <a href="performance.html">Performance</a>
+      <a href="packaging.html">Packaging</a>
+      <a href="security.html">Security</a>
+      <a href="projects.html">Projects</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn Python & AI in Roman Hindi</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Performance Optimization in Python | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body{font-family:Arial, Helvetica, sans-serif;background:#fafafa;color:#333;margin:0;}
+    header{background:#2c3e50;color:#fff;padding:18px 16px;}
+    header h1{margin:0;font-size:20px;}
+    nav a{color:#dfe8ef;text-decoration:none;margin-right:10px;font-weight:600;}
+    main.content{max-width:900px;margin:20px auto;background:#fff;padding:22px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.06);}
+    pre{background:#f4f4f4;padding:12px;border-radius:6px;overflow-x:auto;}
+    .navigation, .advanced-nav{margin-top:20px; display:flex; flex-wrap:wrap; gap:8px;}
+    .advanced-nav a, .navigation a{background:#f1f6fb;padding:8px 10px;border-radius:6px;color:#0a66a3;text-decoration:none;}
+    .advanced-nav a:hover, .navigation a:hover{background:#e6f0fb;}
+    footer{margin:30px 0;text-align:center;padding:14px;background:#f4f4f4;}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Performance Optimization in Python</h1>
+    <nav>
+      <a href="../../index.html">Home</a>
+      <a href="../index.html">Python</a>
+      <a href="../../ai/index.html">AI</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <h2>Introduction</h2>
+    <p>
+      Python easy aur readable language hai, lekin kabhi-kabhi ye slow lag sakti hai — especially jab hum large data ya heavy computation ke sath kaam karte hain.  
+      Yahaan hum seekhenge kaise apna Python code fast aur efficient banayein.
+    </p>
+
+    <h3>1️⃣ Code Optimization Basics</h3>
+    <p>
+      Sabse pehle apne code ka logic aur structure optimize karo.  
+      Unnecessary loops aur repeated calculations avoid karo.
+    </p>
+
+    <pre><code># Slow way
+squares = []
+for i in range(1000000):
+    squares.append(i * i)
+
+# Fast way (using list comprehension)
+squares = [i * i for i in range(1000000)]</code></pre>
+
+    <p>
+      List comprehension internal C-level optimization use karta hai, isliye wo normal loop se fast hota hai.
+    </p>
+
+    <h3>2️⃣ Built-in Functions aur Libraries ka use karo</h3>
+    <p>
+      Python ke built-in functions jaise <code>sum()</code>, <code>max()</code>, aur <code>min()</code> C me optimized hote hain, isliye inhe manually loop likhne se better use karna chahiye.
+    </p>
+
+    <pre><code>nums = [1, 2, 3, 4, 5]
+
+# Slow
+total = 0
+for n in nums:
+    total += n
+
+# Fast
+total = sum(nums)</code></pre>
+
+    <h3>3️⃣ Generators Use Karo Instead of Lists</h3>
+    <p>
+      Agar saara data ek sath memory me load karne ki zarurat nahi hai, to generators use karo.
+    </p>
+
+    <pre><code># List comprehension
+nums = [i * i for i in range(1000000)]
+
+# Generator expression
+nums = (i * i for i in range(1000000))</code></pre>
+
+    <p>
+      Generator ek time me ek value produce karta hai — memory bachaata hai aur bade datasets ke liye perfect hai.
+    </p>
+
+    <h3>4️⃣ Performance Measure karna (Profiling)</h3>
+    <p>
+      Performance improve karne se pehle ye jaan lo ki code me bottleneck kahan hai.  
+      Iske liye <code>timeit</code> aur <code>cProfile</code> use hota hai.
+    </p>
+
+    <pre><code>import timeit
+
+print(timeit.timeit("[i*i for i in range(1000)]", number=1000))
+print(timeit.timeit("map(lambda x:x*x, range(1000))", number=1000))</code></pre>
+
+    <p>
+      <code>timeit</code> ek code snippet ko multiple baar run karke average time nikalta hai.  
+      <code>cProfile</code> function-wise performance report deta hai.
+    </p>
+
+    <h3>5️⃣ NumPy ka Use</h3>
+    <p>
+      Numerical computations ke liye NumPy sabse fast library hai, kyunki ye C me likhi gayi hai.
+    </p>
+
+    <pre><code>import numpy as np
+
+arr = np.arange(1000000)
+squares = arr * arr</code></pre>
+
+    <p>
+      NumPy vectorized operations karta hai jisse loop likhne ki zarurat nahi padti, aur speed kai guna badh jaati hai.
+    </p>
+
+    <h3>6️⃣ Caching with <code>functools.lru_cache</code></h3>
+    <p>
+      Agar koi function baar-baar same argument ke sath call hota hai, to result ko cache me store karna best practice hai.
+    </p>
+
+    <pre><code>from functools import lru_cache
+
+@lru_cache(maxsize=None)
+def fibonacci(n):
+    if n &lt;= 1:
+        return n
+    return fibonacci(n-1) + fibonacci(n-2)
+
+print(fibonacci(35))</code></pre>
+
+    <p>
+      Caching se repeated calculation avoid hoti hai aur recursive code kaafi fast ban jaata hai.
+    </p>
+
+    <h3>7️⃣ Multiprocessing and Parallelism</h3>
+    <p>
+      Multi-core CPU me tasks ko parallel run karne ke liye <code>multiprocessing</code> use karte hain.
+    </p>
+    <pre><code>from multiprocessing import Pool
+
+def square(n):
+    return n * n
+
+if __name__ == "__main__":
+    with Pool() as p:
+        results = p.map(square, range(10))
+        print(results)</code></pre>
+
+    <p>
+      Pool multiple processes banata hai jisse kaam divide hota hai aur overall speed badhti hai.
+    </p>
+
+    <h3>8️⃣ Memory Optimization Tips</h3>
+    <ul>
+      <li>Generators use karo list ke jagah.</li>
+      <li>Classes me <code>__slots__</code> use karo jab bohot saare objects bante hain.</li>
+      <li>Unused variables delete karo using <code>del</code>.</li>
+      <li><code>sys.getsizeof()</code> se memory usage check karo.</li>
+    </ul>
+
+    <pre><code>import sys
+x = [i for i in range(1000)]
+print(sys.getsizeof(x))</code></pre>
+
+    <p>
+      Ye method dikhata hai ki koi object memory me kitni jagah le raha hai — optimization ke liye useful hai.
+    </p>
+
+    <hr />
+    <div class="navigation">
+      <a href="testing.html">&lt; Previous: Testing & Debugging</a>
+      <a href="packaging.html" style="margin-left:auto">Next: Packaging & Deployment &gt;</a>
+    </div>
+
+    <div class="advanced-nav" style="margin-top:18px;">
+      <a href="oop-advanced.html">OOP & Design Patterns</a>
+      <a href="iterators-generators.html">Iterators & Generators</a>
+      <a href="decorators-context.html">Decorators & Context Managers</a>
+      <a href="concurrency.html">Concurrency & Async</a>
+      <a href="file-data.html">File & Data Handling</a>
+      <a href="networking.html">Networking & APIs</a>
+      <a href="testing.html">Testing</a>
+      <a href="performance.html">Performance</a>
+      <a href="packaging.html">Packaging</a>
+      <a href="security.html">Security</a>
+      <a href="projects.html">Projects</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn Python & AI in Roman Hindi</p>
+  </footer>
+</body>
+</html>

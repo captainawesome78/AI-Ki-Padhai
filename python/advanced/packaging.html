@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Packaging & Deployment in Python | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body{font-family:Arial, Helvetica, sans-serif;background:#fafafa;color:#333;margin:0;}
+    header{background:#2c3e50;color:#fff;padding:18px 16px;}
+    header h1{margin:0;font-size:20px;}
+    nav a{color:#dfe8ef;text-decoration:none;margin-right:10px;font-weight:600;}
+    main.content{max-width:900px;margin:20px auto;background:#fff;padding:22px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.06);}
+    pre{background:#f4f4f4;padding:12px;border-radius:6px;overflow-x:auto;}
+    .navigation, .advanced-nav{margin-top:20px; display:flex; flex-wrap:wrap; gap:8px;}
+    .advanced-nav a, .navigation a{background:#f1f6fb;padding:8px 10px;border-radius:6px;color:#0a66a3;text-decoration:none;}
+    .advanced-nav a:hover, .navigation a:hover{background:#e6f0fb;}
+    footer{margin:30px 0;text-align:center;padding:14px;background:#f4f4f4;}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Packaging & Deployment in Python</h1>
+    <nav>
+      <a href="../../index.html">Home</a>
+      <a href="../index.html">Python</a>
+      <a href="../../ai/index.html">AI</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <h2>Introduction</h2>
+    <p>
+      Jab hum apna Python project complete kar lete hain, to next step hota hai use distribute ya deploy karna.  
+      Packaging ka matlab hota hai apne code ko ek structured format me banana jisse koi aur easily install aur use kar sake.  
+      Deployment ka matlab hai apne code ko real-world me run karna — jaise kisi server, PyPI, ya app ke form me.
+    </p>
+
+    <h3>1️⃣ Project Structure</h3>
+    <p>
+      Ek professional Python package ka structure kuch aisa hota hai:
+    </p>
+    <pre><code>my_project/
+│
+├── my_module/
+│   ├── __init__.py
+│   ├── main.py
+│   └── utils.py
+│
+├── setup.py
+├── README.md
+├── requirements.txt
+└── LICENSE</code></pre>
+
+    <p>
+      <code>__init__.py</code> file package ke andar honi chahiye — ye batata hai ki ye directory ek Python module hai.  
+      <code>setup.py</code> file me installation aur package information hoti hai.
+    </p>
+
+    <h3>2️⃣ setup.py File</h3>
+    <p>
+      Ye file Python ke packaging system ko batata hai ki project kaunse modules include kare aur unhe kaise install kare.
+    </p>
+
+    <pre><code>from setuptools import setup, find_packages
+
+setup(
+    name='my_project',
+    version='1.0.0',
+    author='Aapka Naam',
+    author_email='you@example.com',
+    description='Ek simple Python package example',
+    packages=find_packages(),
+    install_requires=['requests'],
+)</code></pre>
+
+    <p>
+      <code>find_packages()</code> automatically sab modules detect karta hai, aur <code>install_requires</code> me dependencies likhte hain.
+    </p>
+
+    <h3>3️⃣ requirements.txt</h3>
+    <p>
+      Ye file me sab libraries list hoti hain jo aapka project use karta hai.
+    </p>
+
+    <pre><code>requests==2.31.0
+numpy==1.26.0
+pandas==2.2.1</code></pre>
+
+    <p>
+      Install karne ke liye user likhta hai:
+    </p>
+    <pre><code>pip install -r requirements.txt</code></pre>
+
+    <h3>4️⃣ Package Banana (Build Karna)</h3>
+    <p>
+      Apna package build karne ke liye pehle dependencies install karo:
+    </p>
+    <pre><code>pip install setuptools wheel</code></pre>
+
+    <p>
+      Phir command run karo:
+    </p>
+    <pre><code>python setup.py sdist bdist_wheel</code></pre>
+
+    <p>
+      Ye command `.tar.gz` aur `.whl` files banayegi jo aap distribute kar sakte ho.
+    </p>
+
+    <h3>5️⃣ Local Installation</h3>
+    <p>
+      Apna package test karne ke liye local system me install karo:
+    </p>
+    <pre><code>pip install .</code></pre>
+
+    <p>
+      Ye command current directory ka package system me install kar degi.
+    </p>
+
+    <h3>6️⃣ PyPI me Upload Karna</h3>
+    <p>
+      Agar aap chahte ho ki koi bhi aapka package pip se install kar sake, to use PyPI pe upload karo.
+    </p>
+    <pre><code>pip install twine
+twine upload dist/*</code></pre>
+
+    <p>
+      Ye command aapke package ko PyPI pe upload karti hai.  
+      Uske baad koi bhi likh sakta hai: <code>pip install my_project</code>.
+    </p>
+
+    <h3>7️⃣ Python App Deploy Karna</h3>
+    <p>
+      Python apps ko deploy karne ke liye alag-alag platforms use hote hain:
+    </p>
+    <ul>
+      <li><b>Flask/Django Apps:</b> Render, Railway, AWS, Heroku.</li>
+      <li><b>FastAPI:</b> Host on Vercel ya DigitalOcean.</li>
+      <li><b>CLI Tools:</b> PyPI ke through installable.</li>
+    </ul>
+
+    <pre><code># Example: Simple Flask App
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Hello from AIkiPadhai!"
+
+if __name__ == '__main__':
+    app.run()</code></pre>
+
+    <p>
+      Flask app ko production me run karne ke liye <code>gunicorn</code> aur <code>nginx</code> use karte hain.
+    </p>
+
+    <h3>8️⃣ Versioning & Best Practices</h3>
+    <ul>
+      <li>Semantic Versioning follow karo — <code>major.minor.patch</code> (e.g., 1.0.0).</li>
+      <li>Always add <code>README.md</code> aur <code>LICENSE</code> file.</li>
+      <li>GitHub repo maintain karo aur version control rakho.</li>
+      <li>Automate build aur testing via GitHub Actions.</li>
+    </ul>
+
+    <hr />
+    <div class="navigation">
+      <a href="performance.html">&lt; Previous: Performance Optimization</a>
+      <a href="security.html" style="margin-left:auto">Next: Security Best Practices &gt;</a>
+    </div>
+
+    <div class="advanced-nav" style="margin-top:18px;">
+      <a href="oop-advanced.html">OOP & Design Patterns</a>
+      <a href="iterators-generators.html">Iterators & Generators</a>
+      <a href="decorators-context.html">Decorators & Context Managers</a>
+      <a href="concurrency.html">Concurrency & Async</a>
+      <a href="file-data.html">File & Data Handling</a>
+      <a href="networking.html">Networking & APIs</a>
+      <a href="testing.html">Testing</a>
+      <a href="performance.html">Performance</a>
+      <a href="packaging.html">Packaging</a>
+      <a href="security.html">Security</a>
+      <a href="projects.html">Projects</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn Python & AI in Roman Hindi</p>
+  </footer>
+</body>
+</html>

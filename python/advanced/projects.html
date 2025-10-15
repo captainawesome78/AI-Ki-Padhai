@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Advanced Projects | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body{font-family:Arial, Helvetica, sans-serif;background:#fafafa;color:#333;margin:0;}
+    header{background:#2c3e50;color:#fff;padding:18px 16px;}
+    header h1{margin:0;font-size:20px;}
+    nav a{color:#dfe8ef;text-decoration:none;margin-right:10px;font-weight:600;}
+    main.content{max-width:900px;margin:20px auto;background:#fff;padding:22px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.06);}
+    pre{background:#f4f4f4;padding:12px;border-radius:6px;overflow-x:auto;}
+    .navigation, .advanced-nav{margin-top:20px; display:flex; flex-wrap:wrap; gap:8px;}
+    .advanced-nav a, .navigation a{background:#f1f6fb;padding:8px 10px;border-radius:6px;color:#0a66a3;text-decoration:none;}
+    .advanced-nav a:hover, .navigation a:hover{background:#e6f0fb;}
+    footer{margin:30px 0;text-align:center;padding:14px;background:#f4f4f4;}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Python Advanced Projects</h1>
+    <nav>
+      <a href="../../index.html">Home</a>
+      <a href="../index.html">Python</a>
+      <a href="../../ai/index.html">AI</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <h2>Introduction</h2>
+    <p>
+      Aapne ab tak Python ke beginner, intermediate, aur advanced concepts seekh liye hain — ab time hai unhe real projects me use karne ka.  
+      Ye chhote projects aapke logical thinking, problem solving aur code organization skills ko test karenge.
+    </p>
+
+    <h3>1️⃣ Project: Weather App (API Based)</h3>
+    <p>
+      Ye project real-world API se data fetch karke display karta hai.  
+      Hum <b>Open-Meteo API</b> ka use karenge weather information lene ke liye.
+    </p>
+
+    <pre><code>import requests
+
+city = input("Enter city name: ")
+geo_url = f"https://geocoding-api.open-meteo.com/v1/search?name={city}"
+geo_data = requests.get(geo_url).json()
+
+lat = geo_data["results"][0]["latitude"]
+lon = geo_data["results"][0]["longitude"]
+
+weather_url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current_weather=true"
+weather_data = requests.get(weather_url).json()
+
+temp = weather_data["current_weather"]["temperature"]
+windspeed = weather_data["current_weather"]["windspeed"]
+
+print(f"🌤️ {city} me abhi {temp}°C temperature aur {windspeed} km/h wind speed hai.")</code></pre>
+
+    <p>
+      Concepts used: <b>APIs, JSON, requests library, error handling</b>.
+    </p>
+
+    <h3>2️⃣ Project: Web Scraper for Quotes</h3>
+    <p>
+      Ye program ek website se quotes extract karta hai using <code>requests</code> aur <code>BeautifulSoup</code>.
+    </p>
+
+    <pre><code>import requests
+from bs4 import BeautifulSoup
+
+url = "https://quotes.toscrape.com/"
+response = requests.get(url)
+soup = BeautifulSoup(response.text, "html.parser")
+
+quotes = soup.find_all("span", class_="text")
+authors = soup.find_all("small", class_="author")
+
+for q, a in zip(quotes, authors):
+    print(f'"{q.text}" - {a.text}')</code></pre>
+
+    <p>
+      Concepts used: <b>HTML parsing, loops, data extraction</b>.  
+      Isse aap kisi bhi website se useful data nikal sakte ho (agar scraping allowed ho).
+    </p>
+
+    <h3>3️⃣ Project: File Organizer Script</h3>
+    <p>
+      Ye automation script kisi folder ke files ko unke extension ke hisaab se alag folders me move karta hai.
+    </p>
+
+    <pre><code>import os, shutil
+
+source = "C:/Users/YourName/Downloads"
+files = os.listdir(source)
+
+for f in files:
+    if os.path.isfile(os.path.join(source, f)):
+        ext = f.split('.')[-1]
+        folder = os.path.join(source, ext.upper())
+        os.makedirs(folder, exist_ok=True)
+        shutil.move(os.path.join(source, f), os.path.join(folder, f))
+
+print("✅ Files successfully organized!")</code></pre>
+
+    <p>
+      Concepts used: <b>File handling, os module, shutil, loops</b>.  
+      Is project se aap samajh jaoge kaise system-level automation scripts likhi jaati hain.
+    </p>
+
+    <h3>4️⃣ Bonus Project: Simple Chat App (Sockets)</h3>
+    <p>
+      Ye client-server communication ka demo hai using Python’s <code>socket</code> module.  
+      Niche diya gaya code basic version hai — aap ise aur advanced bana sakte ho.
+    </p>
+
+    <h4>Server Code:</h4>
+    <pre><code>import socket
+
+server = socket.socket()
+server.bind(("localhost", 9999))
+server.listen(1)
+
+print("Server waiting for connection...")
+conn, addr = server.accept()
+print("Connected with", addr)
+
+while True:
+    msg = conn.recv(1024).decode()
+    if msg == 'exit':
+        break
+    print("Client:", msg)
+    conn.send(input("You: ").encode())
+
+conn.close()</code></pre>
+
+    <h4>Client Code:</h4>
+    <pre><code>import socket
+
+client = socket.socket()
+client.connect(("localhost", 9999))
+
+while True:
+    msg = input("You: ")
+    client.send(msg.encode())
+    if msg == 'exit':
+        break
+    print("Server:", client.recv(1024).decode())
+
+client.close()</code></pre>
+
+    <p>
+      Concepts used: <b>Networking, sockets, loops, encoding/decoding</b>.  
+      Ye simple chat app local machine pe run hota hai, par ye real-time communication ka foundation samjhata hai.
+    </p>
+
+    <h3>5️⃣ What Next?</h3>
+    <p>
+      Ab aapko real confidence mil gaya hoga Python me.  
+      Next step ho sakta hai:
+    </p>
+    <ul>
+      <li>AI aur Machine Learning modules seekhna (AI section me start karo!)</li>
+      <li>Flask / FastAPI se web apps banana</li>
+      <li>Automation aur scripting projects karna</li>
+      <li>Open-source contributions karna</li>
+    </ul>
+
+    <p>
+      Aap ab officially ek <b>Python Developer</b> ban gaye ho 🎉  
+      Aage AIkiPadhai ke AI section me chalo — jahan hum Machine Learning aur Generative AI seekhenge, Roman Hindi me hi!
+    </p>
+
+    <hr />
+    <div class="navigation">
+      <a href="security.html">&lt; Previous: Security Best Practices</a>
+      <a href="../../ai/index.html" style="margin-left:auto">Next: AI Tutorials &gt;</a>
+    </div>
+
+    <div class="advanced-nav" style="margin-top:18px;">
+      <a href="oop-advanced.html">OOP & Design Patterns</a>
+      <a href="iterators-generators.html">Iterators & Generators</a>
+      <a href="decorators-context.html">Decorators & Context Managers</a>
+      <a href="concurrency.html">Concurrency & Async</a>
+      <a href="file-data.html">File & Data Handling</a>
+      <a href="networking.html">Networking & APIs</a>
+      <a href="testing.html">Testing</a>
+      <a href="performance.html">Performance</a>
+      <a href="packaging.html">Packaging</a>
+      <a href="security.html">Security</a>
+      <a href="projects.html">Projects</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn Python & AI in Roman Hindi</p>
+  </footer>
+</body>
+</html>

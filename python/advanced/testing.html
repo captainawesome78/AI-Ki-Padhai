@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Testing & Debugging in Python | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body{font-family:Arial, Helvetica, sans-serif;background:#fafafa;color:#333;margin:0;}
+    header{background:#2c3e50;color:#fff;padding:18px 16px;}
+    header h1{margin:0;font-size:20px;}
+    nav a{color:#dfe8ef;text-decoration:none;margin-right:10px;font-weight:600;}
+    main.content{max-width:900px;margin:20px auto;background:#fff;padding:22px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.06);}
+    pre{background:#f4f4f4;padding:12px;border-radius:6px;overflow-x:auto;}
+    .navigation, .advanced-nav{margin-top:20px; display:flex; flex-wrap:wrap; gap:8px;}
+    .advanced-nav a, .navigation a{background:#f1f6fb;padding:8px 10px;border-radius:6px;color:#0a66a3;text-decoration:none;}
+    .advanced-nav a:hover, .navigation a:hover{background:#e6f0fb;}
+    footer{margin:30px 0;text-align:center;padding:14px;background:#f4f4f4;}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Testing & Debugging in Python</h1>
+    <nav>
+      <a href="../../index.html">Home</a>
+      <a href="../index.html">Python</a>
+      <a href="../../ai/index.html">AI</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <h2>Introduction</h2>
+    <p>
+      Testing ka matlab hota hai apne code ko check karna ki wo sahi se kaam kar raha hai ya nahi.  
+      Debugging ka matlab hota hai galti (bug) ko dhundhna aur fix karna.  
+      Dono process ek professional Python developer ke liye bahut important hain.
+    </p>
+
+    <h3>1️⃣ Manual Testing</h3>
+    <p>
+      Shuru me hum simple programs manually test karte hain — jaise code run karke dekha ki output sahi aa raha hai ya nahi.  
+      Lekin jaise-jaise project bada hota hai, manual testing time-consuming ho jata hai.  
+      Isliye hum automated testing tools use karte hain.
+    </p>
+
+    <h3>2️⃣ <code>assert</code> Statement</h3>
+    <p>
+      <code>assert</code> ek simple tarika hai condition test karne ka. Agar condition galat hui to program error (AssertionError) dega.
+    </p>
+    <pre><code>def add(a, b):
+    return a + b
+
+assert add(2, 3) == 5
+assert add(-1, 1) == 0
+
+print("Sab tests pass ho gaye!")</code></pre>
+
+    <p>
+      Agar koi bhi <code>assert</code> fail hua to program wahi ruk jaayega aur error dikha dega.  
+      Agar sab sahi hai to "Sab tests pass ho gaye!" print hoga.
+    </p>
+
+    <h3>3️⃣ <code>unittest</code> Module</h3>
+    <p>
+      Python ke built-in testing framework ka naam hai <code>unittest</code>.  
+      Isse hum test cases likh sakte hain aur automatically run kar sakte hain.
+    </p>
+    <pre><code>import unittest
+
+def multiply(a, b):
+    return a * b
+
+class TestMath(unittest.TestCase):
+    def test_multiply(self):
+        self.assertEqual(multiply(3, 4), 12)
+        self.assertEqual(multiply(-2, 5), -10)
+
+if __name__ == "__main__":
+    unittest.main()</code></pre>
+
+    <p>
+      Har test class ko <code>unittest.TestCase</code> se inherit karte hain.  
+      <code>assertEqual()</code> check karta hai ki actual aur expected values match kar rahi hain ya nahi.  
+      Agar koi test fail hota hai, framework clearly dikha deta hai kaunsa fail hua.
+    </p>
+
+    <h3>4️⃣ <code>pytest</code> Framework</h3>
+    <p>
+      <code>pytest</code> ek popular aur simple testing framework hai jo beginners aur professionals dono use karte hain.  
+      Install karne ke liye likhiye:
+    </p>
+    <pre><code>pip install pytest</code></pre>
+
+    <h4>Example:</h4>
+    <pre><code># test_calc.py
+from calc import add
+
+def test_add():
+    assert add(2, 3) == 5
+    assert add(-1, 1) == 0</code></pre>
+
+    <p>
+      Ab terminal me run karo:
+    </p>
+    <pre><code>pytest test_calc.py</code></pre>
+
+    <p>
+      Pytest automatically sab functions jinka naam <code>test_</code> se start hota hai, unhe test ke roop me run karta hai.  
+      Fail hone par wo clear report deta hai aur pass hone par “✓ PASSED” likha aata hai.
+    </p>
+
+    <h3>5️⃣ Debugging (Code me bug dhundhna)</h3>
+    <p>
+      Python me built-in debugger aata hai — <code>pdb</code>.  
+      Isse hum code ko step-by-step run karke variables ka state dekh sakte hain.
+    </p>
+    <pre><code>import pdb
+
+def divide(a, b):
+    pdb.set_trace()  # debugger start hoga
+    return a / b
+
+print(divide(10, 2))</code></pre>
+
+    <p>
+      Jab code <code>pdb.set_trace()</code> par aata hai, program ruk jaata hai aur aap interactive mode me command likh sakte ho jaise:
+      <br>• <code>n</code> – next line execute karo  
+      <br>• <code>p variable</code> – variable ka value dekho  
+      <br>• <code>c</code> – continue till next breakpoint
+    </p>
+
+    <h3>6️⃣ Logging</h3>
+    <p>
+      Debugging me help karne ke liye Python ka <code>logging</code> module use hota hai.  
+      Isse hum apne program ke important events ko log file me likh sakte hain.
+    </p>
+    <pre><code>import logging
+
+logging.basicConfig(filename="app.log", level=logging.INFO)
+
+logging.info("Program start ho gaya")
+logging.warning("Low disk space!")
+logging.error("Kuch galat ho gaya!")</code></pre>
+
+    <p>
+      Logging se hume code ka flow samajhne me madad milti hai jab kuch galat hota hai.  
+      Ye production code me bhi use hota hai taaki hum system ke issues track kar sakein.
+    </p>
+
+    <hr />
+    <div class="navigation">
+      <a href="networking.html">&lt; Previous: Networking & APIs</a>
+      <a href="performance.html" style="margin-left:auto">Next: Performance Optimization &gt;</a>
+    </div>
+
+    <div class="advanced-nav" style="margin-top:18px;">
+      <a href="oop-advanced.html">OOP & Design Patterns</a>
+      <a href="iterators-generators.html">Iterators & Generators</a>
+      <a href="decorators-context.html">Decorators & Context Managers</a>
+      <a href="concurrency.html">Concurrency & Async</a>
+      <a href="file-data.html">File & Data Handling</a>
+      <a href="networking.html">Networking & APIs</a>
+      <a href="testing.html">Testing</a>
+      <a href="performance.html">Performance</a>
+      <a href="packaging.html">Packaging</a>
+      <a href="security.html">Security</a>
+      <a href="projects.html">Projects</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn Python & AI in Roman Hindi</p>
+  </footer>
+</body>
+</html>
