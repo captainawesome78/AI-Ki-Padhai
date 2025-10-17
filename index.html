@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AIkiPadhai - Learn Python & AI in Roman Hindi</title>
   <style>
     :root {
@@ -12,20 +12,36 @@
       --accent: #38bdf8;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', Roboto, sans-serif; background: var(--light); color: var(--dark); line-height: 1.6; }
+    body {
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      background: var(--light);
+      color: var(--dark);
+      line-height: 1.6;
+    }
 
+    /* HEADER */
     header {
       background: linear-gradient(135deg, #0077cc, #38bdf8);
       color: white;
       text-align: center;
-      padding: 60px 20px;
+      padding: 70px 20px;
     }
-    header h1 { font-size: 2.8rem; margin-bottom: 10px; letter-spacing: 0.5px; }
-    header p { font-size: 1.1rem; opacity: 0.95; }
+    header h1 {
+      font-size: 2.8rem;
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+    }
+    header p {
+      font-size: 1.1rem;
+      opacity: 0.95;
+      max-width: 700px;
+      margin: 0 auto;
+    }
 
+    /* NAVIGATION */
     nav {
       background: white;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
       display: flex;
       justify-content: center;
       gap: 30px;
@@ -40,127 +56,152 @@
       font-weight: 600;
       transition: color 0.3s ease;
     }
-    nav a:hover { color: var(--primary); }
+    nav a:hover {
+      color: var(--primary);
+    }
 
+    /* MAIN SECTION */
     .container {
       max-width: 1100px;
-      margin: 40px auto;
+      margin: 50px auto;
       padding: 0 20px;
     }
 
     .intro {
       text-align: center;
-      margin-bottom: 40px;
+      margin-bottom: 50px;
     }
     .intro h2 {
-      font-size: 1.8rem;
+      font-size: 2rem;
       color: var(--dark);
       margin-bottom: 10px;
     }
     .intro p {
       color: #475569;
-      font-size: 1rem;
+      font-size: 1.05rem;
+      max-width: 700px;
+      margin: 0 auto;
     }
 
-    .levels {
+    /* TOPIC CARDS */
+    .topics {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 28px;
     }
 
     .card {
       background: white;
-      border-radius: 12px;
-      padding: 24px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      border-radius: 16px;
+      padding: 32px 26px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      text-align: center;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     .card:hover {
       transform: translateY(-6px);
-      box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     }
 
     .card h3 {
       color: var(--primary);
-      margin-bottom: 12px;
-      font-size: 1.3rem;
-    }
-    .card ul { list-style: none; margin-top: 8px; }
-    .card ul li { margin: 8px 0; }
-    .card ul li a {
-      color: var(--dark);
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.3s;
-    }
-    .card ul li a:hover {
-      color: var(--primary);
-      text-decoration: underline;
+      margin: 14px 0 10px;
+      font-size: 1.6rem;
     }
 
+    .card p {
+      color: #475569;
+      font-size: 1rem;
+      margin-bottom: 18px;
+    }
+
+    .card img {
+      width: 70px;
+      height: 70px;
+      margin-bottom: 15px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 18px;
+      background: var(--primary);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: background 0.3s ease;
+    }
+    .btn:hover {
+      background: var(--accent);
+    }
+
+    /* FOOTER */
     footer {
       text-align: center;
       padding: 24px;
       background: var(--dark);
       color: white;
-      margin-top: 50px;
+      margin-top: 60px;
     }
-    footer p { font-size: 0.95rem; }
+    footer p {
+      font-size: 0.95rem;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 700px) {
+      header h1 {
+        font-size: 2.2rem;
+      }
+      .intro h2 {
+        font-size: 1.6rem;
+      }
+    }
   </style>
 </head>
 <body>
   <header>
     <h1>AI ki Padhai 🧠</h1>
-    <p>Python aur AI ko seekho step by step — Roman Hindi mein, easy examples ke sath 🚀</p>
+    <p>Python aur AI ko seekho step-by-step — Roman Hindi mein, real examples ke sath 🚀</p>
   </header>
 
   <nav>
-    <a href="index.html">Home</a>
+    <a href="index.html"><strong>Home</strong></a>
     <a href="python/index.html">Python</a>
     <a href="ai/index.html">AI</a>
     <a href="about.html">About</a>
   </nav>
 
-
   <div class="container">
     <div class="intro">
-      <h2>🧭 Learning Path</h2>
-      <p>Python ko humne 3 levels mein divide kiya hai — Beginner, Intermediate, aur Advanced.  
-         Apne comfort level ke hisaab se start karo aur step-by-step expert bano.</p>
+      <h2>📘 Explore Learning Tracks</h2>
+      <p>
+        AIkiPadhai ek modern learning platform hai jahan hum Python aur Artificial Intelligence ko Roman Hindi me samjhate hain — easy language aur interactive examples ke sath.
+      </p>
     </div>
 
-    <div class="levels">
+    <div class="topics">
+      <!-- Python Card -->
       <div class="card">
-        <h3>👶 Beginner</h3>
-        <ul>
-          <li><a href="python/beginner/overview-installation.html">Python Introduction</a></li>
-          <li><a href="python/beginner/variables.html">Variables & Data Types</a></li>
-          <li><a href="python/beginner/loops.html">Loops & Conditionals</a></li>
-          <li><a href="python/beginner/functions.html">Functions</a></li>
-          <li><a href="python/beginner/overview-installation.html">and more..</a></li>
-        </ul>
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python logo" />
+        <h3>🐍 Learn Python</h3>
+        <p>Programming ka foundation yahan se start hota hai — step-by-step Python basics, logic building aur real projects ke sath.</p>
+        <a href="python/index.html" class="btn">Start Python</a>
       </div>
 
+      <!-- AI Card -->
       <div class="card">
-        <h3>🧑 Intermediate</h3>
-        <ul>
-          <li><a href="python/intermediate/oop.html">Object-Oriented Programming</a></li>
-          <li><a href="python/intermediate/file-handling.html">File Handling</a></li>
-          <li><a href="python/intermediate/modules.html">Modules aur Libraries</a></li>
-          <li><a href="python/intermediate/error-handling.html">Error Handling</a></li>
-           <li><a href="python/intermediate/oop.html">and more..</a></li>
-        </ul>
+        <img src="https://cdn-icons-png.flaticon.com/512/4712/4712107.png" alt="AI icon" />
+        <h3>🤖 Learn Artificial Intelligence</h3>
+        <p>AI, Machine Learning aur Neural Networks ke basics seekho simple examples aur projects ke sath.</p>
+        <a href="ai/index.html" class="btn">Start AI</a>
       </div>
 
+      <!-- GenAI Card -->
       <div class="card">
-        <h3>👨‍💻 Advanced</h3>
-        <ul>
-          <li><a href="python/advanced/decorators.html">Decorators & Context Managers</a></li>
-          <li><a href="python/advanced/networking.html">Networking & APIs</a></li>
-          <li><a href="python/advanced/testing.html">Testing & Debugging</a></li>
-          <li><a href="/python/advanced/projects.html">Final Projects</a></li>
-          <li><a href="python/advanced/decorators.html">and more..</a></li>
-        </ul>
+        <img src="https://cdn-icons-png.flaticon.com/512/13749/13749712.png" alt="GenAI icon" />
+        <h3>🧬 Generative AI (Coming Soon)</h3>
+        <p>Text, Images aur Code generate karna seekho using ChatGPT, Gemini aur open-source GenAI models.</p>
+        <a href="#" class="btn" style="background: gray; cursor: not-allowed;">Coming Soon</a>
       </div>
     </div>
   </div>
