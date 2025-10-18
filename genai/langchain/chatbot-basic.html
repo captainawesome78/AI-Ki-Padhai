@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LangChain Chatbot Tutorial | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    /* Page styles — keep consistent with other AIkiPadhai pages */
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fafafa;
+      color: #222;
+      margin: 0;
+      line-height: 1.65;
+    }
+
+    header {
+      background: #2c3e50;
+      color: #fff;
+      text-align: center;
+      padding: 22px 16px;
+    }
+    header h1 { margin: 0; font-size: 22px; }
+    nav { margin-top: 8px; }
+    nav a {
+      color: #dfe8ef;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+    nav a:hover { color: #f1f6fb; }
+
+    main {
+      max-width: 1000px;
+      margin: 28px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+    }
+
+    .eyebrow {
+      color: #0a66a3;
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    h2 { color: #1e3551; margin-top: 6px; }
+    p { color: #333; font-size: 16px; margin: 12px 0; }
+
+    .section {
+      margin-top: 20px;
+    }
+
+    pre {
+      background: #f4f6f8;
+      border-radius: 8px;
+      padding: 14px;
+      overflow-x: auto;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      border: 1px solid #e6eef8;
+    }
+
+    code.inline {
+      background: #eef6ff;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    ul { margin-left: 18px; color: #333; }
+    li { margin: 8px 0; }
+
+    .pro-tips {
+      background: #fff7ed;
+      border-left: 4px solid #ffb020;
+      padding: 12px 14px;
+      border-radius: 6px;
+      margin-top: 12px;
+      color: #6b4a00;
+    }
+
+    .back {
+      display:inline-block;
+      margin-top:18px;
+      text-decoration:none;
+      color:#0077cc;
+      font-weight:600;
+    }
+    .back:hover { text-decoration:underline; }
+
+    footer {
+      text-align:center;
+      padding:18px;
+      margin-top: 24px;
+      background:#f4f4f4;
+      font-size:14px;
+    }
+
+    @media (max-width:720px) {
+      main { margin: 18px; padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>LangChain — Aasan Chatbot Tutorial</h1>
+    <nav>
+      <a href="https://aikipadhai.com/index.html">Home</a>
+      <a href="https://aikipadhai.com/python/index.html">Python</a>
+      <a href="https://aikipadhai.com/ai/index.html"><strong>Generative AI</strong></a>
+      <a href="https://aikipadhai.com/about.html">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="eyebrow">Tutorial • LangChain</div>
+    <h2>LangChain ke Saath Ek Aasan Chatbot Banane Ka Safar 🤖✨</h2>
+
+    <p>
+      Dosto, aaj hum seekhenge kaise LangChain, Hugging Face aur Ollama ki madad se ek simple lekin powerful chatbot bana sakte hain.
+      Ye tutorial step-by-step hai — installation se lekar model selection aur chain creation tak. Sab kuch Roman Hindi me.
+    </p>
+
+    <div class="section">
+      <h3>Preparation: Zaruri Tools 🛠️</h3>
+      <p>Sabse pehle kuch packages install karne honge:</p>
+
+      <pre><code>pip install langchain-huggingface langchain-ollama</code></pre>
+
+      <p>Ye packages aapko Hugging Face embeddings aur Ollama chat models ko LangChain ke andar use karne me madad karenge.</p>
+    </div>
+
+    <div class="section">
+      <h3>Code Explanation — Short Me 🧐</h3>
+      <ul>
+        <li><strong>langchain-huggingface:</strong> Hugging Face ke models ko LangChain me integrate karne ke liye package.</li>
+        <li><strong>langchain-ollama:</strong> Ollama open-source models ko LangChain me use karne ka support.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3>Model Selection: Open-Source Ke Sitare 🌟</h3>
+      <p>
+        Hum do models use karenge:
+      </p>
+      <ul>
+        <li>Hugging Face se ek embedding model (text ko vector me badalne ke liye)</li>
+        <li>Ollama se ek chat model (actual conversational responses ke liye)</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3>Hugging Face Embedding Model 📊</h3>
+      <p>Example code — embedding model initialize karna:</p>
+
+      <pre><code>from langchain_huggingface import HuggingFaceEmbeddings
+
+embeddings = HuggingFaceEmbeddings(
+    model_name="BAAI/bge-base-en-v1.5"
+)</code></pre>
+
+      <p><strong>Code ka matlab:</strong> <code class="inline">HuggingFaceEmbeddings</code> text ko vectors me convert karta hai.  
+      <code class="inline">model_name="BAAI/bge-base-en-v1.5"</code> ek strong semantic embedding model hai jo text ka meaning acche se capture karta hai.</p>
+    </div>
+
+    <div class="section">
+      <h3>Ollama Chat Model 💬</h3>
+      <p>Example code — chat model initialize karna:</p>
+
+      <pre><code>from langchain_ollama import ChatOllama
+
+model = ChatOllama(
+    model="llama3",
+    temperature=0.7
+)</code></pre>
+
+      <p><strong>Code ka explanation:</strong>  
+      <code class="inline">ChatOllama</code> Ollama ke open-source language model ko LangChain me integrate karta hai.  
+      <code class="inline">temperature</code> creativity control karta hai (0–1). 0.7 matlab thodi creativity, par zyada precise jawab bhi milenge.</p>
+    </div>
+
+    <div class="section">
+      <h3>Chatbot Logic: Magic Shuru! 🪄</h3>
+      <p>Niche ka code dikhata hai kaise prompt template aur chain banakar model ko call karte hain:</p>
+
+      <pre><code>from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.runnables import RunnablePassthrough
+
+# Prompt template banate hain
+prompt = ChatPromptTemplate.from_template(
+    "Aap ek friendly chatbot hain. {question} ka jawab dijiye."
+)
+
+# Chain create karte hain
+chain = (
+    {"question": RunnablePassthrough()} 
+    | prompt 
+    | model
+)
+
+# Bot se baat karte hain
+response = chain.invoke("Aap kaun hain?")
+print(response)</code></pre>
+
+      <p><strong>Code ka gehrayi se explanation:</strong></p>
+      <ul>
+        <li><strong>ChatPromptTemplate:</strong> Custom prompt template banane ka tool — <code class="inline">{question}</code> jagah par actual user question jayega.</li>
+        <li><strong>RunnablePassthrough()</strong>: Input ko chain me seedha aage pass karta hai — flexibility badhata hai.</li>
+        <li><strong>Chain Creation (| operator):</strong> Ye operator components ko connect karta hai: Question → Prompt → Model.</li>
+        <li><strong>chain.invoke():</strong> Actual conversation start karta hai — model se response nikalta hai.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3>Pro Tips 💡</h3>
+      <div class="pro-tips">
+        <ul>
+          <li>Model training ke liye diverse aur high-quality data use karo — taaki model robust bane.</li>
+          <li>Temperature ko adjust karke creative vs precise responses balance karo.</li>
+          <li>Embedding aur chat models ko use-case ke hisaab se carefully choose karo — kabhi-kabhi smaller models bhi kaafi acche results dete hain.</li>
+        </ul>
+      </div>
+    </div>
+
+    <a class="back" href="index.html">← Back to LangChain Tutorials</a>
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn LangChain & Generative AI in Roman Hindi</p>
+  </footer>
+</body>
+</html>
