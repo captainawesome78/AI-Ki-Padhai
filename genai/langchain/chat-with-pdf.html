@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chat with Your PDF using LangChain | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fafafa;
+      color: #222;
+      margin: 0;
+      line-height: 1.65;
+    }
+
+    header {
+      background: #2c3e50;
+      color: #fff;
+      text-align: center;
+      padding: 22px 16px;
+    }
+
+    header h1 { margin: 0; font-size: 22px; }
+
+    nav { margin-top: 8px; }
+
+    nav a {
+      color: #dfe8ef;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    nav a:hover { color: #f1f6fb; }
+
+    main {
+      max-width: 1000px;
+      margin: 28px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+    }
+
+    h2, h3 { color: #1e3551; }
+    p { color: #333; font-size: 16px; margin: 12px 0; }
+
+    .section { margin-top: 22px; }
+
+    pre {
+      background: #f4f6f8;
+      border-radius: 8px;
+      padding: 14px;
+      overflow-x: auto;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      border: 1px solid #e6eef8;
+    }
+
+    code.inline {
+      background: #eef6ff;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    ul { margin-left: 18px; color: #333; }
+    li { margin: 8px 0; }
+
+    .pro-tips {
+      background: #fff7ed;
+      border-left: 4px solid #ffb020;
+      padding: 12px 14px;
+      border-radius: 6px;
+      margin-top: 12px;
+      color: #6b4a00;
+    }
+
+    .back {
+      display: inline-block;
+      margin-top: 18px;
+      text-decoration: none;
+      color: #0077cc;
+      font-weight: 600;
+    }
+
+    .back:hover { text-decoration: underline; }
+
+    footer {
+      text-align: center;
+      padding: 18px;
+      margin-top: 24px;
+      background: #f4f4f4;
+      font-size: 14px;
+    }
+
+    @media (max-width: 720px) {
+      main { margin: 18px; padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>LangChain ke Saath PDF Chatbot</h1>
+    <nav>
+      <a href="https://aikipadhai.com/index.html">Home</a>
+      <a href="https://aikipadhai.com/python/index.html">Python</a>
+      <a href="https://aikipadhai.com/genai/index.html"><strong>AI</strong></a>
+      <a href="https://aikipadhai.com/about.html">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>PDF ke Saath Baat Karne Ka Jadui Tarika 📄✨</h2>
+    <p>
+      Kya aapko kabhi laga hai ki aapke PDF documents se interact karne ka ek aasan tarika ho?  
+      LangChain ke madad se hum ek powerful PDF chatbot bana sakte hain jo aapke documents se direct baat karta hai!  
+      Chaliye step-by-step samajhte hain kaise.
+    </p>
+
+    <div class="section">
+      <h3>🔧 Prerequisite</h3>
+      <p>Sabse pehle humein kuch libraries install karni hongi:</p>
+
+      <pre><code>pip install langchain pypdf python-dotenv openai chromadb</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Step 1: PDF Loader Setup 📚</h3>
+      <p>PDF ko load karne ke liye hum <code class="inline">PyPDFLoader</code> ka use karenge:</p>
+
+      <pre><code>from langchain_community.document_loaders import PyPDFLoader
+
+# PDF file path
+file_path = "your_document.pdf"
+
+# PDF loader initialize karna
+loader = PyPDFLoader(file_path)
+
+# Documents load karna
+documents = loader.load()</code></pre>
+
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li><code class="inline">PyPDFLoader</code> PDF file ko load karta hai.</li>
+        <li><code class="inline">.load()</code> method saare pages ko document objects me convert karta hai.</li>
+        <li>Har page ek separate document ban jata hai.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3>Step 2: Text Splitting ✂️</h3>
+      <p>PDF ke text ko chunks me split karna important hai:</p>
+
+      <pre><code>from langchain.text_splitter import RecursiveCharacterTextSplitter
+
+# Text splitter create karna
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=1000,
+    chunk_overlap=200
+)
+
+# Documents ko split karna
+texts = text_splitter.split_documents(documents)</code></pre>
+
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li><code class="inline">chunk_size=1000</code> → har chunk 1000 characters ka hoga.</li>
+        <li><code class="inline">chunk_overlap=200</code> → 200 characters overlap rahenge taaki context na toote.</li>
+        <li>Yeh approach semantic meaning ko preserve karta hai.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3>Step 3: Embeddings Generate Karna 🧠</h3>
+      <p>Embeddings document ke meaning ko vector format me convert karte hain:</p>
+
+      <pre><code>from langchain_openai import OpenAIEmbeddings
+from langchain_community.vectorstores import Chroma
+
+# OpenAI Embeddings
+embeddings = OpenAIEmbeddings()
+
+# Vector Store create karna
+vectorstore = Chroma.from_documents(
+    documents=texts,
+    embedding=embeddings
+)</code></pre>
+
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li><code class="inline">OpenAIEmbeddings</code> text ko high-dimensional vector me convert karta hai.</li>
+        <li><code class="inline">Chroma</code> vector store documents ko efficiently store & retrieve karne me help karta hai.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3>Step 4: Retrieval Chain Setup 🔗</h3>
+      <p>Retrieval chain document se relevant information nikalne me help karta hai:</p>
+
+      <pre><code>from langchain.chains import RetrievalQA
+from langchain_openai import ChatOpenAI
+
+# ChatGPT model initialize
+llm = ChatOpenAI(model_name="gpt-3.5-turbo")
+
+# Retrieval QA Chain
+qa_chain = RetrievalQA.from_chain_type(
+    llm=llm,
+    chain_type="stuff",
+    retriever=vectorstore.as_retriever()
+)</code></pre>
+
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li><code class="inline">ChatOpenAI</code> language model ko initialize karta hai.</li>
+        <li><code class="inline">RetrievalQA</code> chain documents se relevant context nikalta hai.</li>
+        <li><code class="inline">chain_type="stuff"</code> → context directly model ko pass hota hai.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3>Step 5: Chatbot Interaction 💬</h3>
+      <p>Ab aap apne PDF se interact kar sakte hain!</p>
+
+      <pre><code># Query karna
+query = "Aapke document ka main point kya hai?"
+result = qa_chain.invoke(query)
+
+print(result['result'])</code></pre>
+
+      <p>Yeh command aapke PDF ke content se relevant jawab nikal kar dikhata hai 🎯</p>
+    </div>
+
+    <div class="section">
+      <h3>Advanced Features 🚀</h3>
+      <p><strong>1. Conversation Memory</strong></p>
+
+      <pre><code>from langchain.memory import ConversationBufferMemory
+from langchain.chains import ConversationalRetrievalChain
+
+memory = ConversationBufferMemory()</code></pre>
+
+      <p>
+        Memory feature chatbot ko past questions ya context yaad rakhne me help karta hai —
+        taaki conversation natural lage aur user experience better ho.
+      </p>
+    </div>
+
+    <div class="pro-tips">
+      <h3>💡 Pro Tips</h3>
+      <ul>
+        <li>Apne documents ka size manageable rakhein (avoid 100s of MBs at once).</li>
+        <li>Chunking aur embedding parameters experiment karke best accuracy nikaalein.</li>
+        <li>Confidential PDFs ke liye local vector store (Chroma) use karein cloud ke bajaye.</li>
+      </ul>
+    </div>
+
+    <a class="back" href="index.html">← Back to LangChain Tutorials</a>
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn LangChain & Generative AI in Roman Hindi</p>
+  </footer>
+</body>
+</html>
+0
