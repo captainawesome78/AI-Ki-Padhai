@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LangChain Tools & Memory Explained | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fafafa;
+      color: #222;
+      margin: 0;
+      line-height: 1.65;
+    }
+
+    header {
+      background: #2c3e50;
+      color: #fff;
+      text-align: center;
+      padding: 22px 16px;
+    }
+
+    header h1 { margin: 0; font-size: 22px; }
+
+    nav { margin-top: 8px; }
+
+    nav a {
+      color: #dfe8ef;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    nav a:hover { color: #f1f6fb; }
+
+    main {
+      max-width: 1000px;
+      margin: 28px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+    }
+
+    h2, h3 { color: #1e3551; }
+    p { color: #333; font-size: 16px; margin: 12px 0; }
+
+    .section { margin-top: 22px; }
+
+    pre {
+      background: #f4f6f8;
+      border-radius: 8px;
+      padding: 14px;
+      overflow-x: auto;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      border: 1px solid #e6eef8;
+    }
+
+    code.inline {
+      background: #eef6ff;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    ul { margin-left: 18px; color: #333; }
+    li { margin: 8px 0; }
+
+    .pro-tips {
+      background: #fff7ed;
+      border-left: 4px solid #ffb020;
+      padding: 12px 14px;
+      border-radius: 6px;
+      margin-top: 12px;
+      color: #6b4a00;
+    }
+
+    .back {
+      display: inline-block;
+      margin-top: 18px;
+      text-decoration: none;
+      color: #0077cc;
+      font-weight: 600;
+    }
+
+    .back:hover { text-decoration: underline; }
+
+    footer {
+      text-align: center;
+      padding: 18px;
+      margin-top: 24px;
+      background: #f4f4f4;
+      font-size: 14px;
+    }
+
+    @media (max-width: 720px) {
+      main { margin: 18px; padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>LangChain Tools & Memory Explained</h1>
+    <nav>
+      <a href="https://aikipadhai.com/index.html">Home</a>
+      <a href="https://aikipadhai.com/python/index.html">Python</a>
+      <a href="https://aikipadhai.com/genai/index.html"><strong>AI</strong></a>
+      <a href="https://aikipadhai.com/about.html">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>LangChain Tools & Memory Explained Deeply (Roman Hindi)</h2>
+
+    <p>
+      LangChain ek powerful framework hai jo Large Language Models (LLMs) ke saath intelligent applications banane mein madad karta hai.
+      Isme <strong>Tools</strong> aur <strong>Memory</strong> do bahut important concepts hain.
+      Tools AI ko external systems ya functions call karne ki power dete hain, jabki Memory conversation ya state ko save karke multi-turn interactions manage karti hai.
+    </p>
+
+    <p>
+      Is blog mein hum dono concepts ko detail mein samjhenge — saath hi practical code examples bhi dekhenge. ⚙️
+    </p>
+
+    <div class="section">
+      <h3>🔧 LangChain Tools Kya Hain?</h3>
+      <p>
+        Tools basically aise functions ya APIs hote hain jo AI model ko external world ke saath interact karne dete hain — 
+        jaise API calls, calculations, ya web scraping.
+      </p>
+    </div>
+
+    <div class="section">
+      <h3>🧩 Tool Banana (Python Example)</h3>
+
+      <pre><code>from langchain_core.tools import tool
+
+@tool
+def multiply(a: int, b: int) -> int:
+    """Do numbers ka multiplication karta hai."""
+    return a * b
+
+# Tool ke attributes check karna
+print(multiply.name)          # Output: multiply
+print(multiply.description)   # Output: Do numbers ka multiplication karta hai.
+print(multiply.args)          # Output: {'a': {'title': 'A', 'type': 'integer'}, 'b': {'title': 'B', 'type': 'integer'}}
+
+# Tool invoke karna
+result = multiply.invoke({"a": 5, "b": 7})
+print(result)  # Output: 35</code></pre>
+
+      <p>
+        Is example mein humne ek simple multiply tool banaya jo do integers ko multiply karta hai.
+        <code class="inline">@tool</code> decorator se function ko tool mein convert karte hain jise LLM call kar sakta hai.
+      </p>
+    </div>
+
+    <div class="section">
+      <h3>🧰 Toolkits ka Use</h3>
+      <p>
+        Agar aapke paas multiple related tools hain, unhe ek <em>toolkit</em> mein group kar sakte hain:
+      </p>
+
+      <pre><code>class MathToolkit:
+    def get_tools(self):
+        return [multiply]
+
+toolkit = MathToolkit()
+tools = toolkit.get_tools()</code></pre>
+
+      <p>Isse aap easily tools ko agent ya chain mein pass kar sakte hain.</p>
+    </div>
+
+    <div class="section">
+      <h3>🤖 LangChain Agents aur Tool Calling</h3>
+      <p>
+        Agents AI ke wo components hain jo decide karte hain ki user ke input ke hisaab se kaunse tools call karne hain.
+        LangChain mein hum tools ko LLM ke saath bind kar sakte hain taaki model zarurat ke hisaab se external functions call kare.
+      </p>
+
+      <h4>🔗 Tool Binding Example</h4>
+      <pre><code>from langchain.chat_models import init_chat_model
+
+# LLM initialize karo (example: Anthropic Claude)
+llm = init_chat_model("anthropic:claude-3-7-sonnet-latest", temperature=0)
+
+# Tools list
+tools = [multiply]
+
+# LLM ke saath tools bind karo
+llm_with_tools = llm.bind_tools(tools)
+
+# Ab LLM input ke hisaab se tool call kar sakta hai
+response = llm_with_tools.invoke({"input": "Multiply 6 and 9"})
+print(response)</code></pre>
+
+      <p>
+        Is tarah se aap LLM ko tools ke saath integrate kar sakte hain jisse wo complex queries ke liye external functions call kar sake.
+      </p>
+    </div>
+
+    <div class="section">
+      <h3>🧠 LangChain Memory: Evolution aur Modern Approach</h3>
+
+      <h4>Purana Memory System (v0.0.x)</h4>
+      <ul>
+        <li><code class="inline">ConversationBufferMemory</code> – poora conversation store karta tha</li>
+        <li><code class="inline">ConversationSummaryMemory</code> – conversation ka summary banata tha</li>
+      </ul>
+
+      <p>
+        Lekin ye simple memory system multi-user ya complex workflows ke liye limited tha.
+      </p>
+
+      <h4>Naya Memory System: LangGraph Persistence</h4>
+      <p>
+        LangChain v0.3+ se <strong>LangGraph</strong> ko memory ke liye recommend kiya jaata hai.
+      </p>
+      <ul>
+        <li>Multi-user aur multi-conversation support</li>
+        <li>Conversations ko save aur resume kar sakta hai</li>
+        <li>Error recovery aur human-in-the-loop workflows</li>
+        <li>Flexible storage backends</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3>💾 Simple Memory Example with LangGraph</h3>
+
+      <pre><code>from langgraph.prebuilt import create_react_agent
+from langgraph.checkpoint.memory import InMemorySaver
+
+# Simple tool
+def get_weather(city: str) -> str:
+    return f"Weather in {city} is always sunny!"
+
+# Memory saver
+checkpointer = InMemorySaver()
+
+# Agent create karo with memory
+agent = create_react_agent(
+    model="anthropic:claude-3-7-sonnet-latest",
+    tools=[get_weather],
+    prompt="You are a helpful assistant",
+    checkpointer=checkpointer
+)
+
+# Conversation session id (thread_id)
+thread_id = "session_123"
+
+# Agent invoke karo with memory config
+response = agent.invoke(
+    {
+        "messages": [{"role": "user", "content": "What is the weather in Mumbai?"}],
+        "config": {"thread_id": thread_id}
+    }
+)
+
+print(response)</code></pre>
+
+      <p>
+        Is example me humne ek weather tool banaya, LangGraph agent ke saath memory enable ki, aur ek session id ke saath
+        conversation chalayi — jisse conversation state save hoti hai aur future queries me use hoti hai.
+      </p>
+    </div>
+
+    <div class="section">
+      <h3>🧭 Legacy Memory Se LangGraph Memory Migration</h3>
+      <p>
+        Agar aap purane LangChain memory classes (like <code class="inline">ConversationBufferMemory</code>) use kar rahe ho,
+        toh ab LangGraph persistence me migrate karna recommended hai.
+      </p>
+      <ul>
+        <li>Conversation history ko <strong>LangGraph</strong> me store kar sakte hain</li>
+        <li>Summary-based memory (<code class="inline">ConversationSummaryMemory</code>) ko migrate kar sakte hain</li>
+        <li>TokenBufferMemory ke liye trimming aur summarization strategies available hain</li>
+      </ul>
+    </div>
+
+    <div class="section pro-tips">
+      <h3>💡 Best Practices for Tools & Memory</h3>
+      <ul>
+        <li>Tools ko simple aur narrowly scoped rakho taaki LLM unhe accurately call kar sake.</li>
+        <li>Tools ko achhi documentation aur type hints do.</li>
+        <li>LangGraph persistence use karo agar multi-user aur resumable conversations chahiye.</li>
+        <li>Prompt design aur tool call schemas pe dhyan do taaki agent sahi tools select kare.</li>
+        <li>Legacy memory se LangGraph memory me migrate karo for production-grade stability.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3>🧩 Summary</h3>
+      <p>
+        LangChain Tools aur Memory dono hi AI applications ko zyada powerful aur flexible banate hain.
+        Tools se aap AI ko external world se interact karne ke laayak banate hain,
+        aur memory se multi-turn aur multi-user conversations ko manage karte hain.
+      </p>
+      <p>
+        Naya LangGraph persistence system aapke agents ko production-ready banata hai —
+        jahan stateful, resumable, aur customizable memory milti hai 🔥
+      </p>
+    </div>
+        <div class="section">
+      <h3>🔗 References</h3>
+      <ul>
+        <li>🧰 Tools Guide: <a href="https://python.langchain.com/docs/concepts/tools/" target="_blank">https://python.langchain.com/docs/concepts/tools/</a></li>
+        <li>🧠 Memory Migration: <a href="https://python.langchain.com/docs/versions/migrating_memory/" target="_blank">https://python.langchain.com/docs/versions/migrating_memory/</a></li>
+        <li>🤖 Agent Migration: <a href="https://python.langchain.com/docs/how_to/migrate_agent/" target="_blank">https://python.langchain.com/docs/how_to/migrate_agent/</a></li>
+        <li>⚡ LangGraph Quickstart: <a href="https://docs.langchain.com/oss/python/quickstart" target="_blank">https://docs.langchain.com/oss/python/quickstart</a></li>
+      </ul>
+    </div>
+
+
+    <a class="back" href="index.html">← Back to LangChain Tutorials</a>
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn LangChain & Generative AI in Roman Hindi</p>
+  </footer>
+</body>
+</html>
