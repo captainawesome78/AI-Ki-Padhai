@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LangGraph Tutorial: Build AI Agents | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fafafa;
+      color: #222;
+      margin: 0;
+      line-height: 1.65;
+    }
+
+    header {
+      background: #2c3e50;
+      color: #fff;
+      text-align: center;
+      padding: 22px 16px;
+    }
+
+    header h1 { margin: 0; font-size: 22px; }
+
+    nav { margin-top: 8px; }
+
+    nav a {
+      color: #dfe8ef;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    nav a:hover { color: #f1f6fb; }
+
+    main {
+      max-width: 1000px;
+      margin: 28px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+    }
+
+    h2, h3 { color: #1e3551; }
+    p { color: #333; font-size: 16px; margin: 12px 0; }
+
+    .section { margin-top: 22px; }
+
+    pre {
+      background: #f4f6f8;
+      border-radius: 8px;
+      padding: 14px;
+      overflow-x: auto;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      border: 1px solid #e6eef8;
+    }
+
+    code.inline {
+      background: #eef6ff;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    ul { margin-left: 18px; color: #333; }
+    li { margin: 8px 0; }
+
+    .pro-tips {
+      background: #fff7ed;
+      border-left: 4px solid #ffb020;
+      padding: 12px 14px;
+      border-radius: 6px;
+      margin-top: 12px;
+      color: #6b4a00;
+    }
+
+    .back {
+      display: inline-block;
+      margin-top: 18px;
+      text-decoration: none;
+      color: #0077cc;
+      font-weight: 600;
+    }
+
+    .back:hover { text-decoration: underline; }
+
+    footer {
+      text-align: center;
+      padding: 18px;
+      margin-top: 24px;
+      background: #f4f4f4;
+      font-size: 14px;
+    }
+
+    @media (max-width: 720px) {
+      main { margin: 18px; padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>LangGraph Tutorial: The Future of AI Agents 🚀</h1>
+    <nav>
+      <a href="https://aikipadhai.com/index.html">Home</a>
+      <a href="https://aikipadhai.com/python/index.html">Python</a>
+      <a href="https://aikipadhai.com/genai/index.html"><strong>AI</strong></a>
+      <a href="https://aikipadhai.com/about.html">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>LangGraph Kya Hai aur Ise Kyun Use Karein?</h2>
+    <p>
+      Dosto, LangGraph LangChain ka ek extension hai jo aapko stateful, multi-agent applications banane me madad karta hai. Purane agent executors ke mukable, LangGraph aapko zyada control deta hai. Aap isse complex cycles, human-in-the-loop workflows, aur persistent memory wale agents bana sakte hain.
+    </p>
+
+    <div class="section">
+      <h3>🔧 Prerequisites</h3>
+      <p>Chaliye, zaroori libraries install karte hain:</p>
+      <pre><code>pip install langgraph langchain_openai langchain_community tavily-python</code></pre>
+      <p>
+        Iske alawa, aapko <a href="https://platform.openai.com/" target="_blank">OpenAI</a> aur <a href="https://tavily.com/" target="_blank">Tavily</a> ke liye API keys ki zaroorat hogi.
+      </p>
+    </div>
+
+    <div class="section">
+      <h3>Step 1: State, Tools, aur LLM Setup Karein 🛠️</h3>
+      <p>Har LangGraph application ek "state" object par chalta hai. Yeh state agents ke beech information share karta hai. Hum ek search tool bhi set up karenge.</p>
+
+      <pre><code>from typing import TypedDict, Annotated
+from langchain_core.messages import AnyMessage, SystemMessage, HumanMessage, ToolMessage
+from langchain_openai import ChatOpenAI
+from langchain_community.tools.tavily_search import TavilySearchResults
+import operator
+
+# 1. Agent State
+class AgentState(TypedDict):
+    messages: Annotated[list[AnyMessage], operator.add]
+
+# 2. Tools
+tool = TavilySearchResults(max_results=2)
+tools = [tool]
+
+# 3. LLM
+llm = ChatOpenAI(model="gpt-4-turbo-preview")
+
+# LLM ko tools ke baare me batayein
+llm_with_tools = llm.bind_tools(tools)
+</code></pre>
+
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li><code class="inline">AgentState</code>: Yeh hamare graph ka memory (state) hai. <code class="inline">messages</code> list me saari conversation store hogi.</li>
+        <li><code class="inline">TavilySearchResults</code>: Hamara web search tool.</li>
+        <li><code class="inline">llm.bind_tools(tools)</code>: Yeh LLM ko batata hai ki uske paas kaun-kaun se tools available hain.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3>Step 2: Graph Nodes Banayein 🧠</h3>
+      <p>Nodes hamare graph ke building blocks hain. Yeh simple Python functions hote hain jo state par kaam karte hain. Hum do nodes banayenge: ek LLM ko call karne ke liye aur ek tool ko execute karne ke liye.</p>
+
+      <pre><code>from langgraph.prebuilt import ToolNode
+
+# Node 1: Agent (LLM ko call karta hai)
+def call_model(state: AgentState):
+    messages = state['messages']
+    response = llm_with_tools.invoke(messages)
+    return {"messages": [response]}
+
+# Node 2: Tool Executor (Tools ko call karta hai)
+tool_node = ToolNode(tools)
+</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Step 3: Graph ki Edges Define Karein (Logic) ⛓️</h3>
+      <p>Ab hum nodes ko jodenge. Yahan LangGraph ki asli power dikhti hai. Hum conditional edges ka use karke decide karenge ki LLM ke response ke baad kya karna hai: tool call karna hai ya conversation end karni hai.</p>
+
+      <pre><code>from langgraph.graph import StateGraph, END
+
+# Conditional Edge Logic
+def should_continue(state: AgentState) -> str:
+    last_message = state['messages'][-1]
+    if last_message.tool_calls:
+        return "continue" # Tool call karna hai
+    else:
+        return "end" # Conversation khatam
+
+# Graph define karein
+workflow = StateGraph(AgentState)
+
+# Nodes add karein
+workflow.add_node("agent", call_model)
+workflow.add_node("action", tool_node)
+
+# Entry point set karein
+workflow.set_entry_point("agent")
+
+# Conditional edge add karein
+workflow.add_conditional_edges(
+    "agent",
+    should_continue,
+    {
+        "continue": "action",
+        "end": END,
+    },
+)
+
+# Tool node se wapas agent node par edge add karein
+workflow.add_edge("action", "agent")
+
+# Graph compile karein
+app = workflow.compile()
+</code></pre>
+
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li><code class="inline">should_continue</code>: Yeh function check karta hai ki LLM ne tool call karne ko kaha hai ya nahi.</li>
+        <li><code class="inline">add_conditional_edges</code>: Yeh graph ko batata hai ki 'agent' node ke baad, `should_continue` ke result ke hisaab se 'action' node par jaana hai ya `END` karna hai.</li>
+        <li><code class="inline">add_edge("action", "agent")</code>: Yeh ek loop banata hai. Tool use karne ke baad, control wapas agent ke paas chala jaata hai.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3>Step 4: Agent se Interact Karein! 💬</h3>
+      <p>Hamara agent ab taiyar hai. Chaliye isse ek sawal puchte hain.</p>
+
+      <pre><code># Agent se interact karein
+inputs = {"messages": [HumanMessage(content="What is the weather in London and what are the main attractions there?")]}
+
+# Graph ko run karein
+for output in app.stream(inputs):
+    for key, value in output.items():
+        print(f"Output from node '{key}':")
+        print(value["messages"][-1].content)
+    print("---")
+</code></pre>
+
+      <p>Jab aap is code ko chalayenge, to aap dekhenge ki agent pehle Tavily search tool ka use karega, information collect karega, aur phir uss information ko use karke ek final answer dega. Yeh sab `stream` ke through live dikhega. 🎯</p>
+    </div>
+
+    <div class="pro-tips">
+      <h3>💡 Pro Tips</h3>
+      <ul>
+        <li><strong>Persistence</strong>: Production apps ke liye, <code class="inline">checkpointer</code> ka use karein taaki conversation history save ho sake. Isse aapka agent conversations ko yaad rakh payega.</li>
+        <li><strong>Human-in-the-loop</strong>: Aap graph me ek aisa node daal sakte hain jahan agent koi action lene se pehle aapse permission maange.</li>
+        <li><strong>Multi-Agent Systems</strong>: Aap alag-alag roles (e.g., "Researcher", "Writer") ke liye alag-alag graphs bana kar unhe aapas me connect kar sakte hain.</li>
+      </ul>
+    </div>
+
+    <a class="back" href="index.html">← Back to LangChain Tutorials</a>
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn LangChain & Generative AI in Roman Hindi</p>
+  </footer>
+</body>
+</html>
