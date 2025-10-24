@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Multi-Agent AI System with LangChain | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fafafa;
+      color: #222;
+      margin: 0;
+      line-height: 1.65;
+    }
+
+    header {
+      background: #2c3e50;
+      color: #fff;
+      text-align: center;
+      padding: 22px 16px;
+    }
+
+    header h1 { margin: 0; font-size: 22px; }
+
+    nav { margin-top: 8px; }
+
+    nav a {
+      color: #dfe8ef;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    nav a:hover { color: #f1f6fb; }
+
+    main {
+      max-width: 1000px;
+      margin: 28px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+    }
+
+    h2, h3 { color: #1e3551; }
+    p { color: #333; font-size: 16px; margin: 12px 0; }
+
+    .section { margin-top: 22px; }
+
+    pre {
+      background: #f4f6f8;
+      border-radius: 8px;
+      padding: 14px;
+      overflow-x: auto;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      border: 1px solid #e6eef8;
+    }
+
+    code.inline {
+      background: #eef6ff;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    ul { margin-left: 18px; color: #333; }
+    li { margin: 8px 0; }
+
+    .pro-tips {
+      background: #fff7ed;
+      border-left: 4px solid #ffb020;
+      padding: 12px 14px;
+      border-radius: 6px;
+      margin-top: 12px;
+      color: #6b4a00;
+    }
+
+    .back {
+      display: inline-block;
+      margin-top: 18px;
+      text-decoration: none;
+      color: #0077cc;
+      font-weight: 600;
+    }
+
+    .back:hover { text-decoration: underline; }
+
+    footer {
+      text-align: center;
+      padding: 18px;
+      margin-top: 24px;
+      background: #f4f4f4;
+      font-size: 14px;
+    }
+
+    @media (max-width: 720px) {
+      main { margin: 18px; padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Multi-Agent AI System: AI Teamwork in Action 🤖🤝🤖</h1>
+    <nav>
+      <a href="https://aikipadhai.com/index.html">Home</a>
+      <a href="https://aikipadhai.com/python/index.html">Python</a>
+      <a href="https://aikipadhai.com/genai/index.html"><strong>AI</strong></a>
+      <a href="https://aikipadhai.com/about.html">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>AI Agents ki Team Banayein, LangChain ke Saath!</h2>
+    <p>
+      Dosto, sochiye agar aap ek AI team bana sakein jahan har agent ek specific kaam mein expert ho? Ek agent research kare, doosra content likhe, aur teesra use review kare.
+      Aaj hum <strong>LangGraph</strong> (LangChain ka part) use karke ek aisi hi "Multi-Agent System" banayenge.
+    </p>
+
+    <div class="section">
+      <h3>🔧 Prerequisites</h3>
+      <p>Humein kuch libraries install karni hongi. Is project ke liye humein ek search tool bhi chahiye, jaise Tavily.</p>
+      <pre><code>pip install langchain langgraph langchain_openai tavily-python</code></pre>
+      <p>
+        Aapko <a href="https://tavily.com/" target="_blank">Tavily</a> par ek free API key bhi banani hogi.
+      </p>
+    </div>
+
+    <div class="section">
+      <h3>Step 1: Tools aur Agent State Define Karein 🛠️</h3>
+      <p>Sabse pehle, hum ek search tool banayenge aur phir apne graph ka "state" define karenge. State ek dictionary hai jo agents ke beech information share karti hai.</p>
+
+      <pre><code>from langchain_community.tools.tavily_search import TavilySearchResults
+from typing import TypedDict, Annotated, List
+from langchain_core.messages import BaseMessage
+import operator
+
+# 1. Tool
+tool = TavilySearchResults(max_results=2)
+
+# 2. Agent State
+class AgentState(TypedDict):
+    messages: Annotated[List[BaseMessage], operator.add]
+</code></pre>
+
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li><code class="inline">TavilySearchResults</code>: Yeh hamara web search tool hai.</li>
+        <li><code class="inline">AgentState</code>: Yeh graph ka memory bank hai. <code class="inline">messages</code> field me saari conversation history store hogi.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3>Step 2: Agent Node aur Graph Banayein 🧠</h3>
+      <p>Ab hum ek "agent node" banayenge. Yeh ek function hai jo LLM ko call karta hai aur decide karta hai ki tool use karna hai ya nahi. Phir hum in nodes ko ek graph me jodenge.</p>
+
+      <pre><code>from langchain_openai import ChatOpenAI
+from langgraph.prebuilt import create_tool_executor, ToolInvocation
+from langgraph.graph import StateGraph, END
+
+# LLM aur Tool Executor
+llm = ChatOpenAI(model="gpt-4-turbo-preview")
+tool_executor = create_tool_executor([tool])
+
+# Agent Node Function
+def agent_node(state):
+    # LLM ko call karo
+    response = llm.invoke(state['messages'])
+    # Agar LLM tool call karna chahta hai, to use execute karo
+    if response.tool_calls:
+        tool_invocations = [ToolInvocation(tool=call['name'], tool_input=call['args']) for call in response.tool_calls]
+        tool_responses = tool_executor.batch(tool_invocations)
+        return {"messages": tool_responses}
+    else:
+        return {"messages": [response]}
+
+# Graph define karo
+workflow = StateGraph(AgentState)
+workflow.add_node("agent", agent_node)
+workflow.set_entry_point("agent")
+workflow.add_edge("agent", END) # Simple graph: agent se seedha end
+
+# Graph compile karo
+app = workflow.compile()
+</code></pre>
+
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li><code class="inline">agent_node</code>: Yeh hamare agent ka dimaag hai. Yeh state leta hai, LLM se sochwata hai, aur zaroorat padne par tool chalata hai.</li>
+        <li><code class="inline">StateGraph</code>: Yeh hamare multi-agent system ka blueprint hai.</li>
+        <li><code class="inline">add_node</code> aur <code class="inline">add_edge</code>: Inse hum graph me nodes (agents) aur unke beech connections (edges) banate hain.</li>
+        <li><code class="inline">compile()</code>: Yeh graph ko ek executable application me badal deta hai.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3>Step 3: Apni AI Team se Kaam Karwayein! 🚀</h3>
+      <p>Ab hamara agent graph taiyar hai. Chaliye isse ek research task dete hain.</p>
+
+      <pre><code>from langchain_core.messages import HumanMessage
+
+# Agent se sawal puchein
+inputs = {"messages": [HumanMessage(content="What is the weather in Dubai? Also, what is LangGraph and how does it work?")]}
+
+# Graph ko stream me run karein taaki hum live updates dekh sakein
+for output in app.stream(inputs):
+    for key, value in output.items():
+        print(f"Output from node '{key}':")
+        print("---")
+        print(value)
+    print("\n---\n")
+</code></pre>
+
+      <p>Jab aap is code ko chalayenge, to aap dekhenge ki agent pehle Tavily search tool ka use karke weather aur LangGraph ki information nikalega, aur phir us information ko use karke ek final, comprehensive answer generate karega. 🎯</p>
+    </div>
+
+    <div class="pro-tips">
+      <h3>💡 Pro Tips</h3>
+      <ul>
+        <li><strong>Conditional Edges</strong>: Aap <code class="inline">add_conditional_edges</code> ka use karke complex logic bana sakte hain. Jaise, "agar tool call hua to tool node par jao, warna end kar do".</li>
+        <li><strong>Multiple Agents</strong>: Alag-alag roles (e.g., "Researcher", "Writer") ke liye alag-alag nodes banayein. Har node ka apna prompt aur tools ho sakte hain.</li>
+        <li><strong>Human-in-the-loop</strong>: Aap graph me ek "wait" point daal sakte hain jahan system human approval ke liye rukega.</li>
+        <li><strong>Persistence</strong>: LangGraph me memory (checkpointers) add karna aasan hai, taaki aapki team lambi conversations ko yaad rakh sake.</li>
+      </ul>
+    </div>
+
+    <a class="back" href="projects.html">← Back to Projects Showcase</a>
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn LangChain & Generative AI in Roman Hindi</p>
+  </footer>
+</body>
+</html>
