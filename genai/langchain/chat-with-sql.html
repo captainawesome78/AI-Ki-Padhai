@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chat with SQL Database using LangChain | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fafafa;
+      color: #222;
+      margin: 0;
+      line-height: 1.65;
+    }
+
+    header {
+      background: #2c3e50;
+      color: #fff;
+      text-align: center;
+      padding: 22px 16px;
+    }
+
+    header h1 { margin: 0; font-size: 22px; }
+
+    nav { margin-top: 8px; }
+
+    nav a {
+      color: #dfe8ef;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    nav a:hover { color: #f1f6fb; }
+
+    main {
+      max-width: 1000px;
+      margin: 28px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+    }
+
+    h2, h3 { color: #1e3551; }
+    p { color: #333; font-size: 16px; margin: 12px 0; }
+
+    .section { margin-top: 22px; }
+
+    pre {
+      background: #f4f6f8;
+      border-radius: 8px;
+      padding: 14px;
+      overflow-x: auto;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      border: 1px solid #e6eef8;
+    }
+
+    code.inline {
+      background: #eef6ff;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    ul { margin-left: 18px; color: #333; }
+    li { margin: 8px 0; }
+
+    .pro-tips {
+      background: #fff7ed;
+      border-left: 4px solid #ffb020;
+      padding: 12px 14px;
+      border-radius: 6px;
+      margin-top: 12px;
+      color: #6b4a00;
+    }
+
+    .back {
+      display: inline-block;
+      margin-top: 18px;
+      text-decoration: none;
+      color: #0077cc;
+      font-weight: 600;
+    }
+
+    .back:hover { text-decoration: underline; }
+
+    footer {
+      text-align: center;
+      padding: 18px;
+      margin-top: 24px;
+      background: #f4f4f4;
+      font-size: 14px;
+    }
+
+    @media (max-width: 720px) {
+      main { margin: 18px; padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>LangChain SQL Agent: Apne Database se Baat Karein 📊</h1>
+    <nav>
+      <a href="https://aikipadhai.com/index.html">Home</a>
+      <a href="https://aikipadhai.com/python/index.html">Python</a>
+      <a href="https://aikipadhai.com/genai/index.html"><strong>AI</strong></a>
+      <a href="https://aikipadhai.com/about.html">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>SQL Database se Chat Karein, Bina SQL Likhe!</h2>
+    <p>
+      Dosto, kya aapne socha hai ki aap apne SQL database se English ya Hindi me सवाल पूछ sakte hain, aur AI aapke liye SQL query likh kar jawab de?
+      Aaj hum LangChain ka use karke ek aisa hi powerful <strong>SQL Agent</strong> banayenge.
+    </p>
+
+    <div class="section">
+      <h3>🔧 Prerequisites</h3>
+      <p>Humein kuch libraries install karni hongi:</p>
+      <pre><code>pip install langchain langchain-openai openai sqlalchemy</code></pre>
+      <p>
+        <code class="inline">SQLAlchemy</code> ek popular library hai jo Python ko SQL databases se connect karne me madad karti hai.
+      </p>
+    </div>
+
+    <div class="section">
+      <h3>Step 1: Database Setup (SQLite) 🗃️</h3>
+      <p>Hum ek simple in-memory SQLite database banayenge aur usme kuch data daalenge.</p>
+
+      <pre><code>from langchain_community.utilities import SQLDatabase
+
+# In-memory SQLite database banayein
+db = SQLDatabase.from_uri("sqlite:///Chinook.db")
+
+# Check karein ki connection hua ya nahi
+print(db.dialect)
+print(db.get_usable_table_names())</code></pre>
+
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li>Humne ek sample 'Chinook' database use kiya hai, jise aap online download kar sakte hain. Yeh music store ka data rakhta hai.</li>
+        <li><code class="inline">SQLDatabase.from_uri()</code> database se connection banata hai.</li>
+        <li><code class="inline">get_usable_table_names()</code> humein batata hai ki database me kaun-kaun si tables hain.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3>Step 2: LLM aur Agent Banayein 🤖</h3>
+      <p>Ab hum ek Language Model (LLM) initialize karenge aur use database ke saath jodkar ek agent banayenge.</p>
+
+      <pre><code>from langchain_openai import ChatOpenAI
+from langchain_community.agent_toolkits import create_sql_agent
+
+# OpenAI ka LLM initialize karein
+llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
+
+# SQL Agent banayein
+agent_executor = create_sql_agent(
+    llm=llm,
+    db=db,
+    agent_type="openai-tools",
+    verbose=True
+)</code></pre>
+
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li><code class="inline">ChatOpenAI</code> se hum GPT model ko access kar rahe hain.</li>
+        <li><code class="inline">create_sql_agent</code> ek magic function hai jo LLM aur Database ko ek saath kaam karne ke liye taiyar karta hai.</li>
+        <li><code class="inline">verbose=True</code> se hum dekh sakte hain ki agent background me kya soch raha hai aur kaun si SQL query bana raha hai.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3>Step 3: Database se Sawal Puche! 💬</h3>
+      <p>Ab hamara agent taiyar hai. Chaliye isse kuch natural language me sawal puchte hain.</p>
+
+      <pre><code># Agent se sawal puchein
+response = agent_executor.invoke({
+    "input": "List the total sales per country. Which country has the highest sales?"
+})
+
+print(response["output"])</code></pre>
+
+      <p>Yeh agent aapke sawal ko samjhega, uske liye SQL query generate karega, database par chalayega, aur result ko aasan bhasha me aapko dega. 🎯</p>
+
+      <pre><code># Ek aur sawal
+agent_executor.invoke({"input": "Show me all artists from the 'Rock' genre."})</code></pre>
+    </div>
+
+    <div class="pro-tips">
+      <h3>💡 Pro Tips</h3>
+      <ul>
+        <li>Complex databases ke liye, agent ko table aur column ke baare me thoda context (descriptions) dena behtar rehta hai.</li>
+        <li><code class="inline">temperature=0</code> set karne se agent zyada factual aur kam creative jawab dega, jo data queries ke liye accha hai.</li>
+        <li>Production me, database access ke liye read-only permissions wale user credentials ka istemal karein taaki data galti se modify na ho.</li>
+      </ul>
+    </div>
+
+    <a class="back" href="index.html">← Back to LangChain Tutorials</a>
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn LangChain & Generative AI in Roman Hindi</p>
+  </footer>
+</body>
+</html>
