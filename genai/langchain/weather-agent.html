@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Weather Assistant using LangChain & OpenWeatherMap | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fafafa;
+      color: #222;
+      margin: 0;
+      line-height: 1.65;
+    }
+
+    header {
+      background: #2c3e50;
+      color: #fff;
+      text-align: center;
+      padding: 22px 16px;
+    }
+
+    header h1 { margin: 0; font-size: 22px; }
+
+    nav { margin-top: 8px; }
+
+    nav a {
+      color: #dfe8ef;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    nav a:hover { color: #f1f6fb; }
+
+    main {
+      max-width: 1000px;
+      margin: 28px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+    }
+
+    h2, h3 { color: #1e3551; }
+    p { color: #333; font-size: 16px; margin: 12px 0; }
+    .section { margin-top: 22px; }
+
+    pre {
+      background: #f4f6f8;
+      border-radius: 8px;
+      padding: 14px;
+      overflow-x: auto;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      border: 1px solid #e6eef8;
+    }
+
+    code.inline {
+      background: #eef6ff;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    ul { margin-left: 18px; color: #333; }
+    li { margin: 8px 0; }
+
+    .pro-tips {
+      background: #fff7ed;
+      border-left: 4px solid #ffb020;
+      padding: 12px 14px;
+      border-radius: 6px;
+      margin-top: 12px;
+      color: #6b4a00;
+    }
+
+    .back {
+      display: inline-block;
+      margin-top: 18px;
+      text-decoration: none;
+      color: #0077cc;
+      font-weight: 600;
+    }
+
+    .back:hover { text-decoration: underline; }
+
+    footer {
+      text-align: center;
+      padding: 18px;
+      margin-top: 24px;
+      background: #f4f4f4;
+      font-size: 14px;
+    }
+
+    @media (max-width: 720px) {
+      main { margin: 18px; padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>LangChain Weather Assistant 🌦️</h1>
+    <nav>
+      <a href="https://aikipadhai.com/index.html">Home</a>
+      <a href="https://aikipadhai.com/python/index.html">Python</a>
+      <a href="https://aikipadhai.com/genai/index.html"><strong>AI</strong></a>
+      <a href="https://aikipadhai.com/about.html">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>LangChain aur OpenWeatherMap ke Saath 🌤️</h2>
+    <p>
+      Pyaare Developers! Aaj hum ek cool <strong>Weather Assistant</strong> banayenge jo <code class="inline">LangChain</code> aur
+      <code class="inline">OpenWeatherMap API</code> ka use karke real-time mausam ka data laata hai.  
+      Yeh project dikhata hai ki kaise AI aur open APIs milkar ek smart assistant create kar sakte hain!
+    </p>
+
+    <div class="section">
+      <h3>🧩 Prerequisites</h3>
+      <ul>
+        <li>Python 3.7+ installed</li>
+        <li>OpenWeatherMap API key (free account se)</li>
+        <li><code class="inline">LangChain</code> aur <code class="inline">pyowm</code> libraries</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3>Step 1: Installation ⚙️</h3>
+      <p>Sabse pehle, zaruri libraries install karein:</p>
+
+      <pre><code>pip install langchain pyowm</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Step 2: API Key Setup 🔑</h3>
+      <p>
+        <strong>OpenWeatherMap</strong> se API key lein:
+      </p>
+      <ul>
+        <li>OpenWeatherMap par jaake free account banao</li>
+        <li>Profile → API Keys me jaake ek key generate karo</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3>Step 3: Code Implementation 💻</h3>
+
+      <pre><code>from langchain_community.document_loaders import WeatherDataLoader
+from langchain_community.utilities import OpenWeatherMapAPIWrapper
+import os
+
+# API Key set karo
+os.environ["OPENWEATHERMAP_API_KEY"] = "your_api_key_here"
+
+# Weather Wrapper initialize karo
+weather_wrapper = OpenWeatherMapAPIWrapper()
+
+# Weather data retrieve karne ka function
+def get_weather_info(city):
+    try:
+        # City ke liye weather data fetch karo
+        weather_data = weather_wrapper.run(city)
+        return weather_data
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+# Main function
+def weather_assistant():
+    print("🌦️ Namaste! Main aapka Mausam Assistant hoon!")
+    
+    while True:
+        city = input("\nKis city ka mausam jaanna chahte hain? (Exit ke liye 'quit' type karein): ")
+        
+        if city.lower() == 'quit':
+            print("Alvida! Phir milenge!")
+            break
+        
+        weather_info = get_weather_info(city)
+        print(f"\n{city} ka Mausam Report:\n{weather_info}")
+
+# Assistant start karo
+if __name__ == "__main__":
+    weather_assistant()</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>🧠 Deep Dive: Code Explanation</h3>
+      <ul>
+        <li><strong>WeatherDataLoader:</strong> LangChain ka module jo weather data handle karta hai</li>
+        <li><strong>OpenWeatherMapAPIWrapper:</strong> OpenWeatherMap API ke sath interact karne ka utility</li>
+        <li><strong>os:</strong> Environment variables (API key) securely manage karta hai</li>
+      </ul>
+
+      <p><strong>get_weather_info():</strong> city ke liye data fetch karta hai aur exceptions handle karta hai.</p>
+      <p><strong>weather_assistant():</strong> continuous user loop hai jisme city input liya jata hai aur result print hota hai.</p>
+    </div>
+
+    <div class="section">
+      <h3>🚀 Advanced Features To Try</h3>
+      <ul>
+        <li>🌍 Multiple language support</li>
+        <li>📅 Detailed forecast (hourly/daily)</li>
+        <li>🌡️ Temperature unit conversion (Celsius ↔ Fahrenheit)</li>
+        <li>⚙️ Error handling improvements</li>
+      </ul>
+    </div>
+
+    <div class="section pro-tips">
+      <h3>💡 Best Practices</h3>
+      <ul>
+        <li>API key ko secure rakho (environment variables ya .env file use karo)</li>
+        <li>Rate limiting handle karo (avoid frequent API calls)</li>
+        <li>Error scenarios jaise “Invalid City” ya “No Data Found” ko cover karo</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3>🧩 Challenges & Solutions</h3>
+      <ul>
+        <li><strong>API Limits:</strong> Free tier me request limit hoti hai — caching use karo.</li>
+        <li><strong>Data Accuracy:</strong> Different sources se cross-verify karna useful hai.</li>
+        <li><strong>Performance:</strong> Repeated queries ke liye local cache implement karo.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3>🎯 Conclusion</h3>
+      <p>
+        Bas itna sa effort lagake aapne ek powerful weather assistant bana liya! 🌦️  
+        Yeh project dikhata hai ki kaise <strong>AI</strong> aur <strong>Open APIs</strong> ko combine karke practical, real-world solutions banaye ja sakte hain.  
+        Ab aap apna AI-based weather chatbot aur advanced bana sakte ho!
+      </p>
+    </div>
+
+    <a class="back" href="index.html">← Back to LangChain Tutorials</a>
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn LangChain & Generative AI in Roman Hindi</p>
+  </footer>
+</body>
+</html>
