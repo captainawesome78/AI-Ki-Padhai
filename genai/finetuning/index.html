@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finetuning Projects</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #fafafa;
+            margin: 0;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        header {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 25px 15px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 26px;
+        }
+
+        nav { margin-top: 8px; }
+
+        nav a {
+            color: #dfe8ef;
+            text-decoration: none;
+            margin: 0 12px;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        nav a:hover { color: #f1f6fb; }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 40px;
+            color: #2c3e50;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.25rem;
+            color: #34495e;
+        }
+
+        .card-body p {
+            margin: 0 0 15px 0;
+            color: #555;
+            flex-grow: 1;
+            font-size: 15px;
+        }
+
+        .card a {
+            text-decoration: none;
+            color: #0077cc;
+            font-weight: 600;
+        }
+
+        .card a:hover {
+            text-decoration: underline;
+            color: #005fa3;
+        }
+
+        .card-footer {
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .status.running { background-color: #e0f7fa; color: #00796b; }
+        .status.completed { background-color: #e8f5e9; color: #2e7d32; }
+        .status.failed { background-color: #ffebee; color: #c62828; }
+
+        footer {
+            text-align: center;
+            background: #f4f4f4;
+            padding: 20px;
+            margin-top: 40px;
+            font-size: 15px;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Model Fine-Tuning & Customization</h1>
+        <nav>
+            <a href="https://aikipadhai.com/index.html">Home</a>
+            <a href="https://aikipadhai.com/python/index.html">Python</a>
+            <a href="https://aikipadhai.com/genai/index.html"><strong>AI</strong></a>
+            <a href="https://aikipadhai.com/about.html">About</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>🧩 Fine-Tuning Tutorials & Projects</h1>
+
+        <div class="projects-grid">
+            <!-- Project Card 1: Fine-tune Embedding Model -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>Fine-Tune Embedding Model for RAG</h2>
+                </div>
+                <div class="card-body">
+                    <p>Learn how to fine-tune an embedding model for Retrieval Augmented Generation (RAG) using Hugging Face. This tutorial covers creating a synthetic dataset, training the model, and evaluating its performance.</p>
+                    <a href="embedding-model-rag.html">🎯 Read Tutorial →</a>
+                </div>
+                <div class="card-footer">
+                    <span class="status completed">Tutorial</span>
+                    <p style="margin-top: 10px;">Created: 2024-05-20</p>
+                </div>
+            </div>
+
+            <!-- Add more project cards here as needed -->
+
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 AIkiPadhai | Learn Python & Generative AI in Roman Hindi 🚀</p>
+    </footer>
+</body>
+</html>

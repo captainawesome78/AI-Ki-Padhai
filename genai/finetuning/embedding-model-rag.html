@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fine-Tune Embedding Model for RAG | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    /* Consistent styling from other tutorial pages */
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fafafa;
+      color: #222;
+      margin: 0;
+      line-height: 1.65;
+    }
+
+    header {
+      background: #2c3e50;
+      color: #fff;
+      text-align: center;
+      padding: 22px 16px;
+    }
+    header h1 { margin: 0; font-size: 22px; }
+    nav { margin-top: 8px; }
+    nav a {
+      color: #dfe8ef;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+    nav a:hover { color: #f1f6fb; }
+
+    main {
+      max-width: 1000px;
+      margin: 28px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+    }
+
+    .eyebrow {
+      color: #0a66a3;
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    h2, h3 { color: #1e3551; }
+    p { color: #333; font-size: 16px; margin: 12px 0; }
+
+    .section {
+      margin-top: 25px;
+    }
+
+    pre {
+      background: #f4f6f8;
+      border-radius: 8px;
+      padding: 14px;
+      overflow-x: auto;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      border: 1px solid #e6eef8;
+    }
+
+    code.inline {
+      background: #eef6ff;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    ul { margin-left: 18px; color: #333; }
+    li { margin: 8px 0; }
+
+    .pro-tips {
+      background: #fff7ed;
+      border-left: 4px solid #ffb020;
+      padding: 12px 14px;
+      border-radius: 6px;
+      margin-top: 12px;
+      color: #6b4a00;
+    }
+
+    .back {
+      display:inline-block;
+      margin-top:18px;
+      text-decoration:none;
+      color:#0077cc;
+      font-weight:600;
+    }
+    .back:hover { text-decoration:underline; }
+
+    footer {
+      text-align:center;
+      padding:18px;
+      margin-top: 24px;
+      background:#f4f4f4;
+      font-size:14px;
+    }
+
+    @media (max-width:720px) {
+      main { margin: 18px; padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Fine-Tune Embedding Model for RAG</h1>
+    <nav>
+      <a href="https://aikipadhai.com/index.html">Home</a>
+      <a href="https://aikipadhai.com/python/index.html">Python</a>
+      <a href="https://aikipadhai.com/genai/index.html"><strong>AI</strong></a>
+      <a href="https://aikipadhai.com/about.html">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="eyebrow">Tutorial • Fine-Tuning</div>
+    <h2>Embedding Model ko RAG ke liye Fine-Tune Kaise Karein 🎯</h2>
+
+    <p>
+      Dosto, Retrieval Augmented Generation (RAG) systems me embedding models ka role bahut important hai.
+      Aksar hum general-purpose models jaise <code class="inline">text-embedding-ada-002</code> ya <code class="inline">bge-large-en</code> use karte hain.
+      Lekin, agar aapko apne specific data par behtar performance chahiye, to embedding model ko <strong>fine-tune</strong> karna ek powerful technique hai.
+    </p>
+    <p>
+      Is tutorial me hum seekhenge ki Hugging Face ke <code class="inline">sentence-transformers</code> library ka use karke ek embedding model ko kaise fine-tune karein.
+    </p>
+
+    <div class="section">
+      <h3>Step 1: Synthetic Dataset Banana 🧪</h3>
+      <p>
+        Fine-tuning ke liye humein ek dataset chahiye jisme questions aur unke relevant contexts (answers) hon.
+        Agar aapke paas aisa dataset nahi hai, to aap ek LLM (jaise GPT-4) ka use karke apne documents se synthetic (artificial) dataset bana sakte hain.
+      </p>
+      <p>Hum <code class="inline">llama-index</code> library ka use karke yeh kaam aasaani se kar sakte hain.</p>
+
+      <pre><code>from llama_index.core import SimpleDirectoryReader
+from llama_index.core.node_parser import SimpleNodeParser
+from llama_index.finetuning import generate_qa_embedding_pairs
+
+# Apne documents load karein
+documents = SimpleDirectoryReader("./documents").load_data()
+
+# Nodes/chunks banayein
+parser = SimpleNodeParser.from_defaults(chunk_size=512)
+nodes = parser.get_nodes_from_documents(documents)
+
+# LLM ka use karke Question-Answer pairs generate karein
+qa_dataset = generate_qa_embedding_pairs(nodes, llm="gpt-4-1106-preview")
+
+# Dataset ko save karein
+qa_dataset.save_json("train_dataset.json")</code></pre>
+
+      <p><strong>Explanation:</strong> Yeh code aapke document folder se files ko load karta hai, unhe छोटे-छोटे chunks me todta hai, aur phir GPT-4 ka use karke har chunk ke liye relevant questions generate karta hai. Isse humein training ke liye data mil jaata hai.</p>
+    </div>
+
+    <div class="section">
+      <h3>Step 2: Model ko Train Karna 🏋️‍♂️</h3>
+      <p>
+        Ab hum <code class="inline">sentence-transformers</code> library ka use karke apne base embedding model ko train karenge. Hum <code class="inline">bge-large-en-v1.5</code> ko as a base model use karenge.
+      </p>
+
+      <pre><code>from datasets import load_dataset
+from sentence_transformers import SentenceTransformer, losses
+from sentence_transformers.training_args import SentenceTransformerTrainingArguments
+from sentence_transformers.trainer import SentenceTransformerTrainer
+
+# Dataset load karein
+train_dataset = load_dataset("json", data_files="train_dataset.json", split="train")
+
+# Base model initialize karein
+model = SentenceTransformer("BAAI/bge-large-en-v1.5")
+
+# Training loss define karein (MultipleNegativesRankingLoss RAG ke liye accha hai)
+loss = losses.MultipleNegativesRankingLoss(model)
+
+# Training arguments set karein
+args = SentenceTransformerTrainingArguments(
+    output_dir="bge-large-en-v1.5-finetuned",
+    num_train_epochs=3,
+    per_device_train_batch_size=8,
+    gradient_accumulation_steps=4,
+    learning_rate=2e-5,
+    warmup_ratio=0.1,
+)
+
+# Trainer create karein aur train karein
+trainer = SentenceTransformerTrainer(
+    model=model,
+    args=args,
+    train_dataset=train_dataset,
+    loss=loss,
+)
+trainer.train()
+
+# Model ko save karein
+model.save_to_disk("./bge-finetuned-model")</code></pre>
+
+      <p><strong>Explanation:</strong> Is code me humne synthetic dataset load kiya, base model (<code class="inline">bge-large-en-v1.5</code>) chuna, training ke liye loss function aur parameters set kiye, aur phir model ko train kiya. Trained model local directory me save ho jayega.</p>
+    </div>
+
+    <div class="section">
+      <h3>Step 3: Model ko Evaluate Karna 📊</h3>
+      <p>
+        Fine-tuning ke baad, yeh check karna zaroori hai ki hamara model pehle se behtar hua ya nahi. Hum iske liye <code class="inline">InformationRetrievalEvaluator</code> ka use kar sakte hain, jo MRR (Mean Reciprocal Rank) jaise metrics calculate karta hai.
+      </p>
+      <p>Iske liye aapko ek alag evaluation dataset (corpus, queries, relevant_docs) banana hoga.</p>
+      <pre><code>from sentence_transformers.evaluation import InformationRetrievalEvaluator
+
+# Evaluator create karein
+evaluator = InformationRetrievalEvaluator(queries, corpus, relevant_docs)
+
+# Base model evaluate karein
+base_model = SentenceTransformer("BAAI/bge-large-en-v1.5")
+print("Base model performance:")
+base_model.evaluate(evaluator)
+
+# Fine-tuned model evaluate karein
+finetuned_model = SentenceTransformer("./bge-finetuned-model")
+print("Fine-tuned model performance:")
+finetuned_model.evaluate(evaluator)</code></pre>
+      <p>Aap dekhenge ki fine-tuned model ka MRR score base model se zyada hoga, jiska matlab hai ki woh aapke data ke liye zyada relevant results de raha hai.</p>
+    </div>
+
+    <div class="pro-tips">
+      <h3>💡 Pro Tips</h3>
+      <ul>
+        <li><strong>Dataset Quality:</strong> Aapke synthetic dataset ki quality bahut matter karti hai. Acche questions generate karne ke liye powerful LLM (like GPT-4) use karein.</li>
+        <li><strong>Base Model:</strong> Apne use-case ke hisaab se sahi base model chunein. <code class="inline">bge</code> series ke models RAG ke liye kaafi popular hain.</li>
+        <li><strong>Hyperparameters:</strong> <code class="inline">learning_rate</code>, <code class="inline">num_train_epochs</code>, aur <code class="inline">batch_size</code> ko tune karke aap aur behtar results paa sakte hain.</li>
+      </ul>
+    </div>
+
+    <a class="back" href="index.html">← Back to Fine-Tuning Projects</a>
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn Fine-Tuning & Generative AI in Roman Hindi</p>
+  </footer>
+</body>
+</html>
