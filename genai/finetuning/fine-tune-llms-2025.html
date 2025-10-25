@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>How to Fine-Tune LLMs in 2025 | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    /* Consistent styling from other tutorial pages */
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fafafa;
+      color: #222;
+      margin: 0;
+      line-height: 1.65;
+    }
+
+    header {
+      background: #2c3e50;
+      color: #fff;
+      text-align: center;
+      padding: 22px 16px;
+    }
+    header h1 { margin: 0; font-size: 22px; }
+    nav { margin-top: 8px; }
+    nav a {
+      color: #dfe8ef;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+    nav a:hover { color: #f1f6fb; }
+
+    main {
+      max-width: 1000px;
+      margin: 28px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+    }
+
+    .eyebrow {
+      color: #0a66a3;
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    h2, h3 { color: #1e3551; }
+    p { color: #333; font-size: 16px; margin: 12px 0; }
+
+    .section {
+      margin-top: 25px;
+    }
+
+    pre {
+      background: #f4f6f8;
+      border-radius: 8px;
+      padding: 14px;
+      overflow-x: auto;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      border: 1px solid #e6eef8;
+    }
+
+    code.inline {
+      background: #eef6ff;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    ul { margin-left: 18px; color: #333; }
+    li { margin: 8px 0; }
+
+    .pro-tips {
+      background: #fff7ed;
+      border-left: 4px solid #ffb020;
+      padding: 12px 14px;
+      border-radius: 6px;
+      margin-top: 12px;
+      color: #6b4a00;
+    }
+
+    .back {
+      display:inline-block;
+      margin-top:18px;
+      text-decoration:none;
+      color:#0077cc;
+      font-weight:600;
+    }
+    .back:hover { text-decoration:underline; }
+
+    footer {
+      text-align:center;
+      padding:18px;
+      margin-top: 24px;
+      background:#f4f4f4;
+      font-size:14px;
+    }
+
+    @media (max-width:720px) {
+      main { margin: 18px; padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Fine-Tune LLMs in 2025 with Hugging Face</h1>
+    <nav>
+      <a href="https://aikipadhai.com/index.html">Home</a>
+      <a href="https://aikipadhai.com/python/index.html">Python</a>
+      <a href="https://aikipadhai.com/genai/index.html"><strong>AI</strong></a>
+      <a href="https://aikipadhai.com/about.html">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="eyebrow">Tutorial • Fine-Tuning</div>
+    <h2>Open LLMs ko 2025 me Fine-Tune Kaise Karein 🚀</h2>
+
+    <p>
+      Dosto, aaj kal open-source LLMs jaise Llama 3, Mistral, aur Gemma ko fine-tune karna bahut aasan ho gaya hai.
+      Is process se aap in powerful models ko apne specific tasks ke liye customize kar sakte hain.
+      Is tutorial me hum seekhenge ki Hugging Face ki modern libraries (<code class="inline">TRL</code>, <code class="inline">PEFT</code>, <code class="inline">bitsandbytes</code>) ka use karke LLMs ko efficiently kaise fine-tune karein.
+    </p>
+
+    <div class="section">
+      <h3>Step 1: Environment Setup 🛠️</h3>
+      <p>
+        Sabse pehle, humein zaroori libraries install karni hongi. Yeh libraries humein training, model optimization, aur dataset handling me madad karengi.
+      </p>
+      <pre><code>pip install -U transformers datasets accelerate peft trl bitsandbytes</code></pre>
+      <p><strong>Libraries ka matlab:</strong></p>
+      <ul>
+        <li><code class="inline">transformers</code>: Hugging Face models ko load karne ke liye.</li>
+        <li><code class="inline">peft</code>: Parameter-Efficient Fine-Tuning (LoRA) ke liye.</li>
+        <li><code class="inline">trl</code>: Supervised Fine-Tuning (SFT) ko aasan banane ke liye.</li>
+        <li><code class="inline">bitsandbytes</code>: Model ko quantize (QLoRA) karke memory bachane ke liye.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3>Step 2: Dataset Taiyar Karna 📚</h3>
+      <p>
+        Fine-tuning ke liye, aapka dataset ek specific format me hona chahiye. Chat models ke liye, "chat template" format best hai, jisme har example me roles (user, assistant) aur content hota hai.
+      </p>
+      <p>Hum yahan ek sample dataset <code class="inline">"mlabonne/guanaco-llama2-1k"</code> use karenge.</p>
+      <pre><code>from datasets import load_dataset
+
+# Dataset load karein
+dataset = load_dataset("mlabonne/guanaco-llama2-1k", split="train")</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Step 3: Model ko Fine-Tune Karna (SFT) 🏋️‍♂️</h3>
+      <p>
+        Ab hum training ka process start karenge. Hum <strong>QLoRA</strong> (Quantized Low-Rank Adaptation) ka use karenge, jo kam memory me high performance deta hai.
+        <code class="inline">TRL</code> library ka <code class="inline">SFTTrainer</code> is kaam ko bahut simple bana deta hai.
+      </p>
+
+      <pre><code>import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from peft import LoraConfig
+from trl import SFTTrainer
+from transformers import TrainingArguments
+
+# Model ID
+model_id = "meta-llama/Meta-Llama-3-8B"
+
+# BitsAndBytesConfig for 4-bit quantization (QLoRA)
+bnb_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_compute_dtype=torch.bfloat16
+)
+
+# LoRA config
+lora_config = LoraConfig(
+    r=16,
+    lora_alpha=32,
+    lora_dropout=0.05,
+    target_modules=["q_proj", "k_proj", "v_proj", "o_proj"],
+    task_type="CAUSAL_LM",
+)
+
+# Model aur tokenizer load karein
+model = AutoModelForCausalLM.from_pretrained(model_id, quantization_config=bnb_config, device_map="auto")
+tokenizer = AutoTokenizer.from_pretrained(model_id)
+
+# Training arguments
+training_args = TrainingArguments(
+    output_dir="./llama3-8b-finetuned",
+    per_device_train_batch_size=4,
+    gradient_accumulation_steps=4,
+    learning_rate=2e-4,
+    num_train_epochs=3,
+    logging_steps=10,
+)
+
+# SFTTrainer
+trainer = SFTTrainer(
+    model=model,
+    train_dataset=dataset,
+    peft_config=lora_config,
+    dataset_text_field="text", # Dataset ke column ka naam
+    tokenizer=tokenizer,
+    args=training_args,
+    max_seq_length=512,
+)
+
+# Training start karein
+trainer.train()</code></pre>
+
+      <p><strong>Explanation:</strong> Yeh code Llama 3 8B model ko 4-bit precision me load karta hai, LoRA configuration apply karta hai, aur phir <code class="inline">SFTTrainer</code> ka use karke dataset par fine-tune karta hai. Isse sirf adapter weights train hote hain, pura model nahi.</p>
+    </div>
+
+    <div class="pro-tips">
+      <h3>💡 Pro Tips</h3>
+      <ul>
+        <li><strong>Model Selection:</strong> Apne task aur hardware ke hisaab se sahi base model chunein (e.g., Llama 3 8B, Mistral 7B).</li>
+        <li><strong>Dataset Quality:</strong> Fine-tuning ka result aapke dataset ki quality par depend karta hai. Clean aur relevant data use karein.</li>
+        <li><strong>LoRA Parameters:</strong> <code class="inline">r</code> (rank) aur <code class="inline">lora_alpha</code> ko adjust karke aap training ko control kar sakte hain. <code class="inline">r=16</code> aur <code class="inline">alpha=32</code> ek acchi starting point hai.</li>
+        <li><strong>Hardware:</strong> QLoRA ke saath, aap Llama 3 8B jaise model ko single consumer GPU (jaise NVIDIA T4 ya 24GB VRAM wale GPU) par bhi fine-tune kar sakte hain.</li>
+      </ul>
+    </div>
+
+    <a class="back" href="index.html">← Back to Fine-Tuning Projects</a>
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn Fine-Tuning & Generative AI in Roman Hindi</p>
+  </footer>
+</body>
+</html>
