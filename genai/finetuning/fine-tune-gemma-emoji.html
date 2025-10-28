@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277"
+     crossorigin="anonymous"></script>
+  <title>Emoji generation ke liye Gemma 3 270M ko Fine-tune karein | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fafafa;
+      color: #222;
+      margin: 0;
+      line-height: 1.65;
+    }
+
+    header {
+      background: #2c3e50;
+      color: #fff;
+      text-align: center;
+      padding: 22px 16px;
+    }
+
+    header h1 { margin: 0; font-size: 22px; }
+
+    nav { margin-top: 8px; }
+
+    nav a {
+      color: #dfe8ef;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    nav a:hover { color: #f1f6fb; }
+
+    main {
+      max-width: 1000px;
+      margin: 28px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+    }
+
+    h2, h3 { color: #1e3551; }
+    p { color: #333; font-size: 16px; margin: 12px 0; }
+
+    .section { margin-top: 22px; }
+
+    pre {
+      background: #f4f6f8;
+      border-radius: 8px;
+      padding: 14px;
+      overflow-x: auto;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      border: 1px solid #e6eef8;
+    }
+
+    code.inline {
+      background: #eef6ff;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    ul { margin-left: 18px; color: #333; }
+    li { margin: 8px 0; }
+
+    .pro-tips {
+      background: #fff7ed;
+      border-left: 4px solid #ffb020;
+      padding: 12px 14px;
+      border-radius: 6px;
+      margin-top: 12px;
+      color: #6b4a00;
+    }
+
+    .back {
+      display: inline-block;
+      margin-top: 18px;
+      text-decoration: none;
+      color: #0077cc;
+      font-weight: 600;
+    }
+
+    .back:hover { text-decoration: underline; }
+
+    footer {
+      text-align: center;
+      padding: 18px;
+      margin-top: 24px;
+      background: #f4f4f4;
+      font-size: 14px;
+    }
+
+    @media (max-width: 720px) {
+      main { margin: 18px; padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Emoji generation ke liye Gemma 3 270M ko Fine-tune karein</h1>
+    <nav>
+      <a href="https://aikipadhai.com/index.html">Home</a>
+      <a href="https://aikipadhai.com/python/index.html">Python</a>
+      <a href="https://aikipadhai.com/genai/index.html"><strong>AI</strong></a>
+      <a href="https://aikipadhai.com/about.html">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="eyebrow">Tutorial • Fine-Tuning</div>
+    <h2>Emoji generation ke liye Gemma 3 270M ko Fine-tune karein 🚀</h2>
+
+    <p>
+      Yah notebook text ko emoji mein translate karne ke liye Gemma ko fine-tune karta hai, jismein Quantized Low-Rank Adaptation (QLoRA) ka upyog kiya gaya hai, Hugging Face Transformer Reinforcement Learning (<a href="https://huggingface.co/docs/trl/en/index" target="_blank">TRL</a>) library ke madhyam se memory ke upyog ko kam karne aur fine-tuning process ko tez karne mein madad milti hai.
+    </p>
+    <p>
+      Google Colab T4 GPU accelerator par <a href="https://huggingface.co/google/gemma-3-270m" target="_blank">Gemma 3 270M</a> ko train karte samay, yah process shuru se ant tak 10 minute se bhi kam samay le sakta hai. Har code snippet ko run karein:
+    </p>
+    <ul>
+      <li>Colab environment set up karein</li>
+      <li>Fine-tuning ke liye dataset taiyar karein</li>
+      <li>Base Gemma 3 270M model load aur test karein</li>
+      <li>Model ko fine-tune karein</li>
+      <li>Model ko test, evaluate aur aage ke upyog ke liye save karein</li>
+    </ul>
+
+    <div class="section">
+      <h3>Development environment set up karein 🛠️</h3>
+      <p>Pahla kadam hai `pip` package installer ka upyog karke zaroori libraries install karna.</p>
+      <p>Nayi install ki gayi libraries ka upyog karne ke liye aapko apna session (runtime) restart karna pad sakta hai.</p>
+      <pre><code>!pip install -qqq -U bitsandbytes transformers peft accelerate trl
+!pip install -qqq datasets einops matplotlib</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Hugging Face permissions enable karein 🔐</h3>
+      <p>Gemma models ka upyog karne ke liye, aapko model upyog license swikar karna hoga aur ek Access Token banana hoga:</p>
+      <ol>
+        <li><a href="http://huggingface.co/google/gemma-3-270m-it" target="_blank">Model page</a> par <strong>license swikar karein</strong>.</li>
+        <li><strong>'Write' access ke saath ek valid <a href="https://huggingface.co/settings/tokens" target="_blank">Access Token</a> प्राप्त karein (bahut mahatvapurna!)</strong></li>
+        <li>Left toolbar mein ek naya Colab secret banaein. 'Name' ke roop mein `HF_TOKEN` specify karein, 'Value' ke roop mein apna unique token add karein, aur 'Notebook access' ko toggle on karein.</li>
+      </ol>
+      <pre><code>from huggingface_hub import notebook_login
+
+notebook_login()</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Dataset load karein 📚</h3>
+      <p>Hugging Face training aur evaluating models ke liye datasets ka ek bada collection host karta hai. Agar aap custom dataset ka upyog nahi kar rahe hain, to aap text aur corresponding emoji translations ke examples wale <a href="https://huggingface.co/datasets/kr15t3n/g-emoji" target="_blank">premade dataset</a> ko load kar sakte hain.</p>
+      <p><strong>Agar aap apna custom dataset upyog karna chahte hain, to agle step par skip karein.</strong></p>
+      <pre><code>from datasets import load_dataset
+
+dataset = load_dataset("kr15t3n/g-emoji")
+dataset["train"]</code></pre>
+
+      <h4>Custom dataset upload karein ⬆️</h4>
+      <p><strong>Agar aapne pehle hi dataset load kar liya hai, to is step ko skip karein.</strong></p>
+      <p>Aap Gemma 3 270M ko specific emoji ka upyog karne ke liye customize kar sakte hain, key-value pairs ke roop mein structure kiya gaya text-to-emoji dataset wala spreadsheet bana kar. Agar aap specific emoji ke memorization ko badhava dena chahte hain, to hum us emoji ke 10-20 examples alag-alag text variations ke saath pradan karne ki salah dete hain.</p>
+      <p>Apna khud ka dataset banane ke liye <a href="https://github.com/google-gemini/gemma-cookbook/blob/main/Demos/Emoji-Gemma-on-Web/resources/Emoji%20Translation%20Dataset%20-%20Dataset.csv" target="_blank">premade dataset</a> ka template ke roop mein upyog karein, fir use left toolbar mein Files folder mein upload karein. File par right-click karke aur `custom_dataset_path` mein ise point karke iska path prapt karein.</p>
+      <pre><code>import pandas as pd
+from datasets import Dataset
+
+# custom_dataset_path = "Emoji Translation Dataset - Dataset.csv" # Replace with your custom dataset path
+# custom_dataset = pd.read_csv(custom_dataset_path)
+# dataset = Dataset.from_pandas(custom_dataset)
+# dataset = dataset.train_test_split(test_size=0.2) # Split your dataset into train and test sets
+
+# dataset["train"]</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Model load karein 🧠</h3>
+      <p>Aap license terms swikar karke Hugging Face Hub se <a href="https://huggingface.co/google/gemma-3-270m-it" target="_blank">Gemma 3 270M</a> tak pahunch sakte hain. Model ka instruction-tuned version directions follow karna sikhane ke liye pehle hi train kiya gaya hai, aur fine-tuning ke saath, aap ab ise ek naye task ke liye adapt karenge.</p>
+      <p>Agar aap GPU runtime ka upyog kar rahe hain to Device `cuda` print hona chahiye. <strong>Agar aapne abhi tak nahi kiya hai, to faster fine-tuning ke liye apne Colab mein free T4 GPU runtime ka upyog karein.</strong></p>
+      <pre><code>import torch
+from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
+
+model_id = "google/gemma-3-270m-it"
+
+bnb_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_compute_dtype=torch.bfloat16
+)
+
+tokenizer = AutoTokenizer.from_pretrained(model_id)
+model = AutoModelForCausalLM.from_pretrained(model_id, quantization_config=bnb_config, device_map={"":0})
+
+print(f"Device: {model.device}")</code></pre>
+
+      <h4>Training dataset format karein 📝</h4>
+      <p>Ab jab aapne apna data load kar liya hai, training dataset ko conversational roles mein format karein, jismein text input aur emoji output shamil hai, plus ek system prompt jo model ko direction deta hai. Yah model ko aapke dataset se 'text' aur 'emoji' columns ko interpret karna sikhane mein madad karta hai.</p>
+      <pre><code>def format_dataset(sample):
+    return {
+        "text": f"Translate this text to emoji: {sample['text']} \n {sample['emoji']}"
+    }
+
+dataset["train"] = dataset["train"].map(format_dataset)
+dataset["test"] = dataset["test"].map(format_dataset)
+
+print(dataset["train"][0]["text"])</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Recommended: Base model test karein 🧪</h3>
+      <p>Chaliye pehle check karte hain ki base model "Translate this text to emoji" instruction ka response kaise deta hai.</p>
+      <p>Ise kuch baar test karne ka prayas karein.</p>
+      <p>Base model ka output aapki ummeedon par khara nahi utar sakta—aur yah theek hai!</p>
+      <p>Gemma 3 270M ko task specialization ke liye design kiya gaya tha, jiska matlab hai ki yah representative examples ke saath train kiye jaane par specific tasks ke liye performance mein sudhar kar sakta hai. Chaliye aur adhik reliable outputs ke liye model ko fine-tune karte hain.</p>
+      <pre><code>text_to_translate = "I am so happy to be learning about fine-tuning Gemma!"
+
+input_ids = tokenizer(text_to_translate, return_tensors="pt").to(model.device)
+
+outputs = model.generate(**input_ids, max_new_tokens=50)
+print(tokenizer.decode(outputs[0], skip_special_tokens=True))</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Model ko fine-tune karein ⚙️</h3>
+      <p>Hugging Face <a href="https://huggingface.co/docs/trl/index" target="_blank">TRL</a> memory-efficient techniques jaise QLoRA (Quantized Low-Rank Adaptation) ka upyog karke LLM ko train aur fine-tune karne ke liye tools pradan karta hai, jo model ke frozen quantized version ke upar adapters ko train karta hai.</p>
+
+      <h4>Tuning job configure karein 🛠️</h4>
+      <p>Gemma 3 base model ke liye training configuration define karein:</p>
+      <ol>
+        <li>`BitsandBytesConfig` memory efficiency ke liye model ko quantize karne ke liye</li>
+        <li>`LoraConfig` parameter-efficient fine-tuning ke liye</li>
+        <li>`SFTConfig` supervised fine-tuning ke liye</li>
+      </ol>
+      <pre><code>from peft import LoraConfig
+from trl import SFTConfig
+
+peft_config = LoraConfig(
+    r=8,
+    target_modules=["q_proj", "o_proj", "k_proj", "v_proj", "gate_proj", "up_proj", "down_proj"],
+    task_type="CAUSAL_LM",
+)
+
+training_arguments = SFTConfig(
+    per_device_train_batch_size=1,
+    gradient_accumulation_steps=4,
+    optim="paged_adamw_32bit",
+    lr_scheduler_type="cosine",
+    logging_steps=1,
+    learning_rate=2e-4,
+    max_steps=100,
+    output_dir="gemma-3-270m-it-emoji",
+    # push_to_hub=True, # Uncomment to push to Hugging Face Hub
+    report_to="none",
+    dataset_text_field="text",
+    num_train_epochs=1,
+    packing=True,
+    max_seq_length=512,
+    eval_strategy="steps",
+    eval_steps=10,
+    save_steps=10,
+    load_best_model_at_end=True,
+    metric_for_best_model="eval_loss",
+    greater_is_better=False,
+)</code></pre>
+
+      <h4>Training shuru karein 🚀</h4>
+      <p>`SFTTrainer` datasets ko tokenize karta hai aur pichle step se hyperparameters ka upyog karke base model ko train karta hai.</p>
+      <p>Training time kai factors par nirbhar karta hai, jaise ki aapke dataset ka size ya epochs ki sankhya. T4 GPU ka upyog karke, 1000 training examples ke liye ismein lagbhag 10 minute lagte hain. Agar training dheere ho raha hai, to check karein ki aap Colab mein T4 GPU ka upyog kar rahe hain.</p>
+      <p>Har training checkpoint (epoch) ke liye LoRA adapters aapke temporary Colab session storage mein save kiye jaenge. Ab, aap training aur validation loss metrics ka evaluation kar sakte hain yah chunne ke liye ki kaun se adapters ko model ke saath merge karna hai.</p>
+      <pre><code>from trl import SFTTrainer
+
+trainer = SFTTrainer(
+    model=model,
+    tokenizer=tokenizer,
+    args=training_arguments,
+    peft_config=peft_config,
+    train_dataset=dataset["train"],
+    eval_dataset=dataset["test"],
+)
+
+trainer.train()</code></pre>
+
+      <h4>Training results plot karein 📈</h4>
+      <p>Model ka evaluation karne ke liye, aap Matplotlib ka upyog karke training aur validation losses ko plot kar sakte hain taaki training steps ya epochs par in metrics ko visualize kiya ja sake. Yah training process ko monitor karne aur hyperparameters ya early stopping ke baare mein informed decisions lene mein madad karta hai.</p>
+      <p>Training loss us data par error ko measure karta hai jispar model ko train kiya gaya tha. Validation loss ek alag dataset par error ko measure karta hai jo model ne pehle nahi dekha hai. Dono ko monitor karna overfitting (jab model training data par accha perform karta hai lekin unseen data par kharab) ka pata lagane mein madad karta hai.</p>
+      <ul>
+        <li>validation loss >> training loss: <strong>overfitting</strong></li>
+        <li>validation loss > training loss: <strong>kuch overfitting</strong></li>
+        <li>validation loss < training loss: <strong>kuch underfitting</strong></li>
+        <li>validation loss << training loss: <strong>underfitting</strong></li>
+      </ul>
+      <p>Agar aapke task ko specific examples ke memorization ki zaroorat hai, ya kisi diye gaye text ke liye specific emoji generate karne ki, to overfitting faydemand ho sakta hai.</p>
+      <pre><code>import matplotlib.pyplot as plt
+
+metrics = trainer.state.log_history
+
+train_losses = [entry['loss'] for entry in metrics if 'loss' in entry]
+eval_losses = [entry['eval_loss'] for entry in metrics if 'eval_loss' in entry]
+steps = [entry['step'] for entry in metrics if 'loss' in entry]
+
+plt.figure(figsize=(10, 6))
+plt.plot(steps[:len(train_losses)], train_losses, label='Training Loss')
+plt.plot(steps[:len(eval_losses)], eval_losses, label='Validation Loss')
+plt.xlabel('Steps')
+plt.ylabel('Loss')
+plt.title('Training and Validation Loss')
+plt.legend()
+plt.grid(True)
+plt.show()</code></pre>
+
+      <h4>Adapters merge karein 🔄</h4>
+      <p>Ek baar train hone ke baad aap LoRA adapters ko model ke saath merge kar sakte hain. Aap training checkpoint folder specify karke yah chun sakte hain ki kaun se adapters ko merge karna hai, anyatha yah last epoch par default ho jaega.</p>
+      <ul>
+        <li>Better task generalization ke liye, sabse underfit checkpoint chunein (validation loss < training loss)</li>
+        <li>Specific examples ke बेहतर memorization ke liye, sabse overfit checkpoint chunein (> training loss)</li>
+      </ul>
+      <pre><code>from peft import AutoPeftModelForCausalLM
+
+merged_model = AutoPeftModelForCausalLM.from_pretrained(
+    training_arguments.output_dir,
+    torch_dtype=torch.bfloat16
+)
+
+merged_model_id = "gemma-3-270m-it-emoji-merged"
+merged_model.save_pretrained(merged_model_id)
+tokenizer.save_pretrained(merged_model_id)</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Fine-tuned model test karein ✅</h3>
+      <p>Chaliye apne fine-tuned model ki performance ki base model ke khilaf tulna karte hain! `text_to_translate` ko update karke kuch inputs test karein.</p>
+      <p>Kya model aapki ummeed ke emoji output karta hai?</p>
+      <p>Agar aapko desired results nahi mil rahe hain, to aap model ko train karne ke liye alag hyperparameters ka upyog karne ka prayas kar sakte hain, ya adhik representative examples shamil karne ke liye apne training dataset ko update kar sakte hain.</p>
+      <p>Ek baar jab aap results se khush ho jaate hain, to aap apne model ko Hugging Face Hub par save kar sakte hain.</p>
+      <pre><code>text_to_translate = "I am so happy to be learning about fine-tuning Gemma!"
+
+input_ids = tokenizer(text_to_translate, return_tensors="pt").to(merged_model.device)
+
+outputs = merged_model.generate(**input_ids, max_new_tokens=50)
+print(tokenizer.decode(outputs[0], skip_special_tokens=True))</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Apna model save karein aur Hugging Face Hub par upload karein ☁️</h3>
+      <p><strong>Ab aapke paas ek customized Gemma 3 270M model hai! 🎉</strong></p>
+      <p>Ise Hugging Face Hub par ek repository mein upload karein taaki aap apne model ko aasani se share kar sakein ya baad mein access kar sakein.</p>
+      <pre><code># merged_model.push_to_hub(merged_model_id)
+# tokenizer.push_to_hub(merged_model_id)</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Summary aur agle steps ➡️</h3>
+      <p>Is notebook mein emoji generation ke liye Gemma 3 270M ko efficiently fine-tune karna cover kiya gaya hai. On-device deployment ke liye ise taiyar karne ke liye conversion aur quantization steps par aage badhein. Aap nimnalikhit steps ko follow kar sakte hain:</p>
+      <ol>
+        <li><a href="https://colab.research.google.com/github/google-gemini/gemma-cookbook/blob/main/Demos/Emoji-Gemma-on-Web/resources/Convert_Gemma_3_270M_to_LiteRT_for_MediaPipe_LLM_Inference_API.ipynb" target="_blank">MediaPipe LLM Inference API ke saath upyog ke liye convert karein</a></li>
+        <li><a href="https://colab.research.google.com/github/google-gemini/gemma-cookbook/blob/main/Demos/Emoji-Gemma-on-Web/resources/Convert_Gemma_3_270M_to_ONNX.ipynb" target="_blank">ONNX Runtime ke madhyam se Transformers.js ke saath upyog ke liye convert karein</a></li>
+      </ol>
+      <table align="left">
+        <td>
+            <a target="_blank" href="https://colab.research.google.com/github/google-gemini/gemma-cookbook/blob/main/Demos/Emoji-Gemma-on-Web/resources/Fine_tune_Gemma_3_270M_for_emoji_generation.ipynb"><img src="https://www.tensorflow.org/images/colab_logo_32px.png" />Run in Google Colab</a>
+        </td>
+      </table>
+    </div>
+
+    <a class="back" href="index.html">← Back to Fine-Tuning Projects</a>
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn Fine-Tuning & Generative AI in Roman Hindi</p>
+  </footer>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277"
+     crossorigin="anonymous"></script>
+  <title>Emoji generation ke liye Gemma 3 270M ko Fine-tune karein | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fafafa;
+      color: #222;
+      margin: 0;
+      line-height: 1.65;
+    }
+
+    header {
+      background: #2c3e50;
+      color: #fff;
+      text-align: center;
+      padding: 22px 16px;
+    }
+
+    header h1 { margin: 0; font-size: 22px; }
+
+    nav { margin-top: 8px; }
+
+    nav a {
+      color: #dfe8ef;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    nav a:hover { color: #f1f6fb; }
+
+    main {
+      max-width: 1000px;
+      margin: 28px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+    }
+
+    h2, h3 { color: #1e3551; }
+    p { color: #333; font-size: 16px; margin: 12px 0; }
+
+    .section { margin-top: 22px; }
+
+    pre {
+      background: #f4f6f8;
+      border-radius: 8px;
+      padding: 14px;
+      overflow-x: auto;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      border: 1px solid #e6eef8;
+    }
+
+    code.inline {
+      background: #eef6ff;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    ul { margin-left: 18px; color: #333; }
+    li { margin: 8px 0; }
+
+    .pro-tips {
+      background: #fff7ed;
+      border-left: 4px solid #ffb020;
+      padding: 12px 14px;
+      border-radius: 6px;
+      margin-top: 12px;
+      color: #6b4a00;
+    }
+
+    .back {
+      display: inline-block;
+      margin-top: 18px;
+      text-decoration: none;
+      color: #0077cc;
+      font-weight: 600;
+    }
+
+    .back:hover { text-decoration: underline; }
+
+    footer {
+      text-align: center;
+      padding: 18px;
+      margin-top: 24px;
+      background: #f4f4f4;
+      font-size: 14px;
+    }
+
+    @media (max-width: 720px) {
+      main { margin: 18px; padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Emoji generation ke liye Gemma 3 270M ko Fine-tune karein</h1>
+    <nav>
+      <a href="https://aikipadhai.com/index.html">Home</a>
+      <a href="https://aikipadhai.com/python/index.html">Python</a>
+      <a href="https://aikipadhai.com/genai/index.html"><strong>AI</strong></a>
+      <a href="https://aikipadhai.com/about.html">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="eyebrow">Tutorial • Fine-Tuning</div>
+    <h2>Emoji generation ke liye Gemma 3 270M ko Fine-tune karein 🚀</h2>
+
+    <p>
+      Yah notebook text ko emoji mein translate karne ke liye Gemma ko fine-tune karta hai, jismein Quantized Low-Rank Adaptation (QLoRA) ka upyog kiya gaya hai, Hugging Face Transformer Reinforcement Learning (<a href="https://huggingface.co/docs/trl/en/index" target="_blank">TRL</a>) library ke madhyam se memory ke upyog ko kam karne aur fine-tuning process ko tez karne mein madad milti hai.
+    </p>
+    <p>
+      Google Colab T4 GPU accelerator par <a href="https://huggingface.co/google/gemma-3-270m" target="_blank">Gemma 3 270M</a> ko train karte samay, yah process shuru se ant tak 10 minute se bhi kam samay le sakta hai. Har code snippet ko run karein:
+    </p>
+    <ul>
+      <li>Colab environment set up karein</li>
+      <li>Fine-tuning ke liye dataset taiyar karein</li>
+      <li>Base Gemma 3 270M model load aur test karein</li>
+      <li>Model ko fine-tune karein</li>
+      <li>Model ko test, evaluate aur aage ke upyog ke liye save karein</li>
+    </ul>
+
+    <div class="section">
+      <h3>Development environment set up karein 🛠️</h3>
+      <p>Pahla kadam hai `pip` package installer ka upyog karke zaroori libraries install karna.</p>
+      <p>Nayi install ki gayi libraries ka upyog karne ke liye aapko apna session (runtime) restart karna pad sakta hai.</p>
+      <pre><code>!pip install -qqq -U bitsandbytes transformers peft accelerate trl
+!pip install -qqq datasets einops matplotlib</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Hugging Face permissions enable karein 🔐</h3>
+      <p>Gemma models ka upyog karne ke liye, aapko model upyog license swikar karna hoga aur ek Access Token banana hoga:</p>
+      <ol>
+        <li><a href="http://huggingface.co/google/gemma-3-270m-it" target="_blank">Model page</a> par <strong>license swikar karein</strong>.</li>
+        <li><strong>'Write' access ke saath ek valid <a href="https://huggingface.co/settings/tokens" target="_blank">Access Token</a> प्राप्त karein (bahut mahatvapurna!)</strong></li>
+        <li>Left toolbar mein ek naya Colab secret banaein. 'Name' ke roop mein `HF_TOKEN` specify karein, 'Value' ke roop mein apna unique token add karein, aur 'Notebook access' ko toggle on karein.</li>
+      </ol>
+      <pre><code>from huggingface_hub import notebook_login
+
+notebook_login()</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Dataset load karein 📚</h3>
+      <p>Hugging Face training aur evaluating models ke liye datasets ka ek bada collection host karta hai. Agar aap custom dataset ka upyog nahi kar rahe hain, to aap text aur corresponding emoji translations ke examples wale <a href="https://huggingface.co/datasets/kr15t3n/g-emoji" target="_blank">premade dataset</a> ko load kar sakte hain.</p>
+      <p><strong>Agar aap apna custom dataset upyog karna chahte hain, to agle step par skip karein.</strong></p>
+      <pre><code>from datasets import load_dataset
+
+dataset = load_dataset("kr15t3n/g-emoji")
+dataset["train"]</code></pre>
+
+      <h4>Custom dataset upload karein ⬆️</h4>
+      <p><strong>Agar aapne pehle hi dataset load kar liya hai, to is step ko skip karein.</strong></p>
+      <p>Aap Gemma 3 270M ko specific emoji ka upyog karne ke liye customize kar sakte hain, key-value pairs ke roop mein structure kiya gaya text-to-emoji dataset wala spreadsheet bana kar. Agar aap specific emoji ke memorization ko badhava dena chahte hain, to hum us emoji ke 10-20 examples alag-alag text variations ke saath pradan karne ki salah dete hain.</p>
+      <p>Apna khud ka dataset banane ke liye <a href="https://github.com/google-gemini/gemma-cookbook/blob/main/Demos/Emoji-Gemma-on-Web/resources/Emoji%20Translation%20Dataset%20-%20Dataset.csv" target="_blank">premade dataset</a> ka template ke roop mein upyog karein, fir use left toolbar mein Files folder mein upload karein. File par right-click karke aur `custom_dataset_path` mein ise point karke iska path prapt karein.</p>
+      <pre><code>import pandas as pd
+from datasets import Dataset
+
+# custom_dataset_path = "Emoji Translation Dataset - Dataset.csv" # Replace with your custom dataset path
+# custom_dataset = pd.read_csv(custom_dataset_path)
+# dataset = Dataset.from_pandas(custom_dataset)
+# dataset = dataset.train_test_split(test_size=0.2) # Split your dataset into train and test sets
+
+# dataset["train"]</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Model load karein 🧠</h3>
+      <p>Aap license terms swikar karke Hugging Face Hub se <a href="https://huggingface.co/google/gemma-3-270m-it" target="_blank">Gemma 3 270M</a> tak pahunch sakte hain. Model ka instruction-tuned version directions follow karna sikhane ke liye pehle hi train kiya gaya hai, aur fine-tuning ke saath, aap ab ise ek naye task ke liye adapt karenge.</p>
+      <p>Agar aap GPU runtime ka upyog kar rahe hain to Device `cuda` print hona chahiye. <strong>Agar aapne abhi tak nahi kiya hai, to faster fine-tuning ke liye apne Colab mein free T4 GPU runtime ka upyog karein.</strong></p>
+      <pre><code>import torch
+from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
+
+model_id = "google/gemma-3-270m-it"
+
+bnb_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_compute_dtype=torch.bfloat16
+)
+
+tokenizer = AutoTokenizer.from_pretrained(model_id)
+model = AutoModelForCausalLM.from_pretrained(model_id, quantization_config=bnb_config, device_map={"":0})
+
+print(f"Device: {model.device}")</code></pre>
+
+      <h4>Training dataset format karein 📝</h4>
+      <p>Ab jab aapne apna data load kar liya hai, training dataset ko conversational roles mein format karein, jismein text input aur emoji output shamil hai, plus ek system prompt jo model ko direction deta hai. Yah model ko aapke dataset se 'text' aur 'emoji' columns ko interpret karna sikhane mein madad karta hai.</p>
+      <pre><code>def format_dataset(sample):
+    return {
+        "text": f"Translate this text to emoji: {sample['text']} \n {sample['emoji']}"
+    }
+
+dataset["train"] = dataset["train"].map(format_dataset)
+dataset["test"] = dataset["test"].map(format_dataset)
+
+print(dataset["train"][0]["text"])</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Recommended: Base model test karein 🧪</h3>
+      <p>Chaliye pehle check karte hain ki base model "Translate this text to emoji" instruction ka response kaise deta hai.</p>
+      <p>Ise kuch baar test karne ka prayas karein.</p>
+      <p>Base model ka output aapki ummeedon par khara nahi utar sakta—aur yah theek hai!</p>
+      <p>Gemma 3 270M ko task specialization ke liye design kiya gaya tha, jiska matlab hai ki yah representative examples ke saath train kiye jaane par specific tasks ke liye performance mein sudhar kar sakta hai. Chaliye aur adhik reliable outputs ke liye model ko fine-tune karte hain.</p>
+      <pre><code>text_to_translate = "I am so happy to be learning about fine-tuning Gemma!"
+
+input_ids = tokenizer(text_to_translate, return_tensors="pt").to(model.device)
+
+outputs = model.generate(**input_ids, max_new_tokens=50)
+print(tokenizer.decode(outputs[0], skip_special_tokens=True))</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Model ko fine-tune karein ⚙️</h3>
+      <p>Hugging Face <a href="https://huggingface.co/docs/trl/index" target="_blank">TRL</a> memory-efficient techniques jaise QLoRA (Quantized Low-Rank Adaptation) ka upyog karke LLM ko train aur fine-tune karne ke liye tools pradan karta hai, jo model ke frozen quantized version ke upar adapters ko train karta hai.</p>
+
+      <h4>Tuning job configure karein 🛠️</h4>
+      <p>Gemma 3 base model ke liye training configuration define karein:</p>
+      <ol>
+        <li>`BitsandBytesConfig` memory efficiency ke liye model ko quantize karne ke liye</li>
+        <li>`LoraConfig` parameter-efficient fine-tuning ke liye</li>
+        <li>`SFTConfig` supervised fine-tuning ke liye</li>
+      </ol>
+      <pre><code>from peft import LoraConfig
+from trl import SFTConfig
+
+peft_config = LoraConfig(
+    r=8,
+    target_modules=["q_proj", "o_proj", "k_proj", "v_proj", "gate_proj", "up_proj", "down_proj"],
+    task_type="CAUSAL_LM",
+)
+
+training_arguments = SFTConfig(
+    per_device_train_batch_size=1,
+    gradient_accumulation_steps=4,
+    optim="paged_adamw_32bit",
+    lr_scheduler_type="cosine",
+    logging_steps=1,
+    learning_rate=2e-4,
+    max_steps=100,
+    output_dir="gemma-3-270m-it-emoji",
+    # push_to_hub=True, # Uncomment to push to Hugging Face Hub
+    report_to="none",
+    dataset_text_field="text",
+    num_train_epochs=1,
+    packing=True,
+    max_seq_length=512,
+    eval_strategy="steps",
+    eval_steps=10,
+    save_steps=10,
+    load_best_model_at_end=True,
+    metric_for_best_model="eval_loss",
+    greater_is_better=False,
+)</code></pre>
+
+      <h4>Training shuru karein 🚀</h4>
+      <p>`SFTTrainer` datasets ko tokenize karta hai aur pichle step se hyperparameters ka upyog karke base model ko train karta hai.</p>
+      <p>Training time kai factors par nirbhar karta hai, jaise ki aapke dataset ka size ya epochs ki sankhya. T4 GPU ka upyog karke, 1000 training examples ke liye ismein lagbhag 10 minute lagte hain. Agar training dheere ho raha hai, to check karein ki aap Colab mein T4 GPU ka upyog kar rahe hain.</p>
+      <p>Har training checkpoint (epoch) ke liye LoRA adapters aapke temporary Colab session storage mein save kiye jaenge. Ab, aap training aur validation loss metrics ka evaluation kar sakte hain yah chunne ke liye ki kaun se adapters ko model ke saath merge karna hai.</p>
+      <pre><code>from trl import SFTTrainer
+
+trainer = SFTTrainer(
+    model=model,
+    tokenizer=tokenizer,
+    args=training_arguments,
+    peft_config=peft_config,
+    train_dataset=dataset["train"],
+    eval_dataset=dataset["test"],
+)
+
+trainer.train()</code></pre>
+
+      <h4>Training results plot karein 📈</h4>
+      <p>Model ka evaluation karne ke liye, aap Matplotlib ka upyog karke training aur validation losses ko plot kar sakte hain taaki training steps ya epochs par in metrics ko visualize kiya ja sake. Yah training process ko monitor karne aur hyperparameters ya early stopping ke baare mein informed decisions lene mein madad karta hai.</p>
+      <p>Training loss us data par error ko measure karta hai jispar model ko train kiya gaya tha. Validation loss ek alag dataset par error ko measure karta hai jo model ne pehle nahi dekha hai. Dono ko monitor karna overfitting (jab model training data par accha perform karta hai lekin unseen data par kharab) ka pata lagane mein madad karta hai.</p>
+      <ul>
+        <li>validation loss >> training loss: <strong>overfitting</strong></li>
+        <li>validation loss > training loss: <strong>kuch overfitting</strong></li>
+        <li>validation loss < training loss: <strong>kuch underfitting</strong></li>
+        <li>validation loss << training loss: <strong>underfitting</strong></li>
+      </ul>
+      <p>Agar aapke task ko specific examples ke memorization ki zaroorat hai, ya kisi diye gaye text ke liye specific emoji generate karne ki, to overfitting faydemand ho sakta hai.</p>
+      <pre><code>import matplotlib.pyplot as plt
+
+metrics = trainer.state.log_history
+
+train_losses = [entry['loss'] for entry in metrics if 'loss' in entry]
+eval_losses = [entry['eval_loss'] for entry in metrics if 'eval_loss' in entry]
+steps = [entry['step'] for entry in metrics if 'loss' in entry]
+
+plt.figure(figsize=(10, 6))
+plt.plot(steps[:len(train_losses)], train_losses, label='Training Loss')
+plt.plot(steps[:len(eval_losses)], eval_losses, label='Validation Loss')
+plt.xlabel('Steps')
+plt.ylabel('Loss')
+plt.title('Training and Validation Loss')
+plt.legend()
+plt.grid(True)
+plt.show()</code></pre>
+
+      <h4>Adapters merge karein 🔄</h4>
+      <p>Ek baar train hone ke baad aap LoRA adapters ko model ke saath merge kar sakte hain. Aap training checkpoint folder specify karke yah chun sakte hain ki kaun se adapters ko merge karna hai, anyatha yah last epoch par default ho jaega.</p>
+      <ul>
+        <li>Better task generalization ke liye, sabse underfit checkpoint chunein (validation loss < training loss)</li>
+        <li>Specific examples ke बेहतर memorization ke liye, sabse overfit checkpoint chunein (> training loss)</li>
+      </ul>
+      <pre><code>from peft import AutoPeftModelForCausalLM
+
+merged_model = AutoPeftModelForCausalLM.from_pretrained(
+    training_arguments.output_dir,
+    torch_dtype=torch.bfloat16
+)
+
+merged_model_id = "gemma-3-270m-it-emoji-merged"
+merged_model.save_pretrained(merged_model_id)
+tokenizer.save_pretrained(merged_model_id)</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Fine-tuned model test karein ✅</h3>
+      <p>Chaliye apne fine-tuned model ki performance ki base model ke khilaf tulna karte hain! `text_to_translate` ko update karke kuch inputs test karein.</p>
+      <p>Kya model aapki ummeed ke emoji output karta hai?</p>
+      <p>Agar aapko desired results nahi mil rahe hain, to aap model ko train karne ke liye alag hyperparameters ka upyog karne ka prayas kar sakte hain, ya adhik representative examples shamil karne ke liye apne training dataset ko update kar sakte hain.</p>
+      <p>Ek baar jab aap results se khush ho jaate hain, to aap apne model ko Hugging Face Hub par save kar sakte hain.</p>
+      <pre><code>text_to_translate = "I am so happy to be learning about fine-tuning Gemma!"
+
+input_ids = tokenizer(text_to_translate, return_tensors="pt").to(merged_model.device)
+
+outputs = merged_model.generate(**input_ids, max_new_tokens=50)
+print(tokenizer.decode(outputs[0], skip_special_tokens=True))</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Apna model save karein aur Hugging Face Hub par upload karein ☁️</h3>
+      <p><strong>Ab aapke paas ek customized Gemma 3 270M model hai! 🎉</strong></p>
+      <p>Ise Hugging Face Hub par ek repository mein upload karein taaki aap apne model ko aasani se share kar sakein ya baad mein access kar sakein.</p>
+      <pre><code># merged_model.push_to_hub(merged_model_id)
+# tokenizer.push_to_hub(merged_model_id)</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Summary aur agle steps ➡️</h3>
+      <p>Is notebook mein emoji generation ke liye Gemma 3 270M ko efficiently fine-tune karna cover kiya gaya hai. On-device deployment ke liye ise taiyar karne ke liye conversion aur quantization steps par aage badhein. Aap nimnalikhit steps ko follow kar sakte hain:</p>
+      <ol>
+        <li><a href="https://colab.research.google.com/github/google-gemini/gemma-cookbook/blob/main/Demos/Emoji-Gemma-on-Web/resources/Convert_Gemma_3_270M_to_LiteRT_for_MediaPipe_LLM_Inference_API.ipynb" target="_blank">MediaPipe LLM Inference API ke saath upyog ke liye convert karein</a></li>
+        <li><a href="https://colab.research.google.com/github/google-gemini/gemma-cookbook/blob/main/Demos/Emoji-Gemma-on-Web/resources/Convert_Gemma_3_270M_to_ONNX.ipynb" target="_blank">ONNX Runtime ke madhyam se Transformers.js ke saath upyog ke liye convert karein</a></li>
+      </ol>
+      <table align="left">
+        <td>
+            <a target="_blank" href="https://colab.research.google.com/github/google-gemini/gemma-cookbook/blob/main/Demos/Emoji-Gemma-on-Web/resources/Fine_tune_Gemma_3_270M_for_emoji_generation.ipynb"><img src="https://www.tensorflow.org/images/colab_logo_32px.png" />Run in Google Colab</a>
+        </td>
+      </table>
+    </div>
+
+    <a class="back" href="index.html">← Back to Fine-Tuning Projects</a>
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn Fine-Tuning & Generative AI in Roman Hindi</p>
+  </footer>
+</body>
+</html>
