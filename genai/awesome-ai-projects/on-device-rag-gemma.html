@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277"
+     crossorigin="anonymous"></script>
+  <title>On-Device RAG with Gemma Models | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fafafa;
+      color: #222;
+      margin: 0;
+      line-height: 1.65;
+    }
+
+    header {
+      background: #2c3e50;
+      color: #fff;
+      text-align: center;
+      padding: 22px 16px;
+    }
+
+    header h1 { margin: 0; font-size: 22px; }
+
+    nav { margin-top: 8px; }
+
+    nav a {
+      color: #dfe8ef;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    nav a:hover { color: #f1f6fb; }
+
+    main {
+      max-width: 1000px;
+      margin: 28px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+    }
+
+    h2, h3, h4 { color: #1e3551; }
+    p { color: #333; font-size: 16px; margin: 12px 0; }
+
+    .section { margin-top: 22px; }
+
+    pre {
+      background: #f4f6f8;
+      border-radius: 8px;
+      padding: 14px;
+      overflow-x: auto;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      border: 1px solid #e6eef8;
+    }
+
+    code.inline {
+      background: #eef6ff;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    ul { margin-left: 18px; color: #333; }
+    li { margin: 8px 0; }
+
+    .pro-tips {
+      background: #e8f5e9;
+      border-left: 4px solid #2e7d32;
+      padding: 12px 14px;
+      border-radius: 6px;
+      margin-top: 12px;
+      color: #1b5e20;
+    }
+
+    .back {
+      display: inline-block;
+      margin-top: 18px;
+      text-decoration: none;
+      color: #0077cc;
+      font-weight: 600;
+    }
+
+    .back:hover { text-decoration: underline; }
+
+    footer {
+      text-align: center;
+      padding: 18px;
+      margin-top: 24px;
+      background: #f4f4f4;
+      font-size: 14px;
+    }
+
+    @media (max-width: 720px) {
+      main { margin: 18px; padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Gemma Models ke saath On-Device RAG System Banayein</h1>
+    <nav>
+      <a href="https://aikipadhai.com/index.html">Home</a>
+      <a href="https://aikipadhai.com/python/index.html">Python</a>
+      <a href="https://aikipadhai.com/genai/index.html"><strong>AI</strong></a>
+      <a href="https://aikipadhai.com/about.html">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="eyebrow">Project Tutorial • On-Device AI</div>
+    <h2>Gemma Models ke saath On-Device RAG System Banayein 📱</h2>
+
+    <p>
+      Ek Retrieval-Augmented Generation (RAG) system isliye zaroori hai kyunki yeh information retrieval aur generative AI ki taqat ko milakar zyada accurate, up-to-date, aur samjhane yogya jawab deta hai. Standard language models jo sirf pre-trained knowledge par nirbhar karte hain, unke vipreet, RAG systems external data sources ko dynamically access kar sakte hain. Isse yeh sunishchit hota hai ki jawab factual aur current information par aadharit hain.
+    </p>
+    <p>
+        Gemma models is kaam ke liye ideal hain kyunki yeh lightweight hone ke bawajood kaafi capable hain, jisse on-device deployment performance se samjhauta kiye bina possible ho jaata hai. Is post me hum step-by-step dekhenge ki kaise ek PDF file load karein, uske text ko extract aur chunk karein, similarity matching karein, aur Gemma 3 model ka use karke document ke baare me user ke sawalon ka context-aware jawab generate karein.
+    </p>
+
+    <div class="section">
+      <h3>Step 1: PDF File se Text Extract Karein</h3>
+      <p>Aap mobile par <code class="inline">IText Core</code> library ka use karke PDF se text extract kar sakte hain. Neeche diye gaye snippet se aap assets folder me rakhi PDF se text nikal sakte hain:</p>
+      <pre><code>context.assets.open(assetFileName).use { inputStream ->
+    val pdfReader = PdfReader(inputStream)
+    val pdfDocument = PdfDocument(pdfReader)
+
+    val text = StringBuilder()
+    val numberOfPages = pdfDocument.numberOfPages
+
+    // Sabhi pages se text extract karein (limit to first n pages to avoid overwhelming)
+    val pagesToProcess = minOf(numberOfPages, 100)
+
+    for (page in 1..pagesToProcess) {
+        val pageText =
+            PdfTextExtractor.getTextFromPage(pdfDocument.getPage(page))
+               if (pageText.isNotBlank()) {
+                   text.append("## Page $page\n")
+                   text.append(pageText.trim())
+                   text.append("\n\n")
+               }
+        }
+
+    pdfDocument.close()
+
+    val result = text.toString().trim()
+        result.ifBlank {
+          "[PDF Document: $assetFileName - No readable text content found]"
+        }
+    }</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Step 2: Text ko Chunks me Todein (Tokenization)</h3>
+      <p>Tokenization ka matlab hai text ko chhote-chhote tukdo (tokens) me todna. Hum iske liye Deep Java Library (DJL) API ka use karenge. Har text chunk EmbeddingGemma model ke max input size se chhota ya barabar hona chahiye.</p>
+      <pre><code>// Tokenizer load karein
+private fun loadTokenizer() {
+    try {
+        tokenizer =
+            HuggingFaceTokenizer.newInstance(Paths.get("/data/local/tmp/tokenizer_embedding_300m.json"))
+    } catch (e: Exception) {
+        Log.e("GemmaTokenizer", "Failed to load tokenizer", e)
+    }
+}
+
+// Chunker setup karein
+val chunker = ChunkerHelper.RecursiveTextChunker(
+    tokenizer = tokenizerAdapter,
+    maxChunkTokens = 256, // tokens me chunk size
+    overlapTokens = 40,  // tokens me overlap
+    separators = listOf("\n\n", "\n", ". ", " ", "")
+)
+
+// Chunks banayein
+val chunks = chunker.createChunks(fileTextContent ?: "")</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Step 3: Har Text Chunk ke liye Embeddings Banayein aur Store Karein</h3>
+      <p>Pichle step me banaye gaye har text chunk par embedding model run karein aur resulting vectors ko ek file ya vector database me store karein. Yeh step har PDF file ke liye sirf ek baar karna hota hai.</p>
+      <pre><code>val embeddingsMap = HashMap&lt;String, FloatArray&gt;()
+
+chunks.forEach { sentence ->
+    val embedding = runEmbedding(sentence)
+    if (embedding.isNotEmpty()) {
+        embeddingsMap[sentence] = embedding
+    }
+}
+
+// Embeddings ko file me save karein
+ObjectOutputStream(FileOutputStream(embeddingsFile)).use { stream ->
+   stream.writeObject(embeddingsMap)
+}</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Step 4: User ke Input ke liye Embedding Generate Karein</h3>
+      <p>Har user query ke liye, hum <code class="inline">EmbeddingGemma</code> (.tflite model) ka use karke LiteRT framework ke saath embedding generate karenge.</p>
+      <pre><code>private fun runEmbedding(query: String): FloatArray {
+    if (tokenizer == null || interpreter == null) return floatArrayOf()
+    
+    val prompt = "task: search result | query: "
+    val fullInput = prompt + query
+    val encoding = tokenizer!!.encode(fullInput)
+    val sequenceLength = 256
+    val truncatedIds = encoding.ids.take(sequenceLength)
+    
+    val paddedIds = IntArray(sequenceLength) { 0 }
+    truncatedIds.forEachIndexed { i, id -> paddedIds[i] = id.toInt() }
+    
+    val inputArray = arrayOf(paddedIds)
+    val outputBuffer = TensorBuffer.createFixedSize(intArrayOf(1, 768), DataType.FLOAT32)
+    
+    interpreter?.run(inputArray, outputBuffer.buffer)
+    return outputBuffer.floatArray
+}</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Step 5: Similarity Check Karein</h3>
+      <p>Ab user ke input embedding aur har stored text chunk ke embedding ke beech cosine similarity check karein.</p>
+      <pre><code>fun cosineSimilarity(vectorA: FloatArray, vectorB: FloatArray): Float {
+    if (vectorA.size != vectorB.size) throw IllegalArgumentException("Vectors must be of the same size")
+
+    var dotProduct = 0.0
+    var normA = 0.0
+    var normB = 0.0
+    for (i in vectorA.indices) {
+        dotProduct += vectorA[i] * vectorB[i]
+        normA += vectorA[i] * vectorA[i]
+        normB += vectorB[i] * vectorB[i]
+    }
+
+    val magnitudeA = sqrt(normA)
+    val magnitudeB = sqrt(normB)
+    if (magnitudeA == 0.0 || magnitudeB == 0.0) return 0.0f
+
+    return (dotProduct / (magnitudeA * magnitudeB)).toFloat()
+}</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Step 6: Sabse Relevant Text Fetch Karein</h3>
+      <p>Similarity score ke aadhar par top matches ko sort karein aur unke corresponding text ko fetch karein.</p>
+      <pre><code>// Top 3 matches ko sort karke lein
+val topThreeMatches = allMatches.sortedByDescending { it.similarity }.take(3)
+
+val bestMatches: String
+
+if (topThreeMatches.isNotEmpty()) {
+    // Top matches ke text ko ek context string me combine karein
+    bestMatches = topThreeMatches.joinToString(separator = "\n\n---\n\n") { it.text }
+}</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Step 7: LLM se Jawab Generate Karein</h3>
+      <p>Final step me, user query aur fetched context ko ek prompt me combine karke LLM (Gemma 3 1B) ko pass karein taaki woh ek context-aware jawab generate kar sake.</p>
+      <pre><code>// LLM load karein
+private fun loadLLM() {
+  val taskOptions = LlmInferenceOptions.builder()
+        .setModelPath("/data/local/tmp/Gemma3-1B-IT_seq128_q8_ekv1280.task")
+        .setMaxTokens(MAX_TOKENS) // 1280
+        .build()
+    llmInference = LlmInference.createFromOptions(this, taskOptions)
+}
+
+// Prompt taiyar karein aur response generate karein
+val inputPrompt =
+    "You are a helpful assistant that responds to user query: ${query}, based ONLY on the context: ${bestMatches}. Use only text from the context. DO NOT offer any other help."
+
+var stringBuilder = ""
+llmInference?.generateResponseAsync(inputPrompt.take(MAX_TOKENS)) { partialResult, done ->
+    stringBuilder += partialResult
+    onResult(stringBuilder)
+}</code></pre>
+    </div>
+
+    <div class="pro-tips">
+      <h3>💡 Summary</h3>
+      <p>Congratulations! Aapne seekh liya hai ki kaise ek on-device RAG system banaya jaata hai. Is approach se aap apne Android applications me powerful, private, aur context-aware AI features add kar sakte hain, bina server dependency ke.</p>
+    </div>
+
+    <a class="back" href="index.html">← Back to Awesome AI Projects</a>
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn Generative AI in Roman Hindi</p>
+  </footer>
+</body>
+</html>
