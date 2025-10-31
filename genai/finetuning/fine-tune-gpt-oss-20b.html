@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277"
+     crossorigin="anonymous"></script>
+  <title>gpt-oss-20b Model ko Fine-Tune Karein | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fafafa;
+      color: #222;
+      margin: 0;
+      line-height: 1.65;
+    }
+
+    header {
+      background: #2c3e50;
+      color: #fff;
+      text-align: center;
+      padding: 22px 16px;
+    }
+
+    header h1 { margin: 0; font-size: 22px; }
+
+    nav { margin-top: 8px; }
+
+    nav a {
+      color: #dfe8ef;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    nav a:hover { color: #f1f6fb; }
+
+    main {
+      max-width: 1000px;
+      margin: 28px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+    }
+
+    h2, h3, h4 { color: #1e3551; }
+    p { color: #333; font-size: 16px; margin: 12px 0; }
+
+    .section { margin-top: 22px; }
+
+    pre {
+      background: #f4f6f8;
+      border-radius: 8px;
+      padding: 14px;
+      overflow-x: auto;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      border: 1px solid #e6eef8;
+    }
+
+    code.inline {
+      background: #eef6ff;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    ul { margin-left: 18px; color: #333; }
+    li { margin: 8px 0; }
+
+    .pro-tips {
+      background: #e8f5e9;
+      border-left: 4px solid #2e7d32;
+      padding: 12px 14px;
+      border-radius: 6px;
+      margin-top: 12px;
+      color: #1b5e20;
+    }
+
+    .back {
+      display: inline-block;
+      margin-top: 18px;
+      text-decoration: none;
+      color: #0077cc;
+      font-weight: 600;
+    }
+
+    .back:hover { text-decoration: underline; }
+
+    footer {
+      text-align: center;
+      padding: 18px;
+      margin-top: 24px;
+      background: #f4f4f4;
+      font-size: 14px;
+    }
+
+    @media (max-width: 720px) {
+      main { margin: 18px; padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>OpenAI ke gpt-oss-20b Model ko Unsloth se Fine-Tune Karein</h1>
+    <nav>
+      <a href="https://aikipadhai.com/index.html">Home</a>
+      <a href="https://aikipadhai.com/python/index.html">Python</a>
+      <a href="https://aikipadhai.com/genai/index.html"><strong>AI</strong></a>
+      <a href="https://aikipadhai.com/about.html">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="eyebrow">Tutorial • Advanced Fine-Tuning</div>
+    <h2>OpenAI ke gpt-oss-20b Model ko Unsloth se Fine-Tune Karein 🧠</h2>
+
+    <p>
+      Is tutorial mein hum OpenAI ke naye <code class="inline">gpt-oss-20b</code> model ki power dekhenge, use Unsloth ke saath fine-tune karke. Yeh model ek khaas feature ke saath aata hai jise "Reasoning Effort" kehte hain, jisse aap model ki performance aur speed ko control kar sakte hain.
+    </p>
+
+    <div class="section">
+      <h3>Step 1: Environment Setup (Installation) 🛠️</h3>
+      <p>Sabse pehle, humein zaroori libraries install karni hongi. Unsloth is process ko kaafi aasan bana deta hai.</p>
+      <pre><code># %%capture
+# import os, importlib.util
+# !pip install --upgrade -qqq uv
+# if importlib.util.find_spec("torch") is None or "COLAB_" in "".join(os.environ.keys()):
+#     try: import numpy, PIL; get_numpy = f"numpy=={numpy.__version__}"; get_pil = f"pillow=={PIL.__version__}"
+#     except: get_numpy = "numpy"; get_pil = "pillow"
+#     !uv pip install -qqq \
+#         "torch>=2.8.0" "triton>=3.4.0" {get_numpy} {get_pil} torchvision bitsandbytes "transformers==4.56.2" \
+#         "unsloth_zoo[base] @ git+https://github.com/unslothai/unsloth-zoo" \
+#         "unsloth[base] @ git+https://github.com/unslothai/unsloth" \
+#         git+https://github.com/triton-lang/triton.git@05b2c186c1b6c9a08375389d5efe9cb4c401c075#subdirectory=python/triton_kernels
+# elif importlib.util.find_spec("unsloth") is None:
+#     !uv pip install -qqq unsloth
+# !uv pip install --upgrade --no-deps transformers==4.56.2 tokenizers trl==0.22.2 unsloth unsloth_zoo</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Step 2: Model Load Karna (Unsloth ke saath) 🚀</h3>
+      <p>Ab hum Unsloth ki <code class="inline">FastLanguageModel</code> class ka use karke model load karenge. Hum 4-bit quantization ka use karenge taaki memory usage kam ho.</p>
+      <pre><code>from unsloth import FastLanguageModel
+import torch
+max_seq_length = 1024
+dtype = None
+
+model, tokenizer = FastLanguageModel.from_pretrained(
+    model_name = "unsloth/gpt-oss-20b",
+    dtype = dtype, # Auto detection ke liye None
+    max_seq_length = max_seq_length,
+    load_in_4bit = True,  # Memory bachane ke liye 4-bit quantization
+    full_finetuning = False,
+)</code></pre>
+
+      <h4>LoRA Adapters Add Karna</h4>
+      <p>Hum parameter-efficient fine-tuning (PEFT) ke liye LoRA adapters add karenge. Isse hum sirf model ke kuch hi percent parameters ko train karke poore model ko fine-tune kar sakte hain.</p>
+      <pre><code>model = FastLanguageModel.get_peft_model(
+    model,
+    r = 8, # 8, 16, 32, 64, 128 me se koi bhi choose karein
+    target_modules = ["q_proj", "k_proj", "v_proj", "o_proj",
+                      "gate_proj", "up_proj", "down_proj",],
+    lora_alpha = 16,
+    lora_dropout = 0,
+    bias = "none",
+    use_gradient_checkpointing = "unsloth", # 30% kam VRAM use karta hai
+    random_state = 3407,
+)</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Step 3: Reasoning Effort ko Samajhna 🤔</h3>
+      <p><code class="inline">gpt-oss</code> models ka ek unique feature hai "Reasoning Effort". Isse aap model ki "sochne ki kshamta" ko control kar sakte hain. Iske teen levels hain:</p>
+      <ul>
+        <li><strong>Low</strong>: Fast response ke liye, jahan complex reasoning ki zaroorat nahi hai.</li>
+        <li><strong>Medium</strong>: Performance aur speed ke beech ek balance.</li>
+        <li><strong>High</strong>: Sabse strong reasoning performance, lekin response time thoda zyada hota hai.</li>
+      </ul>
+      <p>Chaliye `medium` effort ke saath ek example dekhte hain:</p>
+      <pre><code>from transformers import TextStreamer
+
+messages = [
+    {"role": "user", "content": "Solve x^5 + 3x^4 - 10 = 3."},
+]
+inputs = tokenizer.apply_chat_template(
+    messages,
+    add_generation_prompt = True,
+    return_tensors = "pt",
+    return_dict = True,
+    reasoning_effort = "medium", # **NEW!** Effort ko low, medium, ya high set karein
+).to("cuda")
+
+_ = model.generate(**inputs, max_new_tokens = 64, streamer = TextStreamer(tokenizer))</code></pre>
+      <p>Aap dekhenge ki `high` effort par model zyada "sochta" hai aur behtar jawab deta hai.</p>
+    </div>
+
+    <div class="section">
+      <h3>Step 4: Dataset Taiyar Karna 📚</h3>
+      <p>Hum fine-tuning ke liye <code class="inline">HuggingFaceH4/Multilingual-Thinking</code> dataset ka use karenge. Is dataset me chain-of-thought reasoning ke examples hain, jo model ko alag-alag languages me reason karna sikhate hain.</p>
+      <p>Hum dataset ko OpenAI ke Harmony format ke anusaar format karenge.</p>
+      <pre><code>from datasets import load_dataset
+from unsloth.chat_templates import standardize_sharegpt
+
+def formatting_prompts_func(examples):
+    convos = examples["messages"]
+    texts = [tokenizer.apply_chat_template(convo, tokenize = False, add_generation_prompt = False) for convo in convos]
+    return { "text" : texts, }
+
+dataset = load_dataset("HuggingFaceH4/Multilingual-Thinking", split="train")
+dataset = standardize_sharegpt(dataset)
+dataset = dataset.map(formatting_prompts_func, batched = True,)
+
+# Pehla example dekhein
+print(dataset[0]['text'])</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Step 5: Model ko Fine-Tune Karna ⚙️</h3>
+      <p>Ab hum model ko train karenge. Hum yahan speed ke liye sirf 30 steps run karenge, lekin aap poori training ke liye <code class="inline">num_train_epochs=1</code> set kar sakte hain.</p>
+      <pre><code>from trl import SFTConfig, SFTTrainer
+
+trainer = SFTTrainer(
+    model = model,
+    tokenizer = tokenizer,
+    train_dataset = dataset,
+    args = SFTConfig(
+        per_device_train_batch_size = 1,
+        gradient_accumulation_steps = 4,
+        warmup_steps = 5,
+        max_steps = 30, # Poori training ke liye isse None karein aur num_train_epochs=1 set karein
+        learning_rate = 2e-4,
+        logging_steps = 1,
+        optim = "adamw_8bit",
+        weight_decay = 0.001,
+        lr_scheduler_type = "linear",
+        seed = 3407,
+        output_dir = "outputs",
+        report_to = "none",
+    ),
+)</code></pre>
+
+      <h4>Sirf Assistant ke Responses par Train Karein</h4>
+      <p>Unsloth ka <code class="inline">train_on_responses_only</code> method sirf assistant ke jawab par train karta hai, jisse accuracy badhti hai.</p>
+      <pre><code>from unsloth.chat_templates import train_on_responses_only
+
+gpt_oss_kwargs = dict(instruction_part = "<|start|>user<|message|>", response_part="<|start|>assistant<|channel|>final<|message|>")
+
+trainer = train_on_responses_only(
+    trainer,
+    **gpt_oss_kwargs,
+)
+
+trainer.train()</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Step 6: Fine-Tuned Model se Inference Karna ✅</h3>
+      <p>Training ke baad, chaliye dekhte hain ki hamara model ab French me reasoning kar pata hai ya nahi.</p>
+      <pre><code>messages = [
+    {"role": "system", "content": "reasoning language: French\n\nYou are a helpful assistant that can solve mathematical problems."},
+    {"role": "user", "content": "Solve x^5 + 3x^4 - 10 = 3."},
+]
+inputs = tokenizer.apply_chat_template(
+    messages,
+    add_generation_prompt = True,
+    return_tensors = "pt",
+    return_dict = True,
+    reasoning_effort = "medium",
+).to("cuda")
+
+from transformers import TextStreamer
+_ = model.generate(**inputs, max_new_tokens = 64, streamer = TextStreamer(tokenizer))</code></pre>
+      <p>Fine-tuning ke baad, model ne French me "sochna" seekh liya hai!</p>
+    </div>
+
+    <div class="section">
+      <h3>Step 7: Model ko Save aur Load Karna 💾</h3>
+      <p>Aap apne fine-tuned model ko LoRA adapters ke roop me save kar sakte hain.</p>
+      <pre><code>model.save_pretrained("finetuned_model") # Local save
+# model.push_to_hub("your_username/finetuned_model", token = "...") # Online save</code></pre>
+      
+      <p>Saved LoRA adapters ko load karne ke liye:</p>
+      <pre><code>if False:
+    from unsloth import FastLanguageModel
+    model, tokenizer = FastLanguageModel.from_pretrained(
+        model_name = "finetuned_model",
+        max_seq_length = 1024,
+        dtype = None,
+        load_in_4bit = True,
+    )</code></pre>
+
+      <h4>Model ko float16 me Save Karna</h4>
+      <p>Aap model ko VLLM jaise tools ke liye <code class="inline">float16</code> format me bhi save kar sakte hain.</p>
+      <pre><code># Sirf ek option chunein!
+
+# Locally 16bit me save karein
+if False: model.save_pretrained_merged("finetuned_model", tokenizer, save_method = "merged_16bit")
+
+# Hugging Face account par export aur save karein
+if False: model.push_to_hub_merged("YOUR_USERNAME/gpt-oss-finetune", tokenizer, save_method = "merged_16bit", token = "PUT_HERE")</code></pre>
+    </div>
+
+    <div class="pro-tips">
+      <h3>💡 Summary aur Agle Steps</h3>
+      <p>Congratulations! Aapne successfully OpenAI ke `gpt-oss-20b` model ko ek multi-lingual reasoning task ke liye fine-tune kar liya hai. Unsloth is process ko kaafi aasan aur memory-efficient bana deta hai.</p>
+      <p>Aap Unsloth ke aur bhi notebooks explore kar sakte hain, jaise ki Llama GRPO, DPO, aur Vision model fine-tuning!</p>
+    </div>
+
+    <a class="back" href="index.html">← Back to Fine-Tuning Projects</a>
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn Fine-Tuning & Generative AI in Roman Hindi</p>
+  </footer>
+</body>
+</html>
