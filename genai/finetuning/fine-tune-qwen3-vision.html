@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277"
+     crossorigin="anonymous"></script>
+  <title>Qwen3 Vision Model ko Fine-Tune Karein | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fafafa;
+      color: #222;
+      margin: 0;
+      line-height: 1.65;
+    }
+
+    header {
+      background: #2c3e50;
+      color: #fff;
+      text-align: center;
+      padding: 22px 16px;
+    }
+
+    header h1 { margin: 0; font-size: 22px; }
+
+    nav { margin-top: 8px; }
+
+    nav a {
+      color: #dfe8ef;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    nav a:hover { color: #f1f6fb; }
+
+    main {
+      max-width: 1000px;
+      margin: 28px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+    }
+
+    h2, h3 { color: #1e3551; }
+    p { color: #333; font-size: 16px; margin: 12px 0; }
+
+    .section { margin-top: 22px; }
+
+    pre {
+      background: #f4f6f8;
+      border-radius: 8px;
+      padding: 14px;
+      overflow-x: auto;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      border: 1px solid #e6eef8;
+    }
+
+    code.inline {
+      background: #eef6ff;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    ul { margin-left: 18px; color: #333; }
+    li { margin: 8px 0; }
+
+    .pro-tips {
+      background: #fff7ed;
+      border-left: 4px solid #ffb020;
+      padding: 12px 14px;
+      border-radius: 6px;
+      margin-top: 12px;
+      color: #6b4a00;
+    }
+
+    .back {
+      display: inline-block;
+      margin-top: 18px;
+      text-decoration: none;
+      color: #0077cc;
+      font-weight: 600;
+    }
+
+    .back:hover { text-decoration: underline; }
+
+    footer {
+      text-align: center;
+      padding: 18px;
+      margin-top: 24px;
+      background: #f4f4f4;
+      font-size: 14px;
+    }
+
+    @media (max-width: 720px) {
+      main { margin: 18px; padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Qwen3 Vision Model ko Fine-Tune Karein (Image-to-LaTeX)</h1>
+    <nav>
+      <a href="https://aikipadhai.com/index.html">Home</a>
+      <a href="https://aikipadhai.com/python/index.html">Python</a>
+      <a href="https://aikipadhai.com/genai/index.html"><strong>AI</strong></a>
+      <a href="https://aikipadhai.com/about.html">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="eyebrow">Tutorial • Vision Model Fine-Tuning</div>
+    <h2>Qwen3 Vision Model ko Handwritten Math Formulas ke liye Fine-Tune Karein ✍️→💻</h2>
+
+    <p>
+      Is tutorial mein hum seekhenge ki <code class="inline">Qwen3-VL-8B</code> jaise powerful vision model ko kaise fine-tune karein. Hamara goal handwritten math formulas ki images ko computer-readable LaTeX format mein convert karna hai. Iske liye hum <a href="https://github.com/unslothai/unsloth" target="_blank">Unsloth</a> library ka istemal karenge, jo training ko bahut fast aur memory-efficient banati hai.
+    </p>
+
+    <div class="section">
+      <h3>Step 1: Environment Setup (Installation) 🛠️</h3>
+      <p>Sabse pehle, humein zaroori libraries install karni hongi. Unsloth Colab jaise environments ke liye installation ko aasan bana deta hai.</p>
+      <pre><code># Commented out IPython magic to ensure Python compatibility.
+# %%capture
+# import os, re
+# if "COLAB_" not in "".join(os.environ.keys()):
+#     !pip install unsloth
+# else:
+#     # Do this only in Colab notebooks! Otherwise use pip install unsloth
+#     import torch; v = re.match(r"[0-9\.]{3,}", str(torch.__version__)).group(0)
+#     xformers = "xformers==" + ("0.0.32.post2" if v == "2.8.0" else "0.0.29.post3")
+#     !pip install --no-deps bitsandbytes accelerate {xformers} peft trl triton cut_cross_entropy unsloth_zoo
+#     !pip install sentencepiece protobuf "datasets>=3.4.1,<4.0.0" "huggingface_hub>=0.34.0" hf_transfer
+#     !pip install --no-deps unsloth
+# !pip install transformers==4.57.0
+# !pip install --no-deps trl==0.22.2</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Step 2: Model Load Karna (Unsloth ke saath) 🧠</h3>
+      <p>Ab hum Unsloth ki <code class="inline">FastVisionModel</code> class ka use karke pre-quantized 4-bit model load karenge. Isse memory usage kam hota hai aur download speed 4x tak badh jaati hai.</p>
+      <pre><code>from unsloth import FastVisionModel # LLMs ke liye FastLanguageModel
+import torch
+
+# 4-bit pre-quantized models jo hum support karte hain
+fourbit_models = [
+    "unsloth/Llama-3.2-11B-Vision-Instruct-bnb-4bit", # Llama 3.2 vision support
+    "unsloth/Llama-3.2-11B-Vision-bnb-4bit",
+    "unsloth/Llama-3.2-90B-Vision-Instruct-bnb-4bit", # 80GB card me fit ho sakta hai!
+    "unsloth/Llama-3.2-90B-Vision-bnb-4bit",
+
+    "unsloth/Pixtral-12B-2409-bnb-4bit",              # Pixtral 16GB me fit ho jaata hai!
+    "unsloth/Pixtral-12B-Base-2409-bnb-4bit",         # Pixtral base model
+
+    "unsloth/Qwen2-VL-2B-Instruct-bnb-4bit",          # Qwen2 VL support
+    "unsloth/Qwen2-VL-7B-Instruct-bnb-4bit",
+    "unsloth/Qwen2-VL-72B-Instruct-bnb-4bit",
+
+    "unsloth/llava-v1.6-mistral-7b-hf-bnb-4bit",      # Koi bhi Llava variant kaam karega!
+    "unsloth/llava-1.5-7b-hf-bnb-4bit",
+] # Aur models yahan: https://huggingface.co/unsloth
+
+model, tokenizer = FastVisionModel.from_pretrained(
+    "unsloth/Qwen3-VL-8B-Instruct-unsloth-bnb-4bit",
+    load_in_4bit = True, # Memory bachane ke liye 4bit use karein. 16bit LoRA ke liye False.
+    use_gradient_checkpointing = "unsloth", # Long context ke liye True ya "unsloth"
+)</code></pre>
+
+      <h4>LoRA Adapters Add Karna</h4>
+      <p>Hum parameter-efficient fine-tuning (PEFT) ke liye LoRA adapters add karenge. Isse hum sirf 1% parameters ko train karke poore model ko fine-tune kar sakte hain. Unsloth aapko vision, language, attention, ya MLP layers ko alag-alag fine-tune karne ka option bhi deta hai!</p>
+      <pre><code>model = FastVisionModel.get_peft_model(
+    model,
+    finetune_vision_layers     = True, # Vision layers fine-tune karne ke liye
+    finetune_language_layers   = True, # Language layers fine-tune karne ke liye
+    finetune_attention_modules = True, # Attention layers fine-tune karne ke liye
+    finetune_mlp_modules       = True, # MLP layers fine-tune karne ke liye
+
+    r = 16,           # Jitna bada, utni acchi accuracy, lekin overfit ho sakta hai
+    lora_alpha = 16,  # Recommended hai ki alpha == r ho
+    lora_dropout = 0,
+    bias = "none",
+    random_state = 3407,
+    use_rslora = False,  # Hum rank stabilized LoRA bhi support karte hain
+    loftq_config = None, # Aur LoftQ bhi
+    # target_modules = "all-linear", # Ab optional hai!
+)</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Step 3: Dataset Taiyar Karna 📚</h3>
+      <p>Hum handwritten math formulas ka ek sample dataset use karenge. Goal hai in images ko LaTeX format me convert karna. Aap dataset ko <a href="https://huggingface.co/datasets/unsloth/LaTeX_OCR" target="_blank">yahan</a> se access kar sakte hain.</p>
+      <pre><code>from datasets import load_dataset
+dataset = load_dataset("unsloth/LaTeX_OCR", split = "train")</code></pre>
+      <p>Chaliye dataset par ek nazar daalte hain. Hum teesri image aur uska caption dekhenge.</p>
+      <pre><code># Dataset info
+print(dataset)
+
+# 3rd image
+print(dataset[2]["image"])
+
+# 3rd image ka text (LaTeX)
+print(dataset[2]["text"])</code></pre>
+      <p>Hum is LaTeX ko browser me render karke bhi dekh sakte hain!</p>
+      <pre><code>from IPython.display import display, Math, Latex
+
+latex = dataset[2]["text"]
+display(Math(latex))</code></pre>
+
+      <h4>Dataset ko Format Karna</h4>
+      <p>Vision fine-tuning ke liye, dataset ko ek specific conversational format me hona chahiye:</p>
+      <pre><code>[
+{ "role": "user",
+  "content": [{"type": "text",  "text": Q}, {"type": "image", "image": image} ]
+},
+{ "role": "assistant",
+  "content": [{"type": "text",  "text": A} ]
+},
+]</code></pre>
+      <p>Hum ek function banayenge jo hamare dataset ko is format me convert karega.</p>
+      <pre><code>instruction = "Write the LaTeX representation for this image."
+
+def convert_to_conversation(sample):
+    conversation = [
+        { "role": "user",
+          "content" : [
+            {"type" : "text",  "text"  : instruction},
+            {"type" : "image", "image" : sample["image"]} ]
+        },
+        { "role" : "assistant",
+          "content" : [
+            {"type" : "text",  "text"  : sample["text"]} ]
+        },
+    ]
+    return { "messages" : conversation }
+
+converted_dataset = [convert_to_conversation(sample) for sample in dataset]
+
+# Pehle example ka structure dekhein
+print(converted_dataset[0])</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Step 4: Base Model ko Test Karna (Before Training) 🧪</h3>
+      <p>Fine-tuning se pehle, chaliye dekhte hain ki base model ek example ke liye kya output deta hai.</p>
+      <pre><code>FastVisionModel.for_inference(model) # Inference ke liye enable karein!
+
+image = dataset[2]["image"]
+instruction = "Write the LaTeX representation for this image."
+
+messages = [
+    {"role": "user", "content": [
+        {"type": "image"},
+        {"type": "text", "text": instruction}
+    ]}
+]
+input_text = tokenizer.apply_chat_template(messages, add_generation_prompt = True)
+inputs = tokenizer(
+    image,
+    input_text,
+    add_special_tokens = False,
+    return_tensors = "pt",
+).to("cuda")
+
+from transformers import TextStreamer
+text_streamer = TextStreamer(tokenizer, skip_prompt = True)
+_ = model.generate(**inputs, streamer = text_streamer, max_new_tokens = 128,
+                   use_cache = True, temperature = 1.5, min_p = 0.1)</code></pre>
+      <p>Aap dekhenge ki base model shayad sahi jawab na de. Fine-tuning se hum ise is task ke liye specialize karenge.</p>
+    </div>
+
+    <div class="section">
+      <h3>Step 5: Model ko Fine-Tune Karna ⚙️</h3>
+      <p>Ab hum model ko train karenge. Hum yahan speed ke liye sirf 30 steps run karenge, lekin aap poori training ke liye <code class="inline">num_train_epochs=1</code> set kar sakte hain. Hum Unsloth ke naye <code class="inline">UnslothVisionDataCollator</code> ka use karenge.</p>
+      <pre><code>from unsloth.trainer import UnslothVisionDataCollator
+from trl import SFTTrainer, SFTConfig
+
+FastVisionModel.for_training(model) # Training ke liye enable karein!
+
+trainer = SFTTrainer(
+    model = model,
+    tokenizer = tokenizer,
+    data_collator = UnslothVisionDataCollator(model, tokenizer), # Yeh zaroori hai!
+    train_dataset = converted_dataset,
+    args = SFTConfig(
+        per_device_train_batch_size = 2,
+        gradient_accumulation_steps = 4,
+        warmup_steps = 5,
+        max_steps = 30,
+        # num_train_epochs = 1, # Poori training ke liye isko use karein
+        learning_rate = 2e-4,
+        logging_steps = 1,
+        optim = "adamw_8bit",
+        weight_decay = 0.001,
+        lr_scheduler_type = "linear",
+        seed = 3407,
+        output_dir = "outputs",
+        report_to = "none",     # Weights and Biases ke liye
+
+        # Vision fine-tuning ke liye neeche diye gaye items zaroori hain:
+        remove_unused_columns = False,
+        dataset_text_field = "",
+        dataset_kwargs = {"skip_prepare_dataset": True},
+        max_length = 2048,
+    ),
+)
+
+trainer_stats = trainer.train()</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Step 6: Fine-Tuned Model se Inference Karna ✅</h3>
+      <p>Training ke baad, chaliye dekhte hain ki hamara model ab kaisa perform karta hai.</p>
+      <pre><code>FastVisionModel.for_inference(model) # Inference ke liye enable karein!
+
+image = dataset[2]["image"]
+instruction = "Write the LaTeX representation for this image."
+
+messages = [
+    {"role": "user", "content": [
+        {"type": "image"},
+        {"type": "text", "text": instruction}
+    ]}
+]
+input_text = tokenizer.apply_chat_template(messages, add_generation_prompt = True)
+inputs = tokenizer(
+    image,
+    input_text,
+    add_special_tokens = False,
+    return_tensors = "pt",
+).to("cuda")
+
+from transformers import TextStreamer
+text_streamer = TextStreamer(tokenizer, skip_prompt = True)
+_ = model.generate(**inputs, streamer = text_streamer, max_new_tokens = 128,
+                   use_cache = True, temperature = 1.5, min_p = 0.1)</code></pre>
+      <p>Ab aapka model handwritten formulas ko LaTeX me sahi se convert kar payega!</p>
+    </div>
+
+    <div class="section">
+      <h3>Step 7: Model ko Save aur Load Karna 💾</h3>
+      <p>Aap apne fine-tuned model ko LoRA adapters ke roop me save kar sakte hain. Isse sirf trained weights save hote hain, poora model nahi.</p>
+      <pre><code>model.save_pretrained("lora_model")  # Local save
+tokenizer.save_pretrained("lora_model")
+# model.push_to_hub("your_name/lora_model", token = "...") # Online save
+# tokenizer.push_to_hub("your_name/lora_model", token = "...") # Online save</code></pre>
+      
+      <p>Saved LoRA adapters ko load karne ke liye:</p>
+      <pre><code>if False:
+    from unsloth import FastVisionModel
+    model, tokenizer = FastVisionModel.from_pretrained(
+        model_name = "lora_model", # Aapka training me use kiya gaya model
+        load_in_4bit = True, # 16bit LoRA ke liye False set karein
+    )
+    FastVisionModel.for_inference(model) # Inference ke liye enable karein!</code></pre>
+
+      <h4>Model ko float16 me Save Karna</h4>
+      <p>Aap model ko VLLM jaise tools ke liye <code class="inline">float16</code> format me bhi save kar sakte hain.</p>
+      <pre><code># Sirf ek option chunein!
+
+# Locally 16bit me save karein
+if False: model.save_pretrained_merged("unsloth_finetune", tokenizer,)
+
+# Hugging Face account par export aur save karein
+if False: model.push_to_hub_merged("YOUR_USERNAME/unsloth_finetune", tokenizer, token = "PUT_HERE")</code></pre>
+    </div>
+
+    <div class="pro-tips">
+      <h3>💡 Summary aur Agle Steps</h3>
+      <p>Congratulations! Aapne successfully ek vision model ko ek specific task ke liye fine-tune kar liya hai. Unsloth is process ko kaafi aasan aur efficient bana deta hai.</p>
+      <p>Aap Unsloth ke aur bhi notebooks explore kar sakte hain:</p>
+      <ul>
+        <li><a href="https://colab.research.google.com/github/unslothai/notebooks/blob/main/nb/Llama3.1_(8B)-GRPO.ipynb" target="_blank">Reasoning model train karein (Llama GRPO)</a></li>
+        <li><a href="https://colab.research.google.com/github/unslothai/notebooks/blob/main/nb/Llama3_(8B)-Ollama.ipynb" target="_blank">Fine-tuned model ko Ollama me save karein</a></li>
+        <li><a href="https://colab.research.google.com/github/unslothai/notebooks/blob/main/nb/Llama3.2_(11B)-Vision.ipynb" target="_blank">Llama 3.2 Vision ko Radiography ke liye fine-tune karein</a></li>
+      </ul>
+    </div>
+
+    <a class="back" href="index.html">← Back to Fine-Tuning Projects</a>
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn Fine-Tuning & Generative AI in Roman Hindi</p>
+  </footer>
+</body>
+</html>

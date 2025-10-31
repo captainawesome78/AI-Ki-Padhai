@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277"
+     crossorigin="anonymous"></script>
+  <title>Unsloth aur Docker se LLMs Fine-Tune Karein | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fafafa;
+      color: #222;
+      margin: 0;
+      line-height: 1.65;
+    }
+
+    header {
+      background: #2c3e50;
+      color: #fff;
+      text-align: center;
+      padding: 22px 16px;
+    }
+
+    header h1 { margin: 0; font-size: 22px; }
+
+    nav { margin-top: 8px; }
+
+    nav a {
+      color: #dfe8ef;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    nav a:hover { color: #f1f6fb; }
+
+    main {
+      max-width: 1000px;
+      margin: 28px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+    }
+
+    h2, h3 { color: #1e3551; }
+    p { color: #333; font-size: 16px; margin: 12px 0; }
+
+    .section { margin-top: 22px; }
+
+    pre {
+      background: #f4f6f8;
+      border-radius: 8px;
+      padding: 14px;
+      overflow-x: auto;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      border: 1px solid #e6eef8;
+    }
+
+    code.inline {
+      background: #eef6ff;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    ul { margin-left: 18px; color: #333; }
+    li { margin: 8px 0; }
+
+    .pro-tips {
+      background: #e8f5e9;
+      border-left: 4px solid #2e7d32;
+      padding: 12px 14px;
+      border-radius: 6px;
+      margin-top: 12px;
+      color: #1b5e20;
+    }
+
+    .warning-tips {
+        background: #fff3e0;
+        border-left: 4px solid #ff9800;
+        padding: 12px 14px;
+        border-radius: 6px;
+        margin-top: 12px;
+        color: #e65100;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+
+    .back {
+      display: inline-block;
+      margin-top: 18px;
+      text-decoration: none;
+      color: #0077cc;
+      font-weight: 600;
+    }
+
+    .back:hover { text-decoration: underline; }
+
+    footer {
+      text-align: center;
+      padding: 18px;
+      margin-top: 24px;
+      background: #f4f4f4;
+      font-size: 14px;
+    }
+
+    @media (max-width: 720px) {
+      main { margin: 18px; padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Unsloth aur Docker ke saath LLMs ko Fine-Tune Karein</h1>
+    <nav>
+      <a href="https://aikipadhai.com/index.html">Home</a>
+      <a href="https://aikipadhai.com/python/index.html">Python</a>
+      <a href="https://aikipadhai.com/genai/index.html"><strong>AI</strong></a>
+      <a href="https://aikipadhai.com/about.html">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="eyebrow">Tutorial • Docker Fine-Tuning</div>
+    <h2>Unsloth aur Docker ke saath LLMs ko Fine-Tune Kaise Karein 🐳</h2>
+
+    <p>
+      Local training aksar dependency issues ya environment break hone ki vajah se complex ho sakti hai. Unsloth ki <a href="https://hub.docker.com/r/unsloth/unsloth" target="_blank">Docker image</a> in sab pareshaniyon se bachne ka ek shandar tarika hai. Koi setup ki zaroorat nahi: bas image ko pull karo, run karo, aur training shuru karo.
+    </p>
+
+    <div class="pro-tips">
+      <p>Aap ab hamari main Docker image <code class="inline">unsloth/unsloth</code> ko Blackwell aur 50-series GPUs ke liye bhi use kar sakte hain - alag se image ki zaroorat nahi hai.</p>
+    </div>
+
+    <div class="section">
+      <h3>⚡ Step-by-Step Tutorial</h3>
+      
+      <h4>Step 1: Docker aur NVIDIA Container Toolkit Install Karein</h4>
+      <p>Pehle Docker install karein <a href="https://docs.docker.com/engine/install/" target="_blank">Linux</a> ya <a href="https://docs.docker.com/desktop/" target="_blank">Desktop</a> ke liye. Phir, <a href="https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#installation" target="_blank">NVIDIA Container Toolkit</a> install karein:</p>
+      <pre><code>export NVIDIA_CONTAINER_TOOLKIT_VERSION=1.17.8-1
+sudo apt-get update && sudo apt-get install -y \
+  nvidia-container-toolkit=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
+  nvidia-container-toolkit-base=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
+  libnvidia-container-tools=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
+  libnvidia-container1=${NVIDIA_CONTAINER_TOOLKIT_VERSION}</code></pre>
+
+      <h4>Step 2: Container ko Run Karein</h4>
+      <p>Unsloth ki official Docker image <code class="inline">unsloth/unsloth</code> hai. Isse run karne ke liye neeche di gayi command use karein. Yeh command aapke current directory ke `work` folder ko container ke andar map kar degi.</p>
+      <pre><code>docker run -d -e JUPYTER_PASSWORD="mypassword" \
+  -p 8888:8888 -p 2222:22 \
+  -v $(pwd)/work:/workspace/work \
+  --gpus all \
+  unsloth/unsloth</code></pre>
+
+      <h4>Step 3: Jupyter Lab Access Karein</h4>
+      <p>Apne browser me <a href="http://localhost:8888/" target="_blank">http://localhost:8888</a> par jayein. Aapko Jupyter Lab ka interface dikhega. Yahan aapko `unsloth-notebooks` folder milega jismein fine-tuning ke liye ready-to-use notebooks hain.</p>
+
+      <h4>Step 4: Unsloth ke saath Training Shuru Karein</h4>
+      <p>Ab aap kisi bhi notebook ko open karke training shuru kar sakte hain. Agar aap naye hain, to hamare <a href="https://docs.unsloth.ai/get-started/fine-tuning-llms-guide" target="_blank">Fine-tuning Guide</a> ko follow karein.</p>
+    </div>
+
+    <div class="section">
+        <h3>⚙️ Advanced Settings</h3>
+        <p>Aap environment variables ka use karke container ko configure kar sakte hain:</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Variable</th>
+                    <th>Description</th>
+                    <th>Default</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code class="inline">JUPYTER_PASSWORD</code></td>
+                    <td>Jupyter Lab access karne ke liye password set karein.</td>
+                    <td><code class="inline">unsloth</code></td>
+                </tr>
+                <tr>
+                    <td><code class="inline">JUPYTER_PORT</code></td>
+                    <td>Container ke andar Jupyter Lab jis port par chalega.</td>
+                    <td><code class="inline">8888</code></td>
+                </tr>
+                <tr>
+                    <td><code class="inline">SSH_KEY</code></td>
+                    <td>SSH access ke liye apni public key yahan add karein.</td>
+                    <td>None</td>
+                </tr>
+                <tr>
+                    <td><code class="inline">USER_PASSWORD</code></td>
+                    <td>Container ke andar `sudo` commands ke liye 'unsloth' user ka password.</td>
+                    <td><code class="inline">unsloth</code></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="warning-tips">
+            <p><strong>Important:</strong> Apne kaam ko save karne ke liye hamesha volume mounts (<code class="inline">-v</code>) ka use karein, warna container restart hone par data delete ho jayega.</p>
+        </div>
+    </div>
+
+    <a class="back" href="index.html">← Back to Fine-Tuning Projects</a>
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn Fine-Tuning & Generative AI in Roman Hindi</p>
+  </footer>
+</body>
+</html>
