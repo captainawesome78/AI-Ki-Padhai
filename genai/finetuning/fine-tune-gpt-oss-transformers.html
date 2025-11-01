@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277"
+     crossorigin="anonymous"></script>
+  <title>Fine-Tune gpt-oss with Hugging Face Transformers | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fafafa;
+      color: #222;
+      margin: 0;
+      line-height: 1.65;
+    }
+
+    header {
+      background: #2c3e50;
+      color: #fff;
+      text-align: center;
+      padding: 22px 16px;
+    }
+
+    header h1 { margin: 0; font-size: 22px; }
+
+    nav { margin-top: 8px; }
+
+    nav a {
+      color: #dfe8ef;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    nav a:hover { color: #f1f6fb; }
+
+    main {
+      max-width: 1000px;
+      margin: 28px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+    }
+
+    h2, h3, h4 { color: #1e3551; }
+    p { color: #333; font-size: 16px; margin: 12px 0; }
+
+    .section { margin-top: 22px; }
+
+    pre {
+      background: #f4f6f8;
+      border-radius: 8px;
+      padding: 14px;
+      overflow-x: auto;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      border: 1px solid #e6eef8;
+    }
+
+    code.inline {
+      background: #eef6ff;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    ul { margin-left: 18px; color: #333; }
+    li { margin: 8px 0; }
+
+    .pro-tips {
+      background: #e8f5e9;
+      border-left: 4px solid #2e7d32;
+      padding: 12px 14px;
+      border-radius: 6px;
+      margin-top: 12px;
+      color: #1b5e20;
+    }
+
+    .back {
+      display: inline-block;
+      margin-top: 18px;
+      text-decoration: none;
+      color: #0077cc;
+      font-weight: 600;
+    }
+
+    .back:hover { text-decoration: underline; }
+
+    footer {
+      text-align: center;
+      padding: 18px;
+      margin-top: 24px;
+      background: #f4f4f4;
+      font-size: 14px;
+    }
+
+    @media (max-width: 720px) {
+      main { margin: 18px; padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Fine-Tuning gpt-oss with Hugging Face Transformers</h1>
+    <nav>
+      <a href="https://aikipadhai.com/index.html">Home</a>
+      <a href="https://aikipadhai.com/python/index.html">Python</a>
+      <a href="https://aikipadhai.com/genai/index.html"><strong>AI</strong></a>
+      <a href="https://aikipadhai.com/about.html">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="eyebrow">Tutorial • Advanced Fine-Tuning</div>
+    <h2>Fine-Tuning gpt-oss with Hugging Face Transformers 🚀</h2>
+
+    <p>
+      Is tutorial mein hum OpenAI ke <code class="inline">gpt-oss</code> model ko Hugging Face ecosystem ka use karke fine-tune karna seekhenge. Hum <code class="inline">transformers</code>, <code class="inline">datasets</code>, aur <code class="inline">TRL</code> libraries ka istemal karenge.
+    </p>
+
+    <div class="section">
+      <h3>Step 1: Environment Setup 🛠️</h3>
+      <p>Sabse pehle, humein zaroori libraries install karni hongi. Iske liye neeche di gayi command run karein.</p>
+      <pre><code>pip install -U "transformers==4.42.4" "datasets==2.20.0" "accelerate==0.32.1" "peft==0.11.1" "trl==0.9.4" "bitsandbytes==0.43.1"</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Step 2: Load Model and Tokenizer 🧠</h3>
+      <p>Ab hum <code class="inline">gpt-oss</code> model aur uske tokenizer ko load karenge. Hum 4-bit quantization ka use karenge taaki memory usage kam ho.</p>
+      <pre><code>import torch
+from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
+
+model_id = "openai/gpt-oss-12b"
+
+quantization_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_compute_dtype=torch.bfloat16
+)
+
+tokenizer = AutoTokenizer.from_pretrained(model_id)
+model = AutoModelForCausalLM.from_pretrained(
+    model_id,
+    quantization_config=quantization_config,
+    device_map="auto"
+)</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Step 3: Dataset Preparation 📚</h3>
+      <p>Fine-tuning ke liye hum <code class="inline">databricks/databricks-dolly-15k</code> dataset ka use karenge. Hum is dataset ko model ke chat template ke according format karenge.</p>
+      <pre><code>from datasets import load_dataset
+
+dataset = load_dataset("databricks/databricks-dolly-15k", split="train")
+
+def format_dolly(sample):
+    instruction = f"### Instruction\n{sample['instruction']}"
+    context = f"### Context\n{sample['context']}" if len(sample["context"]) > 0 else None
+    response = f"### Answer\n{sample['response']}"
+    # Join all the parts with newline characters
+    prompt = "\n\n".join([i for i in [instruction, context, response] if i is not None])
+    return prompt
+
+# Ek example format karke dekhein
+print(format_dolly(dataset[0]))</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Step 4: Fine-Tune with SFTTrainer ⚙️</h3>
+      <p>Ab hum <code class="inline">TRL</code> library ke <code class="inline">SFTTrainer</code> ka use karke model ko train karenge. Hum LoRA (Low-Rank Adaptation) ka use karenge for parameter-efficient fine-tuning.</p>
+      <pre><code>from peft import LoraConfig
+from trl import SFTTrainer
+from transformers import TrainingArguments
+
+lora_config = LoraConfig(
+    r=16,
+    lora_alpha=32,
+    lora_dropout=0.05,
+    bias="none",
+    task_type="CAUSAL_LM"
+)
+
+training_args = TrainingArguments(
+    output_dir="./gpt-oss-12b-dolly-finetuned",
+    num_train_epochs=1,
+    per_device_train_batch_size=1,
+    gradient_accumulation_steps=4,
+    learning_rate=2e-4,
+    logging_steps=10,
+    max_steps=100, # For a quick demo. Remove for full training.
+)
+
+trainer = SFTTrainer(
+    model=model,
+    args=training_args,
+    train_dataset=dataset,
+    peft_config=lora_config,
+    formatting_func=format_dolly,
+    max_seq_length=2048,
+)
+
+trainer.train()</code></pre>
+    </div>
+
+    <div class="section">
+      <h3>Step 5: Inference with the Fine-Tuned Model ✅</h3>
+      <p>Training ke baad, chaliye dekhte hain ki hamara fine-tuned model kaise perform karta hai.</p>
+      <pre><code>from peft import PeftModel
+
+# Load the fine-tuned model
+ft_model = PeftModel.from_pretrained(model, "gpt-oss-12b-dolly-finetuned/checkpoint-100")
+
+text = "### Instruction\nWhat is the capital of France?\n\n### Answer\n"
+inputs = tokenizer(text, return_tensors="pt").to("cuda")
+
+outputs = ft_model.generate(**inputs, max_new_tokens=50)
+print(tokenizer.decode(outputs[0], skip_special_tokens=True))</code></pre>
+      <p>Aap dekhenge ki fine-tuned model ab instructions ko behtar tareeke se follow kar pata hai.</p>
+    </div>
+
+    <div class="section">
+      <h3>Step 6: Model ko Save Karein aur Hub par Push Karein ☁️</h3>
+      <p>
+        Aakhir mein, aap apne fine-tuned model ko community ke saath share karne ke liye apne Hugging Face Hub repository par push kar sakte hain. Iske liye aapko pehle Hugging Face CLI me login karna hoga.
+      </p>
+      <pre><code># Terminal me login karein
+huggingface-cli login</code></pre>
+      <p>
+        Login karne ke baad, aap neeche di gayi commands ka use karke model ko save aur push kar sakte hain.
+      </p>
+      <pre><code># Model ko locally save karein
+trainer.save_model(training_args.output_dir)
+
+# Model ko Hugging Face Hub par push karein
+# "your-username/your-repo-name" ko apne Hub repo se replace karein
+trainer.push_to_hub("your-username/gpt-oss-12b-dolly-finetuned")</code></pre>
+    </div>
+
+    <div class="pro-tips">
+      <h3>💡 Summary</h3>
+      <p>Congratulations! Aapne successfully OpenAI ke `gpt-oss` model ko Hugging Face Transformers ka use karke fine-tune kar liya hai. Yeh process aapko kisi bhi custom dataset par model ko specialize karne ki power deta hai.</p>
+    </div>
+
+    <a class="back" href="index.html">← Back to Fine-Tuning Projects</a>
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn Fine-Tuning & Generative AI in Roman Hindi</p>
+  </footer>
+</body>
+</html>
