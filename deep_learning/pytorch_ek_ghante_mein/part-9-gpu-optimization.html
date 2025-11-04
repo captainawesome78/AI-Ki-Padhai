@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277"
+     crossorigin="anonymous"></script>
+  <title>Part 9 - GPU Optimization | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fafafa;
+      color: #333;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #2c3e50;
+      color: white;
+      text-align: center;
+      padding: 25px 15px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 26px;
+    }
+
+    nav {
+      margin-top: 8px;
+    }
+
+    nav a {
+      color: #dfe8ef;
+      text-decoration: none;
+      margin: 0 12px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    nav a:hover {
+      color: #f1f6fb;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    .intro {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .intro h2 {
+      font-size: 28px;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    .intro p {
+      font-size: 17px;
+      color: #555;
+    }
+
+    footer {
+      text-align: center;
+      background: #f4f4f4;
+      padding: 20px;
+      margin-top: 40px;
+      font-size: 15px;
+    }
+
+    section {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+    section:last-of-type {
+      border-bottom: none;
+    }
+    h3 {
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+    pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>PyTorch sirf Ek Ghante mein</h1>
+    <nav>
+      <a href="https://aikipadhai.com/index.html">Home</a>
+      <a href="https://aikipadhai.com/deep-learning/index.html">Deep Learning</a>
+      <a href="https://aikipadhai.com/genai/index.html"><strong>AI</strong></a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="intro">
+      <h2>Part 9 - Optimizing Training Performance with GPUs</h2>
+      <p>
+        Is tutorial ke aakhri section mein, hum dekhenge ki hum GPUs ka istemal kaise kar sakte hain, jo regular CPUs ke muqable deep neural network training ko accelerate karega.
+      </p>
+    </section>
+
+    <section>
+      <h3>9.1 PyTorch Computations on GPU Devices</h3>
+      <p>
+        PyTorch mein, ek 'device' woh jagah hai jahan computations hote hain aur data rehta hai. CPU aur GPU devices ke examples hain. Ek PyTorch tensor ek device par rehta hai, aur uske operations usi device par execute hote hain.
+      </p>
+      <p>
+        Chaliye dekhte hain yeh kaise kaam karta hai. Sabse pehle, check karein ki aapke paas GPU-compatible PyTorch version hai ya nahi:
+      </p>
+      <pre><code>import torch
+print(torch.cuda.is_available())</code></pre>
+      <p>Agar output `True` hai, to aapka system GPU ke liye taiyar hai.</p>
+      <pre><code>True</code></pre>
+      <p>By default, saare computations CPU par hote hain:</p>
+      <pre><code>tensor_1 = torch.tensor([1., 2., 3.])
+tensor_2 = torch.tensor([4., 5., 6.])
+
+print(tensor_1 + tensor_2)</code></pre>
+      <p>Output:</p>
+      <pre><code>tensor([5., 7., 9.])</code></pre>
+      <p>Ab, hum `.to()` method ka use karke in tensors ko GPU par transfer kar sakte hain:</p>
+      <pre><code>tensor_1 = tensor_1.to("cuda")
+tensor_2 = tensor_2.to("cuda")
+
+print(tensor_1 + tensor_2)</code></pre>
+      <p>Naya output dikhayega ki computation GPU par hua hai:</p>
+      <pre><code>tensor([5., 7., 9.], device='cuda:0')</code></pre>
+      <p>
+        Yahan `device='cuda:0'` ka matlab hai ki tensor pehle GPU par hai. Agar aapke paas multiple GPUs hain, to aap `.to("cuda:1")`, `.to("cuda:2")` etc. use karke specific GPU select kar sakte hain.
+      </p>
+    </section>
+
+    <section>
+      <h3>Ek Zaroori Niyam</h3>
+      <p>
+        Yeh bahut zaroori hai ki saare tensors ek hi device par hon. Agar ek tensor CPU par aur doosra GPU par hai, to computation fail ho jayega.
+      </p>
+      <pre><code>tensor_1 = tensor_1.to("cpu") # Wapas CPU par bhej rahe hain
+print(tensor_1 + tensor_2)</code></pre>
+      <p>Isse ek `RuntimeError` aayega:</p>
+      <pre><code>RuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!</code></pre>
+      <p>
+        Is section mein, humne seekha ki PyTorch par GPU computations karna kitna aasan hai. Humein bas tensors ko same GPU device par transfer karna hai, aur PyTorch baaki sab sambhal lega. Is jaankari ke saath, ab hum pichle section ke neural network ko GPU par train kar sakte hain.
+      </p>
+    </section>
+
+    <section>
+      <h3>Single-GPU Training</h3>
+      <p>
+        Ab jab hum tensors ko GPU par transfer karna jaante hain, hum Part 7 ke training loop ko GPU par chalane ke liye modify kar sakte hain. Iske liye sirf teen lines code badalna hoga, jaisa ki neeche dikhaya gaya hai.
+      </p>
+      <pre><code>
+import torch.nn.functional as F
+
+# Assuming NeuralNetwork and train_loader are defined
+
+torch.manual_seed(123)
+model = NeuralNetwork(num_inputs=2, num_outputs=2)
+
+# Naya: Ek device variable define karein jo GPU ko default karta hai.
+device = torch.device("cuda") 
+# Naya: Model ko GPU par transfer karein.
+model.to(device)
+
+optimizer = torch.optim.SGD(model.parameters(), lr=0.5)
+
+num_epochs = 3
+
+for epoch in range(num_epochs):
+
+    model.train()
+    for batch_idx, (features, labels) in enumerate(train_loader):
+
+        # Naya: Data ko GPU par transfer karein.
+        features, labels = features.to(device), labels.to(device)
+        
+        logits = model(features)
+        loss = F.cross_entropy(logits, labels)
+
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        ### LOGGING
+        print(f"Epoch: {epoch+1:03d}/{num_epochs:03d}"
+              f" | Batch {batch_idx:03d}/{len(train_loader):03d}"
+              f" | Loss: {loss:.2f}")
+
+    model.eval()
+</code></pre>
+      <p>Upar diye gaye code ko chalane par pehle jaisa hi output milega, lekin saare calculations ab GPU par ho rahe hain.</p>
+      <pre><code>Epoch: 001/003 | Batch 000/002 | Loss: 0.75
+Epoch: 001/003 | Batch 001/002 | Loss: 0.65
+Epoch: 002/003 | Batch 000/002 | Loss: 0.44
+Epoch: 002/003 | Batch 001/002 | Loss: 0.13
+Epoch: 003/003 | Batch 000/002 | Loss: 0.03
+Epoch: 003/003 | Batch 001/002 | Loss: 0.00</code></pre>
+      <p>
+        Code ko aur portable banane ke liye (taaki woh CPU par bhi chal sake agar GPU na ho), yeh best practice maani jaati hai:
+      </p>
+      <pre><code>device = torch.device("cuda" if torch.cuda.is_available() else "cpu")</code></pre>
+      <p>
+        Is chhote dataset ke liye, shayad aapko speed-up na dikhe kyunki data ko CPU se GPU par transfer karne mein bhi samay lagta hai. Lekin, bade models (jaise LLMs) train karte samay aapko significant speed-up milega.
+      </p>
+      <p>
+        <strong>PyTorch on macOS:</strong> Agar aap Apple Mac (M1, M2, etc.) use kar rahe hain, to aap `cuda` ki jagah `mps` ka istemal kar sakte hain: `device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")`.
+      </p>
+    </section>
+
+    <section>
+      <h3>Multiple GPUs ke Saath Training</h3>
+      <p>
+        Is section mein, hum distributed training ke concept ko briefly samjhenge. Distributed training model training ko multiple GPUs aur machines mein divide karne ka concept hai.
+      </p>
+      <p>
+        <strong>Humein iski zaroorat kyun hai?</strong> Jab ek model ko single GPU ya machine par train karna possible ho, tab bhi yeh process bahut time-consuming ho sakta hai. Training process ko multiple machines (har machine mein multiple GPUs ho sakte hain) mein distribute karke training time ko kaafi kam kiya ja sakta hai.
+      </p>
+      <p>
+        Is section mein, hum distributed training ke sabse basic case ko dekhenge: PyTorch ki <strong>DistributedDataParallel (DDP)</strong> strategy. DDP available devices par input data ko split karke aur in data subsets ko ek saath process karke parallelism enable karta hai.
+      </p>
+      <h4>Yeh Kaise Kaam Karta Hai?</h4>
+      <p>
+        PyTorch har GPU par ek alag process launch karta hai, aur har process model ki ek copy receive karta hai aur rakhta hai – in copies ko training ke dauraan synchronize kiya jaata hai.
+      </p>
+      <p>
+        Har training iteration mein, har model data loader se ek minibatch receive karega. Hum ek `DistributedSampler` ka use kar sakte hain taaki yeh sunishchit ho sake ki har GPU DDP ka use karte samay ek alag, non-overlapping batch receive kare.
+      </p>
+      <p>
+        Kyunki har model copy training data ka ek alag sample dekhega, isliye model copies alag-alag logits as output return karenge aur backward pass ke dauraan alag-alag gradients compute karenge. In gradients ko phir training ke dauraan average aur synchronize kiya jaata hai taaki sabhi models ke weights update ho sakein.
+      </p>
+    </section>
+
+    <section>
+        <h3>DDP ke Fayde</h3>
+        <p>
+            DDP ka upyog karne ka fayda single GPU ke muqable dataset ko process karne me milne wali behtar speed hai. Devices ke beech thoda communication overhead hone ke bawajood, DDP सैद्धांतिक रूप से (theoretically) do GPUs ke saath ek training epoch ko sirf ek GPU ke muqable aadhe samay me process kar sakta hai. Samay ki yeh बचत GPUs ki sankhya ke saath badhti jaati hai, jisse hum aath GPUs ke saath ek epoch ko aath guna tezi se process kar sakte hain.
+        </p>
+
+        <h4>Multi-GPU in Interactive Environments</h4>
+        <p>
+            <strong>Zaroori Note:</strong> DDP, Jupyter notebooks jaise interactive Python environments me theek se kaam nahi karta. Isliye, neeche diye gaye code ko ek alag Python script (`.py` file) ke roop me execute kiya jaana chahiye, na ki notebook interface me. Aisa isliye hai kyunki DDP ko multiple processes spawn karne ki zaroorat hoti hai, aur har process ka apna Python interpreter instance hona chahiye.
+        </p>
+        <p>
+            Sabse pehle, hum distributed training ke liye kuch additional modules import karenge.
+        </p>
+        <pre><code>import platform
+from torch.utils.data.distributed import DistributedSampler
+from torch.nn.parallel import DistributedDataParallel as DDP
+from torch.distributed import init_process_group, destroy_process_group</code></pre>
+        <p>
+            In new utilities ka rationale samajhte hain:
+        </p>
+        <ul>
+            <li><strong>`DistributedSampler`</strong>: Jab hum training ke liye multiple processes spawn karte hain, to humein dataset ko in alag-alag processes ke beech divide karne ka ek tareeka chahiye. Iske liye, hum `DistributedSampler` ka upyog karenge.</li>
+            <li><strong>`init_process_group`</strong> aur <strong>`destroy_process_group`</strong>: Inka upyog distributed training mode ko shuru aur band karne ke liye kiya jaata hai.</li>
+        </ul>
+
+        <h4>Poora Multi-GPU Training Script</h4>
+        <p>Neeche poora script diya gaya hai. Isse ek file (jaise `ddp_script.py`) me save karein aur `torchrun` ka use karke command line se chalayein.</p>
+        <pre><code>import torch
+import torch.nn.functional as F
+from torch.utils.data import Dataset, DataLoader
+
+# Naye imports:
+import os
+import platform
+from torch.utils.data.distributed import DistributedSampler
+from torch.nn.parallel import DistributedDataParallel as DDP
+from torch.distributed import init_process_group, destroy_process_group
+
+
+# Naya: Distributed process group ko initialize karne ke liye function (1 process / GPU)
+def ddp_setup(rank, world_size):
+    """
+    Arguments:
+        rank: ek unique process ID
+        world_size: group me total processes ki sankhya
+    """
+    if "MASTER_ADDR" not in os.environ:
+        os.environ["MASTER_ADDR"] = "localhost"
+    if "MASTER_PORT" not in os.environ:
+        os.environ["MASTER_PORT"] = "12345"
+
+    if platform.system() == "Windows":
+        # Windows users ko "gloo" backend use karna pad sakta hai
+        init_process_group(backend="gloo", rank=rank, world_size=world_size)
+    else:
+        # Linux/Mac users "nccl" use kar sakte hain
+        init_process_group(backend="nccl", rank=rank, world_size=world_size)
+
+    torch.cuda.set_device(rank)
+
+
+class ToyDataset(Dataset):
+    def __init__(self, X, y):
+        self.features = X
+        self.labels = y
+
+    def __getitem__(self, index):
+        return self.features[index], self.labels[index]
+
+    def __len__(self):
+        return self.labels.shape[0]
+
+
+class NeuralNetwork(torch.nn.Module):
+    def __init__(self, num_inputs, num_outputs):
+        super().__init__()
+        self.layers = torch.nn.Sequential(
+            torch.nn.Linear(num_inputs, 30), torch.nn.ReLU(),
+            torch.nn.Linear(30, 20), torch.nn.ReLU(),
+            torch.nn.Linear(20, num_outputs),
+        )
+
+    def forward(self, x):
+        return self.layers(x)
+
+
+def prepare_dataset():
+    X_train = torch.tensor([[-1.2, 3.1], [-0.9, 2.9], [-0.5, 2.6], [2.3, -1.1], [2.7, -1.5]])
+    y_train = torch.tensor([0, 0, 0, 1, 1])
+    X_test = torch.tensor([[-0.8, 2.8], [2.6, -1.6]])
+    y_test = torch.tensor([0, 1])
+
+    train_ds = ToyDataset(X_train, y_train)
+    test_ds = ToyDataset(X_test, y_test)
+
+    train_loader = DataLoader(
+        dataset=train_ds,
+        batch_size=2,
+        shuffle=False,  # Naya: False, kyunki DistributedSampler use ho raha hai
+        pin_memory=True,
+        drop_last=True,
+        sampler=DistributedSampler(train_ds)  # Naya
+    )
+    test_loader = DataLoader(dataset=test_ds, batch_size=2, shuffle=False)
+    return train_loader, test_loader
+
+
+# Naya: main function wrapper
+def main(rank, world_size, num_epochs):
+    ddp_setup(rank, world_size)  # Naya: process groups initialize karein
+
+    train_loader, test_loader = prepare_dataset()
+    model = NeuralNetwork(num_inputs=2, num_outputs=2).to(rank)
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.5)
+
+    model = DDP(model, device_ids=[rank])  # Naya: model ko DDP se wrap karein
+
+    for epoch in range(num_epochs):
+        train_loader.sampler.set_epoch(epoch) # Naya: Har epoch me alag shuffle order ke liye
+
+        model.train()
+        for features, labels in train_loader:
+            features, labels = features.to(rank), labels.to(rank)
+            logits = model(features)
+            loss = F.cross_entropy(logits, labels)
+
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+
+            if rank == 0: # Sirf ek GPU se log karein
+                print(f"[GPU{rank}] Epoch: {epoch+1:03d}/{num_epochs:03d} | Loss: {loss:.2f}")
+
+    destroy_process_group()  # Naya: distributed mode se cleanly exit karein
+
+
+if __name__ == "__main__":
+    world_size = torch.cuda.device_count()
+    # Naya: torchrun se set kiye gaye environment variables ka use karein
+    if "WORLD_SIZE" in os.environ:
+        world_size = int(os.environ["WORLD_SIZE"])
+    
+    if "LOCAL_RANK" in os.environ:
+        rank = int(os.environ["LOCAL_RANK"])
+    else:
+        rank = 0
+
+    if rank == 0:
+        print("PyTorch version:", torch.__version__)
+        print("CUDA available:", torch.cuda.is_available())
+        print(f"Number of GPUs available: {world_size}")
+
+    torch.manual_seed(123)
+    num_epochs = 3
+    main(rank, world_size, num_epochs)
+</code></pre>
+        <p>Is script ko chalane ke liye, apne terminal me yeh command use karein (maan lijiye aapke paas 2 GPUs hain):</p>
+        <pre><code>torchrun --nproc_per_node=2 your_script_name.py</code></pre>
+    </section>
+
+    <section>
+        <h3>Multi-GPU Script Kaise Kaam Karta Hai</h3>
+        <p>
+            Script ke neeche `if __name__ == "__main__"` block hai jo tab execute hota hai jab hum file ko ek standalone Python script ke roop me chalate hain. Hum is script ko ek regular Python script (`python your_script.py`) ki tarah nahi chalayenge, balki PyTorch ke modern utility `torchrun` ka upyog karenge.
+        </p>
+        <p>
+            Jab `torchrun` ka upyog karke script chalaya jaata hai, to yeh har GPU ke liye ek process automatically launch karta hai aur har process ko ek unique rank (ID) assign karta hai. Yeh `WORLD_SIZE` (total processes) aur `LOCAL_RANK` jaise environment variables bhi set karta hai. Hamara script in variables ko `os.environ` ka upyog karke padhta hai aur `main()` function me pass karta hai.
+        </p>
+        <p>
+            `main()` function `ddp_setup` helper function ke zariye distributed environment ko initialize karta hai. Phir, yeh data load karta hai, model set up karta hai, aur training loop chalata hai. Hum model aur data dono ko sahi GPU par `.to(rank)` ka upyog karke transfer karte hain. Model ko `DistributedDataParallel (DDP)` se wrap kiya jaata hai, jo training ke dauraan sabhi GPUs me synchronized gradient updates ko enable karta hai. Training poori hone ke baad, hum `destroy_process_group()` ko call karke resources ko release karte hain.
+        </p>
+        <p>
+            Yeh sunishchit karne ke liye ki har GPU ko training data ka ek alag subset mile, hum training data loader me `sampler=DistributedSampler(train_ds)` ka upyog karte hain.
+        </p>
+
+        <h4>Script ko Chalana</h4>
+        <p>
+            Upar diye gaye code ko `DDP-script-torchrun.py` naam ki file me save karne ke baad, aap ise `torchrun` utility ka upyog karke command line se is tarah chala sakte hain:
+        </p>
+        <pre><code>torchrun --nproc_per_node=2 DDP-script-torchrun.py</code></pre>
+        <p>
+            Agar aap ise sabhi available GPUs par chalana chahte hain, to aap is command ka upyog kar sakte hain:
+        </p>
+        <pre><code># Linux/macOS
+torchrun --nproc_per_node=$(nvidia-smi -L | wc -l) DDP-script-torchrun.py</code></pre>
+        <p>
+            <strong>Note:</strong> Kyunki yeh code bahut chhote dataset ka upyog karta hai, isliye zyada GPUs par chalane ke liye aapko script me dataset badhane wali lines ko uncomment karna hoga.
+        </p>
+        <p>
+            Agar aap is script ko single GPU machine par chalate hain, to aapko neeche diya gaya output dikhega:
+        </p>
+        <pre><code>PyTorch version: 2.0.1+cu117
+CUDA available: True
+Number of GPUs available: 1
+[GPU0] Epoch: 001/003 | Batchsize 002 | Train/Val Loss: 0.62
+[GPU0] Epoch: 001/003 | Batchsize 002 | Train/Val Loss: 0.32
+[GPU0] Epoch: 002/003 | Batchsize 002 | Train/Val Loss: 0.11
+[GPU0] Epoch: 002/003 | Batchsize 002 | Train/Val Loss: 0.07
+[GPU0] Epoch: 003/003 | Batchsize 002 | Train/Val Loss: 0.02
+[GPU0] Epoch: 003/003 | Batchsize 002 | Train/Val Loss: 0.03
+[GPU0] Training accuracy 1.0
+[GPU0] Test accuracy 1.0</code></pre>
+        <p>
+            Yeh output single-GPU training ke output jaisa hi hai, jo ek accha sanity check hai.
+        </p>
+    </section>
+
+    <section>
+        <h4>2-GPU Machine par Output</h4>
+        <p>
+            Ab, agar hum wahi command aur code do GPUs wali machine par chalate hain, to humein neeche diya gaya output dikhega:
+        </p>
+        <pre><code>PyTorch version: 2.0.1+cu117
+CUDA available: True
+Number of GPUs available: 2
+[GPU1] Epoch: 001/003 | Batchsize 002 | Train/Val Loss: 0.60
+[GPU0] Epoch: 001/003 | Batchsize 002 | Train/Val Loss: 0.59
+[GPU0] Epoch: 002/003 | Batchsize 002 | Train/Val Loss: 0.16
+[GPU1] Epoch: 002/003 | Batchsize 002 | Train/Val Loss: 0.17
+[GPU0] Epoch: 003/003 | Batchsize 002 | Train/Val Loss: 0.05
+[GPU1] Epoch: 003/003 | Batchsize 002 | Train/Val Loss: 0.05
+[GPU1] Training accuracy 1.0
+[GPU0] Training accuracy 1.0
+[GPU1] Test accuracy 1.0
+[GPU0] Test accuracy 1.0</code></pre>
+        <p>
+            Jaisa ki ummeed thi, hum dekh sakte hain ki kuch batches pehle GPU (GPU0) par process ho rahe hain aur kuch doosre (GPU1) par. Lekin, training aur test accuracies print karte samay humein duplicated output lines dikhti hain. Aisa isliye hai kyunki har process (doosre shabdon me, har GPU) test accuracy ko independently print karta hai.
+        </p>
+        <p>
+            Agar yeh aapko pareshan karta hai, to aap har process ke rank ka upyog karke apne print statements ko control kar sakte hain, taaki sirf ek process (jaise rank 0 wala) hi print kare.
+        </p>
+        <pre><code>if rank == 0: # Sirf pehle process me print karein
+    print("Test accuracy: ", accuracy)</code></pre>
+        <p>
+            Sankshep me, DDP ke zariye distributed training aise kaam karta hai. Agar aap aur details me ruchi rakhte hain, to main official DistributedDataParallel API documentation check karne ki salah deta hun.
+        </p>
+    </section>
+
+    <section>
+        <h3>Summary</h3>
+        <p>Is poore tutorial ka saaransh yahan hai:</p>
+        <ul>
+            <li>PyTorch ek open-source library hai jiske teen core components hain: ek tensor library, automatic differentiation (autograd) functions, aur deep learning utilities.</li>
+            <li>PyTorch ki tensor library NumPy jaisi array libraries ke samaan hai, lekin isme GPU support ka bada fayda hai.</li>
+            <li>PyTorch mein tensors, scalars, vectors, aur matrices jaise multi-dimensional data ko represent karne ke liye array-like data structures hain.</li>
+            <li>Autograd humein gradients ko manually derive kiye bina backpropagation ka upyog karke neural networks ko aasani se train karne deta hai.</li>
+            <li>PyTorch ke deep learning utilities (`torch.nn`) custom neural networks banane ke liye building blocks pradan karte hain.</li>
+            <li>`Dataset` aur `DataLoader` classes efficient data loading pipelines set up karne me madad karti hain.</li>
+            <li>Models ko CPU ya single GPU par train karna sabse aasan hai.</li>
+            <li>Agar multiple GPUs available hain, to `DistributedDataParallel` (DDP) training ko accelerate karne ka sabse saral tareeka hai.</li>
+        </ul>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn PyTorch in Roman Hindi 🚀</p>
+  </footer>
+</body>
+</html>
