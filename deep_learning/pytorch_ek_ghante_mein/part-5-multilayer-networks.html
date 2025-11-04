@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277"
+     crossorigin="anonymous"></script>
+  <title>Part 5 - Multilayer Neural Networks | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fafafa;
+      color: #333;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #2c3e50;
+      color: white;
+      text-align: center;
+      padding: 25px 15px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 26px;
+    }
+
+    nav {
+      margin-top: 8px;
+    }
+
+    nav a {
+      color: #dfe8ef;
+      text-decoration: none;
+      margin: 0 12px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    nav a:hover {
+      color: #f1f6fb;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    .intro {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .intro h2 {
+      font-size: 28px;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    .intro p {
+      font-size: 17px;
+      color: #555;
+    }
+
+    footer {
+      text-align: center;
+      background: #f4f4f4;
+      padding: 20px;
+      margin-top: 40px;
+      font-size: 15px;
+    }
+
+    section {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+    section:last-of-type {
+      border-bottom: none;
+    }
+    h3 {
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+    pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>PyTorch sirf Ek Ghante mein</h1>
+    <nav>
+      <a href="https://aikipadhai.com/index.html">Home</a>
+      <a href="https://aikipadhai.com/deep-learning/index.html">Deep Learning</a>
+      <a href="https://aikipadhai.com/genai/index.html"><strong>AI</strong></a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="intro">
+      <h2>Part 5 - Implementing Multilayer Neural Networks</h2>
+      <p>
+        Pichle sections mein humne tensors aur autograd ke baare mein sikha. Ab hum PyTorch ko deep neural networks banane ke liye kaise use karte hain, yeh dekhenge.
+      </p>
+      <p>
+        PyTorch mein neural network banane ke liye, hum `torch.nn.Module` class ko subclass karte hain.
+      </p>
+    </section>
+
+    <section>
+      <h3>`torch.nn.Module` Class</h3>
+      <p>
+        `torch.nn.Module` ek base class hai jo bahut saari functionality provide karta hai, jisse models banana aur train karna aasan ho jaata hai. Isse hum layers aur operations ko ek saath rakh sakte hain aur model ke parameters ko track kar sakte hain.
+      </p>
+      <p>
+        Subclass ke andar, hum `__init__` constructor mein network layers ko define karte hain aur `forward` method mein unke beech ke interaction ko specify karte hain. `forward` method batata hai ki input data network se kaise guzarta hai aur ek computation graph banata hai.
+      </p>
+      <p>
+        `backward` method, jise humein khud implement karne ki zaroorat nahi hoti, training ke dauraan loss function ke gradients ko model parameters ke respect mein calculate karne ke liye use hota hai.
+      </p>
+      <p>
+        Chaliye ek classic multilayer perceptron banate hain jismein do hidden layers hain:
+      </p>
+      <pre><code>import torch
+
+class NeuralNetwork(torch.nn.Module):
+    def __init__(self, num_inputs, num_outputs):
+        super().__init__()
+
+        self.layers = torch.nn.Sequential(
+
+            # 1st hidden layer
+            torch.nn.Linear(num_inputs, 30),
+            torch.nn.ReLU(),
+
+            # 2nd hidden layer
+            torch.nn.Linear(30, 20),
+            torch.nn.ReLU(),
+
+            # Output layer
+            torch.nn.Linear(20, num_outputs),
+        )
+
+    def forward(self, x):
+        logits = self.layers(x)
+        return logits
+</code></pre>
+      <p>
+        Is code mein, hum `torch.nn.Sequential` ka use kar rahe hain, jo layers ko ek ke baad ek execute karne ka ek aasan tareeka hai.
+      </p>
+      <p>
+        Ab ek naya neural network object banate hain:
+      </p>
+      <pre><code>model = NeuralNetwork(50, 3)
+print(model)</code></pre>
+      <p>Output:</p>
+      <pre><code>NeuralNetwork(
+  (layers): Sequential(
+    (0): Linear(in_features=50, out_features=30, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=30, out_features=20, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=20, out_features=3, bias=True)
+  )
+)</code></pre>
+    </section>
+
+    <section>
+      <h3>Model Parameters</h3>
+      <p>
+        Model mein kitne trainable parameters hain, yeh check karte hain:
+      </p>
+      <pre><code>num_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+print("Total number of trainable model parameters:", num_params)</code></pre>
+      <p>Output:</p>
+      <pre><code>Total number of trainable model parameters: 2213</code></pre>
+      <p>
+        `requires_grad=True` wale har parameter ko training ke dauraan update kiya jaata hai.
+      </p>
+      <p>
+        Hum weight parameter matrix ko bhi access kar sakte hain:
+      </p>
+      <pre><code>print(model.layers[0].weight.shape)</code></pre>
+      <p>Output:</p>
+      <pre><code>torch.Size([30, 50])</code></pre>
+    </section>
+
+    <section>
+      <h3>Forward Pass</h3>
+      <p>
+        Chaliye dekhte hain ki model ko forward pass ke through kaise use karte hain:
+      </p>
+      <pre><code>torch.manual_seed(123)
+X = torch.rand((1, 50)) # Ek random input banayein
+out = model(X) # Model ko input dein
+print(out)</code></pre>
+      <p>Output:</p>
+      <pre><code>tensor([[-0.1262,  0.1080, -0.1792]], grad_fn=&lt;AddmmBackward0&gt;)</code></pre>
+      <p>
+        Jab hum `model(X)` call karte hain, to `forward` method automatically execute hota hai.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn PyTorch in Roman Hindi 🚀</p>
+  </footer>
+</body>
+</html>

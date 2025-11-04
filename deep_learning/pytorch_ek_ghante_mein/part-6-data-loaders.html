@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277"
+     crossorigin="anonymous"></script>
+  <title>Part 6 - Efficient Data Loaders | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fafafa;
+      color: #333;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #2c3e50;
+      color: white;
+      text-align: center;
+      padding: 25px 15px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 26px;
+    }
+
+    nav {
+      margin-top: 8px;
+    }
+
+    nav a {
+      color: #dfe8ef;
+      text-decoration: none;
+      margin: 0 12px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    nav a:hover {
+      color: #f1f6fb;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    .intro {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .intro h2 {
+      font-size: 28px;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    .intro p {
+      font-size: 17px;
+      color: #555;
+    }
+
+    footer {
+      text-align: center;
+      background: #f4f4f4;
+      padding: 20px;
+      margin-top: 40px;
+      font-size: 15px;
+    }
+
+    section {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+    section:last-of-type {
+      border-bottom: none;
+    }
+    h3 {
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+    pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>PyTorch sirf Ek Ghante mein</h1>
+    <nav>
+      <a href="https://aikipadhai.com/index.html">Home</a>
+      <a href="https://aikipadhai.com/deep-learning/index.html">Deep Learning</a>
+      <a href="https://aikipadhai.com/genai/index.html"><strong>AI</strong></a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="intro">
+      <h2>Part 6 - Setting Up Efficient Data Loaders</h2>
+      <p>
+        Pichle section mein humne ek custom neural network model banaya. Ab, model ko train karne se pehle, humein PyTorch mein efficient data loaders banana seekhna hoga.
+      </p>
+    </section>
+
+    <section>
+      <h3>Ek Toy Dataset Banana</h3>
+      <p>
+        Shuruaat ke liye, hum ek chhota sa toy dataset banate hain jismein 5 training examples aur 2 features hain.
+      </p>
+      <pre><code>import torch
+
+X_train = torch.tensor([
+    [-1.2, 3.1], [-0.9, 2.9], [-0.5, 2.6],
+    [2.3, -1.1], [2.7, -1.5]
+])
+y_train = torch.tensor([0, 0, 0, 1, 1])
+
+X_test = torch.tensor([
+    [-0.8, 2.8], [2.6, -1.6]
+])
+y_test = torch.tensor([0, 1])</code></pre>
+      <p><strong>Note:</strong> PyTorch mein class labels 0 se shuru hone chahiye.</p>
+    </section>
+
+    <section>
+      <h3>Custom `Dataset` Class</h3>
+      <p>
+        PyTorch mein data ko handle karne ke liye, hum `torch.utils.data.Dataset` class ko subclass karke ek custom dataset banate hain.
+      </p>
+      <pre><code>from torch.utils.data import Dataset
+
+class ToyDataset(Dataset):
+    def __init__(self, X, y):
+        self.features = X
+        self.labels = y
+
+    def __getitem__(self, index):
+        one_x = self.features[index]
+        one_y = self.labels[index]
+        return one_x, one_y
+
+    def __len__(self):
+        return self.labels.shape[0]
+
+train_ds = ToyDataset(X_train, y_train)
+test_ds = ToyDataset(X_test, y_test)
+
+print(f"Training dataset ki length: {len(train_ds)}")</code></pre>
+      <p>Is custom `Dataset` class ke 3 zaroori hisse hain:</p>
+      <ul>
+        <li>`__init__`: Yahan hum dataset ke attributes (jaise features aur labels) ko set karte hain.</li>
+        <li>`__getitem__`: Yeh method batata hai ki ek single data point (ek feature aur uska label) ko index se kaise access karein.</li>
+        <li>`__len__`: Yeh method dataset ki total length (total number of samples) return karta hai.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h3>`DataLoader` ka Upyog</h3>
+      <p>
+        `Dataset` banane ke baad, hum `DataLoader` ka use karke data ko batches mein load karte hain. `DataLoader` shuffling aur parallel data loading jaise kaam ko aasan bana deta hai.
+      </p>
+      <pre><code>from torch.utils.data import DataLoader
+
+torch.manual_seed(123)
+
+train_loader = DataLoader(
+    dataset=train_ds,
+    batch_size=2,
+    shuffle=True, # Training data ko har epoch mein shuffle karein
+    num_workers=0 # Abhi ke liye 0 rakhein
+)
+
+test_loader = DataLoader(
+    dataset=test_ds,
+    batch_size=2,
+    shuffle=False, # Test data ko shuffle na karein
+    num_workers=0
+)</code></pre>
+      <p>Ab hum `train_loader` par iterate karke dekh sakte hain:</p>
+      <pre><code>for idx, (x, y) in enumerate(train_loader):
+    print(f"Batch {idx+1}:", x.shape, y.shape)
+    print(f"  Features: {x}")
+    print(f"  Labels: {y}\n")</code></pre>
+      <p>Output:</p>
+      <pre><code>Batch 1: torch.Size([2, 2]) torch.Size([2])
+  Features: tensor([[ 2.3000, -1.1000],
+        [-0.9000,  2.9000]])
+  Labels: tensor([1, 0])
+
+Batch 2: torch.Size([2, 2]) torch.Size([2])
+  Features: tensor([[-1.2000,  3.1000],
+        [-0.5000,  2.6000]])
+  Labels: tensor([0, 0])
+
+Batch 3: torch.Size([1, 2]) torch.Size([1])
+  Features: tensor([[ 2.7000, -1.5000]])
+  Labels: tensor([1])
+</code></pre>
+      <p>Aap dekh sakte hain ki aakhri batch mein sirf ek example hai, kyunki hamare paas 5 examples hain aur batch size 2 hai. Isse bachne ke liye, hum `drop_last=True` set kar sakte hain.</p>
+      <pre><code>train_loader = DataLoader(
+    dataset=train_ds,
+    batch_size=2,
+    shuffle=True,
+    num_workers=0,
+    drop_last=True # Aakhri chhota batch drop karein
+)</code></pre>
+    </section>
+
+    <section>
+      <h3>Iterating with `drop_last=True`</h3>
+      <p>Ab, training loader par iterate karne par, hum dekh sakte hain ki aakhri batch chhod diya gaya hai:</p>
+      <pre><code>for idx, (x, y) in enumerate(train_loader):
+    print(f"Batch {idx+1}:", x, y)</code></pre>
+      <p>Output:</p>
+      <pre><code>Batch 1: tensor([[-1.2000,  3.1000],
+        [-0.5000,  2.6000]]) tensor([0, 0])
+Batch 2: tensor([[ 2.3000, -1.1000],
+        [-0.9000,  2.9000]]) tensor([1, 0])</code></pre>
+    </section>
+
+    <section>
+      <h3>`num_workers` Parameter ko Samajhna</h3>
+      <p>
+        Aakhir mein, chaliye `DataLoader` mein `num_workers=0` setting par charcha karte hain. Yeh parameter data loading aur preprocessing ko parallelize karne ke liye bahut zaroori hai.
+      </p>
+      <p>
+        Jab `num_workers` 0 par set hota hai, to data loading main process mein hi hota hai. Isse model training mein kaafi slowdown ho sakta hai, khaas kar jab hum bade networks ko GPU par train kar rahe hon. Aisa isliye hota hai kyunki CPU ko model processing ke saath-saath data load karne ka kaam bhi karna padta hai, jisse GPU ko data ke liye intezaar karna pad sakta hai.
+      </p>
+      <p>
+        Iske vipreet, jab `num_workers` ko 0 se zyada set kiya jaata hai (jaise 1, 2, ya 4), to data ko parallel mein load karne ke liye alag se worker processes launch kiye jaate hain. Isse main process sirf model training par focus kar paata hai aur system ke resources ka behtar istemal hota hai.
+      </p>
+      <p>
+        Lekin, agar hum bahut chhote datasets ya Jupyter notebooks jaise interactive environments ke saath kaam kar rahe hain, to `num_workers` ko badhane se koi khaas speedup nahi milta. Balki, worker processes ko shuru karne ka overhead data loading se zyada ho sakta hai aur kabhi-kabhi errors bhi aa sakte hain.
+      </p>
+      <p>Mere anubhav mein, `num_workers=4` set karna aam taur par kai real-world datasets par optimal performance deta hai, lekin best setting aapke hardware aur dataset par depend karti hai.</p>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn PyTorch in Roman Hindi 🚀</p>
+  </footer>
+</body>
+</html>

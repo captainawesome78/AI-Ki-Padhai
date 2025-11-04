@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277"
+     crossorigin="anonymous"></script>
+  <title>Part 7 - A Typical Training Loop | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fafafa;
+      color: #333;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #2c3e50;
+      color: white;
+      text-align: center;
+      padding: 25px 15px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 26px;
+    }
+
+    nav {
+      margin-top: 8px;
+    }
+
+    nav a {
+      color: #dfe8ef;
+      text-decoration: none;
+      margin: 0 12px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    nav a:hover {
+      color: #f1f6fb;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    .intro {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .intro h2 {
+      font-size: 28px;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    .intro p {
+      font-size: 17px;
+      color: #555;
+    }
+
+    footer {
+      text-align: center;
+      background: #f4f4f4;
+      padding: 20px;
+      margin-top: 40px;
+      font-size: 15px;
+    }
+
+    section {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+    section:last-of-type {
+      border-bottom: none;
+    }
+    h3 {
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+    pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>PyTorch sirf Ek Ghante mein</h1>
+    <nav>
+      <a href="https://aikipadhai.com/index.html">Home</a>
+      <a href="https://aikipadhai.com/deep-learning/index.html">Deep Learning</a>
+      <a href="https://aikipadhai.com/genai/index.html"><strong>AI</strong></a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="intro">
+      <h2>Part 7 - A Typical Training Loop</h2>
+      <p>
+        Ab tak, humne neural networks train karne ke liye sabhi zaroori cheezon par charcha ki hai: PyTorch ki tensor library, autograd, Module API, aur efficient data loaders. Chaliye ab in sab ko milakar pichle section ke toy dataset par ek neural network train karte hain.
+      </p>
+    </section>
+
+    <section>
+      <h3>Training Code</h3>
+      <p>Neeche diya gaya code ek complete training loop dikhata hai.</p>
+      <pre><code>import torch
+import torch.nn.functional as F
+
+# Assuming NeuralNetwork, train_loader are defined as in previous parts
+# For completeness, let's redefine them quickly
+
+class NeuralNetwork(torch.nn.Module):
+    def __init__(self, num_inputs, num_outputs):
+        super().__init__()
+        self.layers = torch.nn.Sequential(
+            torch.nn.Linear(num_inputs, 30), torch.nn.ReLU(),
+            torch.nn.Linear(30, 20), torch.nn.ReLU(),
+            torch.nn.Linear(20, num_outputs),
+        )
+    def forward(self, x): return self.layers(x)
+
+# Dummy train_loader for demonstration
+X_train = torch.rand(10, 2)
+y_train = torch.randint(0, 2, (10,))
+train_ds = torch.utils.data.TensorDataset(X_train, y_train)
+train_loader = torch.utils.data.DataLoader(train_ds, batch_size=2, shuffle=True)
+
+
+torch.manual_seed(123)
+model = NeuralNetwork(num_inputs=2, num_outputs=2)
+optimizer = torch.optim.SGD(model.parameters(), lr=0.5)
+
+num_epochs = 3
+
+for epoch in range(num_epochs):
+
+    model.train() # Model ko training mode mein set karein
+    for batch_idx, (features, labels) in enumerate(train_loader):
+
+        # 1. Forward pass
+        logits = model(features)
+
+        # 2. Loss calculate karein
+        loss = F.cross_entropy(logits, labels)
+
+        # 3. Backpropagation
+        optimizer.zero_grad() # Purane gradients ko zero karein
+        loss.backward()       # Naye gradients calculate karein
+        optimizer.step()      # Model weights ko update karein
+
+        ### LOGGING
+        print(f"Epoch: {epoch+1:03d}/{num_epochs:03d}"
+              f" | Batch {batch_idx:03d}/{len(train_loader):03d}"
+              f" | Loss: {loss:.2f}")
+
+    model.eval() # Model ko evaluation mode mein set karein
+    # Yahan optional model evaluation code aa sakta hai
+</code></pre>
+    </section>
+
+    <section>
+      <h3>Training Loop ko Samajhna</h3>
+      <p>Chaliye upar diye gaye code ke mukhya hisson ko samajhte hain:</p>
+      <ul>
+        <li><strong>Model aur Optimizer:</strong> Humne ek model banaya jiske 2 input features aur 2 output classes hain. Humne Stochastic Gradient Descent (SGD) optimizer ka istemal kiya hai, jiska learning rate (lr) 0.5 hai. Learning rate ek hyperparameter hai jise humein experiment karke set karna padta hai.</li>
+        <li><strong>Epochs:</strong> Ek epoch ka matlab hai poore training dataset par ek baar iterate karna. Hum model ko 3 epochs ke liye train kar rahe hain.</li>
+        <li><strong>`model.train()` aur `model.eval()`:</strong> `model.train()` model ko training mode mein daalta hai, aur `model.eval()` use evaluation mode mein. Yeh zaroori hai kyunki kuch layers jaise Dropout aur BatchNorm training aur inference ke dauraan alag tarah se behave karte hain. Bhale hi hamare current model mein aisi layers na hon, yeh ek acchi practice hai.</li>
+        <li><strong>Forward Pass:</strong> `logits = model(features)` line data ko model se pass karti hai aur output (logits) generate karti hai.</li>
+        <li><strong>Loss Calculation:</strong> `loss = F.cross_entropy(logits, labels)` line model ke predictions aur actual labels ke beech ka error (loss) calculate karti hai. `cross_entropy` function internally softmax apply kar deta hai.</li>
+        <li><strong>Backpropagation:</strong> Yeh training ka sabse zaroori hissa hai:
+            <ol>
+                <li>`optimizer.zero_grad()`: Har batch ke baad gradients ko reset karna zaroori hai, warna woh accumulate ho jaate hain.</li>
+                <li>`loss.backward()`: Yeh loss ke respect mein saare model parameters ka gradient calculate karta hai.</li>
+                <li>`optimizer.step()`: Yeh calculate kiye gaye gradients ka use karke model ke weights ko update karta hai.</li>
+            </ol>
+        </li>
+      </ul>
+      <p>Jaisa ki aap output mein dekhenge, har batch ke saath loss kam hota jaata hai, jiska matlab hai ki hamara model seekh raha hai!</p>
+    </section>
+
+    <section>
+      <h3>Model se Predictions Karna</h3>
+      <p>Training ke baad, hum model ka use predictions karne ke liye kar sakte hain:</p>
+      <pre><code>model.eval()
+
+with torch.no_grad():
+    outputs = model(X_train)
+
+print(outputs)</code></pre>
+      <p>Results:</p>
+      <pre><code>tensor([[ 2.8569, -4.1618],
+        [ 2.5382, -3.7548],
+        [ 2.0944, -3.1820],
+        [-1.4814,  1.4816],
+        [-1.7176,  1.7342]])</code></pre>
+      <p>Class membership probabilities nikalne ke liye, hum softmax function ka use kar sakte hain:</p>
+      <pre><code>torch.set_printoptions(sci_mode=False)
+probas = torch.softmax(outputs, dim=1)
+print(probas)</code></pre>
+      <p>Output:</p>
+      <pre><code>tensor([[    0.9991,     0.0009],
+        [    0.9982,     0.0018],
+        [    0.9949,     0.0051],
+        [    0.0491,     0.9509],
+        [    0.0307,     0.9693]])</code></pre>
+      <p>In values ko class labels me convert karne ke liye, hum argmax function ka use kar sakte hain:</p>
+      <pre><code>predictions = torch.argmax(probas, dim=1)
+print(predictions)</code></pre>
+      <p>Output:</p>
+      <pre><code>tensor([0, 0, 0, 1, 1])</code></pre>
+      <p>Softmax probabilities calculate karna zaroori nahi hai. Hum seedhe logits par bhi argmax apply kar sakte hain:</p>
+      <pre><code>predictions = torch.argmax(outputs, dim=1)
+print(predictions)</code></pre>
+      <p>Output:</p>
+      <pre><code>tensor([0, 0, 0, 1, 1])</code></pre>
+    </section>
+
+    <section>
+      <h3>Accuracy Calculate Karna</h3>
+      <p>Prediction accuracy calculate karne ke liye, hum ek function implement kar sakte hain:</p>
+      <pre><code>def compute_accuracy(model, dataloader):
+
+    model = model.eval()
+    correct = 0.0
+    total_examples = 0
+
+    for idx, (features, labels) in enumerate(dataloader):
+
+        with torch.no_grad():
+            logits = model(features)
+
+        predictions = torch.argmax(logits, dim=1)
+        compare = labels == predictions
+        correct += torch.sum(compare)
+        total_examples += len(compare)
+
+    return (correct / total_examples).item()</code></pre>
+      <p>Yeh function data loader par iterate karta hai aur correct predictions ki sankhya calculate karta hai. Isse hum bade datasets par bhi accuracy calculate kar sakte hain.</p>
+      <p>Training set par accuracy:</p>
+      <pre><code>compute_accuracy(model, train_loader)</code></pre>
+      <p>Output: 1.0</p>
+      <p>Test set par accuracy:</p>
+      <pre><code>compute_accuracy(model, test_loader)</code></pre>
+      <p>Output: 1.0</p>
+    </section>
+    <p>Is section mein, humne seekha ki hum PyTorch ka use karke ek neural network kaise train kar sakte hain. Agle section mein, hum dekhenge ki training ke baad models ko kaise save aur restore kiya jaata hai.</p>
+
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn PyTorch in Roman Hindi 🚀</p>
+  </footer>
+</body>
+</html>
