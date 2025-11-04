@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277"
+     crossorigin="anonymous"></script>
+  <title>Part 4 - Automatic Differentiation | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fafafa;
+      color: #333;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #2c3e50;
+      color: white;
+      text-align: center;
+      padding: 25px 15px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 26px;
+    }
+
+    nav {
+      margin-top: 8px;
+    }
+
+    nav a {
+      color: #dfe8ef;
+      text-decoration: none;
+      margin: 0 12px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    nav a:hover {
+      color: #f1f6fb;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    .intro {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .intro h2 {
+      font-size: 28px;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    .intro p {
+      font-size: 17px;
+      color: #555;
+    }
+
+    footer {
+      text-align: center;
+      background: #f4f4f4;
+      padding: 20px;
+      margin-top: 40px;
+      font-size: 15px;
+    }
+
+    section {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+    section:last-of-type {
+      border-bottom: none;
+    }
+    h3 {
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+    pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>PyTorch sirf Ek Ghante mein</h1>
+    <nav>
+      <a href="https://aikipadhai.com/index.html">Home</a>
+      <a href="https://aikipadhai.com/deep-learning/index.html">Deep Learning</a>
+      <a href="https://aikipadhai.com/genai/index.html"><strong>AI</strong></a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="intro">
+      <h2>Part 4 - Automatic Differentiation Made Easy</h2>
+      <p>
+        Pichle section mein humne computation graphs ke baare mein jaana. PyTorch automatically ek graph banata hai agar uske kisi tensor ka `requires_grad` attribute `True` par set ho.
+      </p>
+      <p>
+        Yeh gradients calculate karne ke liye zaroori hai, jo neural networks ko train karne ke liye 'backpropagation' algorithm mein use hote hain.
+      </p>
+    </section>
+
+    <section>
+      <h3>Gradients aur Autograd Engine</h3>
+      <p>
+        Agar aapko calculus ke concepts jaise partial derivatives ya gradients yaad nahi hain, to chinta na karein. Mota-mota, gradients humein batate hain ki model ke parameters (weights aur bias) ko kis direction mein update karna hai taaki loss kam ho.
+      </p>
+      <p>
+        PyTorch ka `autograd` engine har operation ko track karke background mein ek computation graph banata hai. Isse hum gradients ko aasani se calculate kar sakte hain.
+      </p>
+      <p>
+        Chaliye pichle example ko dekhte hain, lekin is baar hum `w1` aur `b` ke liye gradients calculate karenge. Iske liye, humein unka `requires_grad=True` set karna hoga.
+      </p>
+      <pre><code>import torch
+import torch.nn.functional as F
+from torch.autograd import grad
+
+y = torch.tensor([1.0])
+x1 = torch.tensor([1.1])
+w1 = torch.tensor([2.2], requires_grad=True) # Gradient tracking enable karein
+b = torch.tensor([0.0], requires_grad=True)  # Gradient tracking enable karein
+
+z = x1 * w1 + b
+a = torch.sigmoid(z)
+
+loss = F.binary_cross_entropy(a, y)
+
+# Gradients ko manually calculate karein
+grad_L_w1 = grad(loss, w1, retain_graph=True)
+grad_L_b = grad(loss, b, retain_graph=True)
+
+print(grad_L_w1)
+print(grad_L_b)</code></pre>
+      <p>Yahan `retain_graph=True` zaroori hai kyunki hum ek hi graph par do baar `grad` function call kar rahe hain. By default, PyTorch memory bachane ke liye graph ko pehli call ke baad delete kar deta hai.</p>
+      <p>Output:</p>
+      <pre><code>(tensor([-0.0898]),)
+(tensor([-0.0817]),)</code></pre>
+    </section>
+
+    <section>
+      <h3>Sabse Aasan Tareeka: `.backward()`</h3>
+      <p>
+        Practice mein, hum `grad` function ko manually use nahi karte. PyTorch isse bhi aasan tareeka deta hai. Hum seedhe `loss` tensor par `.backward()` method call kar sakte hain.
+      </p>
+      <p>
+        Yeh method automatically unn sabhi tensors ke gradients calculate kar deta hai jinka `requires_grad=True` set hai. Gradients tensor ke `.grad` attribute mein store ho jaate hain.
+      </p>
+      <pre><code># Pichle gradients ko reset karein (agar dobara run kar rahe hain)
+if w1.grad is not None:
+    w1.grad.zero_()
+if b.grad is not None:
+    b.grad.zero_()
+
+# Gradients calculate karein
+loss.backward()
+
+print(w1.grad)
+print(b.grad)</code></pre>
+      <p>Output bilkul same hoga:</p>
+      <pre><code>tensor([-0.0898])
+tensor([-0.0817])</code></pre>
+      <p>
+        Is section ka sabse important takeaway yeh hai ki aapko calculus ki chinta karne ki zaroorat nahi hai. PyTorch ka `.backward()` method hamare liye saara kaam kar deta hai.
+      </p>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn PyTorch in Roman Hindi 🚀</p>
+  </footer>
+</body>
+</html>
