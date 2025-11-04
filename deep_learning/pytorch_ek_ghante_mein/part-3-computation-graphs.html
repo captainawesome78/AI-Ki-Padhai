@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277"
+     crossorigin="anonymous"></script>
+  <title>Part 3 - Models as Computation Graphs | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fafafa;
+      color: #333;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #2c3e50;
+      color: white;
+      text-align: center;
+      padding: 25px 15px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 26px;
+    }
+
+    nav {
+      margin-top: 8px;
+    }
+
+    nav a {
+      color: #dfe8ef;
+      text-decoration: none;
+      margin: 0 12px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    nav a:hover {
+      color: #f1f6fb;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    .intro {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .intro h2 {
+      font-size: 28px;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    .intro p {
+      font-size: 17px;
+      color: #555;
+    }
+
+    footer {
+      text-align: center;
+      background: #f4f4f4;
+      padding: 20px;
+      margin-top: 40px;
+      font-size: 15px;
+    }
+
+    section {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+    section:last-of-type {
+      border-bottom: none;
+    }
+    h3 {
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+    pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>PyTorch sirf Ek Ghante mein</h1>
+    <nav>
+      <a href="https://aikipadhai.com/index.html">Home</a>
+      <a href="https://aikipadhai.com/deep-learning/index.html">Deep Learning</a>
+      <a href="https://aikipadhai.com/genai/index.html"><strong>AI</strong></a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="intro">
+      <h2>Part 3 - Models as Computation Graphs</h2>
+      <p>
+        Pichle section mein humne PyTorch ki tensor library ko samjha. Ab hum iske doosre core component, 'autograd' (automatic differentiation engine), ki taraf badh rahe hain.
+      </p>
+      <p>
+        Autograd ko samajhne se pehle, humein 'Computation Graph' ke concept ko samajhna hoga.
+      </p>
+    </section>
+
+    <section>
+      <h3>Computation Graph Kya Hai?</h3>
+      <p>
+        Ek computation graph ek directed graph hota hai jo mathematical expressions ko visualize karne ka ek tareeka hai. Deep learning mein, yeh graph unn saare calculations ka sequence dikhata hai jo ek neural network ka output nikalne ke liye zaroori hain.
+      </p>
+      <p>
+        PyTorch background mein automatically ek aisa graph banata hai. Is graph ka istemal karke hi hum model ke parameters (jaise weights aur bias) ke respect mein loss ka gradient calculate karte hain. Yeh process 'backpropagation' kehlata hai aur model training ka sabse important hissa hai.
+      </p>
+    </section>
+
+    <section>
+      <h3>Ek Example se Samajhte Hain</h3>
+      <p>
+        Chaliye ek simple logistic regression model ka forward pass (prediction step) dekhte hain. Isse aap ek single-layer neural network ki tarah soch sakte hain.
+      </p>
+      <pre><code>import torch
+import torch.nn.functional as F
+
+y = torch.tensor([1.0])  # Sahi label
+x1 = torch.tensor([1.1]) # Input feature
+w1 = torch.tensor([2.2]) # Weight parameter
+b = torch.tensor([0.0])  # Bias unit
+
+z = x1 * w1 + b          # Net input
+a = torch.sigmoid(z)     # Activation aur output
+
+loss = F.binary_cross_entropy(a, y) # Loss calculation
+
+print(loss)</code></pre>
+      <p>Iska output hoga:</p>
+      <pre><code>tensor(0.0852)</code></pre>
+      <p>
+        Agar aapko upar diye gaye code ke saare components samajh nahi aaye, to chinta na karein. Yahan main point yeh hai ki hum calculations ke sequence ko ek graph ke roop mein soch sakte hain.
+      </p>
+      <p>
+        Is graph mein, har node ek operation (jaise multiplication, addition) ya ek variable (jaise x1, w1, b) ko represent karta hai. Arrows data ke flow ki direction dikhate hain. PyTorch is graph ko background mein banata hai aur iska istemal gradients ko calculate karne ke liye karta hai, jiske baare mein hum agle section mein detail se baat karenge.
+      </p>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn PyTorch in Roman Hindi 🚀</p>
+  </footer>
+</body>
+</html>
