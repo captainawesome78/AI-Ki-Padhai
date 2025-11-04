@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277"
+     crossorigin="anonymous"></script>
+  <title>Part 8 - Saving and Loading Models | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fafafa;
+      color: #333;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #2c3e50;
+      color: white;
+      text-align: center;
+      padding: 25px 15px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 26px;
+    }
+
+    nav {
+      margin-top: 8px;
+    }
+
+    nav a {
+      color: #dfe8ef;
+      text-decoration: none;
+      margin: 0 12px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    nav a:hover {
+      color: #f1f6fb;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    .intro {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .intro h2 {
+      font-size: 28px;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    .intro p {
+      font-size: 17px;
+      color: #555;
+    }
+
+    footer {
+      text-align: center;
+      background: #f4f4f4;
+      padding: 20px;
+      margin-top: 40px;
+      font-size: 15px;
+    }
+
+    section {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+    section:last-of-type {
+      border-bottom: none;
+    }
+    h3 {
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+    pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>PyTorch sirf Ek Ghante mein</h1>
+    <nav>
+      <a href="https://aikipadhai.com/index.html">Home</a>
+      <a href="https://aikipadhai.com/deep-learning/index.html">Deep Learning</a>
+      <a href="https://aikipadhai.com/genai/index.html"><strong>AI</strong></a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="intro">
+      <h2>Part 8 - Saving and Loading Models</h2>
+      <p>
+        Pichle section mein, humne safaltapoorvak ek model train kiya. Chaliye ab dekhte hain ki hum ek trained model ko baad me reuse karne ke liye kaise save kar sakte hain.
+      </p>
+    </section>
+
+    <section>
+      <h3>Model ko Save Karna</h3>
+      <p>PyTorch mein models ko save karne ka recommended tareeka yahan diya gaya hai:</p>
+      <pre><code>import torch
+# Maan lijiye ki 'model' ek trained model object hai
+torch.save(model.state_dict(), "model.pth")</code></pre>
+      <p>
+        Model ka `state_dict` ek Python dictionary object hai jo model ki har layer ko uske trainable parameters (weights aur biases) se map karta hai. Yahan `"model.pth"` ek file ka naam hai. Aap koi bhi naam aur file extension de sakte hain, lekin `.pth` aur `.pt` sabse common conventions hain.
+      </p>
+    </section>
+
+    <section>
+      <h3>Model ko Load Karna</h3>
+      <p>Ek baar model save ho jaane ke baad, hum use disk se is tarah restore kar sakte hain:</p>
+      <pre><code># Maan lijiye ki 'NeuralNetwork' class defined hai
+model_new = NeuralNetwork(2, 2) # Architecture original model se bilkul match karna chahiye
+model_new.load_state_dict(torch.load("model.pth"))
+model_new.eval() # Model ko evaluation mode me set karein</code></pre>
+      <p>Output (agar sab theek raha):</p>
+      <pre><code>&lt;All keys matched successfully&gt;</code></pre>
+      <p>
+        `torch.load("model.pth")` function file ko padhta hai aur model ke parameters wali dictionary ko reconstruct karta hai. Phir `model.load_state_dict()` in parameters ko naye model instance par apply karta hai, jisse model ki learned state restore ho jaati hai.
+      </p>
+      <p>
+        <strong>Zaroori Note:</strong> Model load karne se pehle, aapko same architecture ka ek naya model instance banana hoga. Yahan, `NeuralNetwork(2, 2)` ka architecture save kiye gaye model se bilkul match karna chahiye.
+      </p>
+    </section>
+
+    <p>Aakhri section mein hum dekhenge ki PyTorch models ko ek ya ek se zyada GPUs (agar available ho) ka use karke tezi se kaise train kiya jaata hai.</p>
+
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn PyTorch in Roman Hindi 🚀</p>
+  </footer>
+</body>
+</html>
