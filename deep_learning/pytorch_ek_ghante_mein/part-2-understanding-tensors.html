@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277"
+     crossorigin="anonymous"></script>
+  <title>Part 2 - Understanding Tensors | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fafafa;
+      color: #333;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #2c3e50;
+      color: white;
+      text-align: center;
+      padding: 25px 15px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 26px;
+    }
+
+    nav {
+      margin-top: 8px;
+    }
+
+    nav a {
+      color: #dfe8ef;
+      text-decoration: none;
+      margin: 0 12px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    nav a:hover {
+      color: #f1f6fb;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    .intro {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .intro h2 {
+      font-size: 28px;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    .intro p {
+      font-size: 17px;
+      color: #555;
+    }
+
+    footer {
+      text-align: center;
+      background: #f4f4f4;
+      padding: 20px;
+      margin-top: 40px;
+      font-size: 15px;
+    }
+
+    section {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+    section:last-of-type {
+      border-bottom: none;
+    }
+    h3 {
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+    ul {
+      list-style-type: '✅ ';
+      padding-left: 20px;
+    }
+    li {
+      margin-bottom: 10px;
+      padding-left: 10px;
+    }
+    pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>PyTorch sirf Ek Ghante mein</h1>
+    <nav>
+      <a href="https://aikipadhai.com/index.html">Home</a>
+      <a href="https://aikipadhai.com/deep-learning/index.html">Deep Learning</a>
+      <a href="https://aikipadhai.com/genai/index.html"><strong>AI</strong></a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="intro">
+      <h2>Part 2 - Understanding Tensors</h2>
+      <p>
+        Tensors ek mathematical concept hai jo vectors aur matrices ko higher dimensions tak generalize karta hai. Doosre shabdon mein, tensors ko unke 'rank' (dimensions ki sankhya) se pehchana jaata hai.
+      </p>
+      <p>
+        Computationally, tensors data containers ki tarah kaam karte hain. PyTorch tensors, NumPy arrays jaise hi hain, lekin inme deep learning ke liye zaroori extra features hote hain, jaise automatic differentiation (autograd) aur GPU par fast computation.
+      </p>
+    </section>
+
+    <section>
+      <h3>2.1 Scalars, Vectors, Matrices, and Tensors</h3>
+      <p>Ek scalar 0-dimensional tensor (sirf ek number), ek vector 1-dimensional tensor, aur ek matrix 2-dimensional tensor hota hai. Chaliye `torch.tensor()` function se kuch tensors banate hain.</p>
+      <pre><code>import torch
+
+# 0D tensor (scalar)
+tensor0d = torch.tensor(1)
+
+# 1D tensor (vector)
+tensor1d = torch.tensor([1, 2, 3])
+
+# 2D tensor (matrix)
+tensor2d = torch.tensor([[1, 2], [3, 4]])
+
+# 3D tensor
+tensor3d = torch.tensor([[[1, 2], [3, 4]], [[5, 6], [7, 8]]])</code></pre>
+    </section>
+
+    <section>
+      <h3>2.2 Tensor Data Types</h3>
+      <p>Jab hum integers se tensor banate hain, to PyTorch default `torch.int64` data type use karta hai. Aap `.dtype` attribute se isse check kar sakte hain.</p>
+      <pre><code>tensor1d = torch.tensor([1, 2, 3])
+print(tensor1d.dtype)</code></pre>
+      <p>Output:</p>
+      <pre><code>torch.int64</code></pre>
+      <p>Floats ke liye, PyTorch default `torch.float32` use karta hai. Yeh precision aur computational efficiency ke beech ek achha balance hai, aur GPUs 32-bit computations ke liye optimized hote hain.</p>
+      <pre><code>floatvec = torch.tensor([1.0, 2.0, 3.0])
+print(floatvec.dtype)</code></pre>
+      <p>Output:</p>
+      <pre><code>torch.float32</code></pre>
+      <p>Aap `.to()` method ka use karke data type ko aasani se badal sakte hain:</p>
+      <pre><code>floatvec = tensor1d.to(torch.float32)
+print(floatvec.dtype)</code></pre>
+      <p>Output:</p>
+      <pre><code>torch.float32</code></pre>
+    </section>
+
+    <section>
+      <h3>2.3 Common PyTorch Tensor Operations</h3>
+      <p>Chaliye kuch zaroori tensor operations dekhte hain jo har project mein kaam aate hain.</p>
+      
+      <p><strong>Shape of a Tensor:</strong> `.shape` attribute se tensor ke dimensions pata chalte hain.</p>
+      <pre><code>tensor2d = torch.tensor([[1, 2, 3], [4, 5, 6]])
+print(tensor2d.shape)</code></pre>
+      <p>Output:</p>
+      <pre><code>torch.Size([2, 3])</code></pre>
+
+      <p><strong>Reshaping Tensors:</strong> `.view()` (zyada common) ya `.reshape()` se tensor ko naya shape de sakte hain.</p>
+      <pre><code>print(tensor2d.view(3, 2))</code></pre>
+      <p>Output:</p>
+      <pre><code>tensor([[1, 2],
+        [3, 4],
+        [5, 6]])</code></pre>
+
+      <p><strong>Transposing Tensors:</strong> `.T` attribute se tensor ko uske diagonal par flip (transpose) kiya jaata hai.</p>
+      <pre><code>print(tensor2d.T)</code></pre>
+      <p>Output:</p>
+      <pre><code>tensor([[1, 4],
+        [2, 5],
+        [3, 6]])</code></pre>
+
+      <p><strong>Matrix Multiplication:</strong> Do matrices ko multiply karne ke liye `.matmul()` ya `@` operator ka use hota hai.</p>
+      <pre><code># Using .matmul()
+print(tensor2d.matmul(tensor2d.T))
+
+# Using @ operator
+print(tensor2d @ tensor2d.T)</code></pre>
+      <p>Dono ka output same hoga:</p>
+      <pre><code>tensor([[14, 32],
+        [32, 77]])</code></pre>
+      <p>PyTorch mein aur bhi bahut saare operations hain, jinke baare mein aap official documentation mein padh sakte hain.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn PyTorch in Roman Hindi 🚀</p>
+  </footer>
+</body>
+</html>

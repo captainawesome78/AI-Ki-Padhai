@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277"
+     crossorigin="anonymous"></script>
+  <title>Part 1 - What is PyTorch? | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fafafa;
+      color: #333;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #2c3e50;
+      color: white;
+      text-align: center;
+      padding: 25px 15px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 26px;
+    }
+
+    nav {
+      margin-top: 8px;
+    }
+
+    nav a {
+      color: #dfe8ef;
+      text-decoration: none;
+      margin: 0 12px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    nav a:hover {
+      color: #f1f6fb;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    .intro {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .intro h2 {
+      font-size: 28px;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    .intro p {
+      font-size: 17px;
+      color: #555;
+    }
+
+    footer {
+      text-align: center;
+      background: #f4f4f4;
+      padding: 20px;
+      margin-top: 40px;
+      font-size: 15px;
+    }
+
+    section {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+    section:last-of-type {
+      border-bottom: none;
+    }
+    h3 {
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+    ul {
+      list-style-type: '✅ ';
+      padding-left: 20px;
+    }
+    li {
+      margin-bottom: 10px;
+      padding-left: 10px;
+    }
+    pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 14px;
+    }
+    /* Add more styles as needed */
+  </style>
+</head>
+<body>
+  <header>
+    <h1>PyTorch sirf Ek Ghante mein</h1>
+    <nav>
+      <a href="https://aikipadhai.com/index.html">Home</a>
+      <a href="https://aikipadhai.com/deep-learning/index.html">Deep Learning</a>
+      <a href="https://aikipadhai.com/genai/index.html"><strong>AI</strong></a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="intro">
+      <h2>Part 1 - What is PyTorch?</h2>
+      <p>
+        PyTorch (<a href="https://pytorch.org/" target="_blank">pytorch.org</a>) ek open-source, Python-based deep learning library hai. Research community mein yeh behad popular hai.
+      </p>
+      <p>
+        Papers With Code ke mutabik, 2019 se PyTorch research ke liye sabse zyada istemal hone wali library ban gayi hai. Kaggle ke 2022 survey mein bhi lagbhag 40% data scientists ne PyTorch ka istemal kiya, aur yeh number har saal badh raha hai.
+      </p>
+      <p>
+        Iski popularity ka raaz iska user-friendly interface aur efficiency hai. Yeh aasan hone ke saath-saath advanced users ko customization ke liye poori flexibility bhi deta hai.
+      </p>
+      <p>
+        Aage aane wale subsections mein, hum PyTorch ke main features ko define karenge.
+      </p>
+    </section>
+
+    <section>
+      <h3>1.1 PyTorch ke teen core components</h3>
+      <p>
+        PyTorch ko samajhne ka sabse achha tareeka hai iske teen core components par focus karna:
+      </p>
+      <ul>
+        <li>
+          <strong>Tensor Library (GPU ke saath):</strong> Yeh NumPy jaisi ek array-oriented library hai, lekin isme GPU par calculations ko fast karne ki extra power hai. Isse aap aasani se CPU aur GPU ke beech switch kar sakte hain.
+        </li>
+        <li>
+          <strong>Automatic Differentiation Engine:</strong> Is feature ko 'autograd' bhi kehte hain. Yeh tensor operations ke liye gradients ko automatically calculate karta hai, jisse model training (backpropagation) bahut aasan ho jaati hai.
+        </li>
+        <li>
+          <strong>Deep Learning Library:</strong> PyTorch aapko deep learning models design aur train karne ke liye zaroori building blocks (jaise pre-trained models, loss functions, optimizers) provide karta hai.
+        </li>
+      </ul>
+      <p>
+        Deep learning term ko define karne aur PyTorch ko install karne ke baad, is tutorial ka baki hissa PyTorch ke in teen core components ko aur detail mein cover karega, hands-on code examples ke saath.
+      </p>
+    </section>
+
+    <section>
+      <h3>1.2 Defining deep learning</h3>
+      <p>Aapne AI, Machine Learning, aur Deep Learning jaise terms sune honge. Chaliye inke beech ke farak ko samajhte hain.</p>
+      <ul>
+        <li><strong>Artificial Intelligence (AI):</strong> Yeh ek broad field hai jiska maqsad aisi machines banana hai jo insaani intelligence wale kaam kar sakein, jaise sochna, samajhna aur faisle lena.</li>
+        <li><strong>Machine Learning (ML):</strong> Yeh AI ka ek subfield hai. Isme algorithms data se seekhte hain aur predictions karte hain, bina explicitly program kiye. Recommendation systems aur spam filters iske examples hain.</li>
+        <li><strong>Deep Learning (DL):</strong> Yeh ML ki ek special branch hai jo 'deep neural networks' ka istemal karti hai. Ye networks insaani dimaag ke neurons se inspired hain. "Deep" ka matlab hai in networks mein multiple layers ka hona, jo unhe images, audio, aur text jaise complex data ko samajhne mein madad karta hai. PyTorch ek deep learning library hai.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h3>1.3 Installing PyTorch</h3>
+      <p>
+        PyTorch ko kisi bhi other Python library ya package ki tarah install kiya ja sakta hai. Lekin, kyunki PyTorch ek comprehensive library hai jismein CPU- aur GPU-compatible codes hain, installation ke liye additional explanation ki zaroorat pad sakti hai.
+      </p>
+      <p>
+        <strong>Python Version:</strong> Hamesha Python ka ek stable version (latest se ek ya do version purana) istemal karein. Jaise, agar Python 3.13 latest hai, to 3.11 ya 3.12 use karna behtar hai.
+      </p>
+      <p>
+        Agar aapke paas NVIDIA GPU hai, to GPU-enabled version install karna best hai. Installation ke liye yeh simple command hai:
+      </p>
+      <pre><code>pip install torch</code></pre>
+      <p>
+        Yeh command automatically detect kar lega ki aapke system mein GPU hai ya nahi aur uske hisaab se sahi version install kar dega.
+      </p>
+      <p>
+        PyTorch ka version check karne ke liye, aap PyTorch mein following code execute kar sakte hain:
+      </p>
+      <pre><code>import torch
+print(torch.__version__)</code></pre>
+      <p>Output kuch aisa dikhega:</p>
+      <pre><code>2.4.1</code></pre>
+      <p>
+        PyTorch install karne ke baad, aap check kar sakte hain ki aapka installation aapke built-in NVIDIA GPU ko recognize karta hai ya nahi, Python mein following code run karke:
+      </p>
+      <pre><code>import torch
+print(torch.cuda.is_available())</code></pre>
+      <p>Agar yeh `True` return karta hai, to aapka GPU setup taiyar hai. Agar `False` aata hai, to chinta na karein, aap CPU par bhi training kar sakte hain, bas woh thoda slow hoga.</p>
+      <p>
+        Agar aapke paas local GPU nahi hai, to aap <a href="https://colab.research.google.com" target="_blank">Google Colab</a> jaise cloud services ka istemal kar sakte hain, jo free mein limited time ke liye GPU access dete hain.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Learn PyTorch in Roman Hindi 🚀</p>
+  </footer>
+</body>
+</html>
