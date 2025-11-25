@@ -164,6 +164,28 @@
             font-family: 'Courier New', Courier, monospace;
             font-size: 18px;
         }
+
+        .story-box {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .story-title {
+            font-weight: bold;
+            color: #2e7d32;
+            font-size: 18px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .story-title span {
+            margin-right: 10px;
+            font-size: 22px;
+        }
     </style>
 </head>
 
@@ -210,7 +232,7 @@
         </section>
 
         <section class="content-section">
-            <h2> Infographic Summary</h2>
+            <h2>📊 Infographic Summary</h2>
             <div class="infographic-container" style="text-align: center; margin-top: 20px;">
                 <img src="images/Laws of Exponents.png" alt="Infographic Summary"
                     style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
@@ -219,6 +241,12 @@
 
         <section class="content-section">
             <h2>📜 Basic Concept: Base & Exponent</h2>
+            <div class="story-box">
+                <div class="story-title"><span>📖</span> Story Time: The Hero and His Power</div>
+                <p>Base woh number hai jo "Hero" hai, aur Exponent uska "Power Level" hai. Jaise game mein power-up lene
+                    se hero strong ho jata hai, waise hi exponent batata hai ki base kitni baar multiply hokar strong
+                    banega. Agar 2⁵ hai, toh 2 hero hai aur 5 uska power level hai!</p>
+            </div>
             <p>Expression: <strong>aⁿ</strong></p>
             <ul>
                 <li><strong>Base (a):</strong> Woh number jo multiply ho raha hai.</li>
@@ -235,6 +263,12 @@
             <h2>⚖️ The 4 Main Laws of Exponents</h2>
 
             <h3>1. Product Law (Multiplication Rule)</h3>
+            <div class="story-box">
+                <div class="story-title"><span>📖</span> Story Time: Team Up!</div>
+                <p>Imagine karo do teams hain. Agar base same hai (matlab team same hai), toh hum bas unke players
+                    (powers) ko count karke add kar dete hain. Multiplication ka matlab hai powers ka milan (addition)!
+                </p>
+            </div>
             <div class="formula-card">aᵐ × aⁿ = aᵐ⁺ⁿ</div>
             <p><strong>Logic:</strong> Jab base same ho, toh hum bas powers ko count kar rahe hain. <br>
                 Example: <code>2² × 2³ = (2×2) × (2×2×2) = 2⁵</code> (Total 5 baar 2 hai).</p>
@@ -249,6 +283,11 @@
             </div>
 
             <h3>2. Quotient Law (Division Rule)</h3>
+            <div class="story-box">
+                <div class="story-title"><span>📖</span> Story Time: The Battle</div>
+                <p>Division ek ladai (battle) ki tarah hai. Upar wali power aur neeche wali power ek dusre ko cancel
+                    karti hain. Jo power badi hoti hai, wahi jeetti hai (subtract karke bachi hui power).</p>
+            </div>
             <div class="formula-card">aᵐ ÷ aⁿ = aᵐ⁻ⁿ</div>
             <p><strong>Logic:</strong> Division mein upar wale numbers neeche wale numbers se cancel ho jate hain. Jo
                 bachta hai wo difference hota hai.<br>
@@ -264,6 +303,11 @@
             </div>
 
             <h3>3. Power Law (Power of Power)</h3>
+            <div class="story-box">
+                <div class="story-title"><span>📖</span> Story Time: Building Floors</div>
+                <p>Ye "Power ke upar Power" hai! Jaise ek building ke upar dusri building khadi kar di ho. Is case mein
+                    hum powers ko multiply kar dete hain taaki total height pata chale.</p>
+            </div>
             <div class="formula-card">(aᵐ)ⁿ = aᵐⁿ</div>
             <p><strong>Logic:</strong> Iska matlab hai groups of groups. <br>
                 Example: <code>(2²)³</code> ka matlab hai <code>2²</code> ko 3 baar likho:
@@ -280,6 +324,11 @@
             </div>
 
             <h3>4. Different Base, Same Power</h3>
+            <div class="story-box">
+                <div class="story-title"><span>📖</span> Story Time: The Shared Umbrella</div>
+                <p>Agar do alag-alag log (bases) same umbrella (power) ke neeche aa jayein, toh woh ek saath chal sakte
+                    hain. Pehle unhe multiply karo, phir umbrella lagao!</p>
+            </div>
             <div class="formula-card">aᵐ × bᵐ = (ab)ᵐ</div>
             <p><strong>Logic:</strong> Agar power same hai, toh hum bases ko pehle multiply kar sakte hain, phir power
                 laga sakte hain.</p>
@@ -298,6 +347,11 @@
             <h2>👻 Special Cases: Zero & Negative Powers</h2>
 
             <h3>The Zero Exponent Rule</h3>
+            <div class="story-box">
+                <div class="story-title"><span>📖</span> Story Time: The Magic Spell</div>
+                <p>Ye maths ka "Magic Spell" hai. Koi bhi number ho, kitna bhi bada kyu na ho (except 0), agar uske sir
+                    par 0 baith gaya, toh wo turant 1 ban jata hai!</p>
+            </div>
             <div class="key-point">
                 <p><strong>a⁰ = 1</strong> (Where a ≠ 0)</p>
             </div>
@@ -318,6 +372,11 @@
             </div>
 
             <h3>The Negative Exponent Rule</h3>
+            <div class="story-box">
+                <div class="story-title"><span>📖</span> Story Time: The Elevator</div>
+                <p>Negative sign ek "Lift" ki tarah hai. Agar power negative hai, toh wo number ko neeche (denominator
+                    mein) le jati hai aur positive ban jati hai. Agar neeche negative hai, toh upar le aati hai.</p>
+            </div>
             <div class="key-point">
                 <p><strong>a⁻ⁿ = 1 / aⁿ</strong></p>
             </div>
@@ -336,6 +395,11 @@
 
         <section class="content-section">
             <h2>🧩 Fractional Exponents (Roots)</h2>
+            <div class="story-box">
+                <div class="story-title"><span>📖</span> Story Time: Cutting it Down</div>
+                <p>Fraction power ka matlab hai "Root". Agar power 1/2 hai, toh wo Square Root hai. Agar 1/3 hai, toh
+                    Cube Root. Ye number ko chota karne ka tareeka hai.</p>
+            </div>
             <p>Fraction power ka seedha connection <strong>Roots</strong> se hai.</p>
             <div class="key-point">
                 <p><strong>a¹/ⁿ = ⁿ√a</strong></p>
