@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,271 +8,122 @@
   <meta name="google-adsense-account" content="ca-pub-8049026984892277">
   <!-- Google AdSense Script -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277"
-     crossorigin="anonymous"></script>
+    crossorigin="anonymous"></script>
   <title>AIkiPadhai - Learn Python & AI in Roman Hindi</title>
-  <style>
-    :root {
-      --primary: #0077cc;
-      --dark: #1e293b;
-      --light: #f8fafc;
-      --accent: #38bdf8;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Segoe UI', Roboto, sans-serif;
-      background: var(--light);
-      color: var(--dark);
-      line-height: 1.6;
-    }
 
-    /* HEADER */
-    header {
-      background: linear-gradient(135deg, #0077cc, #38bdf8);
-      color: white;
-      text-align: center;
-      padding: 70px 20px;
-    }
-    header h1 {
-      font-size: 2.8rem;
-      margin-bottom: 10px;
-      letter-spacing: 0.5px;
-    }
-    header p {
-      font-size: 1.1rem;
-      opacity: 0.95;
-      max-width: 700px;
-      margin: 0 auto;
-    }
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap"
+    rel="stylesheet">
 
-    /* NAVIGATION */
-    nav {
-      background: white;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-      padding: 14px 0;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    nav a {
-      color: var(--dark);
-      text-decoration: none;
-      font-weight: 600;
-      transition: color 0.3s ease;
-    }
-    nav a:hover {
-      color: var(--primary);
-    }
-
-    /* MAIN SECTION */
-    .container {
-      max-width: 1100px;
-      margin: 50px auto;
-      padding: 0 20px;
-    }
-
-    .intro {
-      text-align: center;
-      margin-bottom: 50px;
-    }
-    .intro h2 {
-      font-size: 2rem;
-      color: var(--dark);
-      margin-bottom: 10px;
-    }
-    .intro p {
-      color: #475569;
-      font-size: 1.05rem;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    /* NEW SECTIONS */
-    .about-us, .featured-post {
-      background: white;
-      border-radius: 16px;
-      padding: 35px;
-      margin-bottom: 50px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    }
-    .about-us h2, .featured-post h2 {
-      font-size: 2rem;
-      color: var(--dark);
-      margin-bottom: 15px;
-      text-align: center;
-    }
-    .featured-post a {
-      text-decoration: none;
-      color: var(--primary);
-      font-weight: 600;
-    }
-    .featured-post a:hover { text-decoration: underline; }
-
-    /* TOPIC CARDS */
-    .topics {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 28px;
-    }
-
-    .card {
-      background: white;
-      border-radius: 16px;
-      padding: 32px 26px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      text-align: center;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .card h3 {
-      color: var(--primary);
-      margin: 14px 0 10px;
-      font-size: 1.6rem;
-    }
-
-    .card p {
-      color: #475569;
-      font-size: 1rem;
-      margin-bottom: 18px;
-    }
-
-    .card img {
-      width: 70px;
-      height: 70px;
-      margin-bottom: 15px;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 10px 18px;
-      background: var(--primary);
-      color: white;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: 600;
-      transition: background 0.3s ease;
-    }
-    .btn:hover {
-      background: var(--accent);
-    }
-
-    /* FOOTER */
-    footer {
-      text-align: center;
-      padding: 24px;
-      background: var(--dark);
-      color: white;
-      margin-top: 60px;
-    }
-    footer p {
-      font-size: 0.95rem;
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 700px) {
-      header h1 {
-        font-size: 2.2rem;
-      }
-      .intro h2 {
-        font-size: 1.6rem;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
   <header>
-    <h1>AI ki Padhai 🧠</h1>
-    <p>Python aur AI ko seekho step-by-step — Roman Hindi mein, real examples ke sath 🚀</p>
+    <div class="container header-content">
+      <a href="index.html" class="logo">
+        AIkiPadhai 🧠
+      </a>
+      <nav>
+        <a href="index.html" class="active">Home</a>
+        <a href="python/index.html">Python</a>
+        <a href="genai/index.html">AI</a>
+        <a href="Maths & Science/index.html">Maths & Science</a>
+        <a href="about.html">About</a>
+      </nav>
+    </div>
   </header>
 
-  <nav>
-    <a href="https://aikipadhai.com/index.html">Home</a>
-    <a href="https://aikipadhai.com/python/index.html">Python</a>
-    <a href="https://aikipadhai.com/genai/index.html"><strong>AI</strong></a>
-    <a href="https://aikipadhai.com/about.html">About</a>
-    <a href="http://aikipadhai.com/contact.html">Contact</a>
-  </nav>
+  <section class="hero">
+    <div class="container">
+      <h1>Learn Tech in Your Language 🚀</h1>
+      <p>Python, AI, aur Maths seekho step-by-step — Roman Hindi mein, real examples ke sath.</p>
+    </div>
+  </section>
 
   <div class="container">
-    <div class="intro">
-      <h2>📘 Explore Learning Tracks</h2>
+    <div class="section-header">
+      <h2>Explore Learning Tracks</h2>
       <p>
-        AIkiPadhai ek modern learning platform hai jahan hum Python aur Artificial Intelligence ko Roman Hindi me samjhate hain — easy language aur interactive examples ke sath.
-      </p>
-    </div>
-
-    <!-- About Us Section -->
-    <div class="about-us">
-      <h2>Hamara Mission 🎯</h2>
-      <p>
-        <strong>AIkiPadhai</strong> ka mission technology education ko sabke liye accessible banana hai. Hum maante hain ki bhasha (language) seekhne me rukawat nahi banani chahiye. Isliye, hum Python aur AI jaise complex topics ko <strong>Roman Hindi</strong> me, simple aur practical tareeke se samjhate hain, taaki aap technology me confident ban sakein.
+        AIkiPadhai ek modern learning platform hai jahan hum complex topics ko simple language me samjhate hain.
       </p>
     </div>
 
     <!-- Featured Post Section -->
-    <div class="featured-post">
-      <h2>✨ Featured Tutorial</h2>
+    <div class="card" style="margin-bottom: 3rem; border-left: 5px solid var(--accent);">
+      <h3>✨ Featured Tutorial: LangGraph</h3>
       <p>
-        Check out our latest guide on building powerful, stateful AI agents with LangChain's new library. This is the future of creating complex AI systems.
-        <br><br>
-        <a href="genai/langchain/langgraph-tutorial.html">→ LangGraph Tutorial: The Future of AI Agents 🚀</a>
+        Check out our latest guide on building powerful, stateful AI agents with LangChain's new library. This is the
+        future of creating complex AI systems.
       </p>
+      <a href="genai/langchain/langgraph-tutorial.html" class="btn btn-outline">Read Tutorial →</a>
     </div>
 
-    <div class="topics">
+    <div class="grid grid-3">
       <!-- Python Card -->
       <div class="card">
-        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python logo" />
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python logo"
+          class="card-icon" />
         <h3>🐍 Learn Python</h3>
-        <p>Programming ka foundation yahan se start hota hai. Is track me aap seekhenge: <strong>lists, loops, functions, aur file handling</strong> — sab Roman Hindi me, real projects ke sath.</p>
+        <p>Programming ka foundation yahan se start hota hai. Lists, loops, functions, aur file handling seekhein real
+          projects ke sath.</p>
         <a href="python/index.html" class="btn">Start Python</a>
       </div>
 
-      <!-- AI Card
-      <div class="card">
-        <img src="https://cdn-icons-png.flaticon.com/512/4712/4712107.png" alt="AI icon" />
-        <h3>🤖 Learn Artificial Intelligence</h3>
-        <p>AI, Machine Learning aur Neural Networks ke basics seekho simple examples aur projects ke sath.</p>
-        <a href="ai/index.html" class="btn">Start AI</a>
-      </div> -->
-      
       <!-- GenAI Card -->
       <div class="card">
-        <img src="https://cdn-icons-png.flaticon.com/512/13749/13749712.png" alt="GenAI icon" />
+        <img src="https://cdn-icons-png.flaticon.com/512/13749/13749712.png" alt="GenAI icon" class="card-icon" />
         <h3>🧬 Generative AI</h3>
-        <p>Text, images, aur code generate karna seekho. Hum cover karenge: <strong>LangChain, RAG, Fine-tuning, aur API integration</strong> with modern AI models.</p>
+        <p>Text, images, aur code generate karna seekho. LangChain, RAG, Fine-tuning, aur API integration cover karenge.
+        </p>
         <a href="genai/index.html" class="btn">Start Learning</a>
       </div>
 
       <!-- Deep Learning Card -->
       <div class="card">
-        <img src="https://cdn-icons-png.flaticon.com/512/11495/11495445.png" alt="Deep Learning icon" />
-        <h3>🧠 Learn Deep Learning</h3>
-        <p>Neural networks ki duniya me dive karein. Hum cover karenge: <strong>PyTorch basics, Tensors, training loops, aur GPU optimization</strong>, sab kuch practical examples ke sath.</p>
+        <img src="https://cdn-icons-png.flaticon.com/512/11495/11495445.png" alt="Deep Learning icon"
+          class="card-icon" />
+        <h3>🧠 Deep Learning</h3>
+        <p>Neural networks ki duniya me dive karein. PyTorch basics, Tensors, aur training loops practical examples ke
+          sath.</p>
         <a href="deep_learning/index.html" class="btn">Start Learning</a>
       </div>
 
       <!-- School Card -->
       <div class="card">
-        <img src="https://cdn-icons-png.flaticon.com/512/2232/2232688.png" alt="School icon" />
+        <img src="https://cdn-icons-png.flaticon.com/512/2232/2232688.png" alt="School icon" class="card-icon" />
         <h3>🎓 Maths & Science</h3>
-        <p>School students ke liye Maths aur Science ke concepts. Hum cover karenge: <strong>NCERT syllabus, important formulas, aur problem-solving tricks</strong> — sab easy language me.</p>
+        <p>School students ke liye Maths aur Science ke concepts. NCERT syllabus aur problem-solving tricks easy
+          language me.</p>
         <a href="Maths & Science/index.html" class="btn">Start Learning</a>
       </div>
+    </div>
+
+    <!-- About Us Section -->
+    <div
+      style="margin-top: 4rem; background: var(--white); padding: 2rem; border-radius: var(--radius-lg); text-align: center;">
+      <h2>Hamara Mission 🎯</h2>
+      <p style="max-width: 800px; margin: 1rem auto; color: var(--gray);">
+        <strong>AIkiPadhai</strong> ka mission technology education ko sabke liye accessible banana hai. Hum maante hain
+        ki bhasha (language) seekhne me rukawat nahi banani chahiye. Isliye, hum Python aur AI jaise complex topics ko
+        <strong>Roman Hindi</strong> me, simple aur practical tareeke se samjhate hain.
+      </p>
+      <a href="about.html" class="btn btn-outline">Read More About Us</a>
     </div>
   </div>
 
   <footer>
     <p>© 2025 AIkiPadhai | Made with ❤️ to teach Python & AI in Roman Hindi</p>
-    <div>
-      <a href="about.html">About</a> | <a href="contact.html">Contact</a> | <a href="privacy-policy.html">Privacy Policy</a>
+    <div style="margin-top: 1rem;">
+      <a href="about.html">About</a> | <a href="contact.html">Contact</a> | <a href="privacy-policy.html">Privacy
+        Policy</a>
     </div>
   </footer>
+
+  <script src="script.js"></script>
 </body>
+
 </html>
