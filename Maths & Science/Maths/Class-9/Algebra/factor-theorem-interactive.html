@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Interactive Factor Theorem</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #050505;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        #input_video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            visibility: hidden;
+        }
+
+        /* UI Overlay - Full Screen Wrapper */
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            /* Above canvas */
+            pointer-events: none;
+        }
+
+        /* Title */
+        h1 {
+            font-family: 'Segoe UI', sans-serif;
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            top: 0;
+            margin: 0;
+            padding-top: 20px;
+            font-size: 28px;
+            color: #4db8ff;
+            text-shadow: 0 0 10px #4db8ff;
+        }
+
+        /* LEFT SIDE CONTAINER */
+        .left-panel {
+            position: absolute;
+            top: 50%;
+            left: 50px;
+            transform: translateY(-50%);
+            width: 450px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            pointer-events: auto;
+            /* Allow text selection if needed */
+        }
+
+        /* Calculation Board */
+        .calc-board {
+            background: rgba(10, 15, 20, 0.9);
+            border: 2px solid #333;
+            padding: 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            color: #eee;
+            font-size: 18px;
+            line-height: 1.6;
+            transition: border-color 0.3s;
+        }
+
+        .calc-board.found {
+            border-color: #00ff00;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+        }
+
+        .equation-static {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .calc-row {
+            display: flex;
+            align-items: center;
+            min-height: 32px;
+        }
+
+        .calc-content {
+            flex-grow: 1;
+            white-space: nowrap;
+        }
+
+        /* Variables */
+        .var-x {
+            color: #ffeb3b;
+            font-weight: bold;
+        }
+
+        .result-final {
+            font-weight: bold;
+            font-size: 24px;
+            padding-top: 10px;
+        }
+
+        /* STATUS BADGE (Fixed) */
+        #status-msg {
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 22px;
+            font-weight: bold;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            opacity: 0;
+            /* Hidden by default */
+            transition: opacity 0.3s, transform 0.3s;
+            transform: scale(0.9);
+            background: transparent;
+            color: white;
+            border: 2px solid transparent;
+        }
+
+        /* Specific class for success state */
+        .success-badge {
+            background-color: #00ff00 !important;
+            color: #000000 !important;
+            /* Force Black Text */
+            border: 2px solid #004400 !important;
+            opacity: 1 !important;
+            transform: scale(1) !important;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+            z-index: 100;
+        }
+
+        .neutral-badge {
+            opacity: 0;
+        }
+
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            z-index: 20;
+            font-family: sans-serif;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+        }
+    </style>
+
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <div id="loading">Initializing AI & Graphics...<br>Please allow camera access.</div>
+
+    <div id="ui-layer">
+        <h1>Factor Theorem: P(x) = x³ - 6x² + 11x - 6</h1>
+
+        <div class="left-panel">
+            <div class="calc-board" id="calc-board">
+                <div class="equation-static">Substituting Value</div>
+                <div class="calc-row"><span class="calc-content" id="step-1">P(...) = ...</span></div>
+                <div class="calc-row"><span class="calc-content" id="step-2">...</span></div>
+                <div class="calc-row"><span class="calc-content" id="step-3">...</span></div>
+                <div class="calc-row" style="margin-top:15px; border-top: 1px dashed #444; padding-top:5px;">
+                    <span class="calc-content result-final" id="step-4">Result = ?</span>
+                </div>
+            </div>
+
+            <!-- The Status Box -->
+            <div id="status-msg" class="neutral-badge">
+                <!-- Content injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <video id="input_video"></video>
+    <div id="canvas-container"></div>
+
+    <script>
+        // ==========================================
+        // 1. THREE.JS SCENE
+        // ==========================================
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x050505, 0.02);
+
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 25;
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        container.appendChild(renderer.domElement);
+
+        // Particles
+        const geometry = new THREE.BufferGeometry();
+        const particlesCount = 3500;
+        const posArray = new Float32Array(particlesCount * 3);
+        const targetPosArray = new Float32Array(particlesCount * 3);
+
+        for (let i = 0; i < particlesCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 30;
+        }
+
+        // Target: Perfect Sphere
+        for (let i = 0; i < particlesCount; i++) {
+            const phi = Math.acos(-1 + (2 * i) / particlesCount);
+            const theta = Math.sqrt(particlesCount * Math.PI) * phi;
+            const r = 9;
+            targetPosArray[i * 3] = r * Math.cos(theta) * Math.sin(phi);
+            targetPosArray[i * 3 + 1] = r * Math.sin(theta) * Math.sin(phi);
+            targetPosArray[i * 3 + 2] = r * Math.cos(phi);
+        }
+
+        geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const material = new THREE.PointsMaterial({
+            size: 0.2, color: 0x4db8ff, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending
+        });
+
+        const particlesMesh = new THREE.Points(geometry, material);
+        particlesMesh.position.x = 10; // Move sphere to Right
+        scene.add(particlesMesh);
+        scene.add(new THREE.AmbientLight(0x404040));
+
+        // ==========================================
+        // 2. MATH LOGIC & UI UPDATES
+        // ==========================================
+        let currentX = 0;
+        let smoothedX = 0;
+
+        const uiStep1 = document.getElementById('step-1');
+        const uiStep2 = document.getElementById('step-2');
+        const uiStep3 = document.getElementById('step-3');
+        const uiStep4 = document.getElementById('step-4');
+        const calcBoard = document.getElementById('calc-board');
+        const statusMsg = document.getElementById('status-msg');
+
+        // Helper to format Factor String (x - a) or (x + a)
+        function getFactorString(val) {
+            if (val >= 0) return `(x - ${val})`;
+            return `(x + ${Math.abs(val)})`;
+        }
+
+        function updateMath(val) {
+            let displayX = val;
+            // Snap logic
+            if (Math.abs(val - Math.round(val)) < 0.15) {
+                displayX = Math.round(val);
+            } else {
+                displayX = parseFloat(val.toFixed(1));
+            }
+
+            // P(x) calculation
+            const term1 = Math.pow(displayX, 3);
+            const term2 = 6 * Math.pow(displayX, 2);
+            const term3 = 11 * displayX;
+            const result = term1 - term2 + term3 - 6;
+
+            const xHtml = `<span class="var-x">(${displayX})</span>`;
+
+            // Update Steps
+            uiStep1.innerHTML = `P${xHtml} = ${xHtml}³ - 6${xHtml}² + 11${xHtml} - 6`;
+
+            const sq = Math.pow(displayX, 2).toFixed(Number.isInteger(displayX) ? 0 : 2);
+            const t1 = term1.toFixed(Number.isInteger(term1) ? 0 : 2);
+            uiStep2.innerHTML = `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = ${t1} - 6(${sq}) + 11(${displayX}) - 6`;
+
+            const t2 = (6 * sq).toFixed(Number.isInteger(displayX) ? 0 : 2);
+            const t3 = term3.toFixed(Number.isInteger(displayX) ? 0 : 2);
+            uiStep3.innerHTML = `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = ${t1} - ${t2} + ${t3} - 6`;
+
+            const resFixed = result.toFixed(Number.isInteger(result) ? 0 : 2);
+            let color = Math.abs(result) < 0.1 ? '#00ff00' : '#ff4444';
+            uiStep4.innerHTML = `P(${displayX}) = <span style="color:${color}">${resFixed}</span>`;
+
+            return { result: result, x: displayX };
+        }
+
+        // ==========================================
+        // 3. HAND TRACKING
+        // ==========================================
+        const videoElement = document.getElementById('input_video');
+
+        function onResults(results) {
+            document.getElementById('loading').style.display = 'none';
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                let x = 1 - results.multiHandLandmarks[0][8].x;
+                currentX = (x * 6) - 1;
+            }
+        }
+
+        const hands = new Hands({ locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}` });
+        hands.setOptions({ maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.7, minTrackingConfidence: 0.7 });
+        hands.onResults(onResults);
+
+        const cameraUtils = new Camera(videoElement, {
+            onFrame: async () => { await hands.send({ image: videoElement }); },
+            width: 640, height: 480
+        });
+        cameraUtils.start();
+
+        // ==========================================
+        // 4. ANIMATION & STATE MANAGEMENT
+        // ==========================================
+        const clock = new THREE.Clock();
+        let lastFactorVal = null; // To prevent text thrashing
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const time = clock.getElapsedTime();
+
+            smoothedX += (currentX - smoothedX) * 0.1;
+            const data = updateMath(smoothedX);
+            const isFactor = Math.abs(data.result) < 0.15;
+
+            // UI STATE LOGIC
+            if (isFactor) {
+                // Apply Success Class
+                if (!statusMsg.classList.contains('success-badge')) {
+                    statusMsg.className = "success-badge";
+                    calcBoard.classList.add("found");
+                    material.color.setHex(0x00ff00);
+                }
+
+                // Update Text ONLY if the value changed (Optimization)
+                if (lastFactorVal !== data.x) {
+                    statusMsg.innerHTML = `
+                    FACTOR FOUND!<br>
+                    <span style="font-size:16px; font-weight:normal;">Remainder is 0</span><br>
+                    <div style="margin-top:5px; font-size:20px; border-top:1px solid #004400; padding-top:5px;">
+                        ${getFactorString(data.x)} is a factor
+                    </div>
+                `;
+                    lastFactorVal = data.x;
+                }
+            } else {
+                // Reset State
+                if (statusMsg.classList.contains('success-badge')) {
+                    statusMsg.className = "neutral-badge";
+                    calcBoard.classList.remove("found");
+                    lastFactorVal = null; // Reset tracker
+                }
+
+                // Color Dynamics
+                if (Math.abs(data.result) < 3) material.color.setHex(0xffaa00);
+                else material.color.setHex(0x4db8ff);
+            }
+
+            // Particle Physics
+            const positions = particlesMesh.geometry.attributes.position.array;
+            for (let i = 0; i < particlesCount; i++) {
+                const ix = i * 3;
+                const iy = i * 3 + 1;
+                const iz = i * 3 + 2;
+
+                if (isFactor) {
+                    // Sphere Form
+                    positions[ix] += (targetPosArray[ix] - positions[ix]) * 0.1;
+                    positions[iy] += (targetPosArray[iy] - positions[iy]) * 0.1;
+                    positions[iz] += (targetPosArray[iz] - positions[iz]) * 0.1;
+                } else {
+                    // Chaos Form
+                    const errorMag = Math.min(Math.abs(data.result), 10) * 0.5;
+                    const noiseX = Math.sin(time * 2 + i) * errorMag;
+                    const noiseY = Math.cos(time * 3 + i) * errorMag;
+                    const noiseZ = Math.sin(time + i) * errorMag;
+
+                    positions[ix] += ((targetPosArray[ix] + noiseX * 5) - positions[ix]) * 0.05;
+                    positions[iy] += ((targetPosArray[iy] + noiseY * 5) - positions[iy]) * 0.05;
+                    positions[iz] += ((targetPosArray[iz] + noiseZ * 5) - positions[iz]) * 0.05;
+                }
+            }
+
+            particlesMesh.geometry.attributes.position.needsUpdate = true;
+            particlesMesh.rotation.y = time * 0.15;
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+    </script>
+</body>
+
+</html>
