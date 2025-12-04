@@ -180,6 +180,10 @@
     <div id="loading">Initializing AI & Graphics...<br>Please allow camera access.</div>
 
     <div id="ui-layer">
+        <a href="factorisation-of-polynomials.html"
+            style="position: absolute; top: 20px; left: 20px; z-index: 100; color: white; text-decoration: none; border: 1px solid rgba(255,255,255,0.3); padding: 8px 15px; border-radius: 5px; background: rgba(0,0,0,0.5); font-family: sans-serif; pointer-events: auto; transition: background 0.3s;">
+            ← Back to Lesson
+        </a>
         <h1>Factor Theorem: P(x) = x³ - 6x² + 11x - 6</h1>
 
         <div class="left-panel">
@@ -320,11 +324,30 @@
         hands.setOptions({ maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.7, minTrackingConfidence: 0.7 });
         hands.onResults(onResults);
 
-        const cameraUtils = new Camera(videoElement, {
-            onFrame: async () => { await hands.send({ image: videoElement }); },
-            width: 640, height: 480
-        });
-        cameraUtils.start();
+        // Check for camera support
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            const cameraUtils = new Camera(videoElement, {
+                onFrame: async () => { await hands.send({ image: videoElement }); },
+                width: 640, height: 480
+            });
+            cameraUtils.start().catch(err => {
+                console.error("Camera start error:", err);
+                document.getElementById('loading').innerHTML = `Error starting camera: ${err.message}`;
+            });
+        } else {
+            const loadingDiv = document.getElementById('loading');
+            loadingDiv.style.display = 'block';
+            loadingDiv.innerHTML = `
+                <div style="color: #ff4444; text-align: center;">
+                    <h3>Camera Access Error</h3>
+                    <p>Your browser does not support camera access in this context.</p>
+                    <p style="color: #ddd; font-size: 14px;">
+                        Please ensure you are accessing this page via <b>HTTPS</b> (secure connection).<br>
+                        If you are on GitHub Pages, check that the URL starts with <b>https://</b>.
+                    </p>
+                </div>
+            `;
+        }
 
         // ==========================================
         // 4. ANIMATION & STATE MANAGEMENT
