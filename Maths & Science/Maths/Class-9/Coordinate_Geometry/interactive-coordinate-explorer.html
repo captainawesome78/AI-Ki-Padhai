@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>AI Coordinate Explorer</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #050505;
+            font-family: 'Segoe UI', sans-serif;
+            color: white;
+            user-select: none;
+        }
+
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        #input_video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 320px;
+            height: 240px;
+            /* opacity: 0.1; Debug visibility */
+            visibility: hidden;
+            transform: scaleX(-1);
+            /* Mirror functionality */
+        }
+
+        /* UI Overlay */
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* HEADER */
+        .header-bar {
+            padding: 20px;
+            text-align: center;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent);
+        }
+
+        h1 {
+            margin: 0;
+            color: #d8b4fe;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 24px;
+            text-shadow: 0 0 10px #a855f7;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            pointer-events: auto;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .back-btn:hover {
+            color: white;
+            border-color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* HUD - CURRENT COORDINATES */
+        .hud-panel {
+            position: absolute;
+            top: 80px;
+            right: 20px;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid #7c3aed;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
+            min-width: 180px;
+        }
+
+        .hud-label {
+            font-size: 12px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .hud-value {
+            font-family: 'Courier New', monospace;
+            font-size: 28px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        #current-coords {
+            color: #22d3ee;
+            text-shadow: 0 0 8px #22d3ee;
+        }
+
+        /* GAME MISSION PANEL */
+        .mission-panel {
+            align-self: center;
+            margin-bottom: 40px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #eab308;
+            border-radius: 16px;
+            padding: 20px 40px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(234, 179, 8, 0.2);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-origin: center;
+        }
+
+        .mission-panel.success {
+            border-color: #22c55e;
+            background: rgba(20, 83, 45, 0.9);
+            box-shadow: 0 0 50px rgba(34, 197, 94, 0.5);
+            transform: scale(1.1);
+        }
+
+        .mission-title {
+            font-size: 14px;
+            color: #fde047;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .mission-target {
+            font-size: 36px;
+            font-weight: 800;
+            color: white;
+            margin: 5px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Loading Screen */
+        #loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #a855f7;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <div id="loading">
+        <div class="spinner"></div>
+        <div style="text-align: center;">
+            <div style="font-weight: bold; font-size: 18px;">Initializing AI...</div>
+            <div style="color: #888; margin-top: 5px; font-size: 14px;">Please allow camera access to control the
+                cursor.</div>
+        </div>
+    </div>
+
+    <!-- UI Layer -->
+    <div id="ui-layer">
+        <div class="header-bar">
+            <a href="Coordinate_geometry.html" class="back-btn">← Back</a>
+            <h1>Coordinate Explorer</h1>
+        </div>
+
+        <div class="hud-panel">
+            <div class="hud-label">Your Position</div>
+            <div id="current-coords" class="hud-value">(0, 0)</div>
+        </div>
+
+        <div class="mission-panel" id="mission-panel">
+            <div class="mission-title" id="mission-title">MISSION</div>
+            <div class="mission-target" id="mission-target">Move to (3, 2)</div>
+            <div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 5px;">Use your hand to move the Blue
+                Orb</div>
+        </div>
+    </div>
+
+    <!-- Input Video for MediaPipe (Hidden) -->
+    <video id="input_video"></video>
+    <!-- Three.js Container -->
+    <div id="canvas-container"></div>
+
+    <script>
+        // ==========================================
+        // CONFIGURATION
+        // ==========================================
+        const GRID_SIZE = 10; // -5 to +5 range visible
+        const GRID_STEP = 1;
+
+        let targetX = 3;
+        let targetY = 2;
+        let currentHandX = 0;
+        let currentHandY = 0;
+        let smoothedX = 0;
+        let smoothedY = 0;
+        let isSuccess = false;
+
+        // ==========================================
+        // 1. THREE.JS SCENE SETUP
+        // ==========================================
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x050505, 0.03);
+
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 0, 12); // Front view
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setClearColor(0x050505);
+        container.appendChild(renderer.domElement);
+
+        // LIGHTING
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+
+        const pointLight = new THREE.PointLight(0xa855f7, 1, 50);
+        pointLight.position.set(5, 5, 5);
+        scene.add(pointLight);
+
+        // ==========================================
+        // 2. WORLD OBJECTS
+        // ==========================================
+
+        // GRID HELPERS
+        // Main Axis Lines
+        function createLine(start, end, color, thickness = 1) {
+            const material = new THREE.LineBasicMaterial({ color: color, linewidth: thickness });
+            const points = [start, end];
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            return new THREE.Line(geometry, material);
+        }
+
+        // X-Axis (Red-ish)
+        const xAxis = createLine(new THREE.Vector3(-100, 0, 0), new THREE.Vector3(100, 0, 0), 0xff4444, 2);
+        scene.add(xAxis);
+
+        // Y-Axis (Green-ish)
+        const yAxis = createLine(new THREE.Vector3(0, -100, 0), new THREE.Vector3(0, 100, 0), 0x44ff44, 2);
+        scene.add(yAxis);
+
+        // Grid Lines
+        const gridGroup = new THREE.Group();
+        const gridMaterial = new THREE.LineBasicMaterial({ color: 0x333333, transparent: true, opacity: 0.5 });
+
+        for (let i = -10; i <= 10; i++) {
+            if (i === 0) continue;
+            // Vertical
+            let geoV = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(i, -10, 0), new THREE.Vector3(i, 10, 0)]);
+            gridGroup.add(new THREE.Line(geoV, gridMaterial));
+            // Horizontal
+            let geoH = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-10, i, 0), new THREE.Vector3(10, i, 0)]);
+            gridGroup.add(new THREE.Line(geoH, gridMaterial));
+        }
+        scene.add(gridGroup);
+
+        // CURSOR (The Player) -- Blue Orb
+        const cursorGeo = new THREE.SphereGeometry(0.3, 32, 32);
+        const cursorMat = new THREE.MeshStandardMaterial({
+            color: 0x22d3ee,
+            emissive: 0x22d3ee,
+            emissiveIntensity: 0.8
+        });
+        const cursorMesh = new THREE.Mesh(cursorGeo, cursorMat);
+        scene.add(cursorMesh);
+
+        // Ghost Lines (Lines projecting to Axes)
+        const ghostMat = new THREE.LineDashedMaterial({ color: 0x22d3ee, dashSize: 0.2, gapSize: 0.1, opacity: 0.5, transparent: true });
+        const ghostGeo = new THREE.BufferGeometry();
+        const ghostLines = new THREE.LineSegments(ghostGeo, ghostMat);
+        scene.add(ghostLines);
+
+        function updateGhostLines(x, y) {
+            const points = [
+                new THREE.Vector3(x, y, 0), new THREE.Vector3(x, 0, 0), // To X-axis
+                new THREE.Vector3(x, y, 0), new THREE.Vector3(0, y, 0)  // To Y-axis
+            ];
+            ghostGeo.setFromPoints(points);
+            ghostLines.computeLineDistances(); // Required for dashed lines
+        }
+
+        // TARGET (The Goal) -- Gold Ring
+        const targetGeo = new THREE.TorusGeometry(0.4, 0.08, 16, 32);
+        const targetMat = new THREE.MeshStandardMaterial({ color: 0xeab308, emissive: 0xeab308, emissiveIntensity: 0.5 });
+        const targetMesh = new THREE.Mesh(targetGeo, targetMat);
+        targetMesh.position.set(targetX, targetY, 0);
+        scene.add(targetMesh);
+
+        // Particles System (Background Stars)
+        const starsGeo = new THREE.BufferGeometry();
+        const starsCount = 2000;
+        const posArray = new Float32Array(starsCount * 3);
+        const scaleArray = new Float32Array(starsCount);
+
+        for (let i = 0; i < starsCount * 3; i += 3) {
+            posArray[i] = (Math.random() - 0.5) * 40;   // x
+            posArray[i + 1] = (Math.random() - 0.5) * 40; // y
+            posArray[i + 2] = (Math.random() - 0.5) * 30 - 10; // z (push back)
+            scaleArray[i / 3] = Math.random();
+        }
+        starsGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+        const starsMat = new THREE.PointsMaterial({
+            size: 0.1,
+            color: 0xffffff,
+            transparent: true,
+            opacity: 0.6
+        });
+        const starsMesh = new THREE.Points(starsGeo, starsMat);
+        scene.add(starsMesh);
+
+
+        // ==========================================
+        // 3. GAME LOGIC
+        // ==========================================
+
+        // Setup new Mission
+        function setNextMission() {
+            // Random int between -5 and 5
+            targetX = Math.floor(Math.random() * 11) - 5;
+            targetY = Math.floor(Math.random() * 9) - 4; // limit y slightly for aspect ratio
+
+            // Move visual target
+            // Animate transition could be nice, but instant is fine
+            targetMesh.position.set(targetX, targetY, 0);
+
+            // Update UI
+            document.getElementById('mission-panel').classList.remove('success');
+            document.getElementById('mission-title').innerText = "MISSION";
+            document.getElementById('mission-title').style.color = "#fde047";
+            document.getElementById('mission-target').innerText = `Move to (${targetX}, ${targetY})`;
+            isSuccess = false;
+        }
+
+        function checkSuccess(x, y) {
+            if (isSuccess) return;
+
+            // Check distance
+            const dist = Math.sqrt(Math.pow(x - targetX, 2) + Math.pow(y - targetY, 2));
+
+            // Tolerance radius 0.5
+            if (dist < 0.5) {
+                isSuccess = true;
+
+                // Success FX
+                document.getElementById('mission-panel').classList.add('success');
+                document.getElementById('mission-title').innerText = "EXCELLENT!";
+                document.getElementById('mission-title').style.color = "#fff";
+                document.getElementById('mission-target').innerText = "Target Found!";
+
+                // Trigger next mission after delay
+                setTimeout(() => {
+                    setNextMission();
+                }, 2000);
+            }
+        }
+
+        // ==========================================
+        // 4. HAND TRACKING LOOP
+        // ==========================================
+        const videoElement = document.getElementById('input_video');
+
+        function onResults(results) {
+            document.getElementById('loading').style.display = 'none';
+
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                const hand = results.multiHandLandmarks[0];
+
+                // Index Finger Tip is index 8
+                const indexTip = hand[8];
+
+                // Map coordinates: MediaPipe (0,0 top-left) -> ThreeJS (World Coords)
+                // We want to map [0,1] to roughly [-8, 8] horizontally and [-6, 6] vertically
+                // Invert X because camera is mirrored
+                const rawX = (1 - indexTip.x) * 16 - 8;
+                const rawY = (1 - indexTip.y) * 12 - 6;
+
+                currentHandX = rawX;
+                currentHandY = rawY;
+            }
+        }
+
+        const hands = new Hands({ locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}` });
+        hands.setOptions({
+            maxNumHands: 1,
+            modelComplexity: 1,
+            minDetectionConfidence: 0.6,
+            minTrackingConfidence: 0.6
+        });
+        hands.onResults(onResults);
+
+        const cameraUtils = new Camera(videoElement, {
+            onFrame: async () => { await hands.send({ image: videoElement }); },
+            width: 640,
+            height: 480
+        });
+        cameraUtils.start().catch(err => {
+            console.error(err);
+            document.getElementById('loading').innerHTML = `<div style="color:red; text-align:center;">Camera Denied/Error<br><small>${err.message}</small><br><br>Please use HTTPS or Localhost.</div>`;
+        });
+
+
+        // ==========================================
+        // 5. ANIMATION LOOP
+        // ==========================================
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const time = clock.getElapsedTime();
+
+            // Smooth Movement (Lerp)
+            smoothedX += (currentHandX - smoothedX) * 0.15;
+            smoothedY += (currentHandY - smoothedY) * 0.15;
+
+            // Update Cursor Position
+            cursorMesh.position.set(smoothedX, smoothedY, 0);
+            updateGhostLines(smoothedX, smoothedY);
+
+            // Update UI Number (Rounded)
+            const dispX = Math.round(smoothedX * 10) / 10;
+            const dispY = Math.round(smoothedY * 10) / 10;
+            document.getElementById('current-coords').innerText = `(${dispX.toFixed(1)}, ${dispY.toFixed(1)})`;
+
+            // Rotate Target Ring
+            targetMesh.rotation.x += 0.02;
+            targetMesh.rotation.y += 0.03;
+
+            // Success Check
+            checkSuccess(smoothedX, smoothedY);
+
+            // Parallax Stars
+            // Rotate entire star system slowly
+            starsMesh.rotation.z = time * 0.02;
+
+            renderer.render(scene, camera);
+        }
+
+        setNextMission(); // Init game
+        animate();
+
+        // Responsive Resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+    </script>
+</body>
+
+</html>
