@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277"
+        crossorigin="anonymous"></script>
+    <title>Introduction to Euclid's Geometry - Class 9 Maths | AIkiPadhai</title>
+    <link rel="stylesheet" href="../../../../style.css" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #fafafa;
+            color: #333;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            background: #e11d48;
+            /* Red/Pink theme for Geometry */
+            color: white;
+            text-align: center;
+            padding: 25px 15px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 26px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        nav {
+            margin-top: 8px;
+        }
+
+        nav a {
+            color: #ffe4e6;
+            text-decoration: none;
+            margin: 0 12px;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        nav a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .content-section {
+            margin-bottom: 35px;
+        }
+
+        .content-section h2 {
+            font-size: 24px;
+            color: #be123c;
+            border-bottom: 2px solid #fda4af;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .content-section h3 {
+            font-size: 20px;
+            color: #881337;
+            margin-top: 25px;
+        }
+
+        p,
+        li {
+            font-size: 17px;
+            color: #444;
+        }
+
+        .example {
+            background: #fff1f2;
+            padding: 15px;
+            border-left: 4px solid #e11d48;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .example-title {
+            font-weight: bold;
+            color: #9f1239;
+        }
+
+        .story-box {
+            background: #ecfdf5;
+            border-left: 5px solid #10b981;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .story-title {
+            font-weight: bold;
+            color: #047857;
+            font-size: 18px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .story-title span {
+            margin-right: 10px;
+            font-size: 22px;
+        }
+
+        .definition-box {
+            background-color: #f0f9ff;
+            border: 1px solid #bae6fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .postulate-list {
+            list-style-type: none;
+            counter-reset: postulate-counter;
+            padding: 0;
+        }
+
+        .postulate-list li {
+            counter-increment: postulate-counter;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .postulate-list li::before {
+            content: "Postulate " counter(postulate-counter);
+            display: block;
+            font-weight: 800;
+            color: #e11d48;
+            margin-bottom: 5px;
+            font-family: 'Outfit', sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Introduction to Euclid's Geometry</h1>
+        <nav>
+            <a href="../../../../index.html">Home</a>
+            <a href="../../index.html">Maths & Science</a>
+            <a href="../index.html">Class 9 Maths</a>
+            <a href="geometry.html">Geometry Unit</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="content-section">
+            <h2>🌍 History: Geometry in India & World</h2>
+            <p>"Geometry" word aaya hai Greek language se: <strong>Geo</strong> (Earth) + <strong>Metrein</strong>
+                (Measure). Matlab "Zameen ko naapna".</p>
+
+            <p>Puraane zamaane mein logon ko zameen naapne ki zarurat padti thi, buildings banane ke liye, aur religious
+                altars (havan kund) banane ke liye.</p>
+
+            <div class="story-box">
+                <div class="story-title"><span>🇮🇳</span> Story: The Sulba Sutras</div>
+                <p>India mein <strong>Sulba Sutras</strong> (around 800 BC) geometry ka earliest written record hai.
+                    Vedic times mein, yagya ke liye jo altars bante the, unki shapes (squares, circles) bahut precise
+                    honi chahiye thi.</p>
+                <p>Example: Agar ek square altar banana hai jiska area circle altar ke barabar ho, toh iske liye
+                    geometry ke rules use hote the.</p>
+            </div>
+
+            <p>Lekin pehle geometry knowledge bikhra hua (scattered) tha. Phir aaya ek teacher — <strong>Euclid</strong>
+                (Egypt, 300 BC) — jise "Father of Geometry" kaha jata hai. Usne us time ki saari geometry ko collect
+                kiya aur ek systematic book likhi jiska naam tha <strong>"Elements"</strong>.</p>
+        </section>
+
+        <section class="content-section">
+            <h2>🏗️ Euclid's Definitions</h2>
+            <p>Euclid ne geometry ko define karna start kiya sabse choti cheezon se. Kuch examples dekho:</p>
+
+            <div class="definition-box">
+                <p><strong>1. Point:</strong> Ek point wo hai jiska koi part nahi hota. (Sirf ek dot . )</p>
+            </div>
+            <div class="definition-box">
+                <p><strong>2. Line:</strong> Ek line wo hai jiski sirf length hoti hai, choudai (breadth) nahi hoti.</p>
+            </div>
+            <div class="definition-box">
+                <p><strong>3. Surface:</strong> Surface wo hai jiski length aur breadth dono hoti hai.</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>🤔 Axioms vs Postulates: Kya Fark Hai?</h2>
+            <p>Euclid ne kuch baatein mani jo "Universal Truths" thi – unhe prove karne ki zarurat nahi thi. Unko usne
+                Axioms aur Postulates kaha.</p>
+
+            <ul>
+                <li><strong>Axioms:</strong> Aisi general sachai jo har jagah apply hoti hai (sirf Maths mein nahi).
+                    <br><em>Ex: "The whole is greater than the part." (Pura cake hamesha uske ek tukde se bada hota
+                        hai).</em>
+                </li>
+                <br>
+                <li><strong>Postulates:</strong> Aisi sachai jo sirf <strong>Geometry</strong> ke liye bani hain.
+                    <br><em>Ex: "Hum kisi bhi do points ko jod kar ek straight line bana sakte hain."</em>
+                </li>
+                <br>
+                <li><strong>Theorems:</strong> Ye wo statements hain jo axioms aur postulates ka use karke
+                    <strong>PROVE</strong> karni padti hain.</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h2>🖐️ Euclid's 5 Postulates</h2>
+            <p>Euclid ke 5 famous postulates jo geometry ki neev (foundation) hain:</p>
+
+            <ol class="postulate-list">
+                <li>
+                    <strong>Straight Line:</strong> Kisi bhi ek point se dusre point tak ek seedhi line (straight line)
+                    draw ki ja sakti hai.
+                </li>
+                <li>
+                    <strong>Terminated Line:</strong> Ek ruki hui line (line segment) ko dono taraf kitna bhi lamba
+                    kheench (produce) sakte hain.
+                </li>
+                <li>
+                    <strong>Circle:</strong> Kisi bhi point ko center maankar aur kisi bhi distance ko radius lekar ek
+                    circle draw kiya ja sakta hai.
+                </li>
+                <li>
+                    <strong>Right Angles:</strong> Saare Right Angles (90°) ek dusre ke barabar hote hain.
+                </li>
+                <li>
+                    <strong>Parallel Postulate:</strong> Agar ek line doosri do lines ko cross kare, aur ek taraf ke
+                    interior angles ka sum 180° se kam ho, toh wo dono lines aage jakar usi taraf milengi (intersect
+                    karengi). Iska simple matlab: "Parallel lines kabhi nahi milti."
+                </li>
+            </ol>
+
+            <div class="story-box">
+                <div class="story-title"><span>🚂</span> Story: The Train Tracks (5th Postulate)</div>
+                <p>5th Postulate thoda complicated lagta hai, par ise "Train Tracks" se samjho.</p>
+                <p>Agar train ki patriyan (tracks) ek dusre se perfectly parallel na ho, aur thodi si bhi jhuki hui ho,
+                    toh kya hoga? Kahi na kahi door jaakar wo aapas mein takra jayengi (meet kar jayengi).</p>
+                <p>Yahi 5th Postulate kehta hai: Agar lines parallel nahi hain (Matlab angle sum 180° nahi hai), toh wo
+                    meet karengi.</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>⚖️ Relationship between Axiom and Theorem</h2>
+            <p>Axiom ek basic trust hai, aur Theorem uska logical result hai.</p>
+
+            <div class="example">
+                <div class="example-title">Axiom (Man liya gaya sach):</div>
+                <p><strong>Axiom 5.1:</strong> Given two distinct points, there is a unique line that passes through
+                    them.</p>
+                <p><em>(Agar do alag points A aur B hain, toh unse sirf ek hi line guzar sakti hai.)</em></p>
+            </div>
+
+            <div class="example">
+                <div class="example-title">Theorem (Jo prove kiya gaya):</div>
+                <p><strong>Theorem 5.1:</strong> Two distinct lines cannot have more than one point in common.</p>
+                <p><em>(Agar do alag lines hain, toh wo sirf ek hi point par cross kar sakti hain. Wo baar-baar cross
+                        nahi kar sakti jab tak wo straight lines hain.)</em></p>
+                <br>
+                <p><strong>Proof ka Logic:</strong> Agar wo 2 points par cross karti, toh unn 2 points se 2 alag lines
+                    ban jati, jo Axiom 5.1 ke khilaaf hota. Isliye, wo sirf 1 point par hi cross kar sakti hain.</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>📌 Aage Ka Content (Next Chapter)</h2>
+            <p>Euclid ki geometry sirf shapes tak seemit nahi thi, usne humein logically sochna sikhaya. Next chapter
+                mein hum inhi concepts ko use karke Lines aur Angles ke problems solve karenge.</p>
+            <div style="margin-top: 20px;">
+                <a href="lines-and-angles.html" class="btn"
+                    style="display: inline-block; background: #e11d48; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Next
+                    Topic: Lines and Angles →</a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>© 2025 AIkiPadhai | Made with ❤️ to teach Python & AI in Roman Hindi</p>
+        <div style="margin-top: 1rem;">
+            <a href="../../../../about.html">About</a> | <a href="../../../../contact.html">Contact</a> | <a
+                href="../../../../privacy-policy.html">Privacy Policy</a>
+        </div>
+    </footer>
+
+    <script src="../../../../script.js"></script>
+</body>
+
+</html>
