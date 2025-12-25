@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quad Shifter 2.0 - Neon Labs</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #050505; font-family: 'Segoe UI', sans-serif; color: white; user-select: none; }
+        #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; cursor: crosshair; }
+        
+        /* UI Layer */
+        #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; }
+        
+        .header-bar { 
+            position: absolute; top: 0; left: 0; width: 100%; padding: 20px; 
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent); 
+            display: flex; align-items: center; justify-content: space-between;
+            box-sizing: border-box;
+        }
+        
+        .back-btn { 
+            pointer-events: auto; color: rgba(255,255,255,0.7); text-decoration: none; 
+            border: 1px solid rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 4px; 
+            transition: all 0.3s; font-size: 14px; 
+        }
+        .back-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+        h1 { margin: 0; font-size: 24px; color: #22d3ee; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px rgba(34, 211, 238, 0.5); }
+
+        /* Properties Panel */
+        .properties-panel {
+            position: absolute; top: 80px; left: 20px;
+            background: rgba(15, 23, 42, 0.85); border: 1px solid #3b82f6;
+            padding: 15px; border-radius: 12px; min-width: 200px;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+            backdrop-filter: blur(5px);
+        }
+        .prop-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; color: #cbd5e1; }
+        .prop-val { font-family: 'Courier New', monospace; font-weight: bold; color: #fff; }
+        .prop-group-title { font-size: 12px; color: #94a3b8; text-transform: uppercase; margin: 10px 0 5px 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 2px; }
+
+        /* Mission Panel */
+        .mission-panel {
+            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8); border: 2px solid #eab308;
+            padding: 15px 40px; border-radius: 50px; text-align: center;
+            box-shadow: 0 0 30px rgba(234, 179, 8, 0.3);
+            transition: all 0.3s;
+        }
+        .mission-panel.success { border-color: #22c55e; background: rgba(6, 78, 59, 0.9); box-shadow: 0 0 40px rgba(34, 197, 94, 0.6); }
+        .mission-label { font-size: 12px; color: #fde047; text-transform: uppercase; letter-spacing: 1px; }
+        .mission-text { font-size: 24px; font-weight: 800; color: white; margin-top: 5px; }
+
+        /* Classification Badge */
+        .class-badge {
+            position: absolute; top: 80px; right: 20px;
+            background: rgba(0,0,0,0.6); border: 1px solid #a855f7;
+            padding: 10px 20px; border-radius: 8px;
+            text-align: right;
+        }
+        .class-label { font-size: 12px; color: #d8b4fe; }
+        .class-name { font-size: 28px; font-weight: bold; color: #fff; text-shadow: 0 0 10px #a855f7; }
+
+        /* Controls Instructions */
+        .controls-info {
+            position: absolute; bottom: 70px; right: 20px;
+            text-align: right; color: rgba(255,255,255,0.6);
+            font-size: 11px;
+        }
+        .key { color: #22d3ee; font-weight: bold; }
+    </style>
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <div id="ui-layer">
+        <div class="header-bar">
+            <a href="geometry.html" class="back-btn">← Back to Lab</a>
+            <h1>Quad Shifter <span style="font-size:12px; color:#555; vertical-align: middle;">v2.1</span></h1>
+            <div style="width: 80px;"></div> <!-- Spacer -->
+        </div>
+
+        <div class="properties-panel">
+            <div class="prop-group-title">Side Lengths</div>
+            <div class="prop-row"><span>AB:</span> <span id="val-ab" class="prop-val">-</span></div>
+            <div class="prop-row"><span>BC:</span> <span id="val-bc" class="prop-val">-</span></div>
+            <div class="prop-row"><span>CD:</span> <span id="val-cd" class="prop-val">-</span></div>
+            <div class="prop-row"><span>DA:</span> <span id="val-da" class="prop-val">-</span></div>
+            
+            <div class="prop-group-title">Angles</div>
+            <div class="prop-row"><span>∠A:</span> <span id="val-angle-a" class="prop-val">-</span></div>
+            <div class="prop-row"><span>∠B:</span> <span id="val-angle-b" class="prop-val">-</span></div>
+        </div>
+
+        <div class="class-badge">
+            <div class="class-label">Current Shape</div>
+            <div class="class-name" id="shape-name">Quadrilateral</div>
+        </div>
+
+        <div class="mission-panel" id="mission-panel">
+            <div class="mission-label" id="mission-label">CURRENT MISSION</div>
+            <div class="mission-text" id="mission-text">Make a Rectangle</div>
+        </div>
+
+        <div class="controls-info">
+            <div><span class="key">MOUSE:</span> Click & Drag Corners</div>
+            <div><span class="key">HAND:</span> Pinch Radius (Index+Thumb) to Grab</div>
+        </div>
+
+        <div class="controls">
+            <button class="btn" onclick="resetShape()">Reset Shape</button>
+            <button class="btn" id="cam-btn" onclick="toggleCamera()">📷 Enable Hand Control</button>
+        </div>
+    </div>
+
+    <video id="input_video"></video>
+    <div id="canvas-container"></div>
+
+    <script>
+        // ... (Scene Setup same as before)
+        // ==========================================
+        // 1. SCENE SETUP
+        // ==========================================
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x050505);
+
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 12;
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        container.appendChild(renderer.domElement);
+
+        // Grid
+        const grid = new THREE.GridHelper(30, 30, 0x333333, 0x111111);
+        grid.rotation.x = Math.PI / 2;
+        scene.add(grid);
+
+        // Hand Cursor (Visual feedback for hand position)
+        const cursorGeo = new THREE.RingGeometry(0.2, 0.25, 32);
+        const cursorMat = new THREE.MeshBasicMaterial({ color: 0xffff00, opacity: 0.8, transparent: true, side: THREE.DoubleSide });
+        const handCursor = new THREE.Mesh(cursorGeo, cursorMat);
+        handCursor.visible = false; // Hidden by default
+        scene.add(handCursor);
+
+        // ... (Geometry Engine same as before, skipping lines to focus on interaction updates)
+        // ==========================================
+        // 2. GEOMETRY ENGINE
+        // ==========================================
+        const points = [
+            new THREE.Vector3(-3, 2, 0), new THREE.Vector3(3, 2, 0), 
+            new THREE.Vector3(3, -2, 0), new THREE.Vector3(-3, -2, 0)
+        ];
+
+        const handles = [];
+        const handleGeo = new THREE.CircleGeometry(0.4, 32);
+        const handleMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        const handleHoverMat = new THREE.MeshBasicMaterial({ color: 0x22d3ee });
+        const handleGrabbedMat = new THREE.MeshBasicMaterial({ color: 0xeab308 }); // Gold when grabbed
+
+        points.forEach(p => {
+            const mesh = new THREE.Mesh(handleGeo, handleMat);
+            mesh.position.copy(p);
+            scene.add(mesh);
+            handles.push(mesh);
+        });
+
+        // Lines & Fill
+        const lineGeo = new THREE.BufferGeometry();
+        const lineMat = new THREE.LineBasicMaterial({ color: 0x22d3ee, linewidth: 3 });
+        const lines = new THREE.LineLoop(lineGeo, lineMat);
+        scene.add(lines);
+        
+        const shapeGeo = new THREE.BufferGeometry();
+        const shapeMat = new THREE.MeshBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0.15, side: THREE.DoubleSide });
+        const shapeMesh = new THREE.Mesh(shapeGeo, shapeMat);
+        scene.add(shapeMesh);
+
+        function updateGeometry() {
+            handles.forEach((h, i) => h.position.copy(points[i]));
+            const positions = [];
+            points.forEach(p => positions.push(p.x, p.y, p.z));
+            lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            
+            const fillPos = [
+                points[0].x, points[0].y, points[0].z, points[1].x, points[1].y, points[1].z, points[2].x, points[2].y, points[2].z,
+                points[0].x, points[0].y, points[0].z, points[2].x, points[2].y, points[2].z, points[3].x, points[3].y, points[3].z
+            ];
+            shapeGeo.setAttribute('position', new THREE.Float32BufferAttribute(fillPos, 3));
+            calculateProperties();
+        }
+
+        // ... (calculateProperties & detectShape same as before) ...
+        function calculateProperties() {
+            // Distances
+            const dAB = points[0].distanceTo(points[1]);
+            const dBC = points[1].distanceTo(points[2]);
+            const dCD = points[2].distanceTo(points[3]);
+            const dDA = points[3].distanceTo(points[0]);
+
+            const dAC = points[0].distanceTo(points[2]);
+            const dBD = points[1].distanceTo(points[3]);
+
+            function getAngle(p1, center, p2) {
+                const v1 = new THREE.Vector3().subVectors(p1, center).normalize();
+                const v2 = new THREE.Vector3().subVectors(p2, center).normalize();
+                const dot = v1.dot(v2);
+                return Math.acos(Math.max(-1, Math.min(1, dot))) * (180 / Math.PI);
+            }
+            const angA = getAngle(points[3], points[0], points[1]);
+            const angB = getAngle(points[0], points[1], points[2]);
+            const angC = getAngle(points[1], points[2], points[3]);
+            const angD = getAngle(points[2], points[3], points[0]);
+
+            document.getElementById('val-ab').innerText = dAB.toFixed(1);
+            document.getElementById('val-bc').innerText = dBC.toFixed(1);
+            document.getElementById('val-cd').innerText = dCD.toFixed(1);
+            document.getElementById('val-da').innerText = dDA.toFixed(1);
+            document.getElementById('val-angle-a').innerText = Math.round(angA) + "°";
+            document.getElementById('val-angle-b').innerText = Math.round(angB) + "°";
+
+            detectShape(dAB, dBC, dCD, dDA, dAC, dBD, angA, angB, angC, angD);
+        }
+
+        let currentShapeType = "Quadrilateral";
+        function detectShape(ab, bc, cd, da, ac, bd, aA, aB, aC, aD) {
+            const sideTol = 0.3; const angTol = 4; const diagTol = 0.3;
+            const oppSidesEqual = Math.abs(ab - cd) < sideTol && Math.abs(bc - da) < sideTol;
+            const allSidesEqual = oppSidesEqual && Math.abs(ab - bc) < sideTol;
+            const allAngles90 = Math.abs(aA - 90) < angTol && Math.abs(aB - 90) < angTol && Math.abs(aC - 90) < angTol;
+            
+            let type = "Quadrilateral";
+            if (allSidesEqual && allAngles90) type = "Square";
+            else if (oppSidesEqual && allAngles90) type = "Rectangle";
+            else if (allSidesEqual) type = "Rhombus";
+            else if (oppSidesEqual) type = "Parallelogram";
+            if (type === "Quadrilateral") {
+                if ((Math.abs(ab-da) < sideTol && Math.abs(bc-cd) < sideTol) || (Math.abs(ab-bc) < sideTol && Math.abs(cd-da) < sideTol)) type = "Kite";
+            }
+            currentShapeType = type;
+            document.getElementById('shape-name').innerText = type;
+            if (type !== "Quadrilateral") {
+                lines.material.color.setHex(0xa855f7); document.getElementById('shape-name').style.color = "#d8b4fe";
+            } else {
+                lines.material.color.setHex(0x22d3ee); document.getElementById('shape-name').style.color = "#fff";
+            }
+            checkMission(type);
+        }
+
+        // ==========================================
+        // 3. INTERACTION
+        // ==========================================
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+        let activeHandle = -1;
+        let isDragging = false;
+        const dragPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+
+        function getMousePos(e) {
+            return { x: (e.clientX / window.innerWidth) * 2 - 1, y: -(e.clientY / window.innerHeight) * 2 + 1 };
+        }
+        window.addEventListener('mousedown', (e) => {
+            const m = getMousePos(e); mouse.set(m.x, m.y);
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(handles);
+            if (intersects.length > 0) {
+                isDragging = true; activeHandle = handles.indexOf(intersects[0].object);
+                container.style.cursor = 'grabbing';
+            }
+        });
+        window.addEventListener('mousemove', (e) => {
+            if(cameraActive) return; // Ignore mouse if camera active to prevent conflict? Or allow both. Let's allow both but prioritize camera if active.
+            
+            const m = getMousePos(e); mouse.set(m.x, m.y);
+            if (isDragging && activeHandle !== -1) {
+                raycaster.setFromCamera(mouse, camera);
+                const target = new THREE.Vector3();
+                raycaster.ray.intersectPlane(dragPlane, target);
+                target.x = Math.max(-8, Math.min(8, target.x)); target.y = Math.max(-5, Math.min(5, target.y));
+                points[activeHandle].copy(target); updateGeometry();
+            } else {
+                raycaster.setFromCamera(mouse, camera);
+                const intersects = raycaster.intersectObjects(handles);
+                handles.forEach(h => h.material = handleMat);
+                if (intersects.length > 0) { intersects[0].object.material = handleHoverMat; container.style.cursor = 'grab'; }
+                else container.style.cursor = 'crosshair';
+            }
+        });
+        window.addEventListener('mouseup', () => { isDragging = false; activeHandle = -1; container.style.cursor = 'crosshair'; });
+
+        // ... Missions Logic same ...
+        const missions = ["Rectangle", "Rhombus", "Square", "Parallelogram", "Kite"];
+        let missionIdx = 0; let successTimer = null;
+        function checkMission(type) {
+            if (type === missions[missionIdx] && !successTimer) {
+                document.getElementById('mission-panel').classList.add('success');
+                document.getElementById('mission-label').innerText = "SUCCESS!";
+                document.getElementById('mission-label').style.color = "#fff";
+                successTimer = setTimeout(() => {
+                    missionIdx = (missionIdx + 1) % missions.length;
+                    document.getElementById('mission-panel').classList.remove('success');
+                    document.getElementById('mission-label').innerText = "CURRENT MISSION";
+                    document.getElementById('mission-label').style.color = "#fde047";
+                    document.getElementById('mission-text').innerText = "Make a " + missions[missionIdx];
+                    successTimer = null; resetShape(true);
+                }, 2000);
+            }
+        }
+        function resetShape(random = false) {
+            if (random) {
+                points[0].set(-2 - Math.random(), 1 + Math.random(), 0); points[1].set(2 + Math.random(), 2 - Math.random(), 0);
+                points[2].set(2 - Math.random(), -2 + Math.random(), 0); points[3].set(-2 + Math.random(), -1 - Math.random(), 0);
+            } else {
+                points[0].set(-3, 2, 0); points[1].set(3, 2, 0); points[2].set(3, -2, 0); points[3].set(-3, -2, 0);
+            }
+            updateGeometry();
+        }
+
+        // ==========================================
+        // 5. CAMERA HAND CONTROL (IMPROVED)
+        // ==========================================
+        let cameraActive = false;
+        let cameraUtils = null;
+
+        async function toggleCamera() {
+            const btn = document.getElementById('cam-btn');
+            
+            if (!cameraActive) {
+                btn.innerHTML = "⏳ Loading AI...";
+                
+                const hands = new Hands({ locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}` });
+                hands.setOptions({ maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
+                
+                hands.onResults(results => {
+                    if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                        const hand = results.multiHandLandmarks[0];
+                        
+                        // Hand Landmarks
+                        const indexTip = hand[8];
+                        const thumbTip = hand[4];
+                        const middleTip = hand[12];
+                        
+                        // 1. PINCH DETECTION (Index + Thumb)
+                        const pinchDist = Math.hypot(indexTip.x - thumbTip.x, indexTip.y - thumbTip.y);
+                        // 2. FIST DETECTION (Simplified: Tips close to palm base? Or just strict pinch)
+                        // Let's stick to strict pinch but visualize it well.
+                        
+                        const isPinching = pinchDist < 0.08; // Relaxed threshold (was 0.05)
+
+                        // Map to World
+                        const wx = (1 - indexTip.x) * 16 - 8;
+                        const wy = (1 - indexTip.y) * 10 - 5;
+                        const worldPos = new THREE.Vector3(wx, wy, 0);
+
+                        // Visual Feedback: Update Cursor
+                        handCursor.visible = true;
+                        handCursor.position.copy(worldPos);
+                        
+                        if (isPinching) {
+                            handCursor.material.color.setHex(0xff0000); // Red when pinching
+                            handCursor.scale.set(0.8, 0.8, 1);
+                        } else {
+                            handCursor.material.color.setHex(0xffff00); // Yellow when normal
+                            handCursor.scale.set(1, 1, 1);
+                        }
+
+                        // Interaction Logic
+                        if (!isDragging) {
+                            // HOVER Logic
+                            let closestDist = 100;
+                            let closestIdx = -1;
+                            points.forEach((p, i) => {
+                                const d = p.distanceTo(worldPos);
+                                if (d < 1.0) { // Grab radius
+                                    if(d < closestDist) { closestDist = d; closestIdx = i; }
+                                }
+                            });
+                            
+                            handles.forEach(h => h.material = handleMat);
+                            if (closestIdx !== -1) {
+                                handles[closestIdx].material = handleHoverMat;
+                                document.body.style.cursor = 'grab'; // Visual cue even if mouse not used
+                                
+                                // GRAB Logic
+                                if (isPinching) {
+                                    isDragging = true;
+                                    activeHandle = closestIdx;
+                                    handles[activeHandle].material = handleGrabbedMat; // Gold
+                                }
+                            }
+                        } else {
+                            // DRAG Logic
+                            if (isPinching && activeHandle !== -1) {
+                                points[activeHandle].x = Math.max(-8, Math.min(8, wx));
+                                points[activeHandle].y = Math.max(-5, Math.min(5, wy));
+                                handles[activeHandle].material = handleGrabbedMat;
+                                updateGeometry();
+                            } else {
+                                // RELEASE Logic
+                                isDragging = false;
+                                activeHandle = -1;
+                            }
+                        }
+                    } else {
+                         handCursor.visible = false;
+                    }
+                });
+
+                try {
+                    cameraUtils = new Camera(videoElement, {
+                        onFrame: async () => { await hands.send({ image: videoElement }); },
+                        width: 320, height: 240
+                    });
+                    await cameraUtils.start();
+                    
+                    cameraActive = true;
+                    videoElement.style.display = "block";
+                    btn.innerHTML = "📷 Disable Hand Control";
+                    btn.classList.add('active');
+                } catch (e) {
+                    alert("Camera failed to load. Using Mouse Mode.");
+                    btn.innerHTML = "📷 Enable Hand Control";
+                }
+            } else {
+                cameraActive = false;
+                handCursor.visible = false;
+                if (cameraUtils) cameraUtils.stop();
+                videoElement.style.display = "none";
+                btn.innerHTML = "📷 Enable Hand Control";
+                btn.classList.remove('active');
+            }
+        }
+
+        // Init
+        resetShape(); // Start clean
+        animate();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+    </script>
+</body>
+</html>

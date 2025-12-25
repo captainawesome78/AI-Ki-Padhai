@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Cyclic Explorer - Interactive Geometry</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #050505;
+            font-family: 'Segoe UI', sans-serif;
+            color: white;
+            user-select: none;
+        }
+
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        #input_video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 320px;
+            height: 240px;
+            visibility: hidden;
+            transform: scaleX(-1);
+        }
+
+        /* UI Overlay */
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* HEADER */
+        .header-bar {
+            padding: 20px;
+            text-align: center;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent);
+        }
+
+        h1 {
+            margin: 0;
+            color: #d8b4fe;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 24px;
+            text-shadow: 0 0 10px #a855f7;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            pointer-events: auto;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .back-btn:hover {
+            color: white;
+            border-color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* HUD - STATS */
+        .hud-panel {
+            position: absolute;
+            top: 80px;
+            right: 20px;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid #7c3aed;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
+            min-width: 200px;
+        }
+
+        .hud-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .hud-label {
+            color: #94a3b8;
+        }
+
+        .hud-value {
+            font-family: monospace;
+            font-weight: bold;
+            color: #22d3ee;
+        }
+
+        /* GAME MISSION PANEL */
+        .mission-panel {
+            align-self: center;
+            margin-bottom: 40px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #eab308;
+            border-radius: 16px;
+            padding: 20px 40px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(234, 179, 8, 0.2);
+            transition: all 0.3s;
+        }
+
+        .mission-panel.success {
+            border-color: #22c55e;
+            background: rgba(20, 83, 45, 0.9);
+            box-shadow: 0 0 50px rgba(34, 197, 94, 0.5);
+            transform: scale(1.1);
+        }
+
+        .mission-title {
+            font-size: 14px;
+            color: #fde047;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .mission-target {
+            font-size: 28px;
+            font-weight: 800;
+            color: white;
+            margin: 5px 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        /* Loading Screen */
+        #loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #a855f7;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <div id="loading">
+        <div class="spinner"></div>
+        <div style="text-align: center;">
+            <div style="font-weight: bold; font-size: 18px;">Initializing Cyclic Explorer...</div>
+            <div style="color: #888; margin-top: 5px; font-size: 14px;">Please allow camera access.</div>
+        </div>
+    </div>
+
+    <!-- UI Layer -->
+    <div id="ui-layer">
+        <div class="header-bar">
+            <a href="geometry.html" class="back-btn">← Back</a>
+            <h1>Cyclic Explorer</h1>
+        </div>
+
+        <div class="hud-panel">
+            <div class="hud-row">
+                <span class="hud-label">Radius</span>
+                <span class="hud-value">5.0</span>
+            </div>
+            <div class="hud-row">
+                <span class="hud-label">Chord Length</span>
+                <span id="val-chord" class="hud-value">0.0</span>
+            </div>
+            <div class="hud-row">
+                <span class="hud-label">Dist from Center</span>
+                <span id="val-dist" class="hud-value">0.0</span>
+            </div>
+        </div>
+
+        <div class="mission-panel" id="mission-panel">
+            <div class="mission-title" id="mission-title">MISSION</div>
+            <div class="mission-target" id="mission-target">Find Longest Chord (Diameter)</div>
+            <div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 5px;">Move hand Left/Right to slide
+                the Chord</div>
+        </div>
+    </div>
+
+    <video id="input_video"></video>
+    <div id="canvas-container"></div>
+
+    <script>
+        // ==========================================
+        // 0. FALLBACK / LOADING LOGIC (First to ensure it runs)
+        // ==========================================
+        const loadingDiv = document.getElementById('loading');
+        let isMouseMode = false;
+
+        // Timeout to offer fallback if loading hangs
+        const loadTimeout = setTimeout(() => {
+            if (loadingDiv.style.display !== 'none') {
+                loadingDiv.innerHTML = `
+                    <div style="color: #fca5a5; max-width: 400px;">
+                        <h3>Taking too long?</h3>
+                        <p>Camera access might be blocked or AI failed to load.</p>
+                        <button onclick="enableMouseMode()" 
+                            style="background: #eab308; color: #000; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                            Use Mouse Mode Instead
+                        </button>
+                    </div>
+                `;
+            }
+        }, 2000);
+
+        window.enableMouseMode = function () {
+            isMouseMode = true;
+            loadingDiv.style.display = 'none';
+            if (window.cameraInstance) window.cameraInstance.stop();
+            document.getElementById('mission-panel').innerHTML += '<div style="font-size:10px; color:#aaa; margin-top:5px;">(Mouse Mode Active)</div>';
+        };
+
+        // ==========================================
+        // CONFIGURATION
+        // ==========================================
+
+        const RADIUS = 5;
+        let pY = 0; // Distance of chord from center (Y axis for horizontal chord)
+        let smoothedY = 3;
+
+        // Missions
+        const MISSIONS = [
+            { name: "Longest Chord (Diameter)", targetY: 0, tol: 0.3 },
+            { name: "Chord Length = Radius", targetLen: 5, tol: 0.3 }, // if len=5, dist = sqrt(25 - 6.25) = 4.33
+            { name: "Distance = 3 units", targetY: 3, tol: 0.2 },
+            { name: "Chord Length = 8 units", targetLen: 8, tol: 0.2 } // dist = 3
+        ];
+        let curMission = 0;
+        let isSuccess = false;
+
+        // ==========================================
+        // 1. SCENE
+        // ==========================================
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x050505, 0.03);
+
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 0, 12);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setClearColor(0x050505);
+        container.appendChild(renderer.domElement);
+
+        scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+        const pl = new THREE.PointLight(0xa855f7, 1);
+        pl.position.set(5, 5, 5);
+        scene.add(pl);
+
+        // ==========================================
+        // 2. GEOMETRY
+        // ==========================================
+
+        // Main Circle
+        const circleGeo = new THREE.RingGeometry(4.9, 5.0, 64);
+        const circleMat = new THREE.MeshBasicMaterial({ color: 0x444444, side: THREE.DoubleSide });
+        const circleMesh = new THREE.Mesh(circleGeo, circleMat);
+        scene.add(circleMesh);
+
+        // Center Point
+        const centerDot = new THREE.Mesh(
+            new THREE.SphereGeometry(0.15),
+            new THREE.MeshBasicMaterial({ color: 0xffff00 })
+        );
+        scene.add(centerDot);
+
+        // Chord Line
+        const chordMat = new THREE.LineBasicMaterial({ color: 0x22d3ee, linewidth: 3 });
+        const chordGeo = new THREE.BufferGeometry();
+        const chordLine = new THREE.Line(chordGeo, chordMat);
+        scene.add(chordLine);
+
+        // Perpendicular Line (Center to Chord)
+        const perpMat = new THREE.LineDashedMaterial({ color: 0xeab308, dashSize: 0.3, gapSize: 0.2 });
+        const perpGeo = new THREE.BufferGeometry();
+        const perpLine = new THREE.Line(perpGeo, perpMat);
+        scene.add(perpLine);
+
+        // Triangle (Center to Chord Endpoints) - Isosceles visualization
+        const triGeo = new THREE.BufferGeometry();
+        const triMat = new THREE.MeshBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0.1, side: THREE.DoubleSide });
+        const triMesh = new THREE.Mesh(triGeo, triMat);
+        scene.add(triMesh);
+
+        function updateScene(dist) {
+            // dist is from -5 to 5. Let's clamp slightly inward to keep line visible
+            if (dist > 4.9) dist = 4.9;
+            if (dist < -4.9) dist = -4.9;
+
+            // Calculate Chord X length
+            // x^2 + y^2 = r^2 -> x = sqrt(r^2 - y^2)
+            const halfLen = Math.sqrt(RADIUS * RADIUS - dist * dist);
+
+            // Points
+            // Left: (-halfLen, dist, 0)
+            // Right: (halfLen, dist, 0)
+
+            const p1 = new THREE.Vector3(-halfLen, dist, 0);
+            const p2 = new THREE.Vector3(halfLen, dist, 0);
+            const center = new THREE.Vector3(0, 0, 0);
+            const midP = new THREE.Vector3(0, dist, 0);
+
+            // Update Chord
+            chordGeo.setFromPoints([p1, p2]);
+
+            // Update Perp
+            perpGeo.setFromPoints([center, midP]);
+            perpLine.computeLineDistances();
+
+            // Update Triangle
+            const triVerts = new Float32Array([
+                0, 0, 0,
+                -halfLen, dist, 0,
+                halfLen, dist, 0
+            ]);
+            triGeo.setAttribute('position', new THREE.BufferAttribute(triVerts, 3));
+
+            // Update HUD
+            const chordLen = (halfLen * 2).toFixed(2);
+            document.getElementById('val-chord').innerText = chordLen;
+            let dAbs = Math.abs(dist).toFixed(2);
+            document.getElementById('val-dist').innerText = dAbs;
+
+            return { len: halfLen * 2, dist: Math.abs(dist) };
+        }
+
+        function checkSuccess(stats) {
+            if (isSuccess) return;
+            const mission = MISSIONS[curMission];
+            let matched = false;
+
+            if (mission.targetY !== undefined) {
+                if (Math.abs(stats.dist - mission.targetY) < mission.tol) matched = true;
+            } else if (mission.targetLen !== undefined) {
+                if (Math.abs(stats.len - mission.targetLen) < mission.tol) matched = true;
+            }
+
+            if (matched) {
+                isSuccess = true;
+                document.getElementById('mission-panel').classList.add('success');
+                document.getElementById('mission-title').innerText = "CORRECT!";
+                document.getElementById('mission-title').style.color = "#fff";
+
+                setTimeout(() => {
+                    curMission = (curMission + 1) % MISSIONS.length;
+
+                    const m = MISSIONS[curMission];
+                    document.getElementById('mission-target').innerText = m.name;
+                    document.getElementById('mission-panel').classList.remove('success');
+                    document.getElementById('mission-title').innerText = "MISSION";
+                    document.getElementById('mission-title').style.color = "#fde047";
+
+                    isSuccess = false;
+                }, 2000);
+            }
+        }
+
+        document.getElementById('mission-target').innerText = MISSIONS[0].name;
+
+        // ==========================================
+        // 3. INPUT (Camera + Mouse)
+        // ==========================================
+        let targetY = 3;
+        const videoElement = document.getElementById('input_video');
+        // loadingDiv defined at top
+
+
+        // Mouse Handler
+        document.addEventListener('mousemove', (e) => {
+            if (!isMouseMode) return;
+            // Mouse Y: 0..innerHeight.
+            // Map to 5..-5.
+            const yNorm = e.clientY / window.innerHeight; // 0 (top) to 1 (bottom)
+            // We want top=5, bottom=-5
+            targetY = (0.5 - yNorm) * 10;
+        });
+
+        function onResults(results) {
+            if (isMouseMode) return;
+            clearTimeout(loadTimeout);
+            document.getElementById('loading').style.display = 'none';
+
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                const hand = results.multiHandLandmarks[0];
+                const indexTip = hand[8];
+
+                let y = (1 - indexTip.y); // 0 at bottom, 1 at top
+                targetY = (y * 10) - 5;
+            }
+        }
+
+        const hands = new Hands({ locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}` });
+        hands.setOptions({ maxNumHands: 1, modelComplexity: 1 });
+        hands.onResults(onResults);
+
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            const cameraUtils = new Camera(videoElement, {
+                onFrame: async () => { if (!isMouseMode) await hands.send({ image: videoElement }); },
+                width: 640, height: 480
+            });
+            window.cameraInstance = cameraUtils;
+            cameraUtils.start().catch(e => {
+                clearTimeout(loadTimeout);
+                loadingDiv.innerHTML = `
+                    <div style="color: #fca5a5;">
+                        <h3>Camera Error</h3>
+                        <p>Unable to access camera.</p>
+                        <button onclick="enableMouseMode()" 
+                            style="background: #eab308; color: #000; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                            Use Mouse Mode
+                        </button>
+                    </div>
+                `;
+            });
+        } else {
+            clearTimeout(loadTimeout);
+            loadingDiv.innerHTML = `
+                <div style="color: #fca5a5;">
+                    <h3>Camera Not Supported</h3>
+                    <button onclick="enableMouseMode()" 
+                        style="background: #eab308; color: #000; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                        Use Mouse Mode
+                    </button>
+                </div>
+            `;
+        }
+
+        // ==========================================
+        // 5. ANIMATION
+        // ==========================================
+        function animate() {
+            requestAnimationFrame(animate);
+
+            smoothedY += (targetY - smoothedY) * 0.1;
+
+            const stats = updateScene(smoothedY);
+            checkSuccess(stats);
+
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+    </script>
+</body>
+
+</html>
