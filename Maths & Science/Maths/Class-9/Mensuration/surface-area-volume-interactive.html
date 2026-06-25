@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Shape Explorer - Surface Area & Volume | AIkiPadhai</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #050505; color: #fff; font-family: 'Segoe UI', sans-serif; overflow: hidden; user-select: none; }
+
+    #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+
+    #input_video { position: absolute; top: 0; left: 0; width: 320px; height: 240px; visibility: hidden; transform: scaleX(-1); }
+
+    #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; }
+
+    /* HEADER */
+    .header-bar { padding: 16px 20px 10px; text-align: center; background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent); }
+    h1 { margin: 0; color: #c4b5fd; font-size: 22px; letter-spacing: 1px; text-shadow: 0 0 10px #7c3aed; }
+    .subtitle { color: #a78bfa; font-size: 13px; margin-top: 2px; }
+
+    .back-btn { position: absolute; top: 16px; left: 16px; pointer-events: auto; color: rgba(255,255,255,0.7); text-decoration: none; border: 1px solid rgba(255,255,255,0.25); padding: 7px 14px; border-radius: 5px; font-size: 13px; transition: all 0.2s; }
+    .back-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+    /* SHAPE SELECTOR */
+    #shape-selector { pointer-events: auto; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; padding: 0 20px 8px; }
+    .shape-btn { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #ccc; padding: 7px 14px; border-radius: 20px; cursor: pointer; font-size: 13px; transition: all 0.2s; }
+    .shape-btn:hover { background: rgba(124,58,237,0.3); border-color: #7c3aed; }
+    .shape-btn.active { background: #7c3aed; border-color: #a78bfa; color: #fff; font-weight: bold; }
+
+    /* SLIDERS PANEL */
+    #sliders-panel { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); pointer-events: auto; background: rgba(0,0,0,0.75); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 16px; width: 200px; backdrop-filter: blur(8px); }
+    #sliders-panel h3 { font-size: 13px; color: #a78bfa; margin-bottom: 12px; text-align: center; letter-spacing: 1px; text-transform: uppercase; }
+    .slider-row { margin-bottom: 14px; }
+    .slider-label { font-size: 12px; color: #94a3b8; margin-bottom: 4px; display: flex; justify-content: space-between; }
+    .slider-label span { color: #fbbf24; font-weight: bold; }
+    input[type=range] { width: 100%; accent-color: #7c3aed; cursor: pointer; height: 4px; }
+
+    /* RESULTS PANEL */
+    #results-panel { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.78); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 16px; width: 210px; backdrop-filter: blur(8px); }
+    #results-panel h3 { font-size: 13px; color: #34d399; margin-bottom: 12px; text-align: center; letter-spacing: 1px; text-transform: uppercase; }
+    .result-row { margin-bottom: 10px; }
+    .result-label { font-size: 11px; color: #94a3b8; margin-bottom: 2px; }
+    .result-value { font-size: 17px; color: #fbbf24; font-weight: bold; }
+    .result-formula { font-size: 11px; color: #64748b; margin-top: 2px; }
+
+    /* HINT / LOADING */
+    #mode-indicator { position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 8px 16px; font-size: 12px; color: #94a3b8; text-align: center; pointer-events: none; }
+
+    /* FOOTER */
+    .footer-bar { padding: 10px 20px; text-align: center; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); font-size: 12px; color: #475569; }
+
+    /* LOADING DIV */
+    #loading-div { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; pointer-events: auto; z-index: 20; }
+    #loading-div h3 { color: #c4b5fd; margin-bottom: 10px; }
+    .use-mouse-btn { background: #7c3aed; color: #fff; border: none; padding: 10px 22px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; margin-top: 8px; }
+
+    /* HAND DOT */
+    #hand-dot { position: absolute; width: 14px; height: 14px; border-radius: 50%; background: #a78bfa; border: 2px solid white; pointer-events: none; display: none; transform: translate(-50%,-50%); z-index: 30; }
+  </style>
+</head>
+<body>
+
+<div id="canvas-container"></div>
+<video id="input_video" playsinline></video>
+<div id="hand-dot"></div>
+
+<div id="ui-layer">
+  <div class="header-bar">
+    <a href="surface-area-volume.html" class="back-btn">← Wapas</a>
+    <h1>📦 3D Shape Explorer</h1>
+    <p class="subtitle">Shapes ghuma ke seekho — Surface Area aur Volume live dekho!</p>
+    <div id="shape-selector">
+      <button class="shape-btn active" onclick="selectShape('cuboid')">📦 Cuboid</button>
+      <button class="shape-btn" onclick="selectShape('cube')">🎲 Cube</button>
+      <button class="shape-btn" onclick="selectShape('cylinder')">🥫 Cylinder</button>
+      <button class="shape-btn" onclick="selectShape('cone')">🍦 Cone</button>
+      <button class="shape-btn" onclick="selectShape('sphere')">🔮 Sphere</button>
+      <button class="shape-btn" onclick="selectShape('hemisphere')">🍵 Hemisphere</button>
+      <button class="shape-btn" onclick="selectShape('pyramid')">🔺 Pyramid</button>
+    </div>
+  </div>
+
+  <div style="position:relative; flex:1;">
+    <!-- Results -->
+    <div id="results-panel">
+      <h3>📊 Results</h3>
+      <div class="result-row">
+        <div class="result-label" id="csa-label">Curved SA</div>
+        <div class="result-value" id="csa-value">—</div>
+        <div class="result-formula" id="csa-formula"></div>
+      </div>
+      <div class="result-row">
+        <div class="result-label">Total SA</div>
+        <div class="result-value" id="tsa-value">—</div>
+        <div class="result-formula" id="tsa-formula"></div>
+      </div>
+      <div class="result-row">
+        <div class="result-label">Volume</div>
+        <div class="result-value" id="vol-value">—</div>
+        <div class="result-formula" id="vol-formula"></div>
+      </div>
+    </div>
+
+    <!-- Sliders -->
+    <div id="sliders-panel">
+      <h3>⚙️ Dimensions</h3>
+      <div id="slider-rows"></div>
+    </div>
+  </div>
+
+  <div id="mode-indicator">🖱️ Mouse: drag to rotate | Scroll: zoom | Hand tracking loading...</div>
+  <div class="footer-bar">AIkiPadhai.com — Maths in Roman Hindi 🇮🇳</div>
+</div>
+
+<div id="loading-div" style="display:none;">
+  <h3>⏳ Camera Access...</h3>
+  <p style="color:#94a3b8; font-size:13px; margin-bottom:8px;">Allow camera for hand tracking</p>
+  <button class="use-mouse-btn" onclick="enableMouseMode()">🖱️ Use Mouse Instead</button>
+</div>
+
+<!-- Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- MediaPipe -->
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+
+<script>
+const PI = Math.PI;
+
+// ── Three.js Setup ──────────────────────────────────────────────
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x050505, 0.04);
+
+const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.set(0, 0, 7);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+// Lights
+scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+const dirLight = new THREE.DirectionalLight(0xc4b5fd, 1.2);
+dirLight.position.set(5, 8, 6);
+scene.add(dirLight);
+const pointLight = new THREE.PointLight(0x7c3aed, 0.8, 30);
+pointLight.position.set(-4, 4, 4);
+scene.add(pointLight);
+const fillLight = new THREE.PointLight(0x34d399, 0.5, 20);
+fillLight.position.set(4, -4, 2);
+scene.add(fillLight);
+
+// Grid
+const gridHelper = new THREE.GridHelper(20, 20, 0x1e293b, 0x0f172a);
+gridHelper.position.y = -3;
+scene.add(gridHelper);
+
+// Material factory
+function getMat(color = 0x7c3aed, opacity = 0.85) {
+  return new THREE.MeshPhongMaterial({ color, transparent: true, opacity, side: THREE.DoubleSide, shininess: 60 });
+}
+function getWireMat(color = 0xa78bfa) {
+  return new THREE.MeshBasicMaterial({ color, wireframe: true, transparent: true, opacity: 0.25 });
+}
+
+// Shape group
+let shapeGroup = new THREE.Group();
+scene.add(shapeGroup);
+
+// ── Shape State ──────────────────────────────────────────────────
+let currentShape = 'cuboid';
+let dims = { l: 2, b: 1.5, h: 1.5, r: 1.5, h2: 2.5, a: 2 };
+
+// Shape configs: sliders + build + calc
+const SHAPES = {
+  cuboid: {
+    sliders: [
+      { key: 'l', label: 'Length (l)', min: 0.5, max: 4, step: 0.1 },
+      { key: 'b', label: 'Breadth (b)', min: 0.5, max: 4, step: 0.1 },
+      { key: 'h', label: 'Height (h)', min: 0.5, max: 4, step: 0.1 }
+    ],
+    build: (d) => {
+      const geo = new THREE.BoxGeometry(d.l, d.h, d.b, 2, 2, 2);
+      return [new THREE.Mesh(geo, getMat(0x3b82f6)), new THREE.Mesh(geo.clone(), getWireMat(0x60a5fa))];
+    },
+    calc: (d) => {
+      const {l,b,h} = d;
+      return {
+        csaLabel:'Lateral SA', csa: 2*h*(l+b), csaFmla:`2h(l+b) = 2×${h}×(${l}+${b})`,
+        tsa: 2*(l*b + b*h + h*l), tsaFmla:`2(lb+bh+hl)`,
+        vol: l*b*h, volFmla:`l×b×h = ${l}×${b}×${h}`
+      };
+    }
+  },
+  cube: {
+    sliders: [{ key: 'a', label: 'Side (a)', min: 0.5, max: 4, step: 0.1 }],
+    build: (d) => {
+      const geo = new THREE.BoxGeometry(d.a, d.a, d.a, 3, 3, 3);
+      return [new THREE.Mesh(geo, getMat(0x10b981)), new THREE.Mesh(geo.clone(), getWireMat(0x34d399))];
+    },
+    calc: (d) => {
+      const {a} = d;
+      return {
+        csaLabel:'Lateral SA', csa: 4*a*a, csaFmla:`4a² = 4×${a}²`,
+        tsa: 6*a*a, tsaFmla:`6a² = 6×${a}²`,
+        vol: a*a*a, volFmla:`a³ = ${a}³`
+      };
+    }
+  },
+  cylinder: {
+    sliders: [
+      { key: 'r', label: 'Radius (r)', min: 0.3, max: 3, step: 0.1 },
+      { key: 'h2', label: 'Height (h)', min: 0.5, max: 5, step: 0.1 }
+    ],
+    build: (d) => {
+      const geo = new THREE.CylinderGeometry(d.r, d.r, d.h2, 40, 4, false);
+      return [new THREE.Mesh(geo, getMat(0xf59e0b)), new THREE.Mesh(geo.clone(), getWireMat(0xfbbf24))];
+    },
+    calc: (d) => {
+      const {r, h2:h} = d;
+      return {
+        csaLabel:'Curved SA', csa: 2*PI*r*h, csaFmla:`2πrh = 2π×${r}×${h}`,
+        tsa: 2*PI*r*(r+h), tsaFmla:`2πr(r+h)`,
+        vol: PI*r*r*h, volFmla:`πr²h`
+      };
+    }
+  },
+  cone: {
+    sliders: [
+      { key: 'r', label: 'Radius (r)', min: 0.3, max: 3, step: 0.1 },
+      { key: 'h2', label: 'Height (h)', min: 0.5, max: 5, step: 0.1 }
+    ],
+    build: (d) => {
+      const geo = new THREE.ConeGeometry(d.r, d.h2, 40, 4, false);
+      return [new THREE.Mesh(geo, getMat(0xef4444)), new THREE.Mesh(geo.clone(), getWireMat(0xf87171))];
+    },
+    calc: (d) => {
+      const {r, h2:h} = d;
+      const l = Math.sqrt(r*r + h*h);
+      return {
+        csaLabel:'Curved SA', csa: PI*r*l, csaFmla:`πrl (l=${l.toFixed(2)})`,
+        tsa: PI*r*(r+l), tsaFmla:`πr(r+l)`,
+        vol: PI*r*r*h/3, volFmla:`⅓πr²h`
+      };
+    }
+  },
+  sphere: {
+    sliders: [{ key: 'r', label: 'Radius (r)', min: 0.3, max: 3.5, step: 0.1 }],
+    build: (d) => {
+      const geo = new THREE.SphereGeometry(d.r, 40, 40);
+      return [new THREE.Mesh(geo, getMat(0x06b6d4)), new THREE.Mesh(geo.clone(), getWireMat(0x22d3ee))];
+    },
+    calc: (d) => {
+      const {r} = d;
+      return {
+        csaLabel:'Surface Area', csa: 4*PI*r*r, csaFmla:`4πr² = 4π×${r}²`,
+        tsa: 4*PI*r*r, tsaFmla:`(same as SA)`,
+        vol: (4/3)*PI*r*r*r, volFmla:`(4/3)πr³`
+      };
+    }
+  },
+  hemisphere: {
+    sliders: [{ key: 'r', label: 'Radius (r)', min: 0.3, max: 3.5, step: 0.1 }],
+    build: (d) => {
+      // Half sphere using SphereGeometry with phiStart, phiLength
+      const geo = new THREE.SphereGeometry(d.r, 40, 40, 0, Math.PI*2, 0, Math.PI/2);
+      const capGeo = new THREE.CircleGeometry(d.r, 40);
+      const mesh1 = new THREE.Mesh(geo, getMat(0xf97316));
+      const mesh2 = new THREE.Mesh(capGeo, getMat(0xfb923c, 0.6));
+      mesh2.rotation.x = -Math.PI / 2;
+      const wire = new THREE.Mesh(geo.clone(), getWireMat(0xfb923c));
+      return [mesh1, mesh2, wire];
+    },
+    calc: (d) => {
+      const {r} = d;
+      return {
+        csaLabel:'Curved SA', csa: 2*PI*r*r, csaFmla:`2πr² = 2π×${r}²`,
+        tsa: 3*PI*r*r, tsaFmla:`3πr² (CSA + base)`,
+        vol: (2/3)*PI*r*r*r, volFmla:`(2/3)πr³`
+      };
+    }
+  },
+  pyramid: {
+    sliders: [
+      { key: 'a', label: 'Base Side (a)', min: 0.5, max: 4, step: 0.1 },
+      { key: 'h2', label: 'Height (h)', min: 0.5, max: 5, step: 0.1 }
+    ],
+    build: (d) => {
+      const {a, h2:h} = d;
+      const half = a / 2;
+      const vertices = new Float32Array([
+        // Base square (2 triangles)
+        -half, -h/2, -half,  half, -h/2, -half,  half, -h/2,  half,
+        -half, -h/2, -half,  half, -h/2,  half, -half, -h/2,  half,
+        // 4 triangular faces
+        -half, -h/2, -half,  half, -h/2, -half,  0, h/2, 0,
+         half, -h/2, -half,  half, -h/2,  half,  0, h/2, 0,
+         half, -h/2,  half, -half, -h/2,  half,  0, h/2, 0,
+        -half, -h/2,  half, -half, -h/2, -half,  0, h/2, 0,
+      ]);
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+      geo.computeVertexNormals();
+      return [new THREE.Mesh(geo, getMat(0x7c3aed)), new THREE.Mesh(geo.clone(), getWireMat(0xa78bfa))];
+    },
+    calc: (d) => {
+      const {a, h2:h} = d;
+      const l = Math.sqrt(h*h + (a/2)*(a/2));
+      return {
+        csaLabel:'Lateral SA', csa: 2*a*l, csaFmla:`2al (l=${l.toFixed(2)})`,
+        tsa: a*a + 2*a*l, tsaFmla:`a² + 2al`,
+        vol: a*a*h/3, volFmla:`⅓a²h`
+      };
+    }
+  }
+};
+
+// ── Build/Rebuild Shape ──────────────────────────────────────────
+function buildShape() {
+  while (shapeGroup.children.length) {
+    const child = shapeGroup.children[0];
+    child.geometry && child.geometry.dispose();
+    shapeGroup.remove(child);
+  }
+  const meshes = SHAPES[currentShape].build(dims);
+  meshes.forEach(m => shapeGroup.add(m));
+  updateResults();
+}
+
+function fmt(n) {
+  return n < 10 ? n.toFixed(2) : n.toFixed(1);
+}
+
+function updateResults() {
+  const r = SHAPES[currentShape].calc(dims);
+  document.getElementById('csa-label').textContent = r.csaLabel;
+  document.getElementById('csa-value').textContent = fmt(r.csa) + ' cm²';
+  document.getElementById('csa-formula').textContent = r.csaFmla;
+  document.getElementById('tsa-value').textContent = fmt(r.tsa) + ' cm²';
+  document.getElementById('tsa-formula').textContent = r.tsaFmla;
+  document.getElementById('vol-value').textContent = fmt(r.vol) + ' cm³';
+  document.getElementById('vol-formula').textContent = r.volFmla;
+}
+
+// ── Sliders ──────────────────────────────────────────────────────
+function buildSliders() {
+  const container = document.getElementById('slider-rows');
+  container.innerHTML = '';
+  const cfg = SHAPES[currentShape].sliders;
+  cfg.forEach(s => {
+    const val = dims[s.key];
+    const row = document.createElement('div');
+    row.className = 'slider-row';
+    row.innerHTML = `
+      <div class="slider-label">${s.label} <span id="val-${s.key}">${val}</span></div>
+      <input type="range" min="${s.min}" max="${s.max}" step="${s.step}" value="${val}" 
+             oninput="onSlider('${s.key}', this.value)">
+    `;
+    container.appendChild(row);
+  });
+}
+
+function onSlider(key, val) {
+  dims[key] = parseFloat(val);
+  document.getElementById('val-' + key).textContent = parseFloat(val).toFixed(1);
+  buildShape();
+}
+
+// ── Shape Selector ───────────────────────────────────────────────
+function selectShape(name) {
+  currentShape = name;
+  document.querySelectorAll('.shape-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  buildSliders();
+  buildShape();
+}
+
+// ── Mouse Rotate ─────────────────────────────────────────────────
+let isDragging = false, lastMX = 0, lastMY = 0;
+let rotX = 0.3, rotY = 0.5;
+
+renderer.domElement.addEventListener('mousedown', e => { isDragging = true; lastMX = e.clientX; lastMY = e.clientY; });
+renderer.domElement.addEventListener('mouseup', () => isDragging = false);
+renderer.domElement.addEventListener('mousemove', e => {
+  if (!isDragging) return;
+  rotY += (e.clientX - lastMX) * 0.008;
+  rotX += (e.clientY - lastMY) * 0.006;
+  lastMX = e.clientX; lastMY = e.clientY;
+});
+renderer.domElement.addEventListener('wheel', e => {
+  camera.position.z = Math.max(3, Math.min(14, camera.position.z + e.deltaY * 0.01));
+});
+
+// Touch support
+renderer.domElement.addEventListener('touchstart', e => { isDragging = true; lastMX = e.touches[0].clientX; lastMY = e.touches[0].clientY; }, {passive:true});
+renderer.domElement.addEventListener('touchend', () => isDragging = false);
+renderer.domElement.addEventListener('touchmove', e => {
+  if (!isDragging) return;
+  rotY += (e.touches[0].clientX - lastMX) * 0.008;
+  rotX += (e.touches[0].clientY - lastMY) * 0.006;
+  lastMX = e.touches[0].clientX; lastMY = e.touches[0].clientY;
+}, {passive:true});
+
+// ── MediaPipe Hand Tracking ──────────────────────────────────────
+let isMouseMode = false;
+let prevHandX = null;
+const handDot = document.getElementById('hand-dot');
+
+function enableMouseMode() {
+  isMouseMode = true;
+  document.getElementById('loading-div').style.display = 'none';
+  document.getElementById('mode-indicator').textContent = '🖱️ Mouse: drag to rotate | Scroll: zoom';
+}
+
+const videoElement = document.getElementById('input_video');
+
+// Show loading prompt after 3 seconds if camera not ready
+const loadingTimeout = setTimeout(() => {
+  if (!isMouseMode) {
+    document.getElementById('loading-div').style.display = 'block';
+  }
+}, 3000);
+
+function onHandResults(results) {
+  clearTimeout(loadingTimeout);
+  document.getElementById('loading-div').style.display = 'none';
+
+  if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+    const lm = results.multiHandLandmarks[0];
+    const indexTip = lm[8]; // index finger tip
+    const screenX = (1 - indexTip.x) * window.innerWidth;
+    const screenY = indexTip.y * window.innerHeight;
+
+    handDot.style.display = 'block';
+    handDot.style.left = screenX + 'px';
+    handDot.style.top = screenY + 'px';
+
+    if (prevHandX !== null) {
+      const dx = screenX - prevHandX;
+      rotY += dx * 0.005;
+    }
+    prevHandX = screenX;
+    document.getElementById('mode-indicator').textContent = '🖐️ Hand tracking active! Index finger se rotate karo.';
+  } else {
+    handDot.style.display = 'none';
+    prevHandX = null;
+  }
+}
+
+try {
+  const hands = new Hands({ locateFile: file => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}` });
+  hands.setOptions({ maxNumHands: 1, modelComplexity: 0, minDetectionConfidence: 0.6, minTrackingConfidence: 0.5 });
+  hands.onResults(onHandResults);
+
+  const mpCamera = new Camera(videoElement, {
+    onFrame: async () => { if (!isMouseMode) await hands.send({ image: videoElement }); },
+    width: 320, height: 240
+  });
+  mpCamera.start().catch(() => {
+    enableMouseMode();
+  });
+} catch (e) {
+  enableMouseMode();
+}
+
+// ── Animation Loop ───────────────────────────────────────────────
+function animate() {
+  requestAnimationFrame(animate);
+  shapeGroup.rotation.y = rotY;
+  shapeGroup.rotation.x = rotX;
+  // Gentle auto-spin when not dragging
+  if (!isDragging && prevHandX === null) {
+    rotY += 0.003;
+  }
+  renderer.render(scene, camera);
+}
+
+// ── Resize ───────────────────────────────────────────────────────
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// ── Init ─────────────────────────────────────────────────────────
+buildSliders();
+buildShape();
+animate();
+</script>
+</body>
+</html>

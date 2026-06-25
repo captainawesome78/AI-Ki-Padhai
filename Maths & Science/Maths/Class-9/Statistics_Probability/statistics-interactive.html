@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Detective Lab - Statistics | AIkiPadhai</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:#050505;color:#fff;font-family:'Segoe UI',sans-serif;overflow:hidden;user-select:none;}
+    canvas{position:absolute;top:0;left:0;display:block;}
+
+    #input_video{position:absolute;top:0;left:0;width:320px;height:240px;visibility:hidden;transform:scaleX(-1);}
+
+    #ui{position:absolute;top:0;left:0;width:100%;height:100%;z-index:10;pointer-events:none;}
+
+    /* Header strip */
+    .hdr{position:absolute;top:0;left:0;right:0;padding:12px 20px 8px;text-align:center;background:linear-gradient(to bottom,rgba(0,0,0,.92),rgba(0,0,0,.0));}
+    .hdr h1{color:#5eead4;font-size:19px;letter-spacing:1px;text-shadow:0 0 10px #0f766e;}
+    .hdr p{color:#99f6e4;font-size:11px;margin-top:1px;}
+    .back-btn{position:absolute;top:12px;left:14px;pointer-events:auto;color:rgba(255,255,255,.7);text-decoration:none;border:1px solid rgba(255,255,255,.2);padding:5px 11px;border-radius:5px;font-size:12px;}
+    .back-btn:hover{background:rgba(255,255,255,.1);}
+
+    /* Dataset selector — sits just below header */
+    #ds-row{position:absolute;top:62px;left:0;right:0;display:flex;justify-content:center;gap:7px;flex-wrap:wrap;pointer-events:auto;}
+    .ds-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);color:#ccc;padding:4px 11px;border-radius:14px;cursor:pointer;font-size:12px;transition:all .2s;}
+    .ds-btn:hover,.ds-btn.active{background:#0f766e;border-color:#5eead4;color:#fff;font-weight:bold;}
+
+    /* Mission Panel — absolute, bottom-centre, above answer buttons */
+    #mission-panel{
+      position:absolute;bottom:128px;left:50%;transform:translateX(-50%);
+      background:rgba(0,0,0,.88);border:2px solid #fbbf24;border-radius:14px;
+      padding:10px 28px;text-align:center;
+      box-shadow:0 0 28px rgba(251,191,36,.2);
+      transition:all .3s cubic-bezier(.175,.885,.32,1.275);
+      white-space:nowrap;pointer-events:none;
+    }
+    #mission-panel.success{border-color:#22c55e;background:rgba(20,83,45,.92);box-shadow:0 0 45px rgba(34,197,94,.5);transform:translateX(-50%) scale(1.06);}
+    #mission-panel.wrong{border-color:#ef4444;background:rgba(80,10,10,.92);box-shadow:0 0 28px rgba(239,68,68,.5);}
+    .m-title{font-size:11px;color:#fde047;text-transform:uppercase;font-weight:bold;letter-spacing:1px;}
+    .m-target{font-size:16px;font-weight:800;color:white;margin:3px 0;white-space:normal;max-width:440px;}
+    .m-hint{font-size:11px;color:#94a3b8;}
+
+    /* Answer buttons */
+    #answer-area{position:absolute;bottom:60px;left:50%;transform:translateX(-50%);display:flex;gap:10px;flex-wrap:wrap;justify-content:center;pointer-events:auto;}
+    .ans-btn{background:rgba(15,118,110,.3);border:2px solid #14b8a6;color:#ccfbf1;padding:9px 18px;border-radius:8px;cursor:pointer;font-size:15px;font-weight:bold;transition:all .2s;min-width:66px;}
+    .ans-btn:hover,.ans-btn.finger-hover{background:#0f766e;border-color:#fbbf24;transform:scale(1.08);}
+    .ans-btn.correct{background:#166534;border-color:#22c55e;}
+    .ans-btn.wrong-ans{background:#7f1d1d;border-color:#ef4444;}
+
+    /* Side panels */
+    #stats-panel{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.8);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px;width:182px;}
+    #stats-panel h3{font-size:11px;color:#5eead4;margin-bottom:9px;text-align:center;letter-spacing:1px;text-transform:uppercase;}
+    .st-row{margin-bottom:8px;}
+    .st-lbl{font-size:10px;color:#94a3b8;margin-bottom:1px;}
+    .st-val{font-size:17px;color:#fbbf24;font-weight:bold;}
+    .st-formula{font-size:9px;color:#475569;}
+
+    #score-box{position:absolute;left:12px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.8);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px;width:140px;text-align:center;}
+    #score-box h3{font-size:11px;color:#5eead4;margin-bottom:7px;letter-spacing:1px;text-transform:uppercase;}
+    #score-num{font-size:40px;font-weight:900;color:#fbbf24;}
+    #mission-count{font-size:12px;color:#5eead4;margin-top:5px;}
+
+    /* Hand dot */
+    #hand-dot{position:absolute;width:16px;height:16px;border-radius:50%;background:rgba(94,234,212,.9);border:2px solid white;pointer-events:none;display:none;transform:translate(-50%,-50%);z-index:30;box-shadow:0 0 10px #5eead4;}
+    #pinch-ring{position:absolute;width:30px;height:30px;border-radius:50%;border:2px solid #fbbf24;pointer-events:none;display:none;transform:translate(-50%,-50%);z-index:29;opacity:0;transition:opacity .15s;}
+
+    /* Camera mode indicator */
+    #mode-indicator{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);font-size:11px;color:#475569;text-align:center;}
+
+    /* Loading overlay */
+    #loading-div{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:50;display:none;}
+    #loading-div h3{color:#5eead4;margin-bottom:8px;}
+    .mouse-btn{background:#0f766e;color:#fff;border:none;padding:9px 20px;border-radius:6px;cursor:pointer;font-weight:bold;font-size:13px;margin-top:6px;}
+  </style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<video id="input_video" playsinline></video>
+<div id="hand-dot"></div>
+<div id="pinch-ring"></div>
+
+<div id="ui">
+  <div class="hdr">
+    <a href="statistics.html" class="back-btn">← Wapas</a>
+    <h1>📊 Data Detective Lab</h1>
+    <p>Dataset choose karo → chart samjho → missions complete karo!</p>
+  </div>
+  <div id="ds-row">
+    <button class="ds-btn active" onclick="loadDataset(0,this)">📚 Student Marks</button>
+    <button class="ds-btn" onclick="loadDataset(1,this)">🌡️ Temperature</button>
+    <button class="ds-btn" onclick="loadDataset(2,this)">👟 Shoe Sizes</button>
+    <button class="ds-btn" onclick="loadDataset(3,this)">🏏 Cricket Scores</button>
+  </div>
+
+  <!-- Score: left mid -->
+  <div id="score-box">
+    <h3>⭐ Score</h3>
+    <div id="score-num">0</div>
+    <div id="mission-count">Mission 1/5</div>
+  </div>
+
+  <!-- Live stats: right mid -->
+  <div id="stats-panel">
+    <h3>📈 Live Stats</h3>
+    <div class="st-row"><div class="st-lbl">Mean (Ausat)</div><div class="st-val" id="sv-mean">—</div><div class="st-formula" id="sf-mean"></div></div>
+    <div class="st-row"><div class="st-lbl">Median (Beech)</div><div class="st-val" id="sv-med">—</div><div class="st-formula">Sorted → middle</div></div>
+    <div class="st-row"><div class="st-lbl">Mode (Zyada)</div><div class="st-val" id="sv-mode">—</div><div class="st-formula">Most frequent</div></div>
+    <div class="st-row"><div class="st-lbl">Range</div><div class="st-val" id="sv-range">—</div><div class="st-formula">Max − Min</div></div>
+  </div>
+
+  <!-- Mission panel: bottom-centre -->
+  <div id="mission-panel">
+    <div class="m-title" id="m-title">MISSION</div>
+    <div class="m-target" id="m-target">Loading...</div>
+    <div class="m-hint" id="m-hint"></div>
+  </div>
+
+  <!-- Answer buttons: bottom-centre -->
+  <div id="answer-area"></div>
+  <div id="mode-indicator">🖱️ Mouse: hover bars | 🤚 Hand: point to hover, pinch to select answer</div>
+</div>
+
+<div id="loading-div">
+  <h3>⏳ Camera loading...</h3>
+  <p style="color:#94a3b8;font-size:12px;margin-bottom:6px;">Camera allow karo for hand tracking</p>
+  <button class="mouse-btn" onclick="enableMouseMode()">🖱️ Mouse Mode Use Karo</button>
+</div>
+
+<!-- MediaPipe -->
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+
+<script>
+// ── Canvas & Chart ────────────────────────────────────────────────
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// Chart geometry — pushed down to avoid header
+const CHART = {
+  get left(){ return 180; },
+  get right(){ return canvas.width - 210; },
+  get top(){ return 100; },
+  get bottom(){ return canvas.height - 145; }
+};
+
+// ── Datasets ──────────────────────────────────────────────────────
+const DATASETS = [
+  { name:'Student Marks', labels:['5','6','7','8','9','10'], data:[3,7,5,8,4,3],
+    rawData:[5,5,5,6,6,6,6,6,6,6,7,7,7,7,7,8,8,8,8,8,8,8,8,9,9,9,9,10,10,10],
+    color:'#14b8a6', xLabel:'Marks (out of 10)', yLabel:'Students' },
+  { name:'Temperature (°C)', labels:['22','24','26','28','30','32'], data:[2,5,9,8,4,2],
+    rawData:[22,22,24,24,24,24,24,26,26,26,26,26,26,26,26,26,28,28,28,28,28,28,28,28,30,30,30,30,32,32],
+    color:'#f59e0b', xLabel:'Temperature (°C)', yLabel:'Days' },
+  { name:'Shoe Sizes', labels:['7','8','9','10','11'], data:[4,9,12,7,3],
+    rawData:[7,7,7,7,8,8,8,8,8,8,8,8,8,9,9,9,9,9,9,9,9,9,9,9,9,10,10,10,10,10,10,10,11,11,11],
+    color:'#a78bfa', xLabel:'Shoe Size', yLabel:'People' },
+  { name:'Cricket Scores', labels:['0-20','21-40','41-60','61-80','81-100'], data:[3,6,10,7,4],
+    rawData:[5,10,15,25,30,32,35,38,40,42,45,50,52,55,58,60,60,62,65,65,70,72,74,80,82,85,90,95],
+    color:'#f97316', xLabel:'Runs Scored', yLabel:'Innings' }
+];
+
+let currentDS = 0;
+let hoveredBar = -1;
+let hoveredBtn = -1;   // index into answer buttons
+let score = 0;
+let missionIdx = 0;
+let answerLocked = false;
+
+// ── Hand / Input state ────────────────────────────────────────────
+let isMouseMode = false;
+let fingerX = -1, fingerY = -1; // screen coords of index tip
+let pinching = false;
+let lastPinchTime = 0;
+
+const handDot  = document.getElementById('hand-dot');
+const pinchRing = document.getElementById('pinch-ring');
+
+// ── Stats ─────────────────────────────────────────────────────────
+function calcStats(ds) {
+  const d = [...ds.rawData].sort((a,b)=>a-b), n=d.length;
+  const mean = +(d.reduce((s,v)=>s+v,0)/n).toFixed(1);
+  const median = +(n%2===0?(d[n/2-1]+d[n/2])/2:d[Math.floor(n/2)]).toFixed(1);
+  const freq={}; d.forEach(v=>{freq[v]=(freq[v]||0)+1;});
+  const mxF=Math.max(...Object.values(freq));
+  const mode=Object.keys(freq).filter(k=>freq[k]===mxF).map(Number);
+  return {mean, median, mode, range:d[n-1]-d[0]};
+}
+
+// ── Missions ──────────────────────────────────────────────────────
+function getMissions(ds, s) {
+  const mi = ds.data.indexOf(Math.max(...ds.data));
+  return [
+    { q:`Mode kya hai? Sabse frequent value select karo.`, hint:'Tallest bar dekho!',
+      opts:shuffle([s.mode[0], s.mode[0]+1, s.mode[0]-1, s.mode[0]+2].slice(0,4)), ans:s.mode[0] },
+    { q:`Mean (ausat) kya hai?`, hint:`Sum÷n = ${ds.rawData.reduce((a,b)=>a+b,0)}÷${ds.rawData.length}`,
+      opts:shuffle([s.mean,+(s.mean+1.5).toFixed(1),+(s.mean-1.5).toFixed(1),+(s.mean+3).toFixed(1)]), ans:s.mean },
+    { q:`Median kya hai? (Sorted ka middle)`, hint:`${ds.rawData.length} values → middle = ?`,
+      opts:shuffle([s.median,+(s.median+2).toFixed(1),+(s.median-2).toFixed(1),+(s.median+4).toFixed(1)]), ans:s.median },
+    { q:`Range kya hai? (Max − Min)`, hint:'Sabse badi − sabse choti value',
+      opts:shuffle([s.range, s.range+2, s.range-2, s.range+5]), ans:s.range },
+    { q:`Sabse zyada frequency (${Math.max(...ds.data)}) kaunse label mein?`, hint:'Tallest bar ki x-label choose karo',
+      opts:shuffle([ds.labels[mi],...ds.labels.filter((_,i)=>i!==mi).slice(0,3)]), ans:ds.labels[mi] }
+  ];
+}
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+let currentMissions=[], stats={};
+
+// ── Load Dataset ──────────────────────────────────────────────────
+function loadDataset(idx, btn) {
+  currentDS = idx;
+  document.querySelectorAll('.ds-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  missionIdx=0; score=0; answerLocked=false;
+  document.getElementById('score-num').textContent='0';
+  refreshStats(); startMission();
+}
+
+function refreshStats() {
+  const ds = DATASETS[currentDS];
+  stats = calcStats(ds);
+  document.getElementById('sv-mean').textContent=stats.mean;
+  document.getElementById('sf-mean').textContent=`${ds.rawData.reduce((a,b)=>a+b,0)}÷${ds.rawData.length}`;
+  document.getElementById('sv-med').textContent=stats.median;
+  document.getElementById('sv-mode').textContent=stats.mode.join(', ');
+  document.getElementById('sv-range').textContent=stats.range;
+  currentMissions = getMissions(ds, stats);
+}
+
+// ── Mission UI ────────────────────────────────────────────────────
+function startMission() {
+  if(missionIdx >= currentMissions.length){ showAllDone(); return; }
+  answerLocked=false; hoveredBtn=-1;
+  const m = currentMissions[missionIdx];
+  document.getElementById('m-title').textContent=`MISSION ${missionIdx+1}/${currentMissions.length}`;
+  document.getElementById('m-title').style.color='#fde047';
+  document.getElementById('m-target').textContent=m.q;
+  document.getElementById('m-hint').textContent=`💡 ${m.hint}`;
+  const panel=document.getElementById('mission-panel');
+  panel.classList.remove('success','wrong');
+  document.getElementById('mission-count').textContent=`Mission ${missionIdx+1}/${currentMissions.length}`;
+
+  const area=document.getElementById('answer-area');
+  area.innerHTML='';
+  m.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='ans-btn';
+    btn.textContent=opt;
+    btn.dataset.idx=i;
+    btn.onclick=()=>checkAnswer(opt,m.ans,btn);
+    area.appendChild(btn);
+  });
+}
+
+function checkAnswer(chosen, correct, btn) {
+  if(answerLocked) return;
+  answerLocked=true;
+  const panel=document.getElementById('mission-panel');
+  const ok = String(chosen)===String(correct);
+  if(ok){
+    btn.classList.add('correct');
+    panel.classList.add('success');
+    document.getElementById('m-title').textContent='✅ SAHI HAI!';
+    document.getElementById('m-target').textContent=`Bahut badhiya! "${correct}" bilkul correct! 🎉`;
+    document.getElementById('m-hint').textContent='';
+    score+=20; document.getElementById('score-num').textContent=score;
+    setTimeout(()=>{ missionIdx++; startMission(); }, 2000);
+  } else {
+    btn.classList.add('wrong-ans');
+    panel.classList.add('wrong');
+    document.getElementById('m-title').textContent='❌ GALAT!';
+    document.getElementById('m-target').textContent=`Sahi jawab tha: ${correct}. Phir try karo!`;
+    setTimeout(()=>{
+      panel.classList.remove('wrong');
+      btn.classList.remove('wrong-ans');
+      answerLocked=false;
+      const m=currentMissions[missionIdx];
+      document.getElementById('m-title').textContent=`MISSION ${missionIdx+1}/${currentMissions.length}`;
+      document.getElementById('m-title').style.color='#fde047';
+      document.getElementById('m-target').textContent=m.q;
+      document.getElementById('m-hint').textContent=`💡 ${m.hint}`;
+    }, 1800);
+  }
+}
+
+function showAllDone(){
+  document.getElementById('m-title').textContent='🏆 ALL MISSIONS DONE!';
+  document.getElementById('m-target').textContent=`Score: ${score}/100 — Data Detective ban gaye! 🕵️`;
+  document.getElementById('m-hint').textContent='Doosra dataset try karo!';
+  document.getElementById('mission-panel').classList.add('success');
+  document.getElementById('answer-area').innerHTML='';
+  document.getElementById('mission-count').textContent='✅ All Done!';
+}
+
+// ── Draw Chart ────────────────────────────────────────────────────
+function drawChart() {
+  const W=canvas.width, H=canvas.height;
+  const ds=DATASETS[currentDS];
+  ctx.fillStyle='#050505'; ctx.fillRect(0,0,W,H);
+
+  // Background grid
+  ctx.strokeStyle='#0d1a1a'; ctx.lineWidth=1;
+  for(let x=0;x<W;x+=50){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=50){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+
+  const {left:cL, right:cR, top:cT, bottom:cB} = CHART;
+  const cW=cR-cL, cH=cB-cT;
+  const maxVal=Math.max(...ds.data);
+  const gridN=5;
+
+  // Y grid & labels
+  for(let i=0;i<=gridN;i++){
+    const y=cT+cH-(i/gridN)*cH;
+    ctx.strokeStyle='#1e293b'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(cL,y); ctx.lineTo(cR,y); ctx.stroke();
+    ctx.fillStyle='#475569'; ctx.font='11px Segoe UI'; ctx.textAlign='right';
+    ctx.fillText(Math.round((i/gridN)*maxVal), cL-8, y+4);
+  }
+
+  // Axes
+  ctx.strokeStyle='#334155'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(cL,cT); ctx.lineTo(cL,cB); ctx.lineTo(cR,cB); ctx.stroke();
+
+  // Bars
+  const nB=ds.data.length, gap=cW/nB, barW=gap*0.55;
+  ds.data.forEach((val,i)=>{
+    const bx=cL+i*gap+gap*0.225;
+    const bh=(val/maxVal)*cH, by=cB-bh;
+    const hov=(hoveredBar===i);
+
+    if(hov){ctx.shadowBlur=22; ctx.shadowColor=ds.color;}
+    ctx.fillStyle=hov?'#ffffff':ds.color;
+    ctx.globalAlpha=hov?1:0.78;
+    rrect(bx,by,barW,bh,4);
+    ctx.fill();
+    ctx.globalAlpha=1; ctx.shadowBlur=0;
+
+    // Value label INSIDE bar (top area of bar, white text)
+    ctx.fillStyle=hov?'#1a1a1a':'#ffffff';
+    ctx.font=`bold ${hov?15:12}px Segoe UI`;
+    ctx.textAlign='center';
+    // If bar is tall enough, put label inside; else above
+    if(bh>22){
+      ctx.fillText(val, bx+barW/2, by+16);
+    } else {
+      ctx.fillStyle=hov?'#fbbf24':ds.color;
+      ctx.fillText(val, bx+barW/2, by-5);
+    }
+
+    // X label
+    ctx.fillStyle=hov?'#fbbf24':'#94a3b8';
+    ctx.font=`${hov?13:11}px Segoe UI`;
+    ctx.fillText(ds.labels[i], bx+barW/2, cB+17);
+  });
+
+  // Axis labels
+  ctx.fillStyle='#5eead4'; ctx.font='12px Segoe UI'; ctx.textAlign='center';
+  ctx.fillText(ds.xLabel, (cL+cR)/2, cB+36);
+  ctx.save(); ctx.translate(18,(cT+cB)/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText(ds.yLabel,0,0); ctx.restore();
+
+  // Dataset name
+  ctx.fillStyle='#99f6e4'; ctx.font='bold 13px Segoe UI'; ctx.textAlign='center';
+  ctx.fillText('📊 '+ds.name, (cL+cR)/2, cT-8);
+
+  // Hover tooltip (to the side of bar, not overlapping labels)
+  if(hoveredBar>=0){
+    const i=hoveredBar;
+    const bx=cL+i*gap+gap*0.225, bh=(ds.data[i]/maxVal)*cH, by=cB-bh;
+    const tx=bx+barW+8, ty=by+10;
+    const tw=130, th=40;
+    // Keep tooltip in bounds
+    const fx=Math.min(tx, cR-tw-4);
+    ctx.fillStyle='rgba(0,0,0,0.9)';
+    ctx.strokeStyle=ds.color; ctx.lineWidth=1.5;
+    rrect(fx,ty-12,tw,th,6); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#fff'; ctx.font='11px Segoe UI'; ctx.textAlign='left';
+    ctx.fillText(`Label: ${ds.labels[i]}`, fx+8, ty+2);
+    ctx.fillStyle='#fbbf24'; ctx.font='bold 12px Segoe UI';
+    ctx.fillText(`Frequency: ${ds.data[i]}`, fx+8, ty+18);
+  }
+
+  // Finger cursor crosshair (when hand tracking)
+  if(!isMouseMode && fingerX>0){
+    ctx.strokeStyle='rgba(94,234,212,0.5)'; ctx.lineWidth=1; ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(fingerX,cT); ctx.lineTo(fingerX,cB); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+}
+
+function rrect(x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.arcTo(x+w,y,x+w,y+r,r);
+  ctx.lineTo(x+w,y+h-r); ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+  ctx.lineTo(x+r,y+h); ctx.arcTo(x,y+h,x,y+h-r,r);
+  ctx.lineTo(x,y+r); ctx.arcTo(x,y,x+r,y,r); ctx.closePath();
+}
+
+// ── Input: mouse ──────────────────────────────────────────────────
+canvas.addEventListener('mousemove', e=>{
+  if(!isMouseMode) return;
+  updateHover(e.clientX, e.clientY);
+});
+canvas.addEventListener('mouseleave', ()=>{ if(isMouseMode){ hoveredBar=-1; hoveredBtn=-1; } });
+
+function updateHover(sx, sy){
+  const ds=DATASETS[currentDS];
+  const {left:cL,right:cR}=CHART, cW=cR-cL, nB=ds.data.length, gap=cW/nB, barW=gap*0.55;
+  let fb=-1;
+  ds.data.forEach((_,i)=>{
+    const bx=cL+i*gap+gap*0.225;
+    if(sx>=bx && sx<=bx+barW) fb=i;
+  });
+  hoveredBar=fb;
+
+  // Check answer buttons
+  hoveredBtn=-1;
+  document.querySelectorAll('.ans-btn').forEach((btn,i)=>{
+    const r=btn.getBoundingClientRect();
+    btn.classList.remove('finger-hover');
+    if(sx>=r.left && sx<=r.right && sy>=r.top && sy<=r.bottom){
+      hoveredBtn=i; btn.classList.add('finger-hover');
+    }
+  });
+}
+
+// ── Input: hand tracking ───────────────────────────────────────────
+let prevPinch=false;
+
+function onHandResults(res){
+  clearTimeout(loadTimeout);
+  document.getElementById('loading-div').style.display='none';
+
+  if(res.multiHandLandmarks && res.multiHandLandmarks.length>0){
+    const lm=res.multiHandLandmarks[0];
+    const tip=lm[8]; // index tip
+    const thumb=lm[4]; // thumb tip
+
+    // Mirror x (video is mirrored)
+    fingerX=(1-tip.x)*window.innerWidth;
+    fingerY=tip.y*window.innerHeight;
+
+    // Show hand dot
+    handDot.style.display='block';
+    handDot.style.left=fingerX+'px';
+    handDot.style.top=fingerY+'px';
+
+    // Update hover
+    updateHover(fingerX, fingerY);
+
+    // Pinch detection
+    const tx=(1-thumb.x)*window.innerWidth, ty=thumb.y*window.innerHeight;
+    const dist=Math.hypot(fingerX-tx, fingerY-ty);
+    const isPinching=dist<50;
+
+    // Show pinch ring
+    pinchRing.style.display='block';
+    pinchRing.style.left=fingerX+'px';
+    pinchRing.style.top=fingerY+'px';
+    pinchRing.style.opacity=isPinching?'1':'0';
+
+    // Trigger on pinch start (rising edge)
+    if(isPinching && !prevPinch){
+      const now=Date.now();
+      if(now-lastPinchTime>600){
+        lastPinchTime=now;
+        triggerPinchAction();
+      }
+    }
+    prevPinch=isPinching;
+
+    document.getElementById('mode-indicator').textContent='🤚 Hand tracking active! Point to bars, pinch to select answer.';
+  } else {
+    handDot.style.display='none';
+    pinchRing.style.display='none';
+    fingerX=-1; prevPinch=false;
+    // Clear finger hovers
+    document.querySelectorAll('.ans-btn').forEach(b=>b.classList.remove('finger-hover'));
+    hoveredBar=-1; hoveredBtn=-1;
+  }
+}
+
+function triggerPinchAction(){
+  if(answerLocked) return;
+  if(hoveredBtn>=0){
+    const btns=document.querySelectorAll('.ans-btn');
+    if(btns[hoveredBtn]) btns[hoveredBtn].click();
+  }
+}
+
+function enableMouseMode(){
+  isMouseMode=true;
+  document.getElementById('loading-div').style.display='none';
+  handDot.style.display='none';
+  pinchRing.style.display='none';
+  document.getElementById('mode-indicator').textContent='🖱️ Mouse mode: hover bars to explore, click answer to submit.';
+}
+
+const videoEl=document.getElementById('input_video');
+let loadTimeout=setTimeout(()=>{
+  document.getElementById('loading-div').style.display='block';
+},3500);
+
+try{
+  const hands=new Hands({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/hands/${f}`});
+  hands.setOptions({maxNumHands:1, modelComplexity:0, minDetectionConfidence:0.6, minTrackingConfidence:0.5});
+  hands.onResults(onHandResults);
+  const cam=new Camera(videoEl,{
+    onFrame:async()=>{ if(!isMouseMode) await hands.send({image:videoEl}); },
+    width:320, height:240
+  });
+  cam.start().catch(()=>enableMouseMode());
+} catch(e){ enableMouseMode(); }
+
+// ── Mouse as fallback always on ───────────────────────────────────
+canvas.addEventListener('mousemove', e=>{ if(isMouseMode) updateHover(e.clientX, e.clientY); });
+
+// ── Animation Loop ────────────────────────────────────────────────
+function loop(){ requestAnimationFrame(loop); drawChart(); }
+window.addEventListener('resize',()=>{ canvas.width=window.innerWidth; canvas.height=window.innerHeight; });
+
+// Init
+refreshStats(); startMission(); loop();
+</script>
+</body>
+</html>

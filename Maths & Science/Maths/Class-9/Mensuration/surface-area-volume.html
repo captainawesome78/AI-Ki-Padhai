@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984292277"
+    crossorigin="anonymous"></script>
+  <title>Surface Area and Volume - Class 9 Maths | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../../../style.css" />
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; background: #fafafa; color: #333; margin: 0; line-height: 1.6; }
+    header { background: #2c3e50; color: white; text-align: center; padding: 25px 15px; }
+    header h1 { margin: 0; font-size: 26px; }
+    nav { margin-top: 8px; }
+    nav a { color: #dfe8ef; text-decoration: none; margin: 0 12px; font-weight: 600; font-size: 15px; }
+    nav a:hover { color: #f1f6fb; }
+    main { max-width: 950px; margin: 30px auto; padding: 25px; background: #fff; border-radius: 12px; box-shadow: 0 3px 8px rgba(0,0,0,0.05); }
+    .content-section { margin-bottom: 45px; }
+    .content-section h2 { font-size: 26px; color: #2c3e50; border-bottom: 2px solid #e0e0e0; padding-bottom: 8px; margin-bottom: 20px; }
+    .content-section h3 { font-size: 20px; color: #1e3551; margin-top: 25px; }
+    p, li { font-size: 17px; color: #444; }
+    .example { background: #f0f5f9; padding: 20px; border-left: 5px solid #2563eb; margin: 20px 0; border-radius: 6px; }
+    .example-title { font-weight: bold; color: #1e3551; font-size: 18px; margin-bottom: 10px; }
+    .key-point { background: #fffbeb; border-left: 5px solid #f59e0b; padding: 18px 20px; margin: 20px 0; border-radius: 6px; }
+    .story-box { background: #f0fdf4; border-left: 5px solid #10b981; padding: 18px 20px; margin: 20px 0; border-radius: 6px; }
+    .story-title { font-weight: bold; color: #065f46; font-size: 18px; margin-bottom: 8px; }
+    .shape-card { background: linear-gradient(135deg, #f8fafc, #e2e8f0); border: 2px solid #cbd5e1; border-radius: 10px; padding: 20px; margin: 15px 0; }
+    .shape-card h3 { margin-top: 0; color: #1e3a5f; font-size: 22px; }
+    .formula-box { background: #1e3a5f; color: #e2e8f0; padding: 12px 18px; border-radius: 8px; margin: 10px 0; font-size: 16px; }
+    .formula-box span { color: #fbbf24; font-weight: bold; }
+    svg { display: block; margin: 15px auto; overflow: visible; }
+    .svg-label { font-size: 13px; font-family: Arial, sans-serif; }
+    .svg-title { font-size: 14px; font-weight: bold; font-family: Arial, sans-serif; }
+    .interactive-banner { background: linear-gradient(135deg, #4c1d95, #7c3aed); color: white; border-radius: 12px; padding: 25px; margin: 30px 0; text-align: center; }
+    .interactive-banner h3 { margin-top: 0; color: white; font-size: 22px; }
+    .interactive-banner p { color: #e9d5ff; margin-bottom: 15px; }
+    .btn-interactive { display: inline-block; background: #fbbf24; color: #1e1b4b; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; }
+    .btn-interactive:hover { background: #f59e0b; }
+    table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 15px; }
+    th { background: #1e3a5f; color: white; padding: 10px 14px; text-align: left; }
+    td { padding: 10px 14px; border-bottom: 1px solid #e2e8f0; }
+    tr:nth-child(even) td { background: #f8fafc; }
+  </style>
+  <script>
+    window.MathJax = { tex: { inlineMath: [['\\(','\\)'],['$','$']] }, options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] } };
+    (function w(){ if(window.MathJax && MathJax.typesetPromise){ MathJax.typesetPromise(); } else { setTimeout(w,50); } })();
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+
+<body>
+  <header>
+    <h1>📦 Surface Area and Volume</h1>
+    <nav>
+      <a href="../../../../index.html">Home</a>
+      <a href="../../../index.html">Maths &amp; Science</a>
+      <a href="../index.html">Class 9 Maths</a>
+      <a href="index.html">Mensuration</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <section class="content-section">
+      <h2>🌍 3D Shapes — Duniya Hamare Aas Paas!</h2>
+      <p>Hum jo duniya mein rehte hain woh 2D (flat) nahi balki <strong>3D (teen-dimensional)</strong> hai. Ek football 3D hai, ek tin can 3D hai, ek diya 3D hai. In 3D shapes ke baare mein do important sawaal hote hain:</p>
+      <ul>
+        <li><strong>Surface Area (Bahari Jagah):</strong> Shape ki poori bahari surface ka area — jaise ek dabba (box) paint karne ke liye kitna paint chahiye. Units: cm², m².</li>
+        <li><strong>Volume (Andar ki Jagah):</strong> Shape ke andar ki jagah — jaise ek tank mein kitna paani aayega. Units: cm³, m³.</li>
+      </ul>
+      <div class="story-box">
+        <div class="story-title">💡 Real Life Connection:</div>
+        <p>Kumbhar (potter) ko pata hona chahiye ki matke mein kitna paani aayega <strong>(Volume)</strong>. Painter ko pata hona chahiye ki kamre ki diwar paint karne ke liye kitna paint chahiye <strong>(Surface Area)</strong>. Dono ek hi shape ke alag-alag sawaal hain!</p>
+      </div>
+      <p>Is chapter mein hum seekhenge: <strong>Cuboid → Cube → Cylinder → Cone → Pyramid → Sphere → Hemisphere → Combinations.</strong></p>
+    </section>
+
+    <div class="interactive-banner">
+      <h3>🎮 3D Shape Explorer — Haath Se Seekho!</h3>
+      <p>Shapes ko real-time mein 3D rotate karo, slider se dimensions badlo, live SA aur Volume dekho. Mouse ya hand tracking dono kaam karta hai!</p>
+      <a href="surface-area-volume-interactive.html" class="btn-interactive">🚀 Launch 3D Explorer</a>
+    </div>
+
+    <!-- 1. CUBOID -->
+    <section class="content-section">
+      <h2>1️⃣ Cuboid (Aayatakaar Ghanda / Box)</h2>
+      <p>Cuboid ek aisi 3D shape hai jiske <strong>6 rectangular faces</strong> hote hain. Ek room, brick (eent), matchbox — sab cuboid hain. Teen dimensions hote hain: <strong>l</strong> (length), <strong>b</strong> (breadth), <strong>h</strong> (height).</p>
+
+      <svg width="320" height="200" viewBox="0 0 320 200">
+        <polygon points="60,50 200,50 200,150 60,150" fill="rgba(37,99,235,0.08)" stroke="#2563eb" stroke-width="2"/>
+        <polygon points="60,50 200,50 240,20 100,20" fill="rgba(37,99,235,0.05)" stroke="#2563eb" stroke-width="2"/>
+        <polygon points="200,50 240,20 240,120 200,150" fill="rgba(37,99,235,0.12)" stroke="#2563eb" stroke-width="2"/>
+        <line x1="60" y1="150" x2="100" y2="120" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <line x1="100" y1="20" x2="100" y2="120" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <line x1="100" y1="120" x2="240" y2="120" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="130" y="168" class="svg-label" text-anchor="middle" fill="#2563eb">Length (l)</text>
+        <text x="252" y="90" class="svg-label" fill="#2563eb">Height (h)</text>
+        <text x="165" y="30" class="svg-label" text-anchor="middle" fill="#2563eb">Breadth (b)</text>
+      </svg>
+
+      <h3>🧠 TSA Formula Ki Derivation:</h3>
+      <p>Cuboid ke 6 faces teen pairs mein hote hain:</p>
+      <ul>
+        <li>2 faces: \( l \times b \) &nbsp;(Top + Bottom)</li>
+        <li>2 faces: \( b \times h \) &nbsp;(Front + Back)</li>
+        <li>2 faces: \( l \times h \) &nbsp;(Left + Right)</li>
+      </ul>
+      <p>Total = \( 2lb + 2bh + 2lh = 2(lb + bh + hl) \) ✅</p>
+
+      <div class="shape-card">
+        <h3>📐 Cuboid ke Formulas</h3>
+        <div class="formula-box"><span>Lateral Surface Area (LSA)</span> = 2h(l + b) &nbsp; <em style="color:#94a3b8;font-size:14px;">(sirf 4 walls)</em></div>
+        <div class="formula-box"><span>Total Surface Area (TSA)</span> = 2(lb + bh + hl)</div>
+        <div class="formula-box"><span>Volume (V)</span> = l × b × h</div>
+        <div class="formula-box"><span>Diagonal</span> = √(l² + b² + h²)</div>
+      </div>
+
+      <div class="example">
+        <div class="example-title">📝 Practice Example:</div>
+        <p>Ek kamre ki length <strong>5 m</strong>, breadth <strong>4 m</strong>, height <strong>3 m</strong> hai. 4 walls + ceiling paint karni hai. Kitna area?</p>
+        <p><strong>Solution:</strong><br>
+          LSA (4 walls) = \( 2h(l+b) = 2 \times 3 \times (5+4) = 54 \text{ m}^2 \)<br>
+          Ceiling = \( l \times b = 20 \text{ m}^2 \)<br>
+          Total = \( 54 + 20 = \mathbf{74 \text{ m}^2} \) 🎨</p>
+      </div>
+    </section>
+
+    <!-- 2. CUBE -->
+    <section class="content-section">
+      <h2>2️⃣ Cube (Ghanda Samakaon / Perfect Box)</h2>
+      <p>Cube ek special cuboid hai jisme <strong>l = b = h = a</strong>. Ice cube, Rubik's cube, sugar cube — sab examples hain!</p>
+
+      <svg width="240" height="180" viewBox="0 0 240 180">
+        <polygon points="55,50 155,50 155,150 55,150" fill="rgba(16,185,129,0.08)" stroke="#10b981" stroke-width="2"/>
+        <polygon points="55,50 155,50 190,20 90,20" fill="rgba(16,185,129,0.05)" stroke="#10b981" stroke-width="2"/>
+        <polygon points="155,50 190,20 190,120 155,150" fill="rgba(16,185,129,0.12)" stroke="#10b981" stroke-width="2"/>
+        <line x1="55" y1="150" x2="90" y2="120" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <line x1="90" y1="20" x2="90" y2="120" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <line x1="90" y1="120" x2="190" y2="120" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="120" y="170" class="svg-label" text-anchor="middle" fill="#10b981">a</text>
+        <text x="43" y="102" class="svg-label" fill="#10b981">a</text>
+        <text x="125" y="38" class="svg-label" text-anchor="middle" fill="#10b981">a</text>
+      </svg>
+
+      <div class="story-box">
+        <div class="story-title">🧠 Cube = Cuboid Ka Special Case:</div>
+        <p>Cuboid mein \( l = b = h = a \) rakh do:<br>
+          TSA = \( 2(a \cdot a + a \cdot a + a \cdot a) = 6a^2 \)<br>
+          Volume = \( a \times a \times a = a^3 \)</p>
+      </div>
+
+      <div class="shape-card">
+        <h3>📐 Cube ke Formulas (side = a)</h3>
+        <div class="formula-box"><span>Lateral Surface Area</span> = 4a²</div>
+        <div class="formula-box"><span>Total Surface Area</span> = 6a²</div>
+        <div class="formula-box"><span>Volume</span> = a³</div>
+        <div class="formula-box"><span>Diagonal</span> = a√3</div>
+      </div>
+
+      <div class="example">
+        <div class="example-title">📝 Practice Example:</div>
+        <p>Ek cube ki side <strong>5 cm</strong> hai. TSA aur Volume nikalo.</p>
+        <p><strong>Solution:</strong><br>
+          TSA = \( 6 \times 5^2 = 6 \times 25 = \mathbf{150 \text{ cm}^2} \)<br>
+          Volume = \( 5^3 = \mathbf{125 \text{ cm}^3} \)</p>
+      </div>
+    </section>
+
+    <!-- 3. CYLINDER -->
+    <section class="content-section">
+      <h2>3️⃣ Right Circular Cylinder (Balaen / Tin Can)</h2>
+      <p>Cylinder ek aisi shape hai jo circle ko seedha upar uthane se banti hai. Road roller, drum, pencil — sab cylinders hain. Dimensions: <strong>r</strong> (base radius), <strong>h</strong> (height).</p>
+
+      <svg width="280" height="200" viewBox="0 0 280 200">
+        <ellipse cx="140" cy="155" rx="65" ry="20" fill="rgba(245,158,11,0.08)" stroke="#f59e0b" stroke-width="2"/>
+        <ellipse cx="140" cy="55" rx="65" ry="20" fill="rgba(245,158,11,0.1)" stroke="#f59e0b" stroke-width="2"/>
+        <line x1="75" y1="55" x2="75" y2="155" stroke="#f59e0b" stroke-width="2"/>
+        <line x1="205" y1="55" x2="205" y2="155" stroke="#f59e0b" stroke-width="2"/>
+        <line x1="140" y1="55" x2="205" y2="55" stroke="#2563eb" stroke-width="2" stroke-dasharray="4,2"/>
+        <text x="172" y="48" class="svg-label" fill="#2563eb">r</text>
+        <line x1="220" y1="55" x2="220" y2="155" stroke="#10b981" stroke-width="2"/>
+        <text x="228" y="110" class="svg-label" fill="#10b981">h</text>
+        <text x="140" y="188" class="svg-label" text-anchor="middle" fill="#f59e0b">Right Circular Cylinder</text>
+      </svg>
+
+      <h3>🧠 Curved SA Ka Logic — Unroll Karo!</h3>
+      <p>Cylinder ko upar-niche ke circles hata kar side ko khol do → ek <strong>Rectangle</strong> banta hai!</p>
+      <ul>
+        <li>Rectangle ki height = h</li>
+        <li>Rectangle ki length = Circle circumference = 2πr</li>
+        <li>CSA = \( 2\pi r \times h = 2\pi rh \)</li>
+      </ul>
+
+      <svg width="480" height="120" viewBox="0 0 480 120">
+        <ellipse cx="55" cy="65" rx="28" ry="9" fill="none" stroke="#f59e0b" stroke-width="2"/>
+        <ellipse cx="55" cy="38" rx="28" ry="9" fill="none" stroke="#f59e0b" stroke-width="2"/>
+        <line x1="27" y1="38" x2="27" y2="65" stroke="#f59e0b" stroke-width="2"/>
+        <line x1="83" y1="38" x2="83" y2="65" stroke="#f59e0b" stroke-width="2"/>
+        <text x="102" y="55" class="svg-label" fill="#334155">Unroll →</text>
+        <rect x="150" y="25" width="270" height="60" fill="rgba(245,158,11,0.1)" stroke="#f59e0b" stroke-width="2"/>
+        <text x="285" y="60" class="svg-title" fill="#d97706" text-anchor="middle">Curved Surface (Area = 2πrh)</text>
+        <text x="285" y="103" class="svg-label" text-anchor="middle" fill="#f59e0b">Length = 2πr</text>
+        <text x="136" y="58" class="svg-label" fill="#10b981">h</text>
+      </svg>
+
+      <div class="shape-card">
+        <h3>📐 Cylinder ke Formulas</h3>
+        <div class="formula-box"><span>Curved Surface Area (CSA)</span> = 2πrh</div>
+        <div class="formula-box"><span>Total Surface Area (TSA)</span> = 2πr(r + h) &nbsp;<em style="color:#94a3b8;font-size:14px;">(CSA + 2 circles)</em></div>
+        <div class="formula-box"><span>Volume</span> = πr²h</div>
+      </div>
+
+      <div class="example">
+        <div class="example-title">📝 Practice Example:</div>
+        <p>Ek tin can: radius = <strong>7 cm</strong>, height = <strong>20 cm</strong>. TSA aur Volume nikalo. (\(\pi = 22/7\))</p>
+        <p><strong>Solution:</strong><br>
+          TSA = \( 2\pi r(r+h) = 2 \times \frac{22}{7} \times 7 \times 27 = 44 \times 27 = \mathbf{1188 \text{ cm}^2} \)<br>
+          Volume = \( \pi r^2 h = \frac{22}{7} \times 49 \times 20 = 22 \times 7 \times 20 = \mathbf{3080 \text{ cm}^3} \)</p>
+      </div>
+    </section>
+
+    <!-- 4. CONE -->
+    <section class="content-section">
+      <h2>4️⃣ Right Circular Cone (Shankh / Ice Cream Cone)</h2>
+      <p>Cone ek aisi shape hai jiska base circular hota hai aur sirf ek apex (top point) hota hai. Dimensions: <strong>r</strong> (base radius), <strong>h</strong> (height), <strong>l</strong> (slant height).</p>
+
+      <svg width="280" height="215" viewBox="0 0 280 215">
+        <ellipse cx="140" cy="160" rx="70" ry="22" fill="rgba(239,68,68,0.08)" stroke="#ef4444" stroke-width="2"/>
+        <line x1="70" y1="160" x2="140" y2="40" stroke="#ef4444" stroke-width="2"/>
+        <line x1="210" y1="160" x2="140" y2="40" stroke="#ef4444" stroke-width="2"/>
+        <line x1="140" y1="40" x2="140" y2="160" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="4,2"/>
+        <line x1="140" y1="160" x2="210" y2="160" stroke="#10b981" stroke-width="1.5" stroke-dasharray="4,2"/>
+        <rect x="140" y="152" width="8" height="8" fill="none" stroke="#2563eb" stroke-width="1.5"/>
+        <text x="148" y="105" class="svg-label" fill="#2563eb">h</text>
+        <text x="172" y="175" class="svg-label" fill="#10b981">r</text>
+        <text x="192" y="98" class="svg-label" fill="#ef4444" transform="rotate(-56,192,98)">l (slant)</text>
+        <circle cx="140" cy="40" r="3" fill="#ef4444"/>
+        <text x="140" y="205" class="svg-label" text-anchor="middle" fill="#ef4444">Right Circular Cone</text>
+      </svg>
+
+      <div class="key-point">
+        <p>📏 <strong>Slant Height:</strong> Pythagoras se: \( l = \sqrt{r^2 + h^2} \)<br>
+          <em>(r, h aur l ek right triangle banate hain!)</em></p>
+      </div>
+
+      <h3>🧠 Curved SA Ka Logic — Cone Unroll Karo!</h3>
+      <p>Cone ko side se kaat kar flat karein → ek <strong>Sector of a circle</strong> milta hai jiska radius = slant height <strong>l</strong> aur arc = \(2\pi r\).</p>
+      <p>Sector Area = \( \frac{1}{2} \times \text{arc} \times \text{radius} = \frac{1}{2} \times 2\pi r \times l = \pi r l \)</p>
+
+      <div class="shape-card">
+        <h3>📐 Cone ke Formulas</h3>
+        <div class="formula-box"><span>Slant Height</span> l = √(r² + h²)</div>
+        <div class="formula-box"><span>Curved Surface Area (CSA)</span> = πrl</div>
+        <div class="formula-box"><span>Total Surface Area (TSA)</span> = πr(r + l)</div>
+        <div class="formula-box"><span>Volume</span> = ⅓πr²h</div>
+      </div>
+
+      <div class="story-box">
+        <div class="story-title">🍦 Volume Ka Mazedar Fact:</div>
+        <p>Cone ka volume exactly <strong>⅓ hota hai</strong> us cylinder ke volume ka jiska same base radius aur same height ho! 3 cones fill karo aur cylinder mein daalo — bilkul bhar jaayega! Ghar mein try karo 🧪</p>
+      </div>
+
+      <div class="example">
+        <div class="example-title">📝 Practice Example:</div>
+        <p>Ice-cream cone: radius = <strong>3.5 cm</strong>, height = <strong>12 cm</strong>. CSA aur Volume nikalo.</p>
+        <p><strong>Solution:</strong><br>
+          \( l = \sqrt{3.5^2 + 12^2} = \sqrt{12.25 + 144} = \sqrt{156.25} = 12.5 \text{ cm} \)<br>
+          CSA = \( \pi r l = \frac{22}{7} \times 3.5 \times 12.5 = 22 \times 6.25 = \mathbf{137.5 \text{ cm}^2} \)<br>
+          Volume = \( \frac{1}{3} \times \frac{22}{7} \times 3.5^2 \times 12 = \frac{1}{3} \times \frac{22}{7} \times 147 = \frac{1}{3} \times 462 = \mathbf{154 \text{ cm}^3} \)</p>
+      </div>
+    </section>
+
+    <!-- 5. PYRAMID -->
+    <section class="content-section">
+      <h2>5️⃣ Pyramid (Piramid)</h2>
+      <p>Pyramid ek 3D shape hai jiska ek <strong>polygonal base</strong> aur triangular side faces hain jo apex par milte hain. Egypt ke pyramids square base ke hain! Hum <strong>Square Pyramid</strong> padhenge: base side <strong>a</strong>, height <strong>h</strong>, slant height <strong>l</strong>.</p>
+
+      <svg width="300" height="200" viewBox="0 0 300 200">
+        <polygon points="80,155 200,155 225,125 105,125" fill="rgba(109,40,217,0.05)" stroke="#7c3aed" stroke-width="2"/>
+        <line x1="80" y1="155" x2="152" y2="45" stroke="#7c3aed" stroke-width="2"/>
+        <line x1="200" y1="155" x2="152" y2="45" stroke="#7c3aed" stroke-width="2"/>
+        <line x1="225" y1="125" x2="152" y2="45" stroke="#7c3aed" stroke-width="2"/>
+        <line x1="105" y1="125" x2="152" y2="45" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <line x1="80" y1="155" x2="105" y2="125" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <line x1="152" y1="45" x2="152" y2="140" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="3,2"/>
+        <text x="158" y="100" class="svg-label" fill="#2563eb">h</text>
+        <circle cx="152" cy="45" r="3" fill="#7c3aed"/>
+        <text x="140" y="173" class="svg-label" fill="#7c3aed">a</text>
+        <text x="88" y="143" class="svg-label" fill="#7c3aed">a</text>
+        <text x="152" y="195" class="svg-label" text-anchor="middle" fill="#7c3aed">Square Pyramid</text>
+      </svg>
+
+      <div class="key-point">
+        <p>📏 <strong>Slant Height of Face:</strong> \( l = \sqrt{h^2 + \left(\frac{a}{2}\right)^2} \)</p>
+      </div>
+
+      <div class="shape-card">
+        <h3>📐 Square Pyramid ke Formulas</h3>
+        <div class="formula-box"><span>Slant Height</span> l = √(h² + (a/2)²)</div>
+        <div class="formula-box"><span>Lateral Surface Area</span> = 2al &nbsp;<em style="color:#94a3b8;font-size:14px;">(4 triangular faces)</em></div>
+        <div class="formula-box"><span>Total Surface Area</span> = a² + 2al &nbsp;<em style="color:#94a3b8;font-size:14px;">(base + 4 faces)</em></div>
+        <div class="formula-box"><span>Volume</span> = ⅓ × a² × h</div>
+      </div>
+
+      <div class="story-box">
+        <div class="story-title">🏛️ Did You Know?</div>
+        <p>Egypt ka <strong>Great Pyramid of Giza</strong> (c. 2560 BCE) ek square pyramid hai! Base side ≈ 230 m, height ≈ 138 m. Volume ≈ 2.6 million m³! Ancient engineers ne ye sab bina calculators ke banaya. 🤯</p>
+      </div>
+
+      <div class="example">
+        <div class="example-title">📝 Practice Example:</div>
+        <p>Square pyramid: base side = <strong>6 cm</strong>, height = <strong>4 cm</strong>. TSA aur Volume nikalo.</p>
+        <p><strong>Solution:</strong><br>
+          \( l = \sqrt{4^2 + 3^2} = \sqrt{25} = 5 \text{ cm} \)<br>
+          TSA = \( a^2 + 2al = 36 + 60 = \mathbf{96 \text{ cm}^2} \)<br>
+          Volume = \( \frac{1}{3} \times 36 \times 4 = \mathbf{48 \text{ cm}^3} \)</p>
+      </div>
+    </section>
+
+    <!-- 6. SPHERE -->
+    <section class="content-section">
+      <h2>6️⃣ Sphere (Gola — Football, Marble)</h2>
+      <p>Sphere mein center se surface tak ki <strong>har jagah ki doori same (= r)</strong> hoti hai. Football, marble, Earth — sab approximate spheres hain. Ek hi dimension: <strong>r</strong> (radius).</p>
+
+      <svg width="240" height="200" viewBox="0 0 240 200">
+        <circle cx="120" cy="100" r="75" fill="rgba(16,185,129,0.08)" stroke="#10b981" stroke-width="2"/>
+        <ellipse cx="120" cy="100" rx="75" ry="20" fill="none" stroke="#10b981" stroke-width="1.5" stroke-dasharray="5,3"/>
+        <line x1="120" y1="100" x2="195" y2="100" stroke="#2563eb" stroke-width="2"/>
+        <text x="155" y="93" class="svg-label" fill="#2563eb">r</text>
+        <circle cx="120" cy="100" r="3" fill="#10b981"/>
+        <text x="120" y="192" class="svg-label" text-anchor="middle" fill="#10b981">Sphere</text>
+      </svg>
+
+      <h3>🧠 SA Ka Logic — Archimedes Ki Discovery!</h3>
+      <p>Mahan Greek mathematician <strong>Archimedes</strong> ne prove kiya ki sphere ka surface area bilkul equal hai us cylinder ke CSA ke jo sphere ko exactly fit kare (radius = r, height = 2r):</p>
+      <p style="text-align:center;">Cylinder CSA = \( 2\pi r \times 2r = 4\pi r^2 \) = Sphere SA ✅</p>
+
+      <div class="shape-card">
+        <h3>📐 Sphere ke Formulas</h3>
+        <div class="formula-box"><span>Surface Area</span> = 4πr²</div>
+        <div class="formula-box"><span>Volume</span> = (4/3)πr³</div>
+      </div>
+
+      <div class="example">
+        <div class="example-title">📝 Practice Example:</div>
+        <p>Football ka diameter = <strong>21 cm</strong>. SA aur Volume nikalo.</p>
+        <p><strong>Solution:</strong> r = 10.5 cm<br>
+          SA = \( 4 \times \frac{22}{7} \times 10.5^2 = \frac{88}{7} \times 110.25 = 88 \times 15.75 = \mathbf{1386 \text{ cm}^2} \)<br>
+          Volume = \( \frac{4}{3} \times \frac{22}{7} \times 10.5^3 = \frac{4}{3} \times \frac{22}{7} \times 1157.625 \approx \mathbf{4851 \text{ cm}^3} \)</p>
+      </div>
+    </section>
+
+    <!-- 7. HEMISPHERE -->
+    <section class="content-section">
+      <h2>7️⃣ Hemisphere (Aadha Gola — Bowl, Igloo)</h2>
+      <p>Hemisphere = sphere ka exactly aadha! Ek bowl, igloo, ya Earth ka koi ek half. Dimension: <strong>r</strong> (radius).</p>
+
+      <svg width="240" height="155" viewBox="0 0 240 155">
+        <path d="M 45 100 A 75 75 0 0 1 195 100" fill="rgba(245,158,11,0.1)" stroke="#f59e0b" stroke-width="2"/>
+        <ellipse cx="120" cy="100" rx="75" ry="18" fill="rgba(245,158,11,0.06)" stroke="#f59e0b" stroke-width="2"/>
+        <line x1="120" y1="100" x2="195" y2="100" stroke="#2563eb" stroke-width="2"/>
+        <text x="155" y="93" class="svg-label" fill="#2563eb">r</text>
+        <circle cx="120" cy="100" r="3" fill="#f59e0b"/>
+        <text x="120" y="140" class="svg-label" text-anchor="middle" fill="#f59e0b">Hemisphere</text>
+      </svg>
+
+      <div class="shape-card">
+        <h3>📐 Hemisphere ke Formulas</h3>
+        <div class="formula-box"><span>Curved Surface Area (CSA)</span> = 2πr² &nbsp;<em style="color:#94a3b8;font-size:14px;">(sphere SA ÷ 2)</em></div>
+        <div class="formula-box"><span>Total Surface Area (TSA)</span> = 3πr² &nbsp;<em style="color:#94a3b8;font-size:14px;">(CSA + circular base πr²)</em></div>
+        <div class="formula-box"><span>Volume</span> = (2/3)πr³ &nbsp;<em style="color:#94a3b8;font-size:14px;">(sphere V ÷ 2)</em></div>
+      </div>
+
+      <div class="example">
+        <div class="example-title">📝 Practice Example:</div>
+        <p>Ek bowl (hemisphere) ka radius = <strong>10.5 cm</strong>. CSA aur Volume nikalo.</p>
+        <p><strong>Solution:</strong><br>
+          CSA = \( 2 \times \frac{22}{7} \times 10.5^2 = \frac{44}{7} \times 110.25 = 44 \times 15.75 = \mathbf{693 \text{ cm}^2} \)<br>
+          Volume = \( \frac{2}{3} \times \frac{22}{7} \times 10.5^3 = \frac{2}{3} \times \frac{22}{7} \times 1157.625 \approx \mathbf{2425.5 \text{ cm}^3} \)</p>
+      </div>
+    </section>
+
+    <!-- 8. COMBINATIONS -->
+    <section class="content-section">
+      <h2>8️⃣ Combinations of Shapes (Milaao aur Banao!)</h2>
+      <p>Real life mein shapes akele nahi aati — combine hoti hain. Toy rocket = Cylinder + Cone. Oil barrel = Cylinder + 2 Hemispheres. Khilona temple = Cylinder + Hemisphere on top.</p>
+
+      <svg width="200" height="240" viewBox="0 0 200 240">
+        <polygon points="100,18 65,88 135,88" fill="rgba(239,68,68,0.1)" stroke="#ef4444" stroke-width="2"/>
+        <ellipse cx="100" cy="88" rx="35" ry="10" fill="rgba(37,99,235,0.08)" stroke="#2563eb" stroke-width="1.5"/>
+        <rect x="65" y="88" width="70" height="100" fill="rgba(37,99,235,0.05)" stroke="#2563eb" stroke-width="2"/>
+        <ellipse cx="100" cy="188" rx="35" ry="10" fill="rgba(37,99,235,0.08)" stroke="#2563eb" stroke-width="1.5"/>
+        <text x="148" y="53" class="svg-label" fill="#ef4444">Cone</text>
+        <text x="148" y="138" class="svg-label" fill="#2563eb">Cylinder</text>
+        <line x1="146" y1="51" x2="118" y2="48" stroke="#ef4444" stroke-width="1"/>
+        <line x1="146" y1="136" x2="138" y2="136" stroke="#2563eb" stroke-width="1"/>
+        <text x="100" y="228" class="svg-label" text-anchor="middle" fill="#334155">Rocket = Cylinder + Cone</text>
+      </svg>
+
+      <div class="key-point">
+        <p>📌 <strong>Combined Shapes ke Rules:</strong></p>
+        <ul style="margin:8px 0 0 0;">
+          <li><strong>Volume:</strong> Hamesha add karo → Total V = V₁ + V₂ + ...</li>
+          <li><strong>Surface Area:</strong> Sirf <em>dikhne wali (exposed)</em> surfaces count karo! Jahan do shapes milti hain woh area <em>add nahi</em> hota.</li>
+        </ul>
+      </div>
+
+      <div class="example">
+        <div class="example-title">📝 Practice Example — Toy Rocket:</div>
+        <p>Cylinder: r = <strong>3 cm</strong>, h = <strong>10 cm</strong>. Upar cone: same r, height = <strong>4 cm</strong>. Total Volume nikalo.</p>
+        <p><strong>Solution:</strong><br>
+          V(Cylinder) = \( \pi \times 9 \times 10 = 90\pi \)<br>
+          V(Cone) = \( \frac{1}{3} \times \pi \times 9 \times 4 = 12\pi \)<br>
+          Total = \( 102\pi \approx 102 \times 3.14 = \mathbf{320.28 \text{ cm}^3} \) 🚀</p>
+      </div>
+    </section>
+
+    <!-- Quick Reference Table -->
+    <section class="content-section">
+      <h2>📋 Quick Reference Table</h2>
+      <table>
+        <tr><th>Shape</th><th>CSA / LSA</th><th>Total SA</th><th>Volume</th></tr>
+        <tr><td><strong>Cuboid</strong> (l,b,h)</td><td>2h(l+b)</td><td>2(lb+bh+hl)</td><td>lbh</td></tr>
+        <tr><td><strong>Cube</strong> (a)</td><td>4a²</td><td>6a²</td><td>a³</td></tr>
+        <tr><td><strong>Cylinder</strong> (r,h)</td><td>2πrh</td><td>2πr(r+h)</td><td>πr²h</td></tr>
+        <tr><td><strong>Cone</strong> (r,h,l)</td><td>πrl</td><td>πr(r+l)</td><td>⅓πr²h</td></tr>
+        <tr><td><strong>Sq. Pyramid</strong> (a,h,l)</td><td>2al</td><td>a²+2al</td><td>⅓a²h</td></tr>
+        <tr><td><strong>Sphere</strong> (r)</td><td colspan="2" style="text-align:center;">4πr²</td><td>⁴⁄₃πr³</td></tr>
+        <tr><td><strong>Hemisphere</strong> (r)</td><td>2πr²</td><td>3πr²</td><td>⅔πr³</td></tr>
+      </table>
+    </section>
+
+    <!-- Practice -->
+    <section class="content-section">
+      <h2>🎯 Self-Assessment: Practice Questions</h2>
+
+      <div class="example" style="border-left-color: #10b981;">
+        <p class="example-title">❓ Q1: Cuboid</p>
+        <p>Ek cuboid: 8 cm × 6 cm × 4 cm. TSA nikalo.</p>
+        <p><strong>Answer:</strong> TSA = \(2(48+24+32) = 2 \times 104 = \mathbf{208 \text{ cm}^2}\)</p>
+      </div>
+
+      <div class="example" style="border-left-color: #10b981;">
+        <p class="example-title">❓ Q2: Cylinder — Reverse</p>
+        <p>Cylinder ka Volume = 1540 cm³, height = 10 cm. Radius nikalo. (\(\pi=22/7\))</p>
+        <p><strong>Answer:</strong> \( \pi r^2 h = 1540 \Rightarrow r^2 = \frac{1540 \times 7}{22 \times 10} = 49 \Rightarrow r = \mathbf{7 \text{ cm}}\)</p>
+      </div>
+
+      <div class="example" style="border-left-color: #10b981;">
+        <p class="example-title">❓ Q3: Sphere → Cylinder (Classic NCERT)</p>
+        <p>Ek metallic sphere (r = 6 cm) ko pighla kar cylinder (r = 4 cm) banaya. Height nikalo.</p>
+        <p><strong>Answer:</strong> \(\frac{4}{3}\pi \times 216 = \pi \times 16 \times h \Rightarrow 288 = 16h \Rightarrow h = \mathbf{18 \text{ cm}} \) 🔥</p>
+      </div>
+
+      <div class="example" style="border-left-color: #10b981;">
+        <p class="example-title">❓ Q4 (Challenge): Cone TSA</p>
+        <p>Cone: diameter = 14 cm, slant height = 8 cm. TSA nikalo.</p>
+        <p><strong>Answer:</strong> r = 7, l = 8<br>TSA = \(\pi r(r+l) = \frac{22}{7} \times 7 \times 15 = 22 \times 15 = \mathbf{330 \text{ cm}^2}\)</p>
+      </div>
+    </section>
+
+    <div class="interactive-banner">
+      <h3>🎮 Ab Haath Se Seekho!</h3>
+      <p>3D Shape Explorer mein shapes rotate karo, dimensions badlo, live SA + Volume dekho!</p>
+      <a href="surface-area-volume-interactive.html" class="btn-interactive">🚀 Launch 3D Explorer</a>
+    </div>
+
+    <div style="margin-top:30px; text-align:center;">
+      <a href="index.html" style="color:#2563eb; font-size:16px; text-decoration:none;">← Wapas Mensuration Index par jao</a>
+    </div>
+
+  </main>
+
+  <footer style="background:#2c3e50; color:#dfe8ef; text-align:center; padding:20px 15px; margin-top:30px;">
+    <p>© 2025 AIkiPadhai | Made with ❤️ to teach Maths in Roman Hindi</p>
+    <div style="margin-top:1rem;">
+      <a href="../../../../about.html" style="color:#94a3b8;">About</a> |
+      <a href="../../../../contact.html" style="color:#94a3b8;">Contact</a> |
+      <a href="../../../../privacy-policy.html" style="color:#94a3b8;">Privacy Policy</a>
+    </div>
+  </footer>
+
+  <script src="../../../../script.js"></script>
+</body>
+</html>

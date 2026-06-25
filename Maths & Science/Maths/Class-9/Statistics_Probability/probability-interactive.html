@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Probability Lab - AIkiPadhai</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:#050505;color:#fff;font-family:'Segoe UI',sans-serif;overflow:hidden;user-select:none;}
+    canvas{position:absolute;top:0;left:0;display:block;}
+    #input_video{position:absolute;top:0;left:0;width:320px;height:240px;visibility:hidden;transform:scaleX(-1);}
+
+    #ui{position:absolute;top:0;left:0;width:100%;height:100%;z-index:10;pointer-events:none;}
+    .hdr{position:absolute;top:0;left:0;right:0;padding:11px 20px 7px;text-align:center;background:linear-gradient(to bottom,rgba(0,0,0,.93),rgba(0,0,0,0));}
+    .hdr h1{color:#a78bfa;font-size:18px;letter-spacing:1px;text-shadow:0 0 10px #7c3aed;}
+    .hdr p{color:#c4b5fd;font-size:11px;margin-top:1px;}
+    .back-btn{position:absolute;top:11px;left:14px;pointer-events:auto;color:rgba(255,255,255,.7);text-decoration:none;border:1px solid rgba(255,255,255,.2);padding:5px 11px;border-radius:5px;font-size:12px;}
+    .back-btn:hover{background:rgba(255,255,255,.1);}
+
+    /* Mode tabs */
+    #mode-row{position:absolute;top:60px;left:0;right:0;display:flex;justify-content:center;gap:8px;pointer-events:auto;}
+    .mode-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);color:#ccc;padding:5px 18px;border-radius:14px;cursor:pointer;font-size:12px;transition:all .2s;}
+    .mode-btn:hover,.mode-btn.active{background:#7c3aed;border-color:#a78bfa;color:#fff;font-weight:bold;}
+
+    /* Mission panel — absolute bottom-centre above flip button */
+    #mission-panel{
+      position:absolute;bottom:132px;left:50%;transform:translateX(-50%);
+      background:rgba(0,0,0,.88);border:2px solid #fbbf24;border-radius:14px;
+      padding:10px 28px;text-align:center;
+      box-shadow:0 0 28px rgba(251,191,36,.2);
+      transition:all .3s;white-space:nowrap;pointer-events:none;min-width:280px;
+    }
+    #mission-panel.success{border-color:#22c55e;background:rgba(20,83,45,.92);box-shadow:0 0 45px rgba(34,197,94,.5);}
+    #mission-panel.wrong{border-color:#ef4444;background:rgba(80,10,10,.92);}
+    .m-title{font-size:11px;color:#fde047;text-transform:uppercase;font-weight:bold;letter-spacing:1px;}
+    .m-target{font-size:15px;font-weight:800;color:white;margin:3px 0;white-space:normal;max-width:440px;}
+    .m-hint{font-size:11px;color:#94a3b8;}
+
+    /* Flip/Roll button */
+    #flip-btn{position:absolute;bottom:70px;left:50%;transform:translateX(-50%);
+      pointer-events:auto;background:linear-gradient(135deg,#7c3aed,#a78bfa);
+      border:none;color:#fff;padding:14px 40px;border-radius:30px;font-size:16px;font-weight:bold;
+      cursor:pointer;box-shadow:0 0 22px rgba(167,139,250,.5);transition:all .2s;letter-spacing:1px;}
+    #flip-btn:hover{transform:translateX(-50%) scale(1.06);box-shadow:0 0 36px rgba(167,139,250,.8);}
+    #flip-btn.flash{animation:flash .25s ease;}
+    @keyframes flash{0%{transform:translateX(-50%) scale(1);}50%{transform:translateX(-50%) scale(0.92);}100%{transform:translateX(-50%) scale(1);}}
+
+    /* Answer area */
+    #answer-area{position:absolute;bottom:60px;left:50%;transform:translateX(-50%);display:none;gap:10px;pointer-events:auto;flex-wrap:wrap;justify-content:center;}
+    .ans-btn{background:rgba(124,58,237,.3);border:2px solid #a78bfa;color:#e9d5ff;padding:9px 18px;border-radius:8px;cursor:pointer;font-size:15px;font-weight:bold;transition:all .2s;min-width:66px;}
+    .ans-btn:hover,.ans-btn.finger-hover{background:#7c3aed;border-color:#fbbf24;transform:scale(1.08);}
+    .ans-btn.correct{background:#166534;border-color:#22c55e;}
+    .ans-btn.wrong-ans{background:#7f1d1d;border-color:#ef4444;}
+
+    /* Stats panel right */
+    #stats-panel{position:absolute;right:12px;top:50%;transform:translateY(-50%);
+      background:rgba(0,0,0,.82);border:1px solid rgba(255,255,255,.1);border-radius:12px;
+      padding:12px;width:175px;}
+    #stats-panel h3{font-size:11px;color:#a78bfa;margin-bottom:8px;text-align:center;letter-spacing:1px;text-transform:uppercase;}
+    .st-row{margin-bottom:7px;}
+    .st-lbl{font-size:10px;color:#94a3b8;margin-bottom:1px;}
+    .st-val{font-size:16px;color:#fbbf24;font-weight:bold;}
+
+    /* Score left */
+    #score-box{position:absolute;left:12px;top:50%;transform:translateY(-50%);
+      background:rgba(0,0,0,.82);border:1px solid rgba(255,255,255,.1);border-radius:12px;
+      padding:12px;width:140px;text-align:center;}
+    #score-box h3{font-size:11px;color:#a78bfa;margin-bottom:7px;letter-spacing:1px;}
+    #score-num{font-size:40px;font-weight:900;color:#fbbf24;}
+    #mission-count{font-size:12px;color:#a78bfa;margin-top:5px;}
+
+    /* Hand dot */
+    #hand-dot{position:absolute;width:16px;height:16px;border-radius:50%;background:rgba(167,139,250,.9);border:2px solid white;pointer-events:none;display:none;transform:translate(-50%,-50%);z-index:30;box-shadow:0 0 10px #a78bfa;}
+    #pinch-ring{position:absolute;width:30px;height:30px;border-radius:50%;border:2px solid #fbbf24;pointer-events:none;display:none;transform:translate(-50%,-50%);z-index:29;opacity:0;transition:opacity .15s;}
+    #mode-indicator{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);font-size:11px;color:#475569;text-align:center;}
+  </style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<video id="input_video" playsinline></video>
+<div id="hand-dot"></div>
+<div id="pinch-ring"></div>
+
+<div id="ui">
+  <div class="hdr">
+    <a href="probability.html" class="back-btn">← Wapas</a>
+    <h1>🎲 Probability Lab</h1>
+    <p>Flip/roll karo, empirical probability dekho, missions complete karo!</p>
+  </div>
+
+  <div id="mode-row">
+    <button class="mode-btn active" onclick="setMode('coin',this)">🪙 Coin Flip</button>
+    <button class="mode-btn" onclick="setMode('dice',this)">🎲 Dice Roll</button>
+  </div>
+
+  <div id="score-box">
+    <h3>⭐ Score</h3>
+    <div id="score-num">0</div>
+    <div id="mission-count">Mission 1/5</div>
+  </div>
+
+  <div id="stats-panel">
+    <h3>📊 Stats</h3>
+    <div class="st-row"><div class="st-lbl" id="sl1"></div><div class="st-val" id="sv1">—</div></div>
+    <div class="st-row"><div class="st-lbl" id="sl2"></div><div class="st-val" id="sv2">—</div></div>
+    <div class="st-row"><div class="st-lbl">Theoretical P</div><div class="st-val" id="sv-theo">—</div></div>
+    <div class="st-row"><div class="st-lbl">Empirical P</div><div class="st-val" id="sv-emp">—</div></div>
+    <div class="st-row"><div class="st-lbl">Total Trials</div><div class="st-val" id="sv-total">0</div></div>
+  </div>
+
+  <div id="mission-panel">
+    <div class="m-title" id="m-title">MISSION</div>
+    <div class="m-target" id="m-target">Loading...</div>
+    <div class="m-hint" id="m-hint"></div>
+  </div>
+
+  <button id="flip-btn" onclick="doFlip()">🪙 FLIP!</button>
+  <div id="answer-area"></div>
+  <div id="mode-indicator">🖱️ Mouse: click Flip | 🤚 Hand: pinch to flip, pinch answer to select</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+
+<script>
+const canvas=document.getElementById('c'), ctx=canvas.getContext('2d');
+canvas.width=window.innerWidth; canvas.height=window.innerHeight;
+const W=()=>canvas.width, H=()=>canvas.height;
+
+// ── State ──────────────────────────────────────────────────────────
+let mode='coin';
+let heads=0, tails=0;
+let faces=[0,0,0,0,0,0]; // dice face counts
+let totalFlips=0;
+let anim={active:false,frame:0,frames:20,result:null};
+let lastResult=null;
+let score=0, missionIdx=0, answerLocked=false, showAnswers=false;
+
+// ── Hand tracking state ────────────────────────────────────────────
+let isMouseMode=false;
+let fingerX=-1, fingerY=-1;
+let prevPinch=false, lastPinchTime=0;
+let hoveredBtn=-1;
+const handDot=document.getElementById('hand-dot');
+const pinchRing=document.getElementById('pinch-ring');
+
+// ── Missions ──────────────────────────────────────────────────────
+const COIN_MISSIONS=[
+  {type:'flip', q:'Sirf ek coin flip karo!', hint:'Flip button press karo / pinch karo', flipsNeeded:1},
+  {type:'predict', q:'Agar fair coin flip karein, Heads ki probability kya hai?', hint:'Fair = same chance for both sides',
+   opts:['1/2','1/3','2/3','1/4'], ans:'1/2'},
+  {type:'predict', q:'Tails ki theoretical probability kya hai?', hint:'P(Tails) = favorable/total outcomes',
+   opts:['1/2','1/3','0','1'], ans:'1/2'},
+  {type:'observe', q:'10 flips karo aur observe karo!', hint:'Empirical probability approximately 1/2 hogi', flipsNeeded:10},
+  {type:'predict', q:'P(Heads) + P(Tails) = ?', hint:'Complementary events! Sum = 1', opts:['1','1/2','2','0'], ans:'1'},
+];
+const DICE_MISSIONS=[
+  {type:'flip', q:'Ek baar dice roll karo!', hint:'Flip button press karo / pinch karo', flipsNeeded:1},
+  {type:'predict', q:'Ek specific number (e.g. 6) aane ki probability?', hint:'6 faces hain, 1 favorable',
+   opts:['1/6','1/3','1/2','1'], ans:'1/6'},
+  {type:'predict', q:'Even number (2,4,6) aane ki probability?', hint:'3 even faces out of 6',
+   opts:['1/2','1/3','1/6','2/3'], ans:'1/2'},
+  {type:'observe', q:'12 baar dice roll karo!', hint:'Har number approximately 2 baar aana chahiye', flipsNeeded:12},
+  {type:'predict', q:'P(odd) + P(even) = ?', hint:'Together they cover all outcomes!', opts:['1','1/2','1/3','2'], ans:'1'},
+];
+
+let missions=[], pendingFlips=0;
+
+function getMissions(){ return mode==='coin'?COIN_MISSIONS:DICE_MISSIONS; }
+
+// ── Mode switch ────────────────────────────────────────────────────
+function setMode(m, btn){
+  mode=m; heads=0; tails=0; faces=[0,0,0,0,0,0]; totalFlips=0; lastResult=null;
+  missionIdx=0; score=0; answerLocked=false; showAnswers=false;
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('score-num').textContent='0';
+  document.getElementById('flip-btn').textContent=m==='coin'?'🪙 FLIP!':'🎲 ROLL!';
+  document.getElementById('answer-area').style.display='none';
+  document.getElementById('answer-area').innerHTML='';
+  updateStatsPanel(); startMission();
+}
+
+// ── Flip / Roll ────────────────────────────────────────────────────
+function doFlip(){
+  if(anim.active) return;
+  anim={active:true, frame:0, frames:18, result:mode==='coin'?(Math.random()<0.5?'H':'T'):Math.ceil(Math.random()*6)};
+  // Animate; result applied at end
+  totalFlips++;
+  if(mode==='coin'){
+    if(anim.result==='H') heads++; else tails++;
+  } else {
+    faces[anim.result-1]++;
+  }
+  lastResult=anim.result;
+
+  // Flip button flash
+  const fb=document.getElementById('flip-btn');
+  fb.classList.remove('flash'); void fb.offsetWidth; fb.classList.add('flash');
+
+  // Check mission progress
+  if(pendingFlips>0){
+    pendingFlips--;
+    if(pendingFlips===0) advanceMission();
+  }
+  updateStatsPanel();
+}
+
+// ── Stats panel ────────────────────────────────────────────────────
+function updateStatsPanel(){
+  document.getElementById('sv-total').textContent=totalFlips;
+  if(mode==='coin'){
+    document.getElementById('sl1').textContent='Heads';
+    document.getElementById('sl2').textContent='Tails';
+    document.getElementById('sv1').textContent=heads;
+    document.getElementById('sv2').textContent=tails;
+    document.getElementById('sv-theo').textContent='1/2 = 0.5';
+    const ep=totalFlips>0?(heads/totalFlips).toFixed(2):'—';
+    document.getElementById('sv-emp').textContent=ep;
+  } else {
+    document.getElementById('sl1').textContent='Odd (1,3,5)';
+    document.getElementById('sl2').textContent='Even (2,4,6)';
+    const odd=faces[0]+faces[2]+faces[4];
+    document.getElementById('sv1').textContent=odd;
+    document.getElementById('sv2').textContent=totalFlips-odd;
+    document.getElementById('sv-theo').textContent='1/6 ≈ 0.17';
+    const ep=totalFlips>0?(odd/totalFlips).toFixed(2):'—';
+    document.getElementById('sv-emp').textContent=ep;
+  }
+}
+
+// ── Missions ──────────────────────────────────────────────────────
+function startMission(){
+  missions=getMissions();
+  if(missionIdx>=missions.length){allDone();return;}
+  answerLocked=false; showAnswers=false; hoveredBtn=-1;
+  const m=missions[missionIdx];
+  document.getElementById('m-title').textContent=`MISSION ${missionIdx+1}/${missions.length}`;
+  document.getElementById('m-title').style.color='#fde047';
+  document.getElementById('m-target').textContent=m.q;
+  document.getElementById('m-hint').textContent=`💡 ${m.hint}`;
+  const panel=document.getElementById('mission-panel');
+  panel.classList.remove('success','wrong');
+  document.getElementById('mission-count').textContent=`Mission ${missionIdx+1}/${missions.length}`;
+  document.getElementById('answer-area').style.display='none';
+  document.getElementById('answer-area').innerHTML='';
+
+  if(m.type==='flip'||m.type==='observe'){
+    pendingFlips=m.flipsNeeded||1;
+    document.getElementById('flip-btn').style.display='';
+  } else {
+    pendingFlips=0;
+    showAnswerButtons(m);
+  }
+}
+
+function advanceMission(){
+  // Called when observe flips complete — show congratulation then next
+  const panel=document.getElementById('mission-panel');
+  panel.classList.add('success');
+  document.getElementById('m-title').textContent='✅ DONE!';
+  document.getElementById('m-target').textContent='Sahi observe kiya! Next mission!';
+  document.getElementById('m-hint').textContent='';
+  score+=20; document.getElementById('score-num').textContent=score;
+  setTimeout(()=>{missionIdx++; startMission();},1800);
+}
+
+function showAnswerButtons(m){
+  showAnswers=true;
+  const area=document.getElementById('answer-area');
+  area.style.display='flex'; area.innerHTML='';
+  document.getElementById('flip-btn').style.display='none';
+  const opts=shuffle([...m.opts]);
+  opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='ans-btn'; btn.textContent=opt; btn.dataset.idx=i;
+    btn.onclick=()=>checkAnswer(opt,m.ans,btn);
+    area.appendChild(btn);
+  });
+}
+
+function checkAnswer(chosen,correct,btn){
+  if(answerLocked) return; answerLocked=true;
+  const panel=document.getElementById('mission-panel');
+  const ok=String(chosen)===String(correct);
+  if(ok){
+    btn.classList.add('correct');
+    panel.classList.add('success');
+    document.getElementById('m-title').textContent='✅ BILKUL SAHI!';
+    document.getElementById('m-target').textContent=`Correct! Answer: ${correct} 🎉`;
+    document.getElementById('m-hint').textContent='';
+    score+=20; document.getElementById('score-num').textContent=score;
+    setTimeout(()=>{
+      missionIdx++; startMission();
+    },2000);
+  } else {
+    btn.classList.add('wrong-ans');
+    panel.classList.add('wrong');
+    document.getElementById('m-title').textContent='❌ GALAT!';
+    document.getElementById('m-target').textContent=`Sahi tha: ${correct}. Dobara try!`;
+    setTimeout(()=>{
+      panel.classList.remove('wrong');
+      btn.classList.remove('wrong-ans');
+      answerLocked=false;
+      const m=missions[missionIdx];
+      document.getElementById('m-title').textContent=`MISSION ${missionIdx+1}/${missions.length}`;
+      document.getElementById('m-title').style.color='#fde047';
+      document.getElementById('m-target').textContent=m.q;
+      document.getElementById('m-hint').textContent=`💡 ${m.hint}`;
+    },1800);
+  }
+}
+
+function allDone(){
+  document.getElementById('m-title').textContent='🏆 ALL DONE!';
+  document.getElementById('m-target').textContent=`Score: ${score}/100 — Probability Master! 🎲`;
+  document.getElementById('m-hint').textContent='Doosra mode try karo!';
+  document.getElementById('mission-panel').classList.add('success');
+  document.getElementById('answer-area').style.display='none';
+  document.getElementById('flip-btn').style.display='none';
+  document.getElementById('mission-count').textContent='✅ Complete!';
+}
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+// ── Draw ───────────────────────────────────────────────────────────
+function draw(){
+  const cw=canvas.width, ch=canvas.height;
+  ctx.fillStyle='#050505'; ctx.fillRect(0,0,cw,ch);
+  // Grid
+  ctx.strokeStyle='#0d1a1a'; ctx.lineWidth=1;
+  for(let x=0;x<cw;x+=50){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,ch);ctx.stroke();}
+  for(let y=0;y<ch;y+=50){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(cw,y);ctx.stroke();}
+
+  const cx=cw/2, cy=ch/2-30;
+
+  if(mode==='coin') drawCoin(cx,cy);
+  else drawDice(cx,cy);
+
+  // Probability bar
+  if(totalFlips>0){
+    const bx=cw/2-150, by=ch-42, bw=300, bh=12;
+    ctx.fillStyle='rgba(255,255,255,.06)'; roundRect(bx,by,bw,bh,6); ctx.fill();
+    const empP=mode==='coin'?heads/totalFlips:(faces[0]+faces[2]+faces[4])/totalFlips;
+    ctx.fillStyle='#a78bfa'; roundRect(bx,by,bw*empP,bh,6); ctx.fill();
+    ctx.fillStyle='rgba(251,191,36,.8)'; ctx.lineWidth=2;
+    ctx.beginPath(); const tx=bx+bw*0.5; ctx.moveTo(tx,by-4); ctx.lineTo(tx,by+bh+4); ctx.stroke();
+    ctx.fillStyle='#94a3b8'; ctx.font='10px Segoe UI'; ctx.textAlign='center';
+    ctx.fillText('Empirical ← | → Theoretical(0.5)', cx, by+bh+14);
+  }
+
+  // Finger cursor
+  if(!isMouseMode && fingerX>0){
+    ctx.strokeStyle='rgba(167,139,250,0.5)'; ctx.lineWidth=1; ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(fingerX,100); ctx.lineTo(fingerX,ch-80); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+}
+
+function drawCoin(cx,cy){
+  const r=80;
+  const spin=anim.active?(anim.frame/anim.frames)*Math.PI*4:0;
+  const scaleX=Math.cos(spin);
+  const isHeads=lastResult==='H';
+  ctx.save(); ctx.translate(cx,cy); ctx.scale(Math.abs(scaleX)||0.01,1);
+
+  // Shadow
+  ctx.shadowBlur=40; ctx.shadowColor=isHeads?'#fbbf24':'#94a3b8';
+  // Face
+  ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI*2);
+  ctx.fillStyle=isHeads?'#b45309':'#4b5563'; ctx.fill();
+  ctx.strokeStyle=isHeads?'#fbbf24':'#9ca3af'; ctx.lineWidth=4; ctx.stroke();
+  ctx.shadowBlur=0;
+  // Inner ring
+  ctx.beginPath(); ctx.arc(0,0,r-10,0,Math.PI*2);
+  ctx.strokeStyle=isHeads?'rgba(251,191,36,0.4)':'rgba(156,163,175,0.4)'; ctx.lineWidth=2; ctx.stroke();
+  // Label
+  ctx.fillStyle='#fff'; ctx.font=`bold ${r*0.4}px Segoe UI`; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(isHeads?'H':'T',0,0);
+  ctx.restore();
+
+  // Counts
+  ctx.textBaseline='alphabetic';
+  ctx.fillStyle='#fbbf24'; ctx.font='bold 22px Segoe UI'; ctx.textAlign='center';
+  ctx.fillText(`H: ${heads}   T: ${tails}`, cx, cy+r+36);
+
+  if(anim.active){anim.frame++; if(anim.frame>anim.frames)anim.active=false;}
+}
+
+function drawDice(cx,cy){
+  const sz=120, r=10;
+  const spin=anim.active?1-anim.frame/anim.frames:0;
+  const face=lastResult||1;
+
+  ctx.save(); ctx.translate(cx,cy);
+  if(anim.active){ ctx.rotate(spin*0.6); ctx.scale(0.85+spin*0.15,0.85+spin*0.15); }
+  ctx.shadowBlur=30; ctx.shadowColor='#7c3aed';
+  ctx.fillStyle='#1e1b4b';
+  roundRect(-sz/2,-sz/2,sz,sz,r); ctx.fill();
+  ctx.strokeStyle='#a78bfa'; ctx.lineWidth=3;
+  roundRect(-sz/2,-sz/2,sz,sz,r); ctx.stroke();
+  ctx.shadowBlur=0;
+
+  // Dots
+  const dots=[
+    [[0,0]],
+    [[-25,-25],[25,25]],
+    [[-25,-25],[0,0],[25,25]],
+    [[-25,-25],[25,-25],[-25,25],[25,25]],
+    [[-25,-25],[25,-25],[0,0],[-25,25],[25,25]],
+    [[-25,-25],[25,-25],[-25,0],[25,0],[-25,25],[25,25]],
+  ][face-1];
+  ctx.fillStyle='#fbbf24';
+  dots.forEach(([dx,dy])=>{ctx.beginPath();ctx.arc(dx,dy,9,0,Math.PI*2);ctx.fill();});
+  ctx.restore(); ctx.textBaseline='alphabetic';
+
+  // Bar chart of faces
+  const bx=cx-faces.length*22, by2=cy+82;
+  const maxF=Math.max(1,...faces);
+  faces.forEach((f,i)=>{
+    const x=bx+i*44, bw=28, bh=(f/maxF)*55||2;
+    ctx.fillStyle=i+1===face?'#fbbf24':'#4c1d95';
+    ctx.beginPath(); ctx.fillRect(x,by2-bh,bw,bh);
+    ctx.fillStyle='#a78bfa'; ctx.font='10px Segoe UI'; ctx.textAlign='center';
+    ctx.fillText(i+1, x+bw/2, by2+13);
+    if(f>0){ctx.fillStyle='#fff'; ctx.font='bold 10px Segoe UI'; ctx.fillText(f, x+bw/2, by2-bh-3);}
+  });
+
+  if(anim.active){anim.frame++; if(anim.frame>anim.frames)anim.active=false;}
+}
+
+function roundRect(x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.arcTo(x+w,y,x+w,y+r,r);
+  ctx.lineTo(x+w,y+h-r); ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+  ctx.lineTo(x+r,y+h); ctx.arcTo(x,y+h,x,y+h-r,r);
+  ctx.lineTo(x,y+r); ctx.arcTo(x,y,x+r,y,r); ctx.closePath();
+}
+
+// ── Hand tracking ──────────────────────────────────────────────────
+function updateFingerHover(sx,sy){
+  hoveredBtn=-1;
+  document.querySelectorAll('.ans-btn').forEach((btn,i)=>{
+    btn.classList.remove('finger-hover');
+    const r=btn.getBoundingClientRect();
+    if(sx>=r.left&&sx<=r.right&&sy>=r.top&&sy<=r.bottom){
+      hoveredBtn=i; btn.classList.add('finger-hover');
+    }
+  });
+  // Check flip button
+  const fb=document.getElementById('flip-btn');
+  if(fb.style.display!=='none'){
+    const r=fb.getBoundingClientRect();
+    if(sx>=r.left&&sx<=r.right&&sy>=r.top&&sy<=r.bottom)
+      fb.style.boxShadow='0 0 45px rgba(167,139,250,1)';
+    else
+      fb.style.boxShadow='';
+  }
+}
+
+function onHandResults(res){
+  clearTimeout(loadTimeout);
+  if(res.multiHandLandmarks&&res.multiHandLandmarks.length>0){
+    const lm=res.multiHandLandmarks[0];
+    const tip=lm[8], thumb=lm[4];
+    fingerX=(1-tip.x)*window.innerWidth;
+    fingerY=tip.y*window.innerHeight;
+
+    handDot.style.display='block';
+    handDot.style.left=fingerX+'px';
+    handDot.style.top=fingerY+'px';
+    updateFingerHover(fingerX,fingerY);
+
+    const tx=(1-thumb.x)*window.innerWidth, ty=thumb.y*window.innerHeight;
+    const dist=Math.hypot(fingerX-tx, fingerY-ty);
+    const isPinching=dist<50;
+    pinchRing.style.display='block';
+    pinchRing.style.left=fingerX+'px';
+    pinchRing.style.top=fingerY+'px';
+    pinchRing.style.opacity=isPinching?'1':'0';
+
+    if(isPinching&&!prevPinch){
+      const now=Date.now();
+      if(now-lastPinchTime>600){
+        lastPinchTime=now;
+        if(showAnswers && hoveredBtn>=0){
+          const btns=document.querySelectorAll('.ans-btn');
+          if(btns[hoveredBtn]) btns[hoveredBtn].click();
+        } else {
+          doFlip();
+        }
+      }
+    }
+    prevPinch=isPinching;
+    document.getElementById('mode-indicator').textContent='🤚 Hand tracking active! Pinch to flip, pinch answer to select.';
+  } else {
+    handDot.style.display='none'; pinchRing.style.display='none';
+    fingerX=-1; prevPinch=false;
+    document.querySelectorAll('.ans-btn').forEach(b=>b.classList.remove('finger-hover'));
+    hoveredBtn=-1;
+    document.getElementById('flip-btn').style.boxShadow='';
+  }
+}
+
+function enableMouseMode(){
+  isMouseMode=true;
+  handDot.style.display='none'; pinchRing.style.display='none';
+  document.getElementById('mode-indicator').textContent='🖱️ Mouse mode. Click Flip button or answer options.';
+}
+
+const videoEl=document.getElementById('input_video');
+let loadTimeout=setTimeout(()=>{
+  // Silently fall back to mouse mode without blocking overlay
+  enableMouseMode();
+},4000);
+
+try{
+  const hands=new Hands({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/hands/${f}`});
+  hands.setOptions({maxNumHands:1,modelComplexity:0,minDetectionConfidence:0.6,minTrackingConfidence:0.5});
+  hands.onResults(onHandResults);
+  const cam=new Camera(videoEl,{
+    onFrame:async()=>{ if(!isMouseMode) await hands.send({image:videoEl}); },
+    width:320,height:240
+  });
+  cam.start().catch(()=>enableMouseMode());
+}catch(e){enableMouseMode();}
+
+// Space bar to flip
+window.addEventListener('keydown',e=>{ if(e.code==='Space'){e.preventDefault();doFlip();} });
+
+window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
+
+// Init
+updateStatsPanel(); startMission();
+(function loop(){requestAnimationFrame(loop);draw();})();
+</script>
+</body>
+</html>

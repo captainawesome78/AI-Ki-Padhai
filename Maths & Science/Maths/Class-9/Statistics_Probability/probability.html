@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984292277" crossorigin="anonymous"></script>
+  <title>Probability - Class 9 Maths | AIkiPadhai</title>
+  <link rel="stylesheet" href="../../../../style.css" />
+  <style>
+    body { font-family:Arial,Helvetica,sans-serif; background:#fafafa; color:#333; margin:0; line-height:1.6; }
+    header { background:#92400e; color:white; text-align:center; padding:25px 15px; }
+    header h1 { margin:0; font-size:26px; }
+    nav a { color:#fde68a; text-decoration:none; margin:0 12px; font-weight:600; font-size:15px; }
+    main { max-width:950px; margin:30px auto; padding:25px; background:#fff; border-radius:12px; box-shadow:0 3px 8px rgba(0,0,0,0.05); }
+    .content-section { margin-bottom:45px; }
+    .content-section h2 { font-size:26px; color:#92400e; border-bottom:2px solid #fde68a; padding-bottom:8px; margin-bottom:20px; }
+    .content-section h3 { font-size:20px; color:#78350f; margin-top:25px; }
+    p,li { font-size:17px; color:#444; }
+    .example { background:#fffbeb; padding:20px; border-left:5px solid #f59e0b; margin:20px 0; border-radius:6px; }
+    .example-title { font-weight:bold; color:#78350f; font-size:18px; margin-bottom:10px; }
+    .key-point { background:#fef3c7; border-left:5px solid #d97706; padding:18px 20px; margin:20px 0; border-radius:6px; }
+    .story-box { background:#fff7ed; border-left:5px solid #f97316; padding:18px 20px; margin:20px 0; border-radius:6px; }
+    .story-title { font-weight:bold; color:#7c2d12; font-size:18px; margin-bottom:8px; }
+    .formula-box { background:#78350f; color:#fde68a; padding:12px 18px; border-radius:8px; margin:10px 0; font-size:16px; }
+    .formula-box span { color:#fbbf24; font-weight:bold; }
+    svg { display:block; margin:15px auto; overflow:visible; }
+    .svg-label { font-size:12px; font-family:Arial,sans-serif; }
+    .svg-title { font-size:13px; font-weight:bold; font-family:Arial,sans-serif; }
+    table { width:100%; border-collapse:collapse; margin:15px 0; font-size:15px; }
+    th { background:#92400e; color:white; padding:10px 14px; text-align:left; }
+    td { padding:10px 14px; border-bottom:1px solid #fde68a; text-align:center; }
+    tr:nth-child(even) td { background:#fffbeb; }
+    .interactive-banner { background:linear-gradient(135deg,#92400e,#d97706); color:white; border-radius:12px; padding:25px; margin:30px 0; text-align:center; }
+    .interactive-banner h3 { margin-top:0; color:white; font-size:22px; }
+    .interactive-banner p { color:#fde68a; margin-bottom:15px; }
+    .btn-go { display:inline-block; background:#14b8a6; color:#fff; padding:12px 28px; border-radius:8px; text-decoration:none; font-weight:bold; font-size:16px; }
+  </style>
+  <script>
+    window.MathJax = { tex:{inlineMath:[['\\(','\\)'],['$','$']]}, options:{skipHtmlTags:['script','noscript','style','textarea','pre']} };
+    (function w(){ if(window.MathJax&&MathJax.typesetPromise){MathJax.typesetPromise();}else{setTimeout(w,50);} })();
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+<header>
+  <h1>🎲 Probability (Sambhavna)</h1>
+  <nav>
+    <a href="../../../../index.html">Home</a>
+    <a href="../../../index.html">Maths &amp; Science</a>
+    <a href="../index.html">Class 9 Maths</a>
+    <a href="index.html">Stats &amp; Probability</a>
+  </nav>
+</header>
+
+<main>
+
+  <!-- Intro -->
+  <section class="content-section">
+    <h2>🎲 Probability Kya Hai?</h2>
+    <p><strong>Probability (Sambhavna)</strong> ye measure karti hai ki koi event (ghatna) kitni baar hone ki <strong>sambhavana (chance)</strong> hai. Kya aaj baarish hogi? Kya dice par 6 aayega? Kya coin par heads aayega? — Ye sab probability se samajh sakte hain.</p>
+
+    <div class="story-box">
+      <div class="story-title">🌟 Probability Hamesha 0 aur 1 ke beech hoti hai:</div>
+      <p>
+        <strong>P = 0:</strong> Event KABHI nahi hoga. (Jaise ek normal coin par 3 aana)<br>
+        <strong>P = 1:</strong> Event HAMESHA hoga. (Jaise sun ka east mein ugna)<br>
+        <strong>0 &lt; P &lt; 1:</strong> Kuch chance hai. (Jaise rain today, heads in coin flip)
+      </p>
+    </div>
+
+    <!-- SVG: Probability Scale -->
+    <svg width="480" height="100" viewBox="0 0 480 100">
+      <!-- Scale bar -->
+      <rect x="40" y="42" width="400" height="16" rx="8" fill="url(#probGrad)"/>
+      <defs>
+        <linearGradient id="probGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#ef4444"/>
+          <stop offset="50%" stop-color="#f59e0b"/>
+          <stop offset="100%" stop-color="#10b981"/>
+        </linearGradient>
+      </defs>
+      <!-- Markers -->
+      <line x1="40" y1="38" x2="40" y2="62" stroke="#334155" stroke-width="2"/>
+      <line x1="240" y1="38" x2="240" y2="62" stroke="#334155" stroke-width="2"/>
+      <line x1="440" y1="38" x2="440" y2="62" stroke="#334155" stroke-width="2"/>
+      <!-- Labels -->
+      <text x="40" y="30" class="svg-title" text-anchor="middle" fill="#ef4444">0</text>
+      <text x="240" y="30" class="svg-title" text-anchor="middle" fill="#f59e0b">0.5</text>
+      <text x="440" y="30" class="svg-title" text-anchor="middle" fill="#10b981">1</text>
+      <text x="40" y="82" class="svg-label" text-anchor="middle" fill="#ef4444">Impossible</text>
+      <text x="240" y="82" class="svg-label" text-anchor="middle" fill="#d97706">Equal Chance</text>
+      <text x="440" y="82" class="svg-label" text-anchor="middle" fill="#10b981">Certain</text>
+      <!-- Example dots -->
+      <circle cx="40" cy="50" r="6" fill="#ef4444"/>
+      <circle cx="220" cy="50" r="6" fill="#3b82f6"/>
+      <circle cx="240" cy="50" r="6" fill="#f59e0b"/>
+      <circle cx="440" cy="50" r="6" fill="#10b981"/>
+      <text x="218" y="98" class="svg-label" text-anchor="middle" fill="#3b82f6">Coin Heads</text>
+    </svg>
+  </section>
+
+  <!-- Key Terms -->
+  <section class="content-section">
+    <h2>1️⃣ Important Terms (Zaruri Shabda)</h2>
+
+    <table>
+      <tr><th>Term</th><th>Matlab (Roman Hindi)</th><th>Example</th></tr>
+      <tr><td><strong>Experiment</strong></td><td>Koi action jo uncertain result de</td><td>Coin flip karna, dice roll karna</td></tr>
+      <tr><td><strong>Outcome</strong></td><td>Experiment ka ek possible result</td><td>Coin flip → Heads ya Tails</td></tr>
+      <tr><td><strong>Sample Space (S)</strong></td><td>Sabhi possible outcomes ka set</td><td>Coin: S = {H, T}; Dice: S = {1,2,3,4,5,6}</td></tr>
+      <tr><td><strong>Event (E)</strong></td><td>Outcomes ka ek group jiske liye P nikalte hain</td><td>Dice par even number aana: E = {2,4,6}</td></tr>
+      <tr><td><strong>Favourable Outcomes</strong></td><td>Woh outcomes jo event mein hain</td><td>Event "6 aana" ke liye: 1 favourable outcome</td></tr>
+    </table>
+  </section>
+
+  <!-- Theoretical Probability -->
+  <section class="content-section">
+    <h2>2️⃣ Theoretical Probability (Siddhaantik Sambhavna)</h2>
+    <p>Theoretical probability tab use hoti hai jab hum pehle se jaante hain ki sabhi outcomes equally likely hain (jaise ek fair coin ya fair dice).</p>
+
+    <div class="formula-box">
+      <span>P(Event E)</span> = \(\frac{\text{Number of Favourable Outcomes}}{\text{Total Number of Outcomes in Sample Space}}\)<br>
+      \( P(E) = \frac{n(E)}{n(S)} \)
+    </div>
+
+    <div class="key-point">
+      <p>📌 <strong>Important Properties:</strong></p>
+      <ul>
+        <li>\( 0 \leq P(E) \leq 1 \) hamesha</li>
+        <li>\( P(\text{Sure Event}) = 1 \)</li>
+        <li>\( P(\text{Impossible Event}) = 0 \)</li>
+        <li>\( P(E) + P(\bar{E}) = 1 \) &nbsp; → \( P(\bar{E}) = 1 - P(E) \) &nbsp; (Complementary Events)</li>
+      </ul>
+    </div>
+
+    <div class="example">
+      <div class="example-title">📝 Example 1 — Coin Flip:</div>
+      <p>Ek fair coin flip karte hain. S = {H, T}. n(S) = 2.</p>
+      <p>P(Heads) = \(\frac{1}{2} = 0.5\) &nbsp;|&nbsp; P(Tails) = \(\frac{1}{2} = 0.5\) ✅</p>
+    </div>
+
+    <div class="example">
+      <div class="example-title">📝 Example 2 — Dice Roll:</div>
+      <p>Ek fair dice roll karte hain. S = {1, 2, 3, 4, 5, 6}. n(S) = 6.</p>
+      <p>P(3 aana) = \(\frac{1}{6}\)<br>
+         P(Even number aana) = \(\frac{n(\{2,4,6\})}{6} = \frac{3}{6} = \frac{1}{2}\)<br>
+         P(7 aana) = \(\frac{0}{6} = 0\) (impossible!)<br>
+         P(6 se chhhota ya barabar) = \(\frac{6}{6} = 1\) (certain!)</p>
+    </div>
+
+    <div class="example">
+      <div class="example-title">📝 Example 3 — Playing Cards:</div>
+      <p>52 cards ki deck mein se ek card random nikala. P(Ace aana)?</p>
+      <p>4 Aces hain (♠♥♦♣). n(S) = 52.<br>
+         P(Ace) = \(\frac{4}{52} = \frac{1}{13} \approx 0.077\) ✅</p>
+    </div>
+  </section>
+
+  <!-- Empirical Probability -->
+  <section class="content-section">
+    <h2>3️⃣ Empirical Probability (Anubhav se Milne wali Sambhavna)</h2>
+    <p>Empirical (ya Experimental) probability tab use hoti hai jab hum <strong>actual experiment</strong> karte hain aur results observe karte hain. Theory se nahi, asli data se nikalte hain.</p>
+
+    <div class="formula-box">
+      <span>Empirical P(E)</span> = \(\frac{\text{Number of times E occurred}}{\text{Total number of trials}}\)
+    </div>
+
+    <div class="story-box">
+      <div class="story-title">🔍 Empirical vs Theoretical:</div>
+      <p>Ek coin ko 100 baar flip karo. Theory kehta hai P(H) = 0.5 = 50 baar. Par actual experiment mein tum paa sakte ho 48 ya 53 baar Heads — ye <strong>empirical probability</strong> hai. Jitne zyada trials karoge, empirical → theoretical ke paas aata jaayega. Ise <strong>Law of Large Numbers</strong> kehte hain!</p>
+    </div>
+
+    <div class="example">
+      <div class="example-title">📝 Example — Bag of Balls:</div>
+      <p>Ek bag mein red aur blue balls hain. 50 baar ek ball nikali aur wapas rakhi. Red ball 30 baar aayi.</p>
+      <p>Empirical P(Red) = \(\frac{30}{50} = \frac{3}{5} = 0.6\)<br>
+         Iska matlab bag mein approximately 60% balls red hain.</p>
+    </div>
+  </section>
+
+  <!-- Tree Diagrams -->
+  <section class="content-section">
+    <h2>4️⃣ Tree Diagrams (Ped wale Diagram)</h2>
+    <p>Jab ek se zyada events hon (compound events), tab <strong>Tree Diagram</strong> sabhi outcomes systematically list karne mein help karta hai.</p>
+
+    <!-- SVG: Tree Diagram for 2 coin flips -->
+    <svg width="460" height="240" viewBox="0 0 460 240">
+      <!-- Root -->
+      <circle cx="60" cy="120" r="6" fill="#92400e"/>
+      <text x="30" y="125" class="svg-label" fill="#92400e">Start</text>
+      <!-- First flip -->
+      <line x1="66" y1="120" x2="160" y2="70" stroke="#92400e" stroke-width="2"/>
+      <line x1="66" y1="120" x2="160" y2="170" stroke="#92400e" stroke-width="2"/>
+      <circle cx="165" cy="70" r="6" fill="#d97706"/>
+      <circle cx="165" cy="170" r="6" fill="#d97706"/>
+      <text x="100" y="88" class="svg-label" fill="#d97706">H (½)</text>
+      <text x="100" y="155" class="svg-label" fill="#d97706">T (½)</text>
+      <!-- Second flip from H -->
+      <line x1="171" y1="70" x2="280" y2="40" stroke="#f59e0b" stroke-width="2"/>
+      <line x1="171" y1="70" x2="280" y2="100" stroke="#f59e0b" stroke-width="2"/>
+      <circle cx="285" cy="40" r="6" fill="#14b8a6"/>
+      <circle cx="285" cy="100" r="6" fill="#14b8a6"/>
+      <text x="215" y="48" class="svg-label" fill="#f59e0b">H (½)</text>
+      <text x="215" y="92" class="svg-label" fill="#f59e0b">T (½)</text>
+      <!-- Second flip from T -->
+      <line x1="171" y1="170" x2="280" y2="140" stroke="#f59e0b" stroke-width="2"/>
+      <line x1="171" y1="170" x2="280" y2="200" stroke="#f59e0b" stroke-width="2"/>
+      <circle cx="285" cy="140" r="6" fill="#14b8a6"/>
+      <circle cx="285" cy="200" r="6" fill="#14b8a6"/>
+      <text x="215" y="148" class="svg-label" fill="#f59e0b">H (½)</text>
+      <text x="215" y="193" class="svg-label" fill="#f59e0b">T (½)</text>
+      <!-- Outcomes -->
+      <text x="300" y="44" class="svg-label" fill="#134e4a">HH — P=¼</text>
+      <text x="300" y="104" class="svg-label" fill="#134e4a">HT — P=¼</text>
+      <text x="300" y="144" class="svg-label" fill="#134e4a">TH — P=¼</text>
+      <text x="300" y="204" class="svg-label" fill="#134e4a">TT — P=¼</text>
+      <text x="230" y="230" class="svg-title" text-anchor="middle" fill="#92400e">Tree Diagram: 2 Coin Flips</text>
+    </svg>
+
+    <p>Sample Space S = {HH, HT, TH, TT} → 4 outcomes.</p>
+    <p>P(exactly 1 Heads) = \(\frac{2}{4} = \frac{1}{2}\) (HT aur TH dono count hote hain)</p>
+    <p>P(2 Heads) = \(\frac{1}{4}\) &nbsp;|&nbsp; P(no Heads) = \(\frac{1}{4}\)</p>
+
+    <div class="example">
+      <div class="example-title">📝 Example — Dice + Coin:</div>
+      <p>Ek dice roll karo aur coin flip karo. Kitne total outcomes hain? P(6 aur Heads)?</p>
+      <p>Dice: 6 outcomes × Coin: 2 outcomes = <strong>12 total outcomes</strong><br>
+         Favourable (6 AND H): sirf 1 → P = \(\frac{1}{12}\) ✅</p>
+    </div>
+  </section>
+
+  <!-- Complementary Events -->
+  <section class="content-section">
+    <h2>5️⃣ Complementary Events (Viparit Ghatna)</h2>
+    <p>Kisi event <strong>E</strong> ka complement hota hai <strong>"E nahi hona"</strong> — ise \(\bar{E}\) ya E' likhte hain.</p>
+
+    <div class="formula-box">
+      <span>P(E) + P(\(\bar{E}\))</span> = 1 &nbsp;→&nbsp; <span>P(\(\bar{E}\))</span> = 1 - P(E)
+    </div>
+
+    <div class="example">
+      <div class="example-title">📝 Example:</div>
+      <p>Dice par 6 na aane ki probability kya hai?</p>
+      <p>P(6 aana) = 1/6<br>
+         P(6 na aana) = 1 - 1/6 = <strong>5/6</strong> ✅</p>
+    </div>
+
+    <!-- SVG: Venn diagram -->
+    <svg width="300" height="160" viewBox="0 0 300 160">
+      <rect x="20" y="20" width="260" height="120" rx="10" fill="none" stroke="#92400e" stroke-width="2"/>
+      <circle cx="130" cy="80" r="50" fill="rgba(245,158,11,0.2)" stroke="#d97706" stroke-width="2"/>
+      <text x="130" y="85" class="svg-title" text-anchor="middle" fill="#78350f">Event E</text>
+      <text x="220" y="85" class="svg-label" text-anchor="middle" fill="#92400e">Ē</text>
+      <text x="150" y="155" class="svg-label" text-anchor="middle" fill="#334155">Sample Space S (total)</text>
+    </svg>
+  </section>
+
+  <!-- Interactive Banner -->
+  <div class="interactive-banner">
+    <h3>🎲 Probability Lab — Khud Try Karo!</h3>
+    <p>Coin flip karo, dice roll karo — empirical probability live dekho aur theoretical se compare karo. Missions complete karo!</p>
+    <a href="probability-interactive.html" class="btn-go">🚀 Launch Lab</a>
+  </div>
+
+  <!-- Practice -->
+  <section class="content-section">
+    <h2>🎯 Practice Questions</h2>
+
+    <div class="example" style="border-left-color:#d97706;">
+      <p class="example-title">❓ Q1:</p>
+      <p>Ek bag mein 3 red, 4 blue, 5 green balls hain. Ek ball random nikali. P(Blue) aur P(Not Blue) nikalo.</p>
+      <p><strong>Answer:</strong> n(S) = 12<br>
+         P(Blue) = \(\frac{4}{12} = \frac{1}{3}\)<br>
+         P(Not Blue) = \(1 - \frac{1}{3} = \frac{2}{3}\) ✅</p>
+    </div>
+
+    <div class="example" style="border-left-color:#d97706;">
+      <p class="example-title">❓ Q2:</p>
+      <p>Ek fair dice do baar roll kiya. P(dono baar same number aaye)?</p>
+      <p><strong>Answer:</strong> Total outcomes = 6×6 = 36<br>
+         Same outcomes: (1,1),(2,2),(3,3),(4,4),(5,5),(6,6) = 6<br>
+         P = \(\frac{6}{36} = \frac{1}{6}\) ✅</p>
+    </div>
+
+    <div class="example" style="border-left-color:#d97706;">
+      <p class="example-title">❓ Q3 (Challenge):</p>
+      <p>Ek experiment mein coin 200 baar flip ki. Heads 112 baar aaya. Empirical P(Heads) kya hai? Theoretical se kitna alag hai?</p>
+      <p><strong>Answer:</strong><br>
+         Empirical P(H) = \(\frac{112}{200} = 0.56\)<br>
+         Theoretical P(H) = 0.5<br>
+         Difference = 0.56 - 0.50 = <strong>0.06</strong> — ye expected hai! Aur zyada trials se ye kam hota jaayega. 📉</p>
+    </div>
+  </section>
+
+  <div style="margin-top:20px; text-align:center;">
+    <a href="statistics.html" style="color:#92400e; font-size:16px; text-decoration:none;">← Statistics padhne jao</a>
+    &nbsp;|&nbsp;
+    <a href="index.html" style="color:#92400e; font-size:16px; text-decoration:none;">Wapas Index par jao →</a>
+  </div>
+</main>
+
+<footer style="background:#92400e; color:#fde68a; text-align:center; padding:20px 15px; margin-top:30px;">
+  <p>© 2025 AIkiPadhai | Made with ❤️ to teach Maths in Roman Hindi</p>
+  <div style="margin-top:1rem;">
+    <a href="../../../../about.html" style="color:#fde68a;">About</a> |
+    <a href="../../../../contact.html" style="color:#fde68a;">Contact</a> |
+    <a href="../../../../privacy-policy.html" style="color:#fde68a;">Privacy Policy</a>
+  </div>
+</footer>
+<script src="../../../../script.js"></script>
+</body>
+</html>
