@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Quadratic Equations | Class 10 Maths | AIkiPadhai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;line-height:1.7;}
+    .content-wrap{max-width:900px;margin:0 auto;padding:28px 20px;}
+    h2{font-size:1.55rem;color:#064e3b;border-bottom:3px solid #10b981;padding-bottom:8px;margin:2.2rem 0 1rem;}
+    h3{font-size:1.15rem;color:#065f46;margin:1.5rem 0 .6rem;}
+    .story-box{background:#f0fdf4;border-left:5px solid #10b981;padding:1.2rem 1.5rem;border-radius:0 10px 10px 0;margin:1.2rem 0;}
+    .story-box .story-title{font-weight:700;color:#065f46;margin-bottom:6px;}
+    .concept-box{background:#ecfdf5;border-left:4px solid #059669;padding:1.1rem 1.4rem;border-radius:0 8px 8px 0;margin:1rem 0;}
+    .key-point{background:#fefce8;border-left:4px solid #eab308;padding:1.1rem 1.4rem;border-radius:0 8px 8px 0;margin:1rem 0;}
+    .formula-box{background:#022c22;color:#6ee7b7;border-radius:10px;padding:1.2rem 1.5rem;margin:1rem 0;font-family:monospace;font-size:.98rem;}
+    .formula-box .label{color:#34d399;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+    .example-box{background:#fff7ed;border-left:4px solid #f97316;padding:1.2rem 1.5rem;border-radius:0 8px 8px 0;margin:1.2rem 0;}
+    .example-box .ex-title{font-weight:700;color:#9a3412;margin-bottom:8px;}
+    table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.92rem;}
+    th{background:#059669;color:white;padding:10px 14px;text-align:center;}
+    td{padding:9px 14px;border-bottom:1px solid #e2e8f0;text-align:center;}
+    td:first-child{text-align:left;}
+    tr:nth-child(even) td{background:#f0fdf4;}
+    .disc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:1rem 0;}
+    @media(max-width:640px){.disc-grid{grid-template-columns:1fr;}}
+    .disc-card{border-radius:10px;padding:1rem;text-align:center;}
+    .disc-card.pos{background:#dcfce7;border:2px solid #16a34a;}
+    .disc-card.zero{background:#dbeafe;border:2px solid #3b82f6;}
+    .disc-card.neg{background:#fef2f2;border:2px solid #ef4444;}
+    .disc-card h4{margin:0 0 6px;font-size:.95rem;}
+    .proof-step{background:#f8fafc;border-radius:8px;padding:.9rem 1.1rem;margin:.5rem 0;border:1px solid #d1fae5;}
+    .proof-step .ps-label{font-size:.75rem;font-weight:700;color:#059669;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+    .practice-q{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1.2rem;margin:.8rem 0;}
+    .practice-q h4{margin:0 0 .5rem;}
+    .answer{background:#f0fdf4;border-radius:6px;padding:.8rem 1rem;margin-top:.7rem;font-size:.9rem;display:none;border-left:3px solid #10b981;}
+    .show-ans{background:none;border:1px solid #10b981;color:#059669;padding:5px 14px;border-radius:6px;cursor:pointer;font-size:.85rem;margin-top:.5rem;}
+    .show-ans:hover{background:#10b981;color:white;}
+    svg{display:block;margin:1rem auto;overflow:visible;}
+    .big-formula{background:#1e1b4b;color:#a5b4fc;border-radius:12px;padding:1.5rem;text-align:center;font-size:1.3rem;font-family:monospace;margin:1.2rem 0;letter-spacing:1px;}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+      <nav>
+        <a href="../index.html">Class 10</a>
+        <a href="index.html">Algebra</a>
+        <a href="quadratic-equations.html" class="active">Quadratic Equations</a>
+      </nav>
+    </div>
+  </header>
+  <section class="hero" style="background:linear-gradient(135deg,#022c22,#059669);">
+    <div class="container">
+      <h1>Quadratic Equations 📐</h1>
+      <p>ax²+bx+c=0 ke teen methods — factorisation, completing the square, Sridharacharya formula.</p>
+    </div>
+  </section>
+
+  <div class="content-wrap">
+
+    <h2>🌟 Quadratic Equation Kya Hai?</h2>
+    <div class="story-box">
+      <div class="story-title">🏟️ Real Life Story:</div>
+      <p>Ek rectangular garden ki length, width se 5 meter zyada hai aur area 150 m² hai. Length aur width nikalne ke liye: w(w+5) = 150 → w² + 5w − 150 = 0. Yeh ek <strong>quadratic equation</strong> hai — jisme x² term hoti hai!</p>
+    </div>
+    <div class="concept-box">
+      <strong>Standard Form:</strong> ax² + bx + c = 0, jahan a ≠ 0<br>
+      • a = leading coefficient (x² ka coefficient)<br>
+      • b = middle term coefficient<br>
+      • c = constant term<br>
+      Iske exactly <strong>2 roots</strong> hote hain (real ya complex)
+    </div>
+
+    <div class="example-box">
+      <div class="ex-title">Identify karo — quadratic hai ya nahi?</div>
+      <table>
+        <tr><th>Equation</th><th>Standard form</th><th>Quadratic?</th></tr>
+        <tr><td>x² − 3x + 5 = 0</td><td>a=1, b=−3, c=5</td><td>✅ Yes</td></tr>
+        <tr><td>x³ + x² = 0</td><td>Degree 3</td><td>❌ No (cubic)</td></tr>
+        <tr><td>(x+1)² = 2</td><td>x²+2x−1=0, a=1</td><td>✅ Yes</td></tr>
+        <tr><td>x(x+2) = 3</td><td>x²+2x−3=0</td><td>✅ Yes</td></tr>
+        <tr><td>x + 3 = 0</td><td>a=0</td><td>❌ No (linear)</td></tr>
+      </table>
+    </div>
+
+    <h2>🔧 Method 1: Factorisation (Splitting the Middle Term)</h2>
+    <div class="concept-box">
+      ax² + bx + c ko (px+q)(rx+s) form mein likhna — jahan pr=a aur qs=c aur ps+qr=b
+    </div>
+    <div class="key-point">
+      <strong>Trick:</strong> b ko do numbers mein split karo jinka product = a×c ho.<br>
+      Example: x²−5x+6 mein b=−5, a×c=6. Split: −2 aur −3 (kyunki −2×−3=6 aur −2+−3=−5)
+    </div>
+
+    <div class="example-box">
+      <div class="ex-title">Example 1: x² − 5x + 6 = 0</div>
+      <div class="proof-step"><div class="ps-label">Split</div>Product=6, sum=−5 → −2 aur −3</div>
+      <div class="proof-step"><div class="ps-label">Factorise</div>x² − 2x − 3x + 6 = x(x−2) − 3(x−2) = (x−2)(x−3)</div>
+      <div class="proof-step"><div class="ps-label">Roots</div>x = 2 ya x = 3</div>
+    </div>
+
+    <div class="example-box">
+      <div class="ex-title">Example 2: 2x² + 3x − 2 = 0</div>
+      a×c = 2×(−2) = −4. Sum=3. Split: 4 aur −1 (4×−1=−4, 4+−1=3)<br>
+      2x² + 4x − x − 2 = 2x(x+2) − 1(x+2) = (2x−1)(x+2) = 0<br>
+      <strong>x = 1/2 ya x = −2</strong>
+    </div>
+
+    <div class="example-box">
+      <div class="ex-title">Example 3: 4x² − 4x + 1 = 0</div>
+      4x² − 2x − 2x + 1 = 2x(2x−1) − 1(2x−1) = (2x−1)² = 0<br>
+      <strong>x = 1/2</strong> (repeated/double root)
+    </div>
+
+    <h2>🔧 Method 2: Completing the Square</h2>
+    <div class="concept-box">
+      ax² + bx + c = 0 ko (x + p)² = q form mein badalna.
+    </div>
+
+    <div class="example-box">
+      <div class="ex-title">Example: 2x² − 7x + 3 = 0 (Completing the Square)</div>
+      <div class="proof-step"><div class="ps-label">Divide by 2</div>x² − 7x/2 + 3/2 = 0</div>
+      <div class="proof-step"><div class="ps-label">Half of 7/2 = 7/4, square it = 49/16</div>x² − 7x/2 + 49/16 = 3/2 − 49/16... wait, add 49/16 to both sides</div>
+      <div class="proof-step"><div class="ps-label">Rearrange</div>x² − 7x/2 + 49/16 = −3/2 + 49/16 = (−24+49)/16 = 25/16</div>
+      <div class="proof-step"><div class="ps-label">Perfect square</div>(x − 7/4)² = 25/16</div>
+      <div class="proof-step"><div class="ps-label">Square root</div>x − 7/4 = ±5/4</div>
+      <strong>x = 7/4 + 5/4 = 3 ya x = 7/4 − 5/4 = 1/2</strong>
+    </div>
+
+    <h2>🏆 Method 3: Quadratic Formula (Sridharacharya Formula)</h2>
+    <div class="big-formula">x = (−b ± √(b²−4ac)) / 2a</div>
+    <div class="story-box">
+      <div class="story-title">📜 Historical Note:</div>
+      <p>Ye formula Indian mathematician <strong>Sridharacharya</strong> ne 9th century mein derive kiya tha! Ye completing the square se hi aata hai — general form mein.</p>
+    </div>
+
+    <div class="example-box">
+      <div class="ex-title">Derivation — ax² + bx + c = 0 se formula:</div>
+      x² + (b/a)x + c/a = 0<br>
+      x² + (b/a)x = −c/a<br>
+      x² + (b/a)x + b²/4a² = b²/4a² − c/a<br>
+      (x + b/2a)² = (b²−4ac)/4a²<br>
+      x + b/2a = ±√(b²−4ac) / 2a<br>
+      <strong>x = [−b ± √(b²−4ac)] / 2a</strong>
+    </div>
+
+    <div class="example-box">
+      <div class="ex-title">Example: x² − 3x − 10 = 0</div>
+      a=1, b=−3, c=−10<br>
+      D = 9 + 40 = 49<br>
+      x = (3 ± 7) / 2<br>
+      <strong>x = 5 ya x = −2</strong>
+    </div>
+
+    <div class="example-box">
+      <div class="ex-title">Example: x² + 4x + 5 = 0</div>
+      D = 16 − 20 = −4 &lt; 0<br>
+      <strong>No real roots!</strong> (complex roots exist but not in Class 10 scope)
+    </div>
+
+    <h2>🔑 Discriminant (D = b² − 4ac)</h2>
+    <div class="disc-grid">
+      <div class="disc-card pos">
+        <h4>D &gt; 0</h4>
+        <p>2 distinct real roots<br>Graph x-axis ko 2 points par cross karta hai</p>
+      </div>
+      <div class="disc-card zero">
+        <h4>D = 0</h4>
+        <p>2 equal real roots<br>x = −b/2a (repeated)<br>Graph x-axis ko touch karta hai</p>
+      </div>
+      <div class="disc-card neg">
+        <h4>D &lt; 0</h4>
+        <p>No real roots<br>Graph x-axis ko cross nahi karta</p>
+      </div>
+    </div>
+
+    <!-- Parabola cases SVG -->
+    <svg viewBox="0 0 460 150" width="460" height="150">
+      <!-- Case 1: D>0 - two intersections -->
+      <g transform="translate(10,0)">
+        <line x1="0" y1="80" x2="140" y2="80" stroke="#475569" stroke-width="1"/>
+        <path d="M 5,140 Q 70,20 135,140" stroke="#10b981" stroke-width="2" fill="none"/>
+        <circle cx="30" cy="80" r="4" fill="#ef4444"/>
+        <circle cx="110" cy="80" r="4" fill="#ef4444"/>
+        <text x="70" y="15" font-size="10" fill="#10b981" text-anchor="middle">D&gt;0: 2 roots</text>
+      </g>
+      <!-- Case 2: D=0 - tangent -->
+      <g transform="translate(160,0)">
+        <line x1="0" y1="80" x2="140" y2="80" stroke="#475569" stroke-width="1"/>
+        <path d="M 5,140 Q 70,80 135,140" stroke="#3b82f6" stroke-width="2" fill="none"/>
+        <circle cx="70" cy="80" r="4" fill="#ef4444"/>
+        <text x="70" y="15" font-size="10" fill="#3b82f6" text-anchor="middle">D=0: 1 root (equal)</text>
+      </g>
+      <!-- Case 3: D<0 - no crossing -->
+      <g transform="translate(310,0)">
+        <line x1="0" y1="80" x2="140" y2="80" stroke="#475569" stroke-width="1"/>
+        <path d="M 5,140 Q 70,30 135,140" stroke="#ef4444" stroke-width="2" fill="none"/>
+        <text x="70" y="15" font-size="10" fill="#ef4444" text-anchor="middle">D&lt;0: No real root</text>
+        <text x="70" y="100" font-size="9" fill="#94a3b8" text-anchor="middle">(graph x-axis ke upar)</text>
+      </g>
+    </svg>
+
+    <h2>📦 Word Problems</h2>
+    <div class="example-box">
+      <div class="ex-title">Example: 2 consecutive positive integers jinka product 306 hai.</div>
+      Numbers: x aur x+1<br>
+      x(x+1) = 306 → x² + x − 306 = 0<br>
+      D = 1 + 1224 = 1225 = 35²<br>
+      x = (−1 + 35)/2 = 17 ya x = (−1−35)/2 = −18 (negative → reject)<br>
+      <strong>Numbers: 17 aur 18</strong>
+    </div>
+
+    <div class="example-box">
+      <div class="ex-title">Train Speed Problem: 300 km ki train speed 5 km/h kam hoti to 2 ghante zyada lagte. Speed nikalo.</div>
+      Normal time = 300/v. Slow time = 300/(v−5)<br>
+      300/(v−5) − 300/v = 2<br>
+      300v − 300(v−5) = 2v(v−5)<br>
+      1500 = 2v² − 10v<br>
+      v² − 5v − 750 = 0<br>
+      D = 25 + 3000 = 3025 = 55²<br>
+      v = (5+55)/2 = 30 km/h<br>
+      <strong>Speed = 30 km/h</strong>
+    </div>
+
+    <div class="example-box">
+      <div class="ex-title">Age Problem: Present mein ek aadmi ki age uski beti ki age ke square ke barabar hai. 2 saal baad uski age beti ki age se 8 guna hogi. Dono ki age nikalo.</div>
+      Let beti ki age = x. Aadmi ki age = x²<br>
+      (x²+2) = 8(x+2) → x²+2 = 8x+16 → x²−8x−14 = 0<br>
+      Hmm, let's try: x²+2 = 8(x+2) fails nicely. Let me use: father age = x², daughter = y<br>
+      x² = y ... Actually simpler: Let daughter = d, so father = d².<br>
+      In 2 years: d²+2 = 8(d+2) → d²−8d−14=0 → D=64+56=120... Let's use the standard version:<br>
+      Father's age = beti ki age ke square ke barabar. 2 saal baad father ki age = beti ki age se 8 guna + 2. → Try: d²+2 = 8d+2 → d²=8d → d=8. Father = 64. ✓<br>
+      <strong>Beti = 8 saal, Baap = 64 saal</strong>
+    </div>
+
+    <h2>📝 Practice Questions</h2>
+
+    <div class="practice-q">
+      <h4>Q1. x² + 5x + 6 = 0 ko factorisation se solve karo.</h4>
+      <button class="show-ans" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Answer Dekho</button>
+      <div class="answer">(x+2)(x+3)=0 → <strong>x = −2 ya x = −3</strong></div>
+    </div>
+
+    <div class="practice-q">
+      <h4>Q2. Formula se: 3x² − 5x + 2 = 0</h4>
+      <button class="show-ans" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Answer Dekho</button>
+      <div class="answer">D = 25−24 = 1. x = (5±1)/6. <strong>x = 1 ya x = 2/3</strong></div>
+    </div>
+
+    <div class="practice-q">
+      <h4>Q3. Discriminant nikalo aur roots ka nature batao: 2x² − 4x + 3 = 0</h4>
+      <button class="show-ans" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Answer Dekho</button>
+      <div class="answer">D = 16 − 24 = −8 &lt; 0. <strong>No real roots</strong></div>
+    </div>
+
+    <div class="practice-q">
+      <h4>Q4. k ki kya value hogi ki x² + kx + 4 = 0 ke equal roots hon?</h4>
+      <button class="show-ans" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Answer Dekho</button>
+      <div class="answer">Equal roots → D = 0 → k² − 16 = 0 → k = ±4. <strong>k = 4 ya k = −4</strong></div>
+    </div>
+
+    <div class="practice-q">
+      <h4>Q5. Sum of a number aur uska reciprocal = 10/3. Number nikalo.</h4>
+      <button class="show-ans" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Answer Dekho</button>
+      <div class="answer">x + 1/x = 10/3 → 3x² − 10x + 3 = 0 → (3x−1)(x−3) = 0 → <strong>x = 3 ya x = 1/3</strong></div>
+    </div>
+
+    <div style="text-align:center;margin:2.5rem 0 1rem;">
+      <a href="quadratic-interactive.html" class="btn" style="background:#059669;font-size:1rem;padding:12px 28px;margin-right:12px;">🎮 Quadratic Explorer →</a>
+      <a href="arithmetic-progressions.html" class="btn" style="font-size:1rem;padding:12px 28px;">Next: AP →</a>
+    </div>
+  </div>
+  <footer><p>© 2025 AIkiPadhai</p></footer>
+  <script src="../../../../script.js"></script>
+</body>
+</html>

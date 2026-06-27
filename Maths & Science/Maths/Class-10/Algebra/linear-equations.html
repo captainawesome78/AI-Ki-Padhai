@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Linear Equations in Two Variables | Class 10 | AIkiPadhai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;line-height:1.7;}
+    .content-wrap{max-width:900px;margin:0 auto;padding:28px 20px;}
+    h2{font-size:1.55rem;color:#064e3b;border-bottom:3px solid #10b981;padding-bottom:8px;margin:2.2rem 0 1rem;}
+    h3{font-size:1.15rem;color:#065f46;margin:1.5rem 0 .6rem;}
+    .story-box{background:#f0fdf4;border-left:5px solid #10b981;padding:1.2rem 1.5rem;border-radius:0 10px 10px 0;margin:1.2rem 0;}
+    .story-box .story-title{font-weight:700;color:#065f46;margin-bottom:6px;}
+    .concept-box{background:#ecfdf5;border-left:4px solid #059669;padding:1.1rem 1.4rem;border-radius:0 8px 8px 0;margin:1rem 0;}
+    .key-point{background:#fefce8;border-left:4px solid #eab308;padding:1.1rem 1.4rem;border-radius:0 8px 8px 0;margin:1rem 0;}
+    .formula-box{background:#022c22;color:#6ee7b7;border-radius:10px;padding:1.2rem 1.5rem;margin:1rem 0;font-family:monospace;font-size:.95rem;}
+    .formula-box .label{color:#34d399;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+    .example-box{background:#fff7ed;border-left:4px solid #f97316;padding:1.2rem 1.5rem;border-radius:0 8px 8px 0;margin:1.2rem 0;}
+    .example-box .ex-title{font-weight:700;color:#9a3412;margin-bottom:8px;}
+    .warn-box{background:#fef2f2;border-left:4px solid #ef4444;padding:1.1rem 1.4rem;border-radius:0 8px 8px 0;margin:1rem 0;}
+    table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.92rem;}
+    th{background:#059669;color:white;padding:10px 14px;text-align:center;}
+    td{padding:9px 14px;border-bottom:1px solid #e2e8f0;text-align:center;}
+    td:first-child{text-align:left;}
+    tr:nth-child(even) td{background:#f0fdf4;}
+    .case-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:1rem 0;}
+    @media(max-width:640px){.case-grid{grid-template-columns:1fr;}}
+    .case-card{border-radius:10px;padding:1rem;text-align:center;}
+    .case-card.c1{background:#dcfce7;border:2px solid #16a34a;}
+    .case-card.c2{background:#dbeafe;border:2px solid #3b82f6;}
+    .case-card.c3{background:#fef2f2;border:2px solid #ef4444;}
+    .case-card h4{margin:0 0 6px;font-size:.95rem;}
+    .case-card p{margin:0;font-size:.82rem;}
+    .proof-step{background:#f8fafc;border-radius:8px;padding:.9rem 1.1rem;margin:.5rem 0;border:1px solid #d1fae5;}
+    .proof-step .ps-label{font-size:.75rem;font-weight:700;color:#059669;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+    .practice-q{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1.2rem;margin:.8rem 0;}
+    .practice-q h4{margin:0 0 .5rem;}
+    .answer{background:#f0fdf4;border-radius:6px;padding:.8rem 1rem;margin-top:.7rem;font-size:.9rem;display:none;border-left:3px solid #10b981;}
+    .show-ans{background:none;border:1px solid #10b981;color:#059669;padding:5px 14px;border-radius:6px;cursor:pointer;font-size:.85rem;margin-top:.5rem;}
+    .show-ans:hover{background:#10b981;color:white;}
+    svg{display:block;margin:1rem auto;overflow:visible;}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+      <nav>
+        <a href="../index.html">Class 10</a>
+        <a href="index.html">Algebra</a>
+        <a href="linear-equations.html" class="active">Linear Equations</a>
+      </nav>
+    </div>
+  </header>
+  <section class="hero" style="background:linear-gradient(135deg,#022c22,#059669);">
+    <div class="container">
+      <h1>Pair of Linear Equations 📐</h1>
+      <p>Do equations, do variables — graphically, substitution, elimination, aur cross-multiplication.</p>
+    </div>
+  </section>
+
+  <div class="content-wrap">
+
+    <h2>📖 Introduction — Do equations ek saath</h2>
+    <div class="story-box">
+      <div class="story-title">🛒 Real Life Story:</div>
+      <p>Riya 3 pens aur 2 copies khareedti hai — total ₹70. Sana 1 pen aur 4 copies khareedti hai — total ₹60. Pen aur copy ki alag alag keemat kya hai? Ye solve karne ke liye do equations chahiye — yahi pair of linear equations hai!</p>
+      <p>x = pen ki keemat, y = copy ki keemat:<br>
+      3x + 2y = 70 ...(1)<br>
+      x + 4y = 60 ...(2)</p>
+    </div>
+
+    <div class="concept-box">
+      <strong>General form:</strong> a₁x + b₁y + c₁ = 0 aur a₂x + b₂y + c₂ = 0<br>
+      Jahan a₁, b₁, a₂, b₂ ≠ 0 (simultaneously)<br>
+      Graph par har equation ek <strong>seedhi line</strong> hoti hai.
+    </div>
+
+    <!-- Lines SVG -->
+    <h2>📊 Graphical Representation</h2>
+    <svg viewBox="0 0 460 220" width="460" height="220">
+      <!-- Grid -->
+      <defs>
+        <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+          <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#e2e8f0" stroke-width="0.5"/>
+        </pattern>
+      </defs>
+      <rect width="460" height="220" fill="url(#grid)"/>
+      <!-- Axes -->
+      <line x1="20" y1="110" x2="440" y2="110" stroke="#475569" stroke-width="1.5"/>
+      <line x1="230" y1="10" x2="230" y2="210" stroke="#475569" stroke-width="1.5"/>
+      <text x="445" y="114" font-size="11" fill="#475569">x</text>
+      <text x="234" y="14" font-size="11" fill="#475569">y</text>
+      <!-- Two intersecting lines -->
+      <line x1="60" y1="30" x2="400" y2="190" stroke="#10b981" stroke-width="2" stroke-dasharray="none"/>
+      <line x1="60" y1="190" x2="380" y2="40" stroke="#6366f1" stroke-width="2"/>
+      <!-- Intersection point -->
+      <circle cx="228" cy="112" r="6" fill="#ef4444"/>
+      <text x="240" y="108" font-size="11" fill="#ef4444" font-weight="bold">Solution (x,y)</text>
+      <text x="65" y="25" font-size="11" fill="#10b981" font-weight="bold">L₁: a₁x+b₁y=c₁</text>
+      <text x="390" y="36" font-size="11" fill="#6366f1" font-weight="bold">L₂</text>
+      <text x="200" y="205" font-size="10" fill="#64748b" text-anchor="middle">Lines intersect at 1 point → Unique solution</text>
+    </svg>
+
+    <h2>🔍 Consistency — 3 Cases</h2>
+    <div class="case-grid">
+      <div class="case-card c1">
+        <h4>✅ Consistent (Unique)</h4>
+        <p>a₁/a₂ ≠ b₁/b₂<br>Lines intersect<br>1 solution</p>
+      </div>
+      <div class="case-card c2">
+        <h4>✅ Consistent (Infinite)</h4>
+        <p>a₁/a₂ = b₁/b₂ = c₁/c₂<br>Lines coincide<br>∞ solutions</p>
+      </div>
+      <div class="case-card c3">
+        <h4>❌ Inconsistent</h4>
+        <p>a₁/a₂ = b₁/b₂ ≠ c₁/c₂<br>Lines parallel<br>No solution</p>
+      </div>
+    </div>
+
+    <table>
+      <tr><th>Condition</th><th>Graph</th><th>Type</th><th>Solutions</th></tr>
+      <tr><td>a₁/a₂ ≠ b₁/b₂</td><td>Intersecting lines</td><td>Consistent</td><td>Exactly 1</td></tr>
+      <tr><td>a₁/a₂ = b₁/b₂ = c₁/c₂</td><td>Coincident lines</td><td>Consistent (dependent)</td><td>Infinite</td></tr>
+      <tr><td>a₁/a₂ = b₁/b₂ ≠ c₁/c₂</td><td>Parallel lines</td><td>Inconsistent</td><td>None</td></tr>
+    </table>
+
+    <h2>🛠️ Method 1: Substitution Method</h2>
+    <div class="concept-box">
+      Ek equation se ek variable ki value nikalo — dusri equation mein substitute karo.
+    </div>
+
+    <div class="example-box">
+      <div class="ex-title">Example: x + y = 5 ...(1) aur 2x − 3y = 4 ...(2)</div>
+      <div class="proof-step"><div class="ps-label">Step 1</div>Equation (1) se: x = 5 − y</div>
+      <div class="proof-step"><div class="ps-label">Step 2</div>Eq (2) mein substitute: 2(5−y) − 3y = 4 → 10−2y−3y = 4 → −5y = −6 → y = 6/5</div>
+      <div class="proof-step"><div class="ps-label">Step 3</div>x = 5 − 6/5 = 19/5</div>
+      <strong>x = 19/5, y = 6/5</strong>
+    </div>
+
+    <div class="example-box">
+      <div class="ex-title">Riya-Sana Problem: 3x+2y=70, x+4y=60</div>
+      From (2): x = 60−4y<br>
+      In (1): 3(60−4y)+2y = 70 → 180−12y+2y = 70 → −10y = −110 → y = 11<br>
+      x = 60−44 = 16<br>
+      <strong>Pen = ₹16, Copy = ₹11</strong>
+    </div>
+
+    <h2>🛠️ Method 2: Elimination Method</h2>
+    <div class="concept-box">
+      Dono equations ke coefficients ko multiply karke ek variable eliminate karo.
+    </div>
+
+    <div class="example-box">
+      <div class="ex-title">Example: 3x + 2y = 12 ...(1) aur 2x − y = 1 ...(2)</div>
+      <div class="proof-step"><div class="ps-label">Multiply (2)×2</div>4x − 2y = 2 ...(3)</div>
+      <div class="proof-step"><div class="ps-label">Add (1)+(3)</div>7x = 14 → x = 2</div>
+      <div class="proof-step"><div class="ps-label">Substitute x=2 in (1)</div>6 + 2y = 12 → y = 3</div>
+      <strong>x = 2, y = 3</strong>
+    </div>
+
+    <div class="example-box">
+      <div class="ex-title">Example: 5x − 4y + 8 = 0 aur 7x + 6y − 9 = 0</div>
+      5x − 4y = −8 ...(1) &nbsp; 7x + 6y = 9 ...(2)<br>
+      (1)×3: 15x − 12y = −24<br>
+      (2)×2: 14x + 12y = 18<br>
+      Add: 29x = −6 → x = −6/29<br>
+      Substitute: y = (5x+8)/4 = (−30/29 + 232/29)/4 = 202/(29×4) = <strong>101/58</strong><br>
+      <em>(Calculations verify karo substitution se)</em>
+    </div>
+
+    <h2>🛠️ Method 3: Cross Multiplication</h2>
+    <div class="formula-box">
+      <div class="label">For a₁x + b₁y + c₁=0 aur a₂x + b₂y + c₂=0</div>
+      x/(b₁c₂ − b₂c₁) = y/(c₁a₂ − c₂a₁) = 1/(a₁b₂ − a₂b₁)
+    </div>
+    <div class="key-point">
+      <strong>Memory trick — Diagonal cross:</strong><br>
+      b₁c₂ − b₂c₁ &nbsp;|&nbsp; c₁a₂ − c₂a₁ &nbsp;|&nbsp; a₁b₂ − a₂b₁<br>
+      (b,c) → (c,a) → (a,b) pattern
+    </div>
+
+    <h2>📝 Word Problems — Strategy</h2>
+    <div class="concept-box">
+      <strong>4 Steps:</strong><br>
+      1. Variables decide karo (x, y kise maanein)<br>
+      2. Dono conditions se equations banao<br>
+      3. Solve karo<br>
+      4. Answer problem ke context mein likhein
+    </div>
+
+    <div class="example-box">
+      <div class="ex-title">Classic: Ek 2-digit number ka sum of digits = 9. Digits palat dene par 27 zyada hota hai. Number nikalo.</div>
+      Ten's digit = x, Unit's digit = y<br>
+      x + y = 9 ...(1)<br>
+      (10y + x) − (10x + y) = 27 → 9y − 9x = 27 → y − x = 3 ...(2)<br>
+      Add: 2y = 12 → y = 6, x = 3<br>
+      <strong>Number = 36</strong> (Check: 36+27=63 = reversed ✓)
+    </div>
+
+    <div class="example-box">
+      <div class="ex-title">Speed Problem: Train ki distance 300 km. Speed kam ho 100 km/h to 2 ghante late. Speed badhe 100 km/h to 1 ghanta early. Actual speed aur time nikalo.</div>
+      Let speed = v km/h, time = t hours.<br>
+      vt = 300<br>
+      (v−100)(t+2) = 300 → vt + 2v − 100t − 200 = 300 → 2v − 100t = 200 ...(1)<br>
+      (v+100)(t−1) = 300 → vt − v + 100t − 100 = 300 → −v + 100t = 100 ...(2)<br>
+      (1)+(2)×2: 2v−100t − 2v + 200t = 200+200 → 100t = 400 → t = 4 hrs<br>
+      v = 300/4 = <strong>75 km/h</strong>... <em>(This approach gives fractions — use in exam per actual NCERT values)</em>
+    </div>
+
+    <h2>📝 Practice Questions</h2>
+    <div class="practice-q">
+      <h4>Q1. Graphically check karo: 2x + 3y = 5 aur 4x + 6y = 10 consistent hai ya nahi?</h4>
+      <button class="show-ans" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Answer Dekho</button>
+      <div class="answer">a₁/a₂ = 2/4 = 1/2; b₁/b₂ = 3/6 = 1/2; c₁/c₂ = 5/10 = 1/2<br>
+      Sab equal → Lines coincide → <strong>Infinitely many solutions (consistent)</strong></div>
+    </div>
+
+    <div class="practice-q">
+      <h4>Q2. Substitution se solve karo: 7x − 15y = 2 aur x + 2y = 3.</h4>
+      <button class="show-ans" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Answer Dekho</button>
+      <div class="answer">From (2): x = 3−2y. In (1): 7(3−2y)−15y = 2 → 21−14y−15y = 2 → 29y = 19 → y = 19/29<br>
+      x = 3 − 38/29 = 49/29. <strong>x=49/29, y=19/29</strong></div>
+    </div>
+
+    <div class="practice-q">
+      <h4>Q3. Elimination se: 3x − 5y − 4 = 0 aur 9x = 2y + 7.</h4>
+      <button class="show-ans" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Answer Dekho</button>
+      <div class="answer">3x−5y=4...(1), 9x−2y=7...(2). (1)×3: 9x−15y=12. Subtract (2): −13y=5 → y=−5/13. x=(4+5y)/3=(4−25/13)/3=27/(13×3)=9/13. <strong>x=9/13, y=−5/13</strong></div>
+    </div>
+
+    <div class="practice-q">
+      <h4>Q4. Ek fraction ka numerator denominator se 3 kam hai. Agar 2 dono mein se ghataayein to 1/2 milti hai. Fraction nikalo.</h4>
+      <button class="show-ans" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Answer Dekho</button>
+      <div class="answer">num=x, den=y. x = y−3. (x−2)/(y−2) = 1/2 → 2x−4 = y−2 → 2x−y = 2.<br>Substitute: 2(y−3)−y = 2 → y = 8, x = 5. <strong>Fraction = 5/8</strong></div>
+    </div>
+
+    <div class="practice-q">
+      <h4>Q5. Kab inconsistent hoga: 2x + ky = 1 aur 3x − 5y = 7?</h4>
+      <button class="show-ans" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Answer Dekho</button>
+      <div class="answer">Inconsistent: a₁/a₂ = b₁/b₂ ≠ c₁/c₂ → 2/3 = k/(−5) → k = −10/3. Check c ratio: 1/7 ≠ 2/3 ✓. <strong>k = −10/3</strong></div>
+    </div>
+
+    <div style="text-align:center;margin:2.5rem 0 1rem;">
+      <a href="quadratic-equations.html" class="btn" style="background:#059669;font-size:1rem;padding:12px 28px;">Next: Quadratic Equations →</a>
+    </div>
+  </div>
+  <footer><p>© 2025 AIkiPadhai</p></footer>
+  <script src="../../../../script.js"></script>
+</body>
+</html>

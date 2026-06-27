@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Probability | Class 10 Maths | AIkiPadhai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;line-height:1.7;}
+    .content-wrap{max-width:900px;margin:0 auto;padding:28px 20px;}
+    h2{font-size:1.55rem;color:#1e1b4b;border-bottom:3px solid #1e40af;padding-bottom:8px;margin:2.2rem 0 1rem;}
+    h3{font-size:1.15rem;color:#1e3a8a;margin:1.5rem 0 .6rem;}
+    .story-box{background:#eff6ff;border-left:5px solid #1e40af;padding:1.2rem 1.5rem;border-radius:0 10px 10px 0;margin:1.2rem 0;}
+    .story-box .story-title{font-weight:700;color:#1e3a8a;margin-bottom:6px;}
+    .concept-box{background:#eff6ff;border-left:4px solid #3b82f6;padding:1.1rem 1.4rem;border-radius:0 8px 8px 0;margin:1rem 0;}
+    .key-point{background:#fefce8;border-left:4px solid #eab308;padding:1.1rem 1.4rem;border-radius:0 8px 8px 0;margin:1rem 0;}
+    .formula-box{background:#1e1b4b;color:#bfdbfe;border-radius:10px;padding:1.2rem 1.5rem;margin:1rem 0;font-family:monospace;font-size:.95rem;}
+    .formula-box .label{color:#60a5fa;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+    .example-box{background:#fff7ed;border-left:4px solid #f97316;padding:1.2rem 1.5rem;border-radius:0 8px 8px 0;margin:1.2rem 0;}
+    .example-box .ex-title{font-weight:700;color:#9a3412;margin-bottom:8px;}
+    .warn-box{background:#fef2f2;border-left:4px solid #ef4444;padding:1.1rem 1.4rem;border-radius:0 8px 8px 0;margin:1rem 0;}
+    table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.92rem;}
+    th{background:#1e40af;color:white;padding:10px 14px;text-align:center;}
+    td{padding:9px 14px;border-bottom:1px solid #e2e8f0;text-align:center;}
+    tr:nth-child(even) td{background:#eff6ff;}
+    .practice-q{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1.2rem;margin:.8rem 0;}
+    .practice-q h4{margin:0 0 .5rem;}
+    .answer{background:#eff6ff;border-radius:6px;padding:.8rem 1rem;margin-top:.7rem;font-size:.9rem;display:none;border-left:3px solid #1e40af;}
+    .show-ans{background:none;border:1px solid #1e40af;color:#1e40af;padding:5px 14px;border-radius:6px;cursor:pointer;font-size:.85rem;margin-top:.5rem;}
+    .show-ans:hover{background:#1e40af;color:white;}
+    svg{display:block;margin:1rem auto;overflow:visible;}
+    .prob-scale{display:flex;align-items:center;margin:1rem 0;border-radius:10px;overflow:hidden;font-size:.85rem;}
+    .prob-scale div{flex:1;padding:12px 8px;text-align:center;font-weight:600;}
+    .dice-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:1rem 0;}
+    .dice-chip{background:#1e40af;color:white;padding:6px;text-align:center;border-radius:6px;font-weight:700;font-size:.9rem;}
+    .dice-chip.prime{background:#16a34a;}
+    .outcome-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1rem;margin:.8rem 0;font-family:monospace;font-size:.9rem;line-height:1.8;}
+    .card-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:1rem 0;}
+    .card-suit{background:#fff;border:2px solid #e2e8f0;border-radius:8px;padding:.8rem;text-align:center;}
+    .card-suit.red{border-color:#dc2626;color:#dc2626;}
+    .card-suit.black{border-color:#1e293b;color:#1e293b;}
+    .card-suit h4{margin:0 0 4px;font-size:1.1rem;}
+    .card-suit p{margin:0;font-size:.8rem;}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+      <nav>
+        <a href="../index.html">Class 10</a>
+        <a href="index.html">Stats &amp; Prob</a>
+        <a href="probability.html" class="active">Probability</a>
+      </nav>
+    </div>
+  </header>
+  <section class="hero" style="background:linear-gradient(135deg,#0f172a,#1e40af);">
+    <div class="container">
+      <h1>Probability 🎲</h1>
+      <p>Classical definition, sample space, events — coins, dice, cards, aur word problems.</p>
+    </div>
+  </section>
+
+  <div class="content-wrap">
+
+    <h2>🌟 Probability Kya Hai?</h2>
+    <div class="story-box">
+      <div class="story-title">🌦️ Weather Forecast wali example:</div>
+      <p>Kal baarish hogi ya nahi? Meteorologist kehta hai "70% chance of rain" — ye probability hai! Probability humein batati hai ki koi event kitni baar <strong>likely</strong> hai hona. Coin toss mein Head aane ki probability = 1/2 = 50% = 0.5.</p>
+    </div>
+
+    <div class="formula-box">
+      <div class="label">Classical Probability — Basic Formula</div>
+      P(Event E) = n(E) / n(S)<br><br>
+      n(E) = Number of outcomes favourable to event E<br>
+      n(S) = Total number of equally likely outcomes (Sample Space)<br>
+      0 ≤ P(E) ≤ 1 &nbsp;(hamesha 0 aur 1 ke beech)
+    </div>
+
+    <div class="prob-scale">
+      <div style="background:#dc2626;color:white;">0<br>Impossible</div>
+      <div style="background:#f97316;color:white;">0.25<br>Unlikely</div>
+      <div style="background:#eab308;">0.5<br>Even chance</div>
+      <div style="background:#22c55e;color:white;">0.75<br>Likely</div>
+      <div style="background:#15803d;color:white;">1<br>Certain</div>
+    </div>
+
+    <div class="concept-box">
+      <strong>Important Properties:</strong><br>
+      • P(S) = 1 (certain event — sample space hamesha hoga)<br>
+      • P(∅) = 0 (impossible event — empty set)<br>
+      • P(Ē) = 1 − P(E) (complementary event)<br>
+      • Sum of all probabilities = 1
+    </div>
+
+    <h2>🎰 Coin Problems</h2>
+
+    <h3>1 Coin: S = {H, T}, n(S) = 2</h3>
+    <div class="outcome-box">S = { Head (H), Tail (T) }</div>
+
+    <h3>2 Coins: S = {HH, HT, TH, TT}, n(S) = 4</h3>
+    <div class="outcome-box">HH = (Head, Head)<br>HT = (Head, Tail)<br>TH = (Tail, Head)<br>TT = (Tail, Tail)</div>
+
+    <h3>3 Coins: n(S) = 8</h3>
+    <div class="outcome-box">HHH, HHT, HTH, HTT, THH, THT, TTH, TTT</div>
+
+    <div class="example-box">
+      <div class="ex-title">Example 1: 2 coins. P(exactly 1 head)?</div>
+      Favourable: {HT, TH} → n(E) = 2<br>
+      P = 2/4 = <strong>1/2</strong>
+    </div>
+
+    <div class="example-box">
+      <div class="ex-title">Example 2: 3 coins. P(at least 2 heads)?</div>
+      At least 2 heads: {HHH, HHT, HTH, THH} → n(E) = 4<br>
+      P = 4/8 = <strong>1/2</strong>
+    </div>
+
+    <div class="example-box">
+      <div class="ex-title">Example 3: 2 coins. P(ek bhi head nahi)?</div>
+      No head: {TT} → n(E) = 1. P = 1/4<br>
+      Ya: P(at least 1 head) = 3/4. P(no head) = 1 − 3/4 = <strong>1/4</strong>
+    </div>
+
+    <h2>🎲 Dice Problems</h2>
+    <h3>1 Dice: n(S) = 6</h3>
+    <div class="dice-grid">
+      <div class="dice-chip">1</div>
+      <div class="dice-chip prime">2</div>
+      <div class="dice-chip prime">3</div>
+      <div class="dice-chip">4</div>
+      <div class="dice-chip prime">5</div>
+      <div class="dice-chip">6</div>
+    </div>
+    <p style="font-size:.85rem;color:#64748b;">🟢 Green = Prime numbers (2, 3, 5)</p>
+
+    <div class="example-box">
+      <div class="ex-title">Example: 1 dice. P(prime), P(even), P(greater than 4)</div>
+      P(prime) = P({2,3,5}) = 3/6 = <strong>1/2</strong><br>
+      P(even) = P({2,4,6}) = 3/6 = <strong>1/2</strong><br>
+      P(>4) = P({5,6}) = 2/6 = <strong>1/3</strong>
+    </div>
+
+    <h3>2 Dice: n(S) = 36</h3>
+    <div class="concept-box">
+      Possible sums: 2 to 12. Sum=7 ke sabse zyada ways (6): (1,6),(2,5),(3,4),(4,3),(5,2),(6,1)<br>
+      Most likely sum = 7!
+    </div>
+
+    <table style="font-size:.8rem;">
+      <tr><th>Sum</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th></tr>
+      <tr><td>Ways</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td></tr>
+      <tr><td>P</td><td>1/36</td><td>2/36</td><td>3/36</td><td>4/36</td><td>5/36</td><td>6/36</td><td>5/36</td><td>4/36</td><td>3/36</td><td>2/36</td><td>1/36</td></tr>
+    </table>
+
+    <div class="example-box">
+      <div class="ex-title">Example: 2 dice. P(sum=8), P(doubles), P(sum divisible by 4)</div>
+      P(sum=8) = 5/36 [(2,6),(3,5),(4,4),(5,3),(6,2)]<br>
+      P(doubles) = 6/36 = 1/6 [(1,1),(2,2),(3,3),(4,4),(5,5),(6,6)]<br>
+      P(div by 4) = P({4,8,12}) = (3+5+1)/36 = 9/36 = <strong>1/4</strong>
+    </div>
+
+    <h2>♠♥♦♣ Card Problems</h2>
+    <div class="card-grid">
+      <div class="card-suit black"><h4>♠ Spades</h4><p>13 cards<br>Black suit</p></div>
+      <div class="card-suit red"><h4>♥ Hearts</h4><p>13 cards<br>Red suit</p></div>
+      <div class="card-suit red"><h4>♦ Diamonds</h4><p>13 cards<br>Red suit</p></div>
+      <div class="card-suit black"><h4>♣ Clubs</h4><p>13 cards<br>Black suit</p></div>
+    </div>
+
+    <div class="concept-box">
+      Total cards = 52. Each suit: Ace, 2,3,4,5,6,7,8,9,10, Jack, Queen, King<br>
+      <strong>Face cards:</strong> J, Q, K = 3 × 4 = 12<br>
+      <strong>Number cards:</strong> 2−10 = 9 × 4 = 36<br>
+      <strong>Aces:</strong> 4 (one per suit)<br>
+      Red cards = 26 (♥+♦), Black cards = 26 (♠+♣)
+    </div>
+
+    <div class="example-box">
+      <div class="ex-title">Examples from 52-card deck (1 card drawn randomly):</div>
+      P(Ace) = 4/52 = <strong>1/13</strong><br>
+      P(Face card) = 12/52 = <strong>3/13</strong><br>
+      P(Red face card) = 6/52 = <strong>3/26</strong><br>
+      P(King of black suit) = 2/52 = <strong>1/26</strong><br>
+      P(Not a face card) = 40/52 = <strong>10/13</strong>
+    </div>
+
+    <div class="example-box">
+      <div class="ex-title">Example: P(card ka number 5 se zyada ho)?</div>
+      Numbers > 5: 6,7,8,9,10, J,Q,K → 8 types × 4 suits = 32 cards. But wait — also counting Ace as 1.<br>
+      Cards > 5: {6,7,8,9,10,J,Q,K} = 8 × 4 = 32<br>
+      P = 32/52 = <strong>8/13</strong>
+    </div>
+
+    <h2>🎰 Bag / Ball Problems</h2>
+    <div class="example-box">
+      <div class="ex-title">Example: Bag mein 4 red, 6 blue, 5 green balls. 1 randomly nikalo.</div>
+      n(S) = 15<br>
+      P(Red) = 4/15<br>
+      P(Blue or Green) = 11/15<br>
+      P(Not Red) = 1 − 4/15 = <strong>11/15</strong><br>
+      P(Yellow) = 0 (impossible!)
+    </div>
+
+    <div class="example-box">
+      <div class="ex-title">Example: k white aur 6 black balls. P(white) = 3/7. k nikalo.</div>
+      k/(k+6) = 3/7 → 7k = 3k+18 → 4k = 18 → k = <strong>4.5?</strong> — balls integer hote hain.<br>
+      Aisa question mein usually integer aata hai. Let's try: P(white)=1/3 → k/(k+6)=1/3 → 3k=k+6 → k=3 balls ✓
+    </div>
+
+    <h2>🔢 Complementary Events</h2>
+    <div class="formula-box">
+      <div class="label">P(not E) = 1 − P(E)</div>
+      Ye shortcut tab use karo jab P(E) nikalna mushkil ho<br>
+      aur P(not E) calculate karna easy ho!<br><br>
+      Example: P(at least one head in 3 coins)<br>
+      = 1 − P(no heads) = 1 − 1/8 = 7/8
+    </div>
+
+    <div class="example-box">
+      <div class="ex-title">Example: 1000 lottery tickets mein se 5 winning hain. P(ticket win nahi karega)?</div>
+      P(win) = 5/1000 = 1/200<br>
+      P(not win) = 1 − 1/200 = <strong>199/200</strong>
+    </div>
+
+    <h2>📝 Practice Questions</h2>
+
+    <div class="practice-q">
+      <h4>Q1. 2 dice fenke. P(sum = 6 ya 7)?</h4>
+      <button class="show-ans" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Answer Dekho</button>
+      <div class="answer">Sum=6: (1,5),(2,4),(3,3),(4,2),(5,1) → 5. Sum=7: (1,6),(2,5),(3,4),(4,3),(5,2),(6,1) → 6. Total=11/36</div>
+    </div>
+
+    <div class="practice-q">
+      <h4>Q2. Ek bag mein 5 white, 7 black, 4 red balls hain. P(white ya red)?</h4>
+      <button class="show-ans" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Answer Dekho</button>
+      <div class="answer">P(white or red) = (5+4)/16 = 9/16</div>
+    </div>
+
+    <div class="practice-q">
+      <h4>Q3. 52 cards mein se 2 cards remove ki gayi (ek red, ek black). Remaining cards mein se P(red face card)?</h4>
+      <button class="show-ans" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Answer Dekho</button>
+      <div class="answer">Total remaining = 50. Red cards remaining = 26−1 = 25. Red face cards = 6 (unchanged unless removed card was a red face card — assume not). P = 6/50 = <strong>3/25</strong></div>
+    </div>
+
+    <div class="practice-q">
+      <h4>Q4. 1 se 100 tak ek number randomly select karo. P(perfect square)?</h4>
+      <button class="show-ans" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Answer Dekho</button>
+      <div class="answer">Perfect squares: 1,4,9,16,25,36,49,64,81,100 = 10 numbers. P = 10/100 = <strong>1/10</strong></div>
+    </div>
+
+    <div class="practice-q">
+      <h4>Q5. Ek box mein kuch cards hain jo 6 se 50 tak ke multiples of 3 par likhe hain. Ek card randomly nikalo. P(number 50 se chhota aur even ho)?</h4>
+      <button class="show-ans" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Answer Dekho</button>
+      <div class="answer">Multiples of 3 from 6 to 50: 6,9,12,15,18,21,24,27,30,33,36,39,42,45,48 = 15 numbers.<br>Even multiples of 3 (multiples of 6) less than 50: 6,12,18,24,30,36,42,48 = 8 numbers.<br>P = 8/15</div>
+    </div>
+
+    <div style="text-align:center;margin:2.5rem 0 1rem;">
+      <a href="probability-interactive.html" class="btn" style="background:#1e40af;font-size:1rem;padding:12px 28px;">🎮 Probability Lab →</a>
+    </div>
+  </div>
+  <footer><p>© 2025 AIkiPadhai</p></footer>
+  <script src="../../../../script.js"></script>
+</body>
+</html>

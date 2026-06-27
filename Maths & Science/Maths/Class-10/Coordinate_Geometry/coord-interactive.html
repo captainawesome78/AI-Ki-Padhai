@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Distance & Section Lab | AIkiPadhai</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:#050a14;color:#fff;font-family:'Segoe UI',sans-serif;overflow:hidden;}
+    canvas{position:absolute;top:0;left:0;}
+    #ui{position:absolute;top:0;left:0;width:100%;height:100%;z-index:10;pointer-events:none;}
+    .hdr{position:absolute;top:0;left:0;right:0;padding:10px 20px 6px;text-align:center;background:linear-gradient(to bottom,rgba(0,0,0,.9),transparent);}
+    .hdr h1{color:#7dd3fc;font-size:18px;text-shadow:0 0 10px #0891b2;}
+    .hdr p{color:#bae6fd;font-size:11px;margin-top:2px;}
+    .back-btn{position:absolute;top:10px;left:12px;pointer-events:auto;color:rgba(255,255,255,.7);text-decoration:none;border:1px solid rgba(255,255,255,.2);padding:5px 10px;border-radius:5px;font-size:11px;}
+
+    #left-panel{position:absolute;left:12px;top:68px;background:rgba(0,0,0,.82);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px;width:195px;pointer-events:auto;}
+    #left-panel h3{font-size:11px;color:#7dd3fc;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+    .inp-row{margin-bottom:8px;display:flex;gap:6px;align-items:center;}
+    .inp-lbl{font-size:12px;color:#94a3b8;width:20px;}
+    .coord-inp{background:rgba(255,255,255,.08);border:1px solid #0891b2;border-radius:5px;color:#fff;font-size:13px;width:60px;padding:4px;text-align:center;}
+    .calc-btn{width:100%;background:#0891b2;border:none;color:#fff;padding:9px;border-radius:7px;font-size:13px;font-weight:bold;cursor:pointer;margin-top:4px;}
+    .calc-btn:hover{background:#0e7490;}
+    .result-box{background:rgba(8,145,178,.15);border:1px solid #0891b2;border-radius:8px;padding:8px;margin-top:8px;text-align:center;}
+    .rlbl{font-size:10px;color:#7dd3fc;text-transform:uppercase;letter-spacing:1px;}
+    .rval{font-size:17px;color:#fbbf24;font-weight:bold;}
+
+    #right-panel{position:absolute;right:12px;top:68px;background:rgba(0,0,0,.82);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px;width:195px;}
+    #right-panel h3{font-size:11px;color:#7dd3fc;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+    .score-big{font-size:34px;font-weight:900;color:#fbbf24;text-align:center;}
+
+    #mission-panel{position:absolute;bottom:115px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.88);border:2px solid #fbbf24;border-radius:14px;padding:10px 22px;text-align:center;min-width:270px;pointer-events:none;}
+    #mission-panel.success{border-color:#22c55e;background:rgba(20,83,45,.9);}
+    #mission-panel.wrong{border-color:#ef4444;background:rgba(80,10,10,.9);}
+    .m-title{font-size:10px;color:#fde047;text-transform:uppercase;font-weight:bold;letter-spacing:1px;}
+    .m-q{font-size:14px;font-weight:700;color:#fff;margin:4px 0;}
+    .m-hint{font-size:10px;color:#94a3b8;}
+    #ans-area{position:absolute;bottom:65px;left:50%;transform:translateX(-50%);display:flex;gap:8px;pointer-events:auto;}
+    .ans-btn{background:rgba(8,145,178,.2);border:2px solid #0891b2;color:#bae6fd;padding:8px 14px;border-radius:7px;cursor:pointer;font-size:14px;font-weight:bold;transition:all .2s;}
+    .ans-btn:hover{background:#0891b2;color:#fff;}
+    .ans-btn.correct{background:#166534;border-color:#22c55e;}
+    .ans-btn.wrong-ans{background:#7f1d1d;border-color:#ef4444;}
+    #mode-hint{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);font-size:11px;color:#475569;}
+  </style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="ui">
+  <div class="hdr">
+    <a href="index.html" class="back-btn">← Wapas</a>
+    <h1>📍 Distance &amp; Section Lab</h1>
+    <p>Points drag karo, distance aur section formula live dekho!</p>
+  </div>
+
+  <div id="left-panel">
+    <h3>📌 Points</h3>
+    <div style="font-size:11px;color:#38bdf8;margin-bottom:6px;">Point A</div>
+    <div class="inp-row"><span class="inp-lbl">x₁</span><input class="coord-inp" id="ax" type="number" value="1"><span class="inp-lbl">y₁</span><input class="coord-inp" id="ay" type="number" value="2"></div>
+    <div style="font-size:11px;color:#f97316;margin-bottom:6px;margin-top:8px;">Point B</div>
+    <div class="inp-row"><span class="inp-lbl">x₂</span><input class="coord-inp" id="bx" type="number" value="5"><span class="inp-lbl">y₂</span><input class="coord-inp" id="by" type="number" value="5"></div>
+    <button class="calc-btn" onclick="recalc()">Calculate</button>
+    <div class="result-box"><div class="rlbl">Distance AB</div><div class="rval" id="distVal">—</div></div>
+    <div style="margin-top:10px;font-size:11px;color:#38bdf8;">Section m:n</div>
+    <div class="inp-row"><input class="coord-inp" id="sm" type="number" value="1"><span style="color:#94a3b8;font-size:14px;">:</span><input class="coord-inp" id="sn" type="number" value="1"></div>
+    <div class="result-box"><div class="rlbl">Point P</div><div class="rval" id="sectVal">—</div></div>
+    <div class="result-box"><div class="rlbl">Midpoint</div><div class="rval" id="midVal">—</div></div>
+  </div>
+
+  <div id="right-panel">
+    <h3>🎯 Missions</h3>
+    <div class="score-big" id="scoreNum">0</div>
+    <div style="font-size:10px;color:#7dd3fc;text-align:center;text-transform:uppercase;margin-bottom:8px;">Score</div>
+    <div style="font-size:11px;color:#7dd3fc;text-align:center;margin-bottom:10px;" id="mProg">Mission 1/5</div>
+    <div id="mission-panel" style="position:relative;bottom:auto;left:auto;transform:none;margin-bottom:10px;">
+      <div class="m-title" id="m-title">MISSION</div>
+      <div class="m-q" id="m-q">Loading...</div>
+      <div class="m-hint" id="m-hint"></div>
+    </div>
+    <div id="ans-area" style="position:relative;bottom:auto;left:auto;transform:none;flex-wrap:wrap;display:flex;gap:6px;justify-content:center;"></div>
+  </div>
+  <div id="mode-hint">🖱️ Input values → Calculate, ya canvas pe points drag karo</div>
+</div>
+
+<script>
+const canvas=document.getElementById('c'), ctx=canvas.getContext('2d');
+canvas.width=window.innerWidth; canvas.height=window.innerHeight;
+const OX=canvas.width/2, OY=canvas.height/2, SC=50;
+
+let ptA={x:1,y:2}, ptB={x:5,y:5};
+let dragging=null;
+let score=0, mIdx=0, locked=false;
+
+function toScreen(x,y){return[OX+x*SC, OY-y*SC];}
+function toWorld(px,py){return[(px-OX)/SC, (OY-py)/SC];}
+
+function recalc(){
+  const ax=parseFloat(document.getElementById('ax').value)||0;
+  const ay=parseFloat(document.getElementById('ay').value)||0;
+  const bx=parseFloat(document.getElementById('bx').value)||0;
+  const by=parseFloat(document.getElementById('by').value)||0;
+  ptA={x:ax,y:ay}; ptB={x:bx,y:by};
+  calc();
+}
+
+function calc(){
+  const {x:x1,y:y1}=ptA, {x:x2,y:y2}=ptB;
+  const dist=Math.sqrt((x2-x1)**2+(y2-y1)**2);
+  document.getElementById('distVal').textContent=dist.toFixed(2);
+  const m=parseFloat(document.getElementById('sm').value)||1;
+  const n=parseFloat(document.getElementById('sn').value)||1;
+  const px=(m*x2+n*x1)/(m+n), py=(m*y2+n*y1)/(m+n);
+  document.getElementById('sectVal').textContent=`(${px.toFixed(2)}, ${py.toFixed(2)})`;
+  document.getElementById('midVal').textContent=`(${((x1+x2)/2).toFixed(2)}, ${((y1+y2)/2).toFixed(2)})`;
+}
+
+// Canvas drag
+canvas.addEventListener('mousedown',e=>{
+  const [wx,wy]=toWorld(e.clientX,e.clientY);
+  if(Math.hypot(wx-ptA.x,wy-ptA.y)<0.6) dragging='A';
+  else if(Math.hypot(wx-ptB.x,wy-ptB.y)<0.6) dragging='B';
+  canvas.style.cursor='grabbing';
+});
+canvas.addEventListener('mousemove',e=>{
+  if(!dragging)return;
+  const [wx,wy]=toWorld(e.clientX,e.clientY);
+  const rx=Math.round(wx), ry=Math.round(wy);
+  if(dragging==='A'){ptA={x:rx,y:ry};document.getElementById('ax').value=rx;document.getElementById('ay').value=ry;}
+  else{ptB={x:rx,y:ry};document.getElementById('bx').value=rx;document.getElementById('by').value=ry;}
+  calc();
+});
+canvas.addEventListener('mouseup',()=>{dragging=null;canvas.style.cursor='default';});
+
+function draw(){
+  const W=canvas.width,H=canvas.height;
+  ctx.fillStyle='#050a14';ctx.fillRect(0,0,W,H);
+  // Grid
+  ctx.strokeStyle='#0d1f2e';ctx.lineWidth=1;
+  for(let x=OX%SC;x<W;x+=SC){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=OY%SC;y<H;y+=SC){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  // Axes
+  ctx.strokeStyle='#1e3a5f';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(0,OY);ctx.lineTo(W,OY);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(OX,0);ctx.lineTo(OX,H);ctx.stroke();
+  // Numbers
+  ctx.fillStyle='#334155';ctx.font='10px Segoe UI';ctx.textAlign='center';
+  for(let i=-8;i<=8;i++){if(i===0)continue;ctx.fillText(i,OX+i*SC,OY+13);ctx.fillText(-i,OX+4,OY-i*SC+3);}
+
+  const [ax,ay]=toScreen(ptA.x,ptA.y);
+  const [bx,by]=toScreen(ptB.x,ptB.y);
+
+  // Line AB
+  ctx.strokeStyle='#7dd3fc';ctx.lineWidth=2;ctx.setLineDash([6,4]);
+  ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(bx,by);ctx.stroke();ctx.setLineDash([]);
+
+  // Section point
+  const m=parseFloat(document.getElementById('sm').value)||1;
+  const n=parseFloat(document.getElementById('sn').value)||1;
+  const px=(m*ptB.x+n*ptA.x)/(m+n), py=(m*ptB.y+n*ptA.y)/(m+n);
+  const [spx,spy]=toScreen(px,py);
+  ctx.fillStyle='#fbbf24';ctx.shadowBlur=10;ctx.shadowColor='#fbbf24';
+  ctx.beginPath();ctx.arc(spx,spy,7,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+  ctx.fillStyle='#fbbf24';ctx.font='bold 11px Segoe UI';ctx.textAlign='left';
+  ctx.fillText(`P(${px.toFixed(1)},${py.toFixed(1)})`,spx+10,spy-4);
+
+  // Point A
+  ctx.fillStyle='#38bdf8';ctx.shadowBlur=10;ctx.shadowColor='#38bdf8';
+  ctx.beginPath();ctx.arc(ax,ay,9,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+  ctx.fillStyle='#fff';ctx.font='bold 9px Segoe UI';ctx.textAlign='center';ctx.fillText('A',ax,ay+3);
+  ctx.fillStyle='#38bdf8';ctx.font='11px Segoe UI';ctx.textAlign='left';
+  ctx.fillText(`(${ptA.x},${ptA.y})`,ax+12,ay-8);
+
+  // Point B
+  ctx.fillStyle='#f97316';ctx.shadowBlur=10;ctx.shadowColor='#f97316';
+  ctx.beginPath();ctx.arc(bx,by,9,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+  ctx.fillStyle='#fff';ctx.font='bold 9px Segoe UI';ctx.textAlign='center';ctx.fillText('B',bx,by+3);
+  ctx.fillStyle='#f97316';ctx.font='11px Segoe UI';ctx.textAlign='left';
+  ctx.fillText(`(${ptB.x},${ptB.y})`,bx+12,by-8);
+
+  // Distance label
+  const mx=(ax+bx)/2,my=(ay+by)/2;
+  const dist=Math.sqrt((ptB.x-ptA.x)**2+(ptB.y-ptA.y)**2);
+  ctx.fillStyle='#e2e8f0';ctx.font='bold 12px Segoe UI';ctx.textAlign='center';
+  ctx.fillText(`d = ${dist.toFixed(2)}`,mx,my-10);
+
+  requestAnimationFrame(draw);
+}
+
+// Missions
+const MISSIONS=[
+  {q:'A aur B ka distance exactly 5 banao',hint:'Try A(0,0) aur B(3,4) ya A(0,0) aur B(0,5)',check:()=>Math.abs(Math.sqrt((ptB.x-ptA.x)**2+(ptB.y-ptA.y)**2)-5)<0.1,success:'5-12-13 ya 3-4-5 Pythagorean triple! 🎉'},
+  {q:'A(2,3) aur B(8,11) ka distance kya hai?',hint:'d=√[(8-2)²+(11-3)²]=√[36+64]',opts:['10','8','12','√100'],ans:'10'},
+  {q:'A(1,1) aur B(5,5) ka midpoint kya hai?',hint:'M=((1+5)/2,(1+5)/2)',opts:['(3,3)','(4,4)','(2,2)','(6,6)'],ans:'(3,3)'},
+  {q:'A(0,0) aur B(6,8) ko 1:1 mein divide karne wala point?',hint:'Yeh midpoint hai!',opts:['(3,4)','(4,3)','(6,8)','(2,3)'],ans:'(3,4)'},
+  {q:'A(2,1) aur B(8,7) ka midpoint kya hai?',hint:'M=((2+8)/2,(1+7)/2)',opts:['(5,4)','(4,5)','(6,4)','(5,3)'],ans:'(5,4)'},
+];
+
+function shuffle(arr){return[...arr].sort(()=>Math.random()-.5);}
+
+function startMission(){
+  if(mIdx>=MISSIONS.length){allDone();return;}
+  locked=false;
+  const m=MISSIONS[mIdx];
+  document.getElementById('m-title').textContent=`MISSION ${mIdx+1}/5`;
+  document.getElementById('m-title').style.color='#fde047';
+  document.getElementById('m-q').textContent=m.q;
+  document.getElementById('m-hint').textContent='💡 '+m.hint;
+  document.getElementById('mission-panel').className='';
+  document.getElementById('mProg').textContent=`Mission ${mIdx+1}/5`;
+  const area=document.getElementById('ans-area');area.innerHTML='';
+  if(m.opts){
+    shuffle(m.opts).forEach(opt=>{
+      const btn=document.createElement('button');
+      btn.className='ans-btn';btn.textContent=opt;
+      btn.onclick=()=>checkAns(opt,m.ans,btn);
+      area.appendChild(btn);
+    });
+  }
+}
+
+function checkAns(chosen,correct,btn){
+  if(locked)return;locked=true;
+  const panel=document.getElementById('mission-panel');
+  if(chosen===correct){
+    btn.classList.add('correct');panel.classList.add('success');
+    document.getElementById('m-title').textContent='✅ SAHI!';
+    document.getElementById('m-q').textContent='Bahut badhiya! 🎉';
+    document.getElementById('m-hint').textContent='';
+    score+=20;document.getElementById('scoreNum').textContent=score;
+    setTimeout(()=>{mIdx++;startMission();},1800);
+  } else {
+    btn.classList.add('wrong-ans');panel.classList.add('wrong');
+    document.getElementById('m-title').textContent='❌ GALAT!';
+    document.getElementById('m-q').textContent=`Sahi: ${correct}`;
+    setTimeout(()=>{
+      panel.className='';btn.classList.remove('wrong-ans');locked=false;
+      const m=MISSIONS[mIdx];
+      document.getElementById('m-title').textContent=`MISSION ${mIdx+1}/5`;
+      document.getElementById('m-title').style.color='#fde047';
+      document.getElementById('m-q').textContent=m.q;
+      document.getElementById('m-hint').textContent='💡 '+m.hint;
+    },1700);
+  }
+}
+
+// Drag-check missions
+const origDraw=draw;
+function checkSliderMission(){
+  if(mIdx<MISSIONS.length && !locked && MISSIONS[mIdx].check && MISSIONS[mIdx].check()){
+    locked=true;
+    const panel=document.getElementById('mission-panel');
+    panel.classList.add('success');
+    document.getElementById('m-title').textContent='✅ SAHI!';
+    document.getElementById('m-q').textContent=MISSIONS[mIdx].success;
+    document.getElementById('m-hint').textContent='';
+    score+=20;document.getElementById('scoreNum').textContent=score;
+    setTimeout(()=>{mIdx++;startMission();},2000);
+  }
+}
+canvas.addEventListener('mouseup',checkSliderMission);
+
+function allDone(){
+  document.getElementById('m-title').textContent='🏆 ALL DONE!';
+  document.getElementById('m-q').textContent=`Score: ${score}/100 — Coordinate Expert!`;
+  document.getElementById('m-hint').textContent='Naye points try karo!';
+  document.getElementById('mission-panel').classList.add('success');
+  document.getElementById('ans-area').innerHTML='';
+  document.getElementById('mProg').textContent='✅ Complete!';
+}
+
+calc();startMission();draw();
+window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
+</script>
+</body>
+</html>

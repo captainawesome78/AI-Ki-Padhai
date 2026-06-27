@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Probability Lab | Class 10 | AIkiPadhai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:#050505;color:#e2e8f0;font-family:'Inter',sans-serif;}
+    header{background:#0a0a0a;border-bottom:1px solid #1e293b;padding:14px 0;}
+    header .hc{max-width:1100px;margin:0 auto;padding:0 20px;display:flex;justify-content:space-between;align-items:center;}
+    .logo{font-family:'Outfit',sans-serif;font-weight:800;font-size:1.25rem;color:#60a5fa;text-decoration:none;}
+    nav a{color:#94a3b8;text-decoration:none;margin-left:20px;font-size:.9rem;}
+    nav a:hover,nav a.active{color:#60a5fa;}
+    .lab-hero{background:linear-gradient(135deg,#0f172a,#1e3a5f);padding:32px 20px;text-align:center;}
+    .lab-hero h1{font-family:'Outfit',sans-serif;font-size:2rem;color:#fff;margin-bottom:6px;}
+    .lab-hero p{color:#93c5fd;font-size:1rem;}
+    .lab-wrap{max-width:1100px;margin:0 auto;padding:20px;display:grid;grid-template-columns:1fr 340px;gap:20px;}
+    @media(max-width:780px){.lab-wrap{grid-template-columns:1fr;}}
+    .canvas-wrap{background:#0d1117;border-radius:14px;border:1px solid #1e293b;overflow:hidden;position:relative;}
+    canvas{display:block;width:100%;}
+    .right-panel{display:flex;flex-direction:column;gap:16px;}
+    .panel-box{background:#0d1117;border:1px solid #1e293b;border-radius:12px;padding:16px;}
+    .panel-box h3{font-size:.9rem;font-weight:700;color:#60a5fa;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
+    .sim-btn{display:inline-block;background:#1e3a5f;border:1px solid #60a5fa;color:#60a5fa;padding:9px 18px;border-radius:9px;cursor:pointer;font-size:.9rem;font-weight:600;transition:all .2s;margin:4px 4px 4px 0;}
+    .sim-btn:hover{background:#3b82f6;color:white;}
+    .sim-btn.red{background:#450a0a;border-color:#ef4444;color:#fca5a5;}
+    .sim-btn.red:hover{background:#dc2626;color:white;}
+    .stat-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1e293b;font-size:.9rem;}
+    .stat-row:last-child{border:none;}
+    .stat-label{color:#94a3b8;}
+    .stat-val{color:#60a5fa;font-weight:700;font-family:monospace;}
+    .mode-btn{padding:8px 14px;border-radius:8px;border:1px solid #334155;background:#1e293b;color:#94a3b8;cursor:pointer;font-size:.85rem;transition:all .2s;margin:3px;}
+    .mode-btn.active{background:#1e3a5f;border-color:#60a5fa;color:#60a5fa;}
+    #mission-panel{background:#0d1117;border-radius:12px;padding:14px;border:1px solid #334155;}
+    #mission-panel h3{font-size:.85rem;font-weight:700;color:#fbbf24;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+    #mission-q{font-size:.9rem;color:#e2e8f0;line-height:1.5;margin-bottom:10px;min-height:44px;}
+    .ans-btn{display:block;width:100%;background:#1e293b;border:1px solid #334155;color:#e2e8f0;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:.85rem;margin-bottom:7px;text-align:left;}
+    .ans-btn:hover{background:#1e3a5f;border-color:#60a5fa;}
+    .ans-btn.correct{background:#14532d;border-color:#16a34a;color:#86efac;}
+    .ans-btn.wrong{background:#450a0a;border-color:#dc2626;color:#fca5a5;}
+    #score-display{font-size:.8rem;color:#94a3b8;margin-top:8px;}
+    #mission-hint{font-size:.8rem;color:#fbbf24;margin-bottom:8px;display:none;}
+    #next-mission-btn{display:none;width:100%;background:#1e3a5f;border:1px solid #60a5fa;color:#60a5fa;padding:8px;border-radius:8px;cursor:pointer;font-size:.85rem;margin-top:8px;}
+    .result-chip{display:inline-block;padding:4px 10px;border-radius:6px;font-size:.8rem;font-weight:700;margin:2px;}
+    .chip-h{background:#1e3a5f;color:#93c5fd;}
+    .chip-t{background:#1e293b;color:#94a3b8;}
+    .chip-g{background:#14532d;color:#86efac;}
+    .chip-r{background:#450a0a;color:#fca5a5;}
+    footer{background:#0a0a0a;border-top:1px solid #1e293b;padding:20px;text-align:center;color:#475569;font-size:.85rem;margin-top:30px;}
+    #hand-dot{position:absolute;width:18px;height:18px;border-radius:50%;background:rgba(167,139,250,.9);pointer-events:none;display:none;transform:translate(-50%,-50%);box-shadow:0 0 12px rgba(167,139,250,.6);}
+    #pinch-ring{position:absolute;width:36px;height:36px;border-radius:50%;border:2px solid rgba(167,139,250,.9);pointer-events:none;display:none;transform:translate(-50%,-50%);}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="hc">
+      <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+      <nav>
+        <a href="../index.html">Class 10</a>
+        <a href="index.html">Stats &amp; Prob</a>
+        <a href="probability-interactive.html" class="active">Probability Lab</a>
+      </nav>
+    </div>
+  </header>
+  <section class="lab-hero">
+    <h1>🎲 Probability Lab — Class 10</h1>
+    <p>Coins, Dice, Cards — simulate karo aur theoretical vs experimental compare karo</p>
+  </section>
+
+  <div class="lab-wrap">
+    <!-- Canvas -->
+    <div class="canvas-wrap" style="position:relative;">
+      <canvas id="c" height="440"></canvas>
+      <div id="hand-dot"></div>
+      <div id="pinch-ring"></div>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="right-panel">
+
+      <!-- Experiment selector -->
+      <div class="panel-box">
+        <h3>🧪 Experiment Chunno</h3>
+        <button class="mode-btn active" onclick="setMode('coin1',this)">1 Coin</button>
+        <button class="mode-btn" onclick="setMode('coin2',this)">2 Coins</button>
+        <button class="mode-btn" onclick="setMode('dice1',this)">1 Dice</button>
+        <button class="mode-btn" onclick="setMode('dice2',this)">2 Dice</button>
+        <button class="mode-btn" onclick="setMode('cards',this)">Cards</button>
+      </div>
+
+      <!-- Controls -->
+      <div class="panel-box">
+        <h3>▶ Simulate Karo</h3>
+        <button class="sim-btn" onclick="doThrow(1)">1 Baar</button>
+        <button class="sim-btn" onclick="doThrow(10)">10 Baar</button>
+        <button class="sim-btn" onclick="doThrow(100)">100 Baar</button>
+        <button class="sim-btn red" onclick="resetSim()">Reset</button>
+        <div style="margin-top:10px;font-size:.8rem;color:#475569;" id="last-result"></div>
+      </div>
+
+      <!-- Stats -->
+      <div class="panel-box">
+        <h3>📈 Results</h3>
+        <div class="stat-row"><span class="stat-label">Total Throws</span><span class="stat-val" id="sv-total">0</span></div>
+        <div class="stat-row"><span class="stat-label">Event Outcomes</span><span class="stat-val" id="sv-event">0</span></div>
+        <div class="stat-row"><span class="stat-label">Experimental P</span><span class="stat-val" id="sv-exp">0</span></div>
+        <div class="stat-row"><span class="stat-label">Theoretical P</span><span class="stat-val" id="sv-theory">—</span></div>
+        <div class="stat-row"><span class="stat-label">Current Event</span><span class="stat-val" id="sv-evname" style="font-size:.75rem;">—</span></div>
+      </div>
+
+      <!-- Missions -->
+      <div id="mission-panel">
+        <h3>🎯 Missions</h3>
+        <div id="mission-q">Loading...</div>
+        <div id="mission-hint"></div>
+        <div id="mission-opts"></div>
+        <div id="score-display">Score: 0 / 100</div>
+        <button id="next-mission-btn" onclick="nextMission()">Next Mission →</button>
+      </div>
+
+    </div>
+  </div>
+
+  <footer><p>© 2025 AIkiPadhai — Class 10 Probability Lab</p></footer>
+
+  <!-- MediaPipe -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915/hands.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3.1640029074/camera_utils.js" crossorigin="anonymous"></script>
+
+  <script>
+  // ---- MODES ----
+  const MODES = {
+    coin1: {
+      name:'1 Coin',
+      throw:()=>Math.random()<.5?'H':'T',
+      event: r => r==='H',
+      eventName:'P(Head)',
+      theory: 1/2,
+      outcomes:['H','T'],
+      colors:{H:'#3b82f6',T:'#94a3b8'}
+    },
+    coin2: {
+      name:'2 Coins',
+      throw:()=>(Math.random()<.5?'H':'T')+(Math.random()<.5?'H':'T'),
+      event: r => r==='HH',
+      eventName:'P(2 Heads)',
+      theory: 1/4,
+      outcomes:['HH','HT','TH','TT'],
+      colors:{HH:'#3b82f6',HT:'#6366f1',TH:'#8b5cf6',TT:'#94a3b8'}
+    },
+    dice1: {
+      name:'1 Dice',
+      throw:()=>''+(Math.ceil(Math.random()*6)),
+      event: r => [2,3,5].includes(+r),
+      eventName:'P(Prime)',
+      theory: 1/2,
+      outcomes:['1','2','3','4','5','6'],
+      colors:{'1':'#64748b','2':'#16a34a','3':'#16a34a','4':'#64748b','5':'#16a34a','6':'#64748b'}
+    },
+    dice2: {
+      name:'2 Dice (sum)',
+      throw:()=>''+(Math.ceil(Math.random()*6)+Math.ceil(Math.random()*6)),
+      event: r => +r===7,
+      eventName:'P(Sum=7)',
+      theory: 6/36,
+      outcomes:['2','3','4','5','6','7','8','9','10','11','12'],
+      colors:{'7':'#16a34a'}
+    },
+    cards: {
+      name:'Cards',
+      throw:()=>{const s=['♠','♥','♦','♣'][Math.floor(Math.random()*4)];const v=['A','2','3','4','5','6','7','8','9','10','J','Q','K'][Math.floor(Math.random()*13)];return v+s;},
+      event: r => r.endsWith('♥')||r.endsWith('♦'),
+      eventName:'P(Red card)',
+      theory: 1/2,
+      outcomes:['♠','♥','♦','♣'],
+      colors:{'♠':'#1e293b','♥':'#dc2626','♦':'#dc2626','♣':'#1e293b'}
+    }
+  };
+
+  let curMode = 'coin1';
+  let history = [];
+  let counts = {};
+  let eventCount = 0;
+  let totalCount = 0;
+
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+
+  function resize(){
+    W=canvas.offsetWidth;H=440;
+    canvas.width=W;canvas.height=H;
+    draw();
+  }
+
+  function setMode(m, btn){
+    document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    curMode=m;
+    resetSim();
+  }
+
+  function resetSim(){
+    history=[];counts={};eventCount=0;totalCount=0;
+    document.getElementById('sv-total').textContent='0';
+    document.getElementById('sv-event').textContent='0';
+    document.getElementById('sv-exp').textContent='0';
+    document.getElementById('sv-evname').textContent=MODES[curMode].eventName;
+    document.getElementById('sv-theory').textContent=MODES[curMode].theory.toFixed(4);
+    document.getElementById('last-result').textContent='';
+    draw();
+  }
+
+  function doThrow(n){
+    const m = MODES[curMode];
+    for(let i=0;i<n;i++){
+      const r = m.throw();
+      history.push(r);
+      // For cards mode, use suit for counting
+      let key = r;
+      if(curMode==='cards'){
+        for(const s of['♠','♥','♦','♣']){if(r.includes(s)){key=s;break;}}
+      }
+      counts[key]=(counts[key]||0)+1;
+      if(m.event(r)) eventCount++;
+      totalCount++;
+    }
+    if(history.length>0){
+      const last10 = history.slice(-5);
+      document.getElementById('last-result').textContent='Last: '+last10.join(' ');
+    }
+    document.getElementById('sv-total').textContent=totalCount;
+    document.getElementById('sv-event').textContent=eventCount;
+    document.getElementById('sv-exp').textContent=(eventCount/totalCount).toFixed(4);
+    draw();
+  }
+
+  function draw(){
+    if(!W) return;
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#0d1117';ctx.fillRect(0,0,W,H);
+
+    const m = MODES[curMode];
+    const outcomes = m.outcomes;
+    const n = outcomes.length;
+
+    // Title
+    ctx.fillStyle='#e2e8f0';ctx.font='bold 16px Outfit';ctx.textAlign='center';
+    ctx.fillText(`${m.name} — Frequency Bar Chart`, W/2, 26);
+
+    // Chart area
+    const cL=60, cR=W-30, cT=50, cB=H-100;
+    const cW=cR-cL, cH=cB-cT;
+    const barW=cW/n;
+
+    // Max count
+    let maxC = Math.max(...outcomes.map(o=>counts[o]||0),1);
+
+    // Grid
+    ctx.strokeStyle='#1e293b';ctx.lineWidth=1;
+    for(let i=0;i<=4;i++){
+      const y=cB-(i/4)*cH;
+      ctx.beginPath();ctx.moveTo(cL,y);ctx.lineTo(cR,y);ctx.stroke();
+      ctx.fillStyle='#475569';ctx.font='11px Inter';ctx.textAlign='right';
+      ctx.fillText(Math.round(i/4*maxC), cL-6, y+4);
+    }
+
+    // Bars
+    outcomes.forEach((o,i)=>{
+      const cnt=counts[o]||0;
+      const bH=cnt>0?(cnt/maxC)*cH:0;
+      const x=cL+i*barW;
+      const y=cB-bH;
+
+      const isEvent = m.event ? m.colors[o]==='#16a34a'||m.colors[o]==='#dc2626'||m.colors[o]==='#3b82f6' : false;
+      const col = m.colors[o]||'#3b82f6';
+      const grad=ctx.createLinearGradient(x,y,x,cB);
+      grad.addColorStop(0,col);
+      grad.addColorStop(1,col+'88');
+      ctx.fillStyle=grad;
+      if(bH>0) ctx.fillRect(x+2,y,barW-4,bH);
+
+      // Count label
+      if(cnt>0){
+        ctx.fillStyle='#e2e8f0';ctx.font='bold 12px Inter';ctx.textAlign='center';
+        if(bH>22) ctx.fillText(cnt,x+barW/2,y+16);
+        else{ctx.fillStyle='#60a5fa';ctx.fillText(cnt,x+barW/2,y-5);}
+      }
+
+      // X label
+      ctx.fillStyle='#94a3b8';ctx.font='12px Inter';ctx.textAlign='center';
+      ctx.fillText(o, x+barW/2, cB+20);
+
+      // Probability label
+      if(totalCount>0){
+        const p=(cnt/totalCount).toFixed(2);
+        ctx.fillStyle='#475569';ctx.font='10px Inter';
+        ctx.fillText(p, x+barW/2, cB+36);
+      }
+    });
+
+    // Axes
+    ctx.strokeStyle='#475569';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(cL,cT);ctx.lineTo(cL,cB);ctx.lineTo(cR,cB);ctx.stroke();
+
+    // Theoretical vs experimental line
+    if(totalCount>0){
+      const expP = eventCount/totalCount;
+      const theoryP = m.theory;
+      const midY = cB - 45;
+      ctx.fillStyle='#e2e8f0';ctx.font='bold 13px Inter';ctx.textAlign='left';
+      ctx.fillText(`Experimental: ${expP.toFixed(4)}`, cL, H-60);
+      ctx.fillStyle='#fbbf24';
+      ctx.fillText(`Theoretical: ${theoryP.toFixed(4)}`, cL, H-44);
+      ctx.fillStyle='#94a3b8';ctx.font='11px Inter';
+      ctx.fillText(`(Event: ${m.eventName})`, cL, H-28);
+    } else {
+      ctx.fillStyle='#475569';ctx.font='14px Inter';ctx.textAlign='center';
+      ctx.fillText('Simulate karo — results yahan dikhenge!', W/2, cB-cH/2);
+    }
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  resetSim();
+
+  // ---- MISSIONS ----
+  const MISSIONS = [
+    {
+      q:'Ek coin uchhala. P(Tail) kya hai?',
+      hint:'Sample space = {H, T}, n(S)=2',
+      opts:['1','1/2','1/4','0'],
+      ans:1
+    },
+    {
+      q:'Ek dice fenki. P(number > 4) kya hai?',
+      hint:'5 aur 6 hi 4 se bade hain',
+      opts:['1/6','1/3','1/2','2/3'],
+      ans:1
+    },
+    {
+      q:'52 cards mein se 1 nikali. P(Ace) kya hai?',
+      hint:'Total Aces = 4',
+      opts:['1/13','1/52','4/13','1/4'],
+      ans:0
+    },
+    {
+      q:'2 coins. P(exactly 2 tails) kya hai?',
+      hint:'Sample space = {HH,HT,TH,TT}',
+      opts:['1/2','1/4','3/4','1'],
+      ans:1
+    },
+    {
+      q:'Ek bag mein 5 red aur 3 blue balls. P(blue) kya hai?',
+      hint:'Total = 5+3 = 8',
+      opts:['3/5','5/8','3/8','1/3'],
+      ans:2
+    }
+  ];
+
+  let mIdx=0, score=0, answered=false;
+
+  function renderMission(){
+    if(mIdx>=MISSIONS.length){
+      document.getElementById('mission-q').textContent='🎉 Sab missions complete! Score: '+score+'/100';
+      document.getElementById('mission-opts').innerHTML='';
+      document.getElementById('mission-hint').style.display='none';
+      document.getElementById('next-mission-btn').style.display='none';
+      return;
+    }
+    const m=MISSIONS[mIdx];
+    document.getElementById('mission-q').textContent=`Mission ${mIdx+1}/5: ${m.q}`;
+    document.getElementById('mission-hint').style.display='none';
+    document.getElementById('next-mission-btn').style.display='none';
+    answered=false;
+    const div=document.getElementById('mission-opts');
+    div.innerHTML='';
+    m.opts.forEach((o,i)=>{
+      const b=document.createElement('button');
+      b.className='ans-btn';b.textContent=o;
+      b.onclick=()=>checkAns(i,b);
+      div.appendChild(b);
+    });
+    document.getElementById('score-display').textContent=`Score: ${score} / 100`;
+  }
+
+  function checkAns(i,btn){
+    if(answered) return;
+    answered=true;
+    const m=MISSIONS[mIdx];
+    const btns=document.querySelectorAll('.ans-btn');
+    if(i===m.ans){btn.classList.add('correct');score+=20;}
+    else{
+      btn.classList.add('wrong');
+      btns[m.ans].classList.add('correct');
+      document.getElementById('mission-hint').textContent='💡 Hint: '+m.hint;
+      document.getElementById('mission-hint').style.display='block';
+    }
+    document.getElementById('score-display').textContent=`Score: ${score} / 100`;
+    document.getElementById('next-mission-btn').style.display='block';
+  }
+
+  function nextMission(){mIdx++;renderMission();}
+  renderMission();
+
+  // ---- MEDIAPIPE ----
+  let isMouseMode = false;
+  const handDot = document.getElementById('hand-dot');
+  const pinchRing = document.getElementById('pinch-ring');
+  const canvasWrap = canvas.parentElement;
+  let lastPinch = false;
+
+  function getAnsBtns(){ return document.querySelectorAll('.ans-btn'); }
+
+  function onHandResults(results){
+    if(!results.multiHandLandmarks||results.multiHandLandmarks.length===0){
+      handDot.style.display='none'; pinchRing.style.display='none'; return;
+    }
+    const lm = results.multiHandLandmarks[0];
+    const rect = canvasWrap.getBoundingClientRect();
+    const ix = lm[8].x * rect.width;
+    const iy = lm[8].y * rect.height;
+    const tx = lm[4].x * rect.width;
+    const ty = lm[4].y * rect.height;
+    const dist = Math.hypot(ix-tx, iy-ty);
+    const pinching = dist < 50;
+
+    handDot.style.display='block';
+    handDot.style.left=ix+'px'; handDot.style.top=iy+'px';
+
+    if(pinching){
+      pinchRing.style.display='block';
+      pinchRing.style.left=ix+'px'; pinchRing.style.top=iy+'px';
+    } else {
+      pinchRing.style.display='none';
+    }
+
+    if(pinching && !lastPinch){
+      // Check ans buttons
+      const btns = getAnsBtns();
+      btns.forEach(btn=>{
+        const r = btn.getBoundingClientRect();
+        const bx = ix + rect.left;
+        const by = iy + rect.top;
+        if(bx>=r.left&&bx<=r.right&&by>=r.top&&by<=r.bottom) btn.click();
+      });
+
+      // Check throw buttons
+      document.querySelectorAll('.sim-btn').forEach(btn=>{
+        const r = btn.getBoundingClientRect();
+        const bx = ix + rect.left;
+        const by = iy + rect.top;
+        if(bx>=r.left&&bx<=r.right&&by>=r.top&&by<=r.bottom) btn.click();
+      });
+
+      // Next mission
+      const nb = document.getElementById('next-mission-btn');
+      if(nb && nb.style.display!=='none'){
+        const r=nb.getBoundingClientRect();
+        const bx=ix+rect.left, by=iy+rect.top;
+        if(bx>=r.left&&bx<=r.right&&by>=r.top&&by<=r.bottom) nb.click();
+      }
+    }
+    lastPinch = pinching;
+  }
+
+  // Try to start MediaPipe; auto-fallback to mouse after 4s
+  let mpStarted = false;
+  setTimeout(()=>{if(!mpStarted) isMouseMode=true;}, 4000);
+
+  try {
+    const hands = new Hands({locateFile: f=>`https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915/${f}`});
+    hands.setOptions({maxNumHands:1,modelComplexity:0,minDetectionConfidence:.6,minTrackingConfidence:.5});
+    hands.onResults(onHandResults);
+    const vid = document.createElement('video');
+    vid.style.display='none'; document.body.appendChild(vid);
+    const cam = new Camera(vid,{onFrame:async()=>{await hands.send({image:vid});},width:320,height:240});
+    cam.start().then(()=>{mpStarted=true;}).catch(()=>{isMouseMode=true;});
+  } catch(e){ isMouseMode=true; }
+
+  // Mouse fallback for answer buttons (always on)
+  canvas.addEventListener('mousemove', e=>{
+    const r=canvas.getBoundingClientRect();
+    const mx=e.clientX-r.left;const my=e.clientY-r.top;
+  });
+  </script>
+</body>
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trig Ratios Lab | AIkiPadhai</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:#0a0500;color:#fff;font-family:'Segoe UI',sans-serif;overflow:hidden;}
+    canvas{position:absolute;top:0;left:0;}
+    #ui{position:absolute;top:0;left:0;width:100%;height:100%;z-index:10;pointer-events:none;}
+    .hdr{position:absolute;top:0;left:0;right:0;padding:10px 20px 6px;text-align:center;background:linear-gradient(to bottom,rgba(0,0,0,.9),transparent);}
+    .hdr h1{color:#fdba74;font-size:18px;text-shadow:0 0 10px #ea580c;}
+    .hdr p{color:#fed7aa;font-size:11px;margin-top:2px;}
+    .back-btn{position:absolute;top:10px;left:12px;pointer-events:auto;color:rgba(255,255,255,.7);text-decoration:none;border:1px solid rgba(255,255,255,.2);padding:5px 10px;border-radius:5px;font-size:11px;}
+
+    #ctrl-panel{position:absolute;left:12px;top:68px;background:rgba(0,0,0,.82);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px;width:200px;pointer-events:auto;}
+    #ctrl-panel h3{font-size:11px;color:#fdba74;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+    .sl-row{margin-bottom:10px;}
+    .sl-lbl{font-size:11px;color:#94a3b8;margin-bottom:2px;}
+    .sl-val{font-size:22px;color:#fbbf24;font-weight:900;}
+    input[type=range]{width:100%;accent-color:#ea580c;}
+
+    #ratios-panel{position:absolute;right:12px;top:68px;background:rgba(0,0,0,.82);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px;width:190px;}
+    #ratios-panel h3{font-size:11px;color:#fdba74;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+    .ratio-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding:5px 8px;background:rgba(255,255,255,.04);border-radius:6px;}
+    .r-name{font-size:12px;color:#94a3b8;font-weight:bold;}
+    .r-val{font-size:16px;color:#fbbf24;font-weight:bold;}
+    .r-frac{font-size:10px;color:#6b7280;}
+
+    #mission-panel{position:absolute;bottom:115px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.88);border:2px solid #fbbf24;border-radius:14px;padding:10px 22px;text-align:center;min-width:270px;pointer-events:none;}
+    #mission-panel.success{border-color:#22c55e;background:rgba(20,83,45,.9);}
+    #mission-panel.wrong{border-color:#ef4444;background:rgba(80,10,10,.9);}
+    .m-title{font-size:10px;color:#fde047;text-transform:uppercase;font-weight:bold;letter-spacing:1px;}
+    .m-q{font-size:14px;font-weight:700;color:#fff;margin:4px 0;}
+    .m-hint{font-size:10px;color:#94a3b8;}
+    #ans-area{position:absolute;bottom:65px;left:50%;transform:translateX(-50%);display:flex;gap:8px;pointer-events:auto;flex-wrap:wrap;justify-content:center;}
+    .ans-btn{background:rgba(234,88,12,.2);border:2px solid #ea580c;color:#fed7aa;padding:8px 14px;border-radius:7px;cursor:pointer;font-size:14px;font-weight:bold;transition:all .2s;}
+    .ans-btn:hover{background:#ea580c;color:#fff;}
+    .ans-btn.correct{background:#166534;border-color:#22c55e;}
+    .ans-btn.wrong-ans{background:#7f1d1d;border-color:#ef4444;}
+    #score-info{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);font-size:12px;color:#6b7280;text-align:center;}
+  </style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="ui">
+  <div class="hdr">
+    <a href="index.html" class="back-btn">← Wapas</a>
+    <h1>📐 Trig Ratios Lab</h1>
+    <p>Angle change karo, right triangle aur trig ratios live dekho, missions complete karo!</p>
+  </div>
+
+  <div id="ctrl-panel">
+    <h3>⚙️ Angle</h3>
+    <div class="sl-row">
+      <div class="sl-lbl">θ = <span class="sl-val" id="vtheta">30</span>°</div>
+      <input type="range" id="stheta" min="5" max="85" step="1" value="30" oninput="update()">
+    </div>
+    <div class="sl-row">
+      <div class="sl-lbl">Hypotenuse = <span class="sl-val" id="vhyp">10</span></div>
+      <input type="range" id="shyp" min="5" max="15" step="1" value="10" oninput="update()">
+    </div>
+    <hr style="border-color:rgba(255,255,255,.1);margin:10px 0;">
+    <div class="sl-lbl" style="margin-bottom:6px;color:#fdba74;">Standard Angles</div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px;">
+      <button onclick="setAngle(30)" style="background:rgba(234,88,12,.2);border:1px solid #ea580c;color:#fed7aa;padding:4px 10px;border-radius:5px;cursor:pointer;font-size:12px;">30°</button>
+      <button onclick="setAngle(45)" style="background:rgba(234,88,12,.2);border:1px solid #ea580c;color:#fed7aa;padding:4px 10px;border-radius:5px;cursor:pointer;font-size:12px;">45°</button>
+      <button onclick="setAngle(60)" style="background:rgba(234,88,12,.2);border:1px solid #ea580c;color:#fed7aa;padding:4px 10px;border-radius:5px;cursor:pointer;font-size:12px;">60°</button>
+    </div>
+  </div>
+
+  <div id="ratios-panel">
+    <h3>📊 Trig Ratios</h3>
+    <div class="ratio-row"><span class="r-name">sin θ</span><div><div class="r-val" id="vsin">—</div><div class="r-frac" id="fsin">Opp/Hyp</div></div></div>
+    <div class="ratio-row"><span class="r-name">cos θ</span><div><div class="r-val" id="vcos">—</div><div class="r-frac" id="fcos">Adj/Hyp</div></div></div>
+    <div class="ratio-row"><span class="r-name">tan θ</span><div><div class="r-val" id="vtan">—</div><div class="r-frac" id="ftan">Opp/Adj</div></div></div>
+    <div class="ratio-row"><span class="r-name">cosec θ</span><div><div class="r-val" id="vcsc">—</div></div></div>
+    <div class="ratio-row"><span class="r-name">sec θ</span><div><div class="r-val" id="vsec">—</div></div></div>
+    <div class="ratio-row"><span class="r-name">cot θ</span><div><div class="r-val" id="vcot">—</div></div></div>
+    <hr style="border-color:rgba(255,255,255,.1);margin:8px 0;">
+    <div class="ratio-row"><span class="r-name">sin²+cos²</span><div class="r-val" id="vident">1.000</div></div>
+    <div style="text-align:center;margin-top:8px;font-size:11px;color:#ea580c;font-weight:bold;" id="scoreDisp">Score: 0</div>
+    <div style="text-align:center;font-size:10px;color:#6b7280;" id="mProg">Mission 1/5</div>
+  </div>
+
+  <div id="mission-panel">
+    <div class="m-title" id="m-title">MISSION</div>
+    <div class="m-q" id="m-q">Loading...</div>
+    <div class="m-hint" id="m-hint"></div>
+  </div>
+  <div id="ans-area"></div>
+  <div id="score-info">🖱️ Slider se angle badlo, standard angles click karo</div>
+</div>
+
+<script>
+const c=document.getElementById('c'), ctx=c.getContext('2d');
+c.width=window.innerWidth; c.height=window.innerHeight;
+
+let theta=30, hyp=10, score=0, mIdx=0, locked=false;
+const toRad=d=>d*Math.PI/180;
+const fmt=n=>n.toFixed(3);
+
+function setAngle(a){ document.getElementById('stheta').value=a; update(); }
+
+function update(){
+  theta=parseFloat(document.getElementById('stheta').value);
+  hyp=parseFloat(document.getElementById('shyp').value);
+  document.getElementById('vtheta').textContent=theta;
+  document.getElementById('vhyp').textContent=hyp;
+
+  const rad=toRad(theta);
+  const opp=+(hyp*Math.sin(rad)).toFixed(2);
+  const adj=+(hyp*Math.cos(rad)).toFixed(2);
+  const sinV=+(Math.sin(rad)).toFixed(3);
+  const cosV=+(Math.cos(rad)).toFixed(3);
+  const tanV=+(Math.tan(rad)).toFixed(3);
+
+  document.getElementById('vsin').textContent=fmt(sinV);
+  document.getElementById('fsin').textContent=`${opp}/${hyp}`;
+  document.getElementById('vcos').textContent=fmt(cosV);
+  document.getElementById('fcos').textContent=`${adj}/${hyp}`;
+  document.getElementById('vtan').textContent=fmt(tanV);
+  document.getElementById('ftan').textContent=`${opp}/${adj}`;
+  document.getElementById('vcsc').textContent=fmt(1/sinV);
+  document.getElementById('vsec').textContent=fmt(1/cosV);
+  document.getElementById('vcot').textContent=fmt(1/tanV);
+  document.getElementById('vident').textContent=fmt(sinV*sinV+cosV*cosV);
+}
+
+function drawScene(){
+  const W=c.width, H=c.height;
+  ctx.fillStyle='#0a0500'; ctx.fillRect(0,0,W,H);
+
+  // Grid
+  ctx.strokeStyle='#110800'; ctx.lineWidth=1;
+  for(let x=0;x<W;x+=50){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=50){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+
+  const CX=c.width/2, CY=c.height/2+30;
+  const SCALE=22;
+  const rad=toRad(theta);
+  const opp=hyp*Math.sin(rad), adj=hyp*Math.cos(rad);
+
+  // Triangle vertices
+  const A=[CX-adj*SCALE/2, CY+opp*SCALE/2]; // bottom left
+  const B=[CX+adj*SCALE/2, CY+opp*SCALE/2]; // bottom right
+  const Cv=[CX-adj*SCALE/2, CY-opp*SCALE/2]; // top left
+
+  // Fill triangle
+  ctx.fillStyle='rgba(234,88,12,0.08)';
+  ctx.beginPath(); ctx.moveTo(...A); ctx.lineTo(...B); ctx.lineTo(...Cv); ctx.closePath(); ctx.fill();
+
+  // Sides
+  // Hypotenuse (A to Cv ... no, hyp = from B to Cv)
+  ctx.strokeStyle='#fbbf24'; ctx.lineWidth=3; ctx.shadowBlur=8; ctx.shadowColor='#fbbf24';
+  ctx.beginPath(); ctx.moveTo(A[0],A[1]); ctx.lineTo(Cv[0],Cv[1]); ctx.stroke(); // hypotenuse? No... 
+  // Let me re-think the triangle:
+  // θ at A (bottom-left), right angle at B (bottom-right? no)
+  // A = bottom-left, angle θ here
+  // B = bottom-right (right angle)
+  // C = top-right
+
+  const Ax=CX-100, Ay=CY+80;
+  const Bx=CX-100+adj*SCALE, By=CY+80;
+  const Ccx=CX-100+adj*SCALE, Ccy=CY+80-opp*SCALE;
+
+  // Right angle marker at B
+  ctx.strokeStyle='#94a3b8'; ctx.lineWidth=1.5; ctx.shadowBlur=0;
+  ctx.strokeRect(Bx-12,By-12,12,12);
+
+  // Base (Adjacent)
+  ctx.strokeStyle='#10b981'; ctx.lineWidth=2.5; ctx.shadowBlur=6; ctx.shadowColor='#10b981';
+  ctx.beginPath(); ctx.moveTo(Ax,Ay); ctx.lineTo(Bx,By); ctx.stroke();
+
+  // Height (Opposite)
+  ctx.strokeStyle='#6366f1'; ctx.lineWidth=2.5; ctx.shadowColor='#6366f1';
+  ctx.beginPath(); ctx.moveTo(Bx,By); ctx.lineTo(Ccx,Ccy); ctx.stroke();
+
+  // Hypotenuse
+  ctx.strokeStyle='#fbbf24'; ctx.lineWidth=3; ctx.shadowColor='#fbbf24';
+  ctx.beginPath(); ctx.moveTo(Ax,Ay); ctx.lineTo(Ccx,Ccy); ctx.stroke();
+  ctx.shadowBlur=0;
+
+  // Angle arc
+  ctx.strokeStyle='#fde047'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.arc(Ax,Ay,35,0,-rad,true); ctx.stroke();
+  ctx.fillStyle='#fde047'; ctx.font='bold 15px Segoe UI'; ctx.textAlign='center';
+  ctx.fillText(`${theta}°`, Ax+50, Ay-15);
+
+  // Side labels
+  const midAdj=[(Ax+Bx)/2,(Ay+By)/2];
+  const midOpp=[(Bx+Ccx)/2,(By+Ccy)/2];
+  const midHyp=[(Ax+Ccx)/2,(Ay+Ccy)/2];
+
+  ctx.fillStyle='#10b981'; ctx.font='bold 13px Segoe UI'; ctx.textAlign='center';
+  ctx.fillText(`adj=${adj.toFixed(1)}`,midAdj[0],midAdj[1]+18);
+  ctx.fillStyle='#6366f1'; ctx.textAlign='left';
+  ctx.fillText(`opp=${opp.toFixed(1)}`,midOpp[0]+6,midOpp[1]);
+  ctx.fillStyle='#fbbf24'; ctx.textAlign='center';
+  ctx.fillText(`hyp=${hyp}`,midHyp[0]-20,midHyp[1]-8);
+
+  // Labels
+  ctx.fillStyle='#ea580c'; ctx.font='bold 14px Segoe UI';
+  ctx.fillText('A (θ)',Ax-16,Ay+16);
+  ctx.fillStyle='#94a3b8';
+  ctx.fillText('B (90°)',Bx+8,By+16);
+  ctx.fillText('C',Ccx+10,Ccy-5);
+
+  // Formulas display
+  const sinV=Math.sin(toRad(theta)), cosV=Math.cos(toRad(theta));
+  ctx.fillStyle='rgba(0,0,0,.7)'; ctx.fillRect(W-320,H-180,300,155);
+  ctx.strokeStyle='#ea580c'; ctx.lineWidth=1; ctx.strokeRect(W-320,H-180,300,155);
+  ctx.fillStyle='#fdba74'; ctx.font='bold 12px Segoe UI'; ctx.textAlign='left';
+  ctx.fillText(`sin ${theta}° = opp/hyp = ${opp.toFixed(2)}/${hyp} = ${sinV.toFixed(3)}`,W-310,H-158);
+  ctx.fillText(`cos ${theta}° = adj/hyp = ${adj.toFixed(2)}/${hyp} = ${cosV.toFixed(3)}`,W-310,H-136);
+  ctx.fillText(`tan ${theta}° = opp/adj = ${opp.toFixed(2)}/${adj.toFixed(2)} = ${(sinV/cosV).toFixed(3)}`,W-310,H-114);
+  ctx.fillStyle='#22c55e'; ctx.font='12px Segoe UI';
+  ctx.fillText(`Identity: ${sinV.toFixed(3)}² + ${cosV.toFixed(3)}² = ${(sinV*sinV+cosV*cosV).toFixed(3)} ✓`,W-310,H-85);
+
+  requestAnimationFrame(drawScene);
+}
+
+// Missions
+const MISSIONS=[
+  {q:'Angle 45° pe set karo',hint:'Standard angle: sin 45° = cos 45° = 1/√2',check:()=>theta===45,success:'45°! sin = cos = 1/√2 ≈ 0.707!'},
+  {q:'sin 30° = ?',hint:'30° pe set karo aur sin value dekho',opts:['1/2 = 0.5','1/√2','√3/2','1/3'],ans:'1/2 = 0.5'},
+  {q:'tan 60° = ?',hint:'60° pe set karo aur tan value check karo',opts:['√3 ≈ 1.732','1','1/√3','2'],ans:'√3 ≈ 1.732'},
+  {q:'cos 0° = ?',hint:'Angle 0 pe... adjacent = hypotenuse',opts:['1','0','1/2','∞'],ans:'1'},
+  {q:'sin²θ + cos²θ = ?',hint:'Identity panel mein dekho — always same!',opts:['1','2','0','sin²θ'],ans:'1'},
+];
+function shuffle(arr){return[...arr].sort(()=>Math.random()-.5);}
+
+function startMission(){
+  if(mIdx>=MISSIONS.length){allDone();return;}
+  locked=false;
+  const m=MISSIONS[mIdx];
+  document.getElementById('m-title').textContent=`MISSION ${mIdx+1}/5`;
+  document.getElementById('m-title').style.color='#fde047';
+  document.getElementById('m-q').textContent=m.q;
+  document.getElementById('m-hint').textContent='💡 '+m.hint;
+  document.getElementById('mission-panel').className='';
+  document.getElementById('mProg').textContent=`Mission ${mIdx+1}/5`;
+  const area=document.getElementById('ans-area');area.innerHTML='';
+  if(m.opts){
+    shuffle(m.opts).forEach(opt=>{
+      const btn=document.createElement('button');btn.className='ans-btn';btn.textContent=opt;
+      btn.onclick=()=>checkAns(opt,m.ans,btn);area.appendChild(btn);
+    });
+  }
+}
+
+function checkAns(chosen,correct,btn){
+  if(locked)return;locked=true;
+  const panel=document.getElementById('mission-panel');
+  if(chosen===correct){
+    btn.classList.add('correct');panel.classList.add('success');
+    document.getElementById('m-title').textContent='✅ SAHI!';
+    document.getElementById('m-q').textContent='Bahut badhiya! 🎉';
+    document.getElementById('m-hint').textContent='';
+    score+=20;document.getElementById('scoreDisp').textContent=`Score: ${score}`;
+    setTimeout(()=>{mIdx++;startMission();},1800);
+  } else {
+    btn.classList.add('wrong-ans');panel.classList.add('wrong');
+    document.getElementById('m-title').textContent='❌ GALAT!';
+    document.getElementById('m-q').textContent=`Sahi: ${correct}`;
+    setTimeout(()=>{
+      panel.className='';btn.classList.remove('wrong-ans');locked=false;
+      const m=MISSIONS[mIdx];
+      document.getElementById('m-title').textContent=`MISSION ${mIdx+1}/5`;
+      document.getElementById('m-title').style.color='#fde047';
+      document.getElementById('m-q').textContent=m.q;
+      document.getElementById('m-hint').textContent='💡 '+m.hint;
+    },1700);
+  }
+}
+
+// Slider missions check
+document.getElementById('stheta').addEventListener('input',()=>{
+  if(mIdx<MISSIONS.length&&!locked&&MISSIONS[mIdx].check&&MISSIONS[mIdx].check()){
+    locked=true;
+    document.getElementById('mission-panel').classList.add('success');
+    document.getElementById('m-title').textContent='✅ SAHI!';
+    document.getElementById('m-q').textContent=MISSIONS[mIdx].success;
+    document.getElementById('m-hint').textContent='';
+    document.getElementById('ans-area').innerHTML='';
+    score+=20;document.getElementById('scoreDisp').textContent=`Score: ${score}`;
+    setTimeout(()=>{mIdx++;startMission();},2000);
+  }
+});
+
+function allDone(){
+  document.getElementById('m-title').textContent='🏆 ALL DONE!';
+  document.getElementById('m-q').textContent=`Score: ${score}/100 — Trig Master!`;
+  document.getElementById('m-hint').textContent='Angles explore karte raho!';
+  document.getElementById('mission-panel').classList.add('success');
+  document.getElementById('ans-area').innerHTML='';
+  document.getElementById('mProg').textContent='✅ Complete!';
+}
+
+update(); startMission(); drawScene();
+window.addEventListener('resize',()=>{c.width=window.innerWidth;c.height=window.innerHeight;});
+</script>
+</body>
+</html>

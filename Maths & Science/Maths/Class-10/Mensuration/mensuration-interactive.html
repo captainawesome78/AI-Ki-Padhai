@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Circle Sector Lab | AIkiPadhai</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:#020e0a;color:#fff;font-family:'Segoe UI',sans-serif;overflow:hidden;}
+    canvas{position:absolute;top:0;left:0;}
+    #ui{position:absolute;top:0;left:0;width:100%;height:100%;z-index:10;pointer-events:none;}
+    .hdr{position:absolute;top:0;left:0;right:0;padding:10px 20px 6px;text-align:center;background:linear-gradient(to bottom,rgba(0,0,0,.9),transparent);}
+    .hdr h1{color:#5eead4;font-size:18px;text-shadow:0 0 10px #0d9488;}
+    .hdr p{color:#99f6e4;font-size:11px;margin-top:2px;}
+    .back-btn{position:absolute;top:10px;left:12px;pointer-events:auto;color:rgba(255,255,255,.7);text-decoration:none;border:1px solid rgba(255,255,255,.2);padding:5px 10px;border-radius:5px;font-size:11px;}
+    #ctrl-panel{position:absolute;left:12px;top:68px;background:rgba(0,0,0,.82);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px;width:200px;pointer-events:auto;}
+    #ctrl-panel h3{font-size:11px;color:#5eead4;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+    .sl-row{margin-bottom:10px;}
+    .sl-lbl{font-size:11px;color:#94a3b8;margin-bottom:2px;}
+    .sl-val{font-size:20px;color:#fbbf24;font-weight:bold;}
+    input[type=range]{width:100%;accent-color:#0d9488;}
+    .std-btns{display:flex;gap:5px;margin-top:6px;}
+    .std-btn{background:rgba(13,148,136,.2);border:1px solid #0d9488;color:#5eead4;padding:4px 9px;border-radius:5px;cursor:pointer;font-size:12px;}
+    .std-btn:hover{background:#0d9488;color:#fff;}
+    #right-panel{position:absolute;right:12px;top:68px;background:rgba(0,0,0,.82);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px;width:200px;}
+    #right-panel h3{font-size:11px;color:#5eead4;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+    .info-row{margin-bottom:7px;}
+    .rlbl{font-size:10px;color:#94a3b8;}
+    .rval{font-size:16px;color:#fbbf24;font-weight:bold;}
+    .score-big{font-size:34px;font-weight:900;color:#fbbf24;text-align:center;margin-top:8px;}
+    #mission-panel{position:absolute;bottom:115px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.88);border:2px solid #fbbf24;border-radius:14px;padding:10px 22px;text-align:center;min-width:270px;pointer-events:none;}
+    #mission-panel.success{border-color:#22c55e;background:rgba(20,83,45,.9);}
+    #mission-panel.wrong{border-color:#ef4444;background:rgba(80,10,10,.9);}
+    .m-title{font-size:10px;color:#fde047;text-transform:uppercase;font-weight:bold;letter-spacing:1px;}
+    .m-q{font-size:14px;font-weight:700;color:#fff;margin:4px 0;}
+    .m-hint{font-size:10px;color:#94a3b8;}
+    #ans-area{position:absolute;bottom:65px;left:50%;transform:translateX(-50%);display:flex;gap:8px;pointer-events:auto;flex-wrap:wrap;justify-content:center;}
+    .ans-btn{background:rgba(13,148,136,.2);border:2px solid #0d9488;color:#99f6e4;padding:8px 14px;border-radius:7px;cursor:pointer;font-size:14px;font-weight:bold;transition:all .2s;}
+    .ans-btn:hover{background:#0d9488;color:#fff;}
+    .ans-btn.correct{background:#166534;border-color:#22c55e;}
+    .ans-btn.wrong-ans{background:#7f1d1d;border-color:#ef4444;}
+    #score-info{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);font-size:11px;color:#475569;}
+  </style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="ui">
+  <div class="hdr">
+    <a href="index.html" class="back-btn">← Wapas</a>
+    <h1>⭕ Circle Sector &amp; Segment Lab</h1>
+    <p>Angle aur radius change karo — sector aur segment area live dekho!</p>
+  </div>
+  <div id="ctrl-panel">
+    <h3>⚙️ Settings</h3>
+    <div class="sl-row"><div class="sl-lbl">Radius (r) = <span class="sl-val" id="vr">7</span> cm</div><input type="range" id="sr" min="3" max="14" step="1" value="7" oninput="update()"></div>
+    <div class="sl-row"><div class="sl-lbl">Angle (θ) = <span class="sl-val" id="vt">90</span>°</div><input type="range" id="st" min="10" max="350" step="5" value="90" oninput="update()"></div>
+    <div class="sl-lbl" style="margin-bottom:6px;">Standard Angles</div>
+    <div class="std-btns">
+      <button class="std-btn" onclick="setAngle(60)">60°</button>
+      <button class="std-btn" onclick="setAngle(90)">90°</button>
+      <button class="std-btn" onclick="setAngle(120)">120°</button>
+    </div>
+    <div style="margin-top:12px;">
+      <label style="font-size:11px;color:#94a3b8;"><input type="radio" name="show" value="sector" checked onchange="update()"> Show Sector</label><br>
+      <label style="font-size:11px;color:#94a3b8;margin-top:4px;display:block;"><input type="radio" name="show" value="segment" onchange="update()"> Show Segment</label>
+    </div>
+  </div>
+  <div id="right-panel">
+    <h3>📊 Results</h3>
+    <div class="info-row"><div class="rlbl">Sector Area</div><div class="rval" id="rsect">—</div></div>
+    <div class="info-row"><div class="rlbl">Arc Length</div><div class="rval" id="rarc">—</div></div>
+    <div class="info-row"><div class="rlbl">Triangle Area</div><div class="rval" id="rtri">—</div></div>
+    <div class="info-row"><div class="rlbl">Segment Area</div><div class="rval" id="rseg">—</div></div>
+    <div class="info-row"><div class="rlbl">% of Circle</div><div class="rval" id="rpct">—</div></div>
+    <div class="score-big" id="scoreNum">0</div>
+    <div style="font-size:10px;color:#5eead4;text-align:center;text-transform:uppercase;">Score</div>
+    <div style="font-size:11px;color:#5eead4;text-align:center;margin-top:4px;" id="mProg">Mission 1/5</div>
+  </div>
+  <div id="mission-panel">
+    <div class="m-title" id="m-title">MISSION</div>
+    <div class="m-q" id="m-q">Loading...</div>
+    <div class="m-hint" id="m-hint"></div>
+  </div>
+  <div id="ans-area"></div>
+  <div id="score-info">🖱️ Sliders se radius aur angle badlo</div>
+</div>
+
+<script>
+const c=document.getElementById('c'),ctx=c.getContext('2d');
+c.width=window.innerWidth; c.height=window.innerHeight;
+let r=7, theta=90, score=0, mIdx=0, locked=false;
+const PI=Math.PI;
+
+function setAngle(a){ document.getElementById('st').value=a; update(); }
+
+function update(){
+  r=parseFloat(document.getElementById('sr').value);
+  theta=parseFloat(document.getElementById('st').value);
+  document.getElementById('vr').textContent=r;
+  document.getElementById('vt').textContent=theta;
+
+  const sectorArea=((theta/360)*PI*r*r);
+  const arcLen=((theta/360)*2*PI*r);
+  const rad=theta*PI/180;
+  const triArea=0.5*r*r*Math.sin(rad);
+  const segArea=sectorArea-triArea;
+  const pct=(theta/360*100);
+
+  document.getElementById('rsect').textContent=sectorArea.toFixed(2)+' cm²';
+  document.getElementById('rarc').textContent=arcLen.toFixed(2)+' cm';
+  document.getElementById('rtri').textContent=triArea.toFixed(2)+' cm²';
+  document.getElementById('rseg').textContent=Math.max(0,segArea).toFixed(2)+' cm²';
+  document.getElementById('rpct').textContent=pct.toFixed(1)+'%';
+}
+
+function draw(){
+  const W=c.width,H=c.height;
+  ctx.fillStyle='#020e0a'; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='#041a12'; ctx.lineWidth=1;
+  for(let x=0;x<W;x+=50){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=50){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+
+  const CX=c.width/2-30, CY=c.height/2+20, SCALE=Math.min(20, (Math.min(W,H)/2-150)/14);
+  const pxR=r*SCALE;
+  const rad=theta*PI/180;
+  const showMode=document.querySelector('input[name=show]:checked')?.value||'sector';
+
+  // Full circle (ghost)
+  ctx.strokeStyle='rgba(13,148,136,0.2)'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.arc(CX,CY,pxR,0,2*PI); ctx.stroke();
+
+  // Sector fill
+  ctx.fillStyle='rgba(13,148,136,0.4)';
+  ctx.beginPath(); ctx.moveTo(CX,CY);
+  ctx.arc(CX,CY,pxR,0,-rad,false); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle='#0d9488'; ctx.lineWidth=2.5;
+  ctx.beginPath(); ctx.moveTo(CX,CY);
+  ctx.arc(CX,CY,pxR,0,-rad,false); ctx.closePath(); ctx.stroke();
+
+  // Segment (chord + arc)
+  if(showMode==='segment'){
+    const x1=CX+pxR*Math.cos(0), y1=CY+pxR*Math.sin(0);
+    const x2=CX+pxR*Math.cos(-rad), y2=CY+pxR*Math.sin(-rad);
+    ctx.fillStyle='rgba(99,102,241,0.5)';
+    ctx.beginPath();
+    ctx.moveTo(x1,y1); ctx.arc(CX,CY,pxR,0,-rad,false); ctx.lineTo(x1,y1);
+    ctx.fill();
+    // Triangle
+    ctx.fillStyle='rgba(239,68,68,0.3)';
+    ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(x1,y1); ctx.lineTo(x2,y2); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle='#ef4444'; ctx.lineWidth=1.5; ctx.setLineDash([4,3]);
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.setLineDash([]);
+    // Labels
+    ctx.fillStyle='#a5b4fc'; ctx.font='12px Segoe UI'; ctx.textAlign='center';
+    ctx.fillText('Segment (blue)',CX+pxR*0.5,CY-pxR*0.5-10);
+    ctx.fillStyle='#fca5a5'; ctx.fillText('Triangle (red)',CX+10,CY+10);
+  }
+
+  // Radii labels
+  ctx.strokeStyle='#fbbf24'; ctx.lineWidth=1; ctx.setLineDash([4,3]);
+  ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(CX+pxR,CY); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='#fbbf24'; ctx.font='bold 12px Segoe UI'; ctx.textAlign='center';
+  ctx.fillText(`r=${r}`,CX+pxR/2,CY-8);
+
+  // Angle arc
+  ctx.strokeStyle='#fde047'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.arc(CX,CY,30,0,-rad,false); ctx.stroke();
+  ctx.fillStyle='#fde047'; ctx.font='bold 13px Segoe UI';
+  const midA=-rad/2;
+  ctx.fillText(`${theta}°`,CX+45*Math.cos(midA),CY+45*Math.sin(midA));
+
+  // Center dot
+  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(CX,CY,4,0,2*PI); ctx.fill();
+  ctx.fillStyle='#94a3b8'; ctx.font='11px Segoe UI'; ctx.fillText('O',CX+10,CY+14);
+
+  requestAnimationFrame(draw);
+}
+
+// Missions
+const MISSIONS=[
+  {q:'90° sector ka area r=7 pe nikalo (π=22/7)',hint:'(90/360) × (22/7) × 49',opts:['38.5 cm²','77 cm²','154 cm²','19.25 cm²'],ans:'38.5 cm²'},
+  {q:'θ = 180° banao — sector kya ban jaata hai?',hint:'Half circle = semicircle',check:()=>theta===180,success:'180° sector = Semicircle! Area = πr²/2'},
+  {q:'60° aur r=6 ka arc length kya hai? (π=22/7)',hint:'(60/360) × 2 × (22/7) × 6',opts:['44/7 cm','22/7 cm','88/7 cm','6 cm'],ans:'44/7 cm'},
+  {q:'Segment area = Sector area − ?',hint:'Triangle ban jaata hai center pe',opts:['Triangle Area','Arc Length','Circle Area','Radius'],ans:'Triangle Area'},
+  {q:'θ = 360° sector ka area kya hoga?',hint:'Full circle!',check:()=>theta===350||theta===360,success:'360° = Puri circle! Area = πr²'},
+];
+function shuffle(arr){return[...arr].sort(()=>Math.random()-.5);}
+
+function startMission(){
+  if(mIdx>=MISSIONS.length){allDone();return;}
+  locked=false;
+  const m=MISSIONS[mIdx];
+  document.getElementById('m-title').textContent=`MISSION ${mIdx+1}/5`;
+  document.getElementById('m-title').style.color='#fde047';
+  document.getElementById('m-q').textContent=m.q;
+  document.getElementById('m-hint').textContent='💡 '+m.hint;
+  document.getElementById('mission-panel').className='';
+  document.getElementById('mProg').textContent=`Mission ${mIdx+1}/5`;
+  const area=document.getElementById('ans-area');area.innerHTML='';
+  if(m.opts){
+    shuffle(m.opts).forEach(opt=>{
+      const btn=document.createElement('button');btn.className='ans-btn';btn.textContent=opt;
+      btn.onclick=()=>checkAns(opt,m.ans,btn);area.appendChild(btn);
+    });
+  }
+}
+
+function checkAns(chosen,correct,btn){
+  if(locked)return;locked=true;
+  const panel=document.getElementById('mission-panel');
+  if(chosen===correct){
+    btn.classList.add('correct');panel.classList.add('success');
+    document.getElementById('m-title').textContent='✅ SAHI!';
+    document.getElementById('m-q').textContent='Bahut badhiya! 🎉';
+    document.getElementById('m-hint').textContent='';
+    score+=20;document.getElementById('scoreNum').textContent=score;
+    setTimeout(()=>{mIdx++;startMission();},1800);
+  } else {
+    btn.classList.add('wrong-ans');panel.classList.add('wrong');
+    document.getElementById('m-title').textContent='❌ GALAT!';
+    document.getElementById('m-q').textContent=`Sahi: ${correct}`;
+    setTimeout(()=>{
+      panel.className='';btn.classList.remove('wrong-ans');locked=false;
+      const m=MISSIONS[mIdx];
+      document.getElementById('m-title').textContent=`MISSION ${mIdx+1}/5`;
+      document.getElementById('m-title').style.color='#fde047';
+      document.getElementById('m-q').textContent=m.q;
+      document.getElementById('m-hint').textContent='💡 '+m.hint;
+    },1700);
+  }
+}
+
+// Slider missions
+['st'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',()=>{
+    if(mIdx<MISSIONS.length&&!locked&&MISSIONS[mIdx].check&&MISSIONS[mIdx].check()){
+      locked=true;
+      document.getElementById('mission-panel').classList.add('success');
+      document.getElementById('m-title').textContent='✅ SAHI!';
+      document.getElementById('m-q').textContent=MISSIONS[mIdx].success;
+      document.getElementById('m-hint').textContent='';
+      document.getElementById('ans-area').innerHTML='';
+      score+=20;document.getElementById('scoreNum').textContent=score;
+      setTimeout(()=>{mIdx++;startMission();},2000);
+    }
+  });
+});
+
+function allDone(){
+  document.getElementById('m-title').textContent='🏆 ALL DONE!';
+  document.getElementById('m-q').textContent=`Score: ${score}/100 — Mensuration Master!`;
+  document.getElementById('m-hint').textContent='Naye values explore karo!';
+  document.getElementById('mission-panel').classList.add('success');
+  document.getElementById('ans-area').innerHTML='';
+  document.getElementById('mProg').textContent='✅ Complete!';
+}
+
+update(); startMission(); draw();
+window.addEventListener('resize',()=>{c.width=window.innerWidth;c.height=window.innerHeight;});
+</script>
+</body>
+</html>

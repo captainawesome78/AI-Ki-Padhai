@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quadratic Graph Lab | AIkiPadhai</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:#050a0a;color:#fff;font-family:'Segoe UI',sans-serif;overflow:hidden;}
+    canvas{position:absolute;top:0;left:0;}
+    #ui{position:absolute;top:0;left:0;width:100%;height:100%;z-index:10;pointer-events:none;}
+    .hdr{position:absolute;top:0;left:0;right:0;padding:10px 20px 6px;text-align:center;background:linear-gradient(to bottom,rgba(0,0,0,.9),transparent);}
+    .hdr h1{color:#6ee7b7;font-size:18px;text-shadow:0 0 10px #10b981;}
+    .hdr p{color:#a7f3d0;font-size:11px;margin-top:2px;}
+    .back-btn{position:absolute;top:10px;left:12px;pointer-events:auto;color:rgba(255,255,255,.7);text-decoration:none;border:1px solid rgba(255,255,255,.2);padding:5px 10px;border-radius:5px;font-size:11px;}
+
+    /* Left panel: controls */
+    #ctrl-panel{position:absolute;left:12px;top:70px;background:rgba(0,0,0,.82);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px;width:200px;pointer-events:auto;}
+    #ctrl-panel h3{font-size:11px;color:#6ee7b7;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+    .sl-row{margin-bottom:12px;}
+    .sl-label{font-size:11px;color:#94a3b8;margin-bottom:3px;}
+    .sl-val{font-size:16px;color:#fbbf24;font-weight:bold;}
+    input[type=range]{width:100%;accent-color:#10b981;}
+    .eq-display{background:rgba(16,185,129,.15);border:1px solid #10b981;border-radius:8px;padding:8px;text-align:center;margin:10px 0;font-size:15px;font-weight:bold;color:#d1fae5;}
+
+    /* Right: info + missions */
+    #right-panel{position:absolute;right:12px;top:70px;background:rgba(0,0,0,.82);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px;width:210px;}
+    #right-panel h3{font-size:11px;color:#6ee7b7;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+    .info-row{margin-bottom:8px;}
+    .info-lbl{font-size:10px;color:#94a3b8;}
+    .info-val{font-size:15px;color:#fbbf24;font-weight:bold;}
+
+    /* Mission */
+    #mission-panel{position:absolute;bottom:120px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.88);border:2px solid #fbbf24;border-radius:14px;padding:10px 24px;text-align:center;min-width:280px;pointer-events:none;}
+    #mission-panel.success{border-color:#22c55e;background:rgba(20,83,45,.9);}
+    #mission-panel.wrong{border-color:#ef4444;background:rgba(80,10,10,.9);}
+    .m-title{font-size:10px;color:#fde047;text-transform:uppercase;font-weight:bold;letter-spacing:1px;}
+    .m-q{font-size:14px;font-weight:700;color:#fff;margin:4px 0;white-space:normal;max-width:400px;}
+    .m-hint{font-size:10px;color:#94a3b8;}
+    #ans-area{position:absolute;bottom:65px;left:50%;transform:translateX(-50%);display:flex;gap:8px;pointer-events:auto;}
+    .ans-btn{background:rgba(16,185,129,.2);border:2px solid #10b981;color:#d1fae5;padding:8px 14px;border-radius:7px;cursor:pointer;font-size:14px;font-weight:bold;transition:all .2s;}
+    .ans-btn:hover{background:#10b981;color:#fff;}
+    .ans-btn.correct{background:#166534;border-color:#22c55e;}
+    .ans-btn.wrong-ans{background:#7f1d1d;border-color:#ef4444;}
+    #score-box{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-size:13px;color:#6ee7b7;}
+  </style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="ui">
+  <div class="hdr">
+    <a href="index.html" class="back-btn">← Wapas</a>
+    <h1>📈 Quadratic Graph Lab</h1>
+    <p>ax² + bx + c — sliders se coefficients badlo, graph dekho, missions complete karo!</p>
+  </div>
+
+  <div id="ctrl-panel">
+    <h3>⚙️ Coefficients</h3>
+    <div class="sl-row">
+      <div class="sl-label">a = <span class="sl-val" id="va">1</span></div>
+      <input type="range" id="sa" min="-5" max="5" step="0.5" value="1" oninput="update()">
+    </div>
+    <div class="sl-row">
+      <div class="sl-label">b = <span class="sl-val" id="vb">0</span></div>
+      <input type="range" id="sb" min="-10" max="10" step="0.5" value="0" oninput="update()">
+    </div>
+    <div class="sl-row">
+      <div class="sl-label">c = <span class="sl-val" id="vc">-4</span></div>
+      <input type="range" id="sc" min="-10" max="10" step="0.5" value="-4" oninput="update()">
+    </div>
+    <div class="eq-display" id="eq-display">y = x² − 4</div>
+  </div>
+
+  <div id="right-panel">
+    <h3>📊 Properties</h3>
+    <div class="info-row"><div class="info-lbl">Discriminant (D = b²−4ac)</div><div class="info-val" id="disc">—</div></div>
+    <div class="info-row"><div class="info-lbl">Nature of Roots</div><div class="info-val" id="nature">—</div></div>
+    <div class="info-row"><div class="info-lbl">Roots (zeros)</div><div class="info-val" id="roots">—</div></div>
+    <div class="info-row"><div class="info-lbl">Vertex</div><div class="info-val" id="vertex">—</div></div>
+    <div class="info-row"><div class="info-lbl">y-intercept</div><div class="info-val" id="yint">—</div></div>
+    <div class="info-row"><div class="info-lbl">Score</div><div class="info-val" id="score">0</div></div>
+  </div>
+
+  <div id="mission-panel">
+    <div class="m-title" id="m-title">MISSION</div>
+    <div class="m-q" id="m-q">Loading...</div>
+    <div class="m-hint" id="m-hint"></div>
+  </div>
+  <div id="ans-area"></div>
+  <div id="score-box">Mission <span id="mCount">1</span>/5</div>
+</div>
+
+<script>
+const c = document.getElementById('c'), ctx = c.getContext('2d');
+c.width = window.innerWidth; c.height = window.innerHeight;
+
+const OX = c.width / 2, OY = c.height / 2, SCALE = 55;
+
+let a = 1, b = 0, cv = -4;
+let score = 0, mIdx = 0, locked = false;
+
+const MISSIONS = [
+  { q: 'D > 0 banao: slider set karo taaki 2 distinct real roots hon', hint: 'D = b²−4ac > 0', check: () => disc() > 0, success: 'D > 0! 2 real roots dikh rahe hain!' },
+  { q: 'Parabola ko x-axis se touch karwao (D = 0)', hint: 'b² = 4ac banao', check: () => Math.abs(disc()) < 1, success: 'Perfect! Equal roots — ek jagah touch!' },
+  { q: 'y-intercept = 6 karo (c = 6)', hint: 'y = ax²+bx+c mein x=0 rakhte hain: y = c', check: () => Math.abs(cv - 6) < 0.1, success: 'Sahi! c = y-intercept hai!' },
+  { q: 'a negative karo — dekho kya hota hai parabola ko', hint: 'a < 0 → parabola neeche khulta hai', check: () => a < 0, success: 'Wah! a < 0 → parabola neeche munh karke khulta hai!' },
+  { q: 'Roots = +2 aur −2 banao', hint: 'x²−4 = 0 → a=1, b=0, c=−4', check: () => Math.abs(a - 1) < .1 && Math.abs(b) < .1 && Math.abs(cv + 4) < .1, success: 'Perfect! x² − 4 = (x+2)(x−2)!' },
+];
+
+function disc() { return b * b - 4 * a * cv; }
+
+function update() {
+  a = parseFloat(document.getElementById('sa').value);
+  b = parseFloat(document.getElementById('sb').value);
+  cv = parseFloat(document.getElementById('sc').value);
+  document.getElementById('va').textContent = a;
+  document.getElementById('vb').textContent = b;
+  document.getElementById('vc').textContent = cv;
+
+  const bs = b === 0 ? '' : (b > 0 ? ` + ${b}x` : ` − ${Math.abs(b)}x`);
+  const cs = cv === 0 ? '' : (cv > 0 ? ` + ${cv}` : ` − ${Math.abs(cv)}`);
+  const as = a === 1 ? 'x²' : a === -1 ? '−x²' : `${a}x²`;
+  document.getElementById('eq-display').textContent = `y = ${as}${bs}${cs}`;
+
+  const D = disc();
+  document.getElementById('disc').textContent = D.toFixed(2);
+  let nat, rts;
+  if (a === 0) { nat = 'Linear (a=0)'; rts = '—'; }
+  else if (D > 0.01) {
+    nat = '2 Real Distinct';
+    const r1 = (-b + Math.sqrt(D)) / (2 * a), r2 = (-b - Math.sqrt(D)) / (2 * a);
+    rts = `${r1.toFixed(2)}, ${r2.toFixed(2)}`;
+  } else if (D < -0.01) { nat = 'No Real Roots'; rts = '—'; }
+  else { nat = 'Equal Roots'; rts = `${(-b / (2 * a)).toFixed(2)}`; }
+  document.getElementById('nature').textContent = nat;
+  document.getElementById('roots').textContent = rts;
+  const vx = a !== 0 ? -b / (2 * a) : 0;
+  const vy = a !== 0 ? cv - b * b / (4 * a) : 0;
+  document.getElementById('vertex').textContent = `(${vx.toFixed(1)}, ${vy.toFixed(1)})`;
+  document.getElementById('yint').textContent = cv;
+
+  // Check current mission live
+  if (mIdx < MISSIONS.length && !locked && MISSIONS[mIdx].check && MISSIONS[mIdx].check()) {
+    advanceBySlider();
+  }
+}
+
+function advanceBySlider() {
+  locked = true;
+  const panel = document.getElementById('mission-panel');
+  panel.classList.add('success');
+  document.getElementById('m-title').textContent = '✅ SAHI!';
+  document.getElementById('m-q').textContent = MISSIONS[mIdx].success;
+  document.getElementById('m-hint').textContent = '';
+  document.getElementById('ans-area').innerHTML = '';
+  score += 20; document.getElementById('score').textContent = score;
+  setTimeout(() => { mIdx++; startMission(); }, 2000);
+}
+
+function startMission() {
+  if (mIdx >= MISSIONS.length) { allDone(); return; }
+  locked = false;
+  const m = MISSIONS[mIdx];
+  document.getElementById('m-title').textContent = `MISSION ${mIdx + 1}/5`;
+  document.getElementById('m-title').style.color = '#fde047';
+  document.getElementById('m-q').textContent = m.q;
+  document.getElementById('m-hint').textContent = '💡 ' + m.hint;
+  document.getElementById('mission-panel').className = '';
+  document.getElementById('mCount').textContent = mIdx + 1;
+  document.getElementById('ans-area').innerHTML = '';
+}
+
+function allDone() {
+  document.getElementById('m-title').textContent = '🏆 ALL DONE!';
+  document.getElementById('m-q').textContent = `Score: ${score}/100 — Quadratic Expert!`;
+  document.getElementById('m-hint').textContent = 'Naye values try karo!';
+  document.getElementById('mission-panel').classList.add('success');
+  document.getElementById('mCount').textContent = '✓';
+}
+
+// ── Draw ──────────────────────────────────────────────────────────
+function draw() {
+  const W = c.width, H = c.height;
+  ctx.fillStyle = '#050a0a'; ctx.fillRect(0, 0, W, H);
+
+  // Grid
+  ctx.strokeStyle = '#0d1f1f'; ctx.lineWidth = 1;
+  for (let x = OX % SCALE; x < W; x += SCALE) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+  for (let y = OY % SCALE; y < H; y += SCALE) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+
+  // Axes
+  ctx.strokeStyle = '#334155'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(0, OY); ctx.lineTo(W, OY); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(OX, 0); ctx.lineTo(OX, H); ctx.stroke();
+
+  // Axis numbers
+  ctx.fillStyle = '#475569'; ctx.font = '10px Segoe UI'; ctx.textAlign = 'center';
+  for (let i = -8; i <= 8; i++) {
+    if (i === 0) continue;
+    ctx.fillText(i, OX + i * SCALE, OY + 14);
+    ctx.fillText(-i, OX - 4, OY - i * SCALE + 4);
+  }
+  ctx.fillStyle = '#94a3b8'; ctx.textAlign = 'right'; ctx.fillText('x', W - 8, OY - 6);
+  ctx.textAlign = 'center'; ctx.fillText('y', OX + 16, 18);
+
+  // Parabola
+  if (a !== 0) {
+    ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2.5; ctx.shadowBlur = 8; ctx.shadowColor = '#10b981';
+    ctx.beginPath();
+    let first = true;
+    for (let px = 0; px < W; px++) {
+      const xv = (px - OX) / SCALE;
+      const yv = a * xv * xv + b * xv + cv;
+      const py = OY - yv * SCALE;
+      if (py < -200 || py > H + 200) { first = true; continue; }
+      first ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+      first = false;
+    }
+    ctx.stroke(); ctx.shadowBlur = 0;
+
+    // Mark zeros
+    const D = disc();
+    if (D >= 0) {
+      const roots = D === 0 ? [-b / (2 * a)] : [(-b + Math.sqrt(D)) / (2 * a), (-b - Math.sqrt(D)) / (2 * a)];
+      roots.forEach(r => {
+        const px = OX + r * SCALE;
+        ctx.beginPath(); ctx.arc(px, OY, 7, 0, Math.PI * 2);
+        ctx.fillStyle = '#fbbf24'; ctx.shadowBlur = 10; ctx.shadowColor = '#fbbf24'; ctx.fill(); ctx.shadowBlur = 0;
+        ctx.fillStyle = '#1a1a1a'; ctx.font = 'bold 9px Segoe UI'; ctx.textAlign = 'center'; ctx.fillText(r.toFixed(1), px, OY + 3);
+      });
+    }
+
+    // Mark vertex
+    const vx = -b / (2 * a), vy = a * vx * vx + b * vx + cv;
+    const vpx = OX + vx * SCALE, vpy = OY - vy * SCALE;
+    ctx.beginPath(); ctx.arc(vpx, vpy, 5, 0, Math.PI * 2);
+    ctx.fillStyle = '#a78bfa'; ctx.fill();
+  }
+
+  requestAnimationFrame(draw);
+}
+
+// Init
+update(); startMission(); draw();
+window.addEventListener('resize', () => { c.width = window.innerWidth; c.height = window.innerHeight; });
+</script>
+</body>
+</html>

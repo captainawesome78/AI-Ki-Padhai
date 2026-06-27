@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Factor Tree Lab | Real Numbers | AIkiPadhai</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:#0a0a1a;color:#fff;font-family:'Segoe UI',sans-serif;min-height:100vh;}
+    .hdr{background:linear-gradient(135deg,#312e81,#6366f1);padding:14px 20px;text-align:center;}
+    .hdr h1{font-size:20px;color:#fff;text-shadow:0 0 10px rgba(99,102,241,.6);}
+    .hdr p{font-size:12px;color:#c7d2fe;margin-top:3px;}
+    .back-btn{position:absolute;top:14px;left:14px;color:rgba(255,255,255,.8);text-decoration:none;border:1px solid rgba(255,255,255,.3);padding:5px 11px;border-radius:5px;font-size:12px;}
+    .back-btn:hover{background:rgba(255,255,255,.1);}
+
+    .main{display:flex;gap:16px;padding:16px;max-width:1200px;margin:0 auto;flex-wrap:wrap;}
+
+    /* Left: controls */
+    .panel{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px;}
+    .left-panel{width:220px;flex-shrink:0;}
+    .mid-panel{flex:1;min-width:320px;}
+    .right-panel{width:200px;flex-shrink:0;}
+
+    .panel h3{font-size:12px;color:#a5b4fc;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
+
+    /* Number input */
+    .num-input{width:100%;background:rgba(255,255,255,.08);border:2px solid #6366f1;border-radius:8px;color:#fff;font-size:28px;text-align:center;padding:10px;font-weight:bold;margin-bottom:10px;}
+    .preset-btns{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+    .preset-btn{background:rgba(99,102,241,.2);border:1px solid #6366f1;color:#a5b4fc;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:bold;transition:all .2s;}
+    .preset-btn:hover,.preset-btn.active{background:#6366f1;color:#fff;}
+    .factorize-btn{width:100%;background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;color:#fff;padding:12px;border-radius:8px;font-size:15px;font-weight:bold;cursor:pointer;margin-bottom:10px;transition:all .2s;}
+    .factorize-btn:hover{transform:scale(1.03);}
+
+    /* Result */
+    .result-box{background:rgba(99,102,241,.15);border:1px solid #6366f1;border-radius:10px;padding:12px;text-align:center;margin-bottom:10px;min-height:48px;}
+    .result-box .res-label{font-size:10px;color:#a5b4fc;text-transform:uppercase;letter-spacing:1px;}
+    .result-box .res-val{font-size:18px;color:#e0e7ff;font-weight:bold;margin-top:4px;word-break:break-all;}
+
+    /* HCF LCM */
+    .hcf-section{margin-top:12px;}
+    .hcf-nums{display:flex;gap:6px;margin-bottom:8px;}
+    .hcf-input{flex:1;background:rgba(255,255,255,.08);border:1px solid #6366f1;border-radius:6px;color:#fff;font-size:16px;text-align:center;padding:7px;}
+    .hcf-btn{background:#4f46e5;border:none;color:#fff;padding:7px 12px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:bold;}
+
+    /* Canvas area */
+    #tree-canvas{width:100%;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);display:block;}
+
+    /* Mission panel */
+    #mission-panel{background:rgba(0,0,0,.7);border:2px solid #fbbf24;border-radius:12px;padding:10px 16px;text-align:center;margin-bottom:12px;transition:all .3s;}
+    #mission-panel.success{border-color:#22c55e;background:rgba(20,83,45,.8);}
+    #mission-panel.wrong{border-color:#ef4444;background:rgba(80,10,10,.8);}
+    .m-label{font-size:10px;color:#fde047;text-transform:uppercase;font-weight:bold;letter-spacing:1px;}
+    .m-q{font-size:14px;font-weight:700;color:#fff;margin:4px 0;}
+    .m-hint{font-size:10px;color:#94a3b8;}
+
+    /* Answer buttons */
+    .ans-area{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:10px;}
+    .ans-btn{background:rgba(99,102,241,.2);border:2px solid #6366f1;color:#c7d2fe;padding:8px 14px;border-radius:7px;cursor:pointer;font-size:14px;font-weight:bold;transition:all .2s;}
+    .ans-btn:hover{background:#6366f1;color:#fff;transform:scale(1.06);}
+    .ans-btn.correct{background:#166534;border-color:#22c55e;}
+    .ans-btn.wrong-ans{background:#7f1d1d;border-color:#ef4444;}
+
+    /* Score */
+    .score-num{font-size:36px;font-weight:900;color:#fbbf24;text-align:center;}
+    .score-label{font-size:10px;color:#a5b4fc;text-align:center;text-transform:uppercase;letter-spacing:1px;}
+    .mission-prog{font-size:12px;color:#a5b4fc;text-align:center;margin-top:6px;}
+    .prime-list{margin-top:12px;}
+    .prime-tag{display:inline-block;background:#4f46e5;border-radius:5px;padding:3px 8px;margin:3px 2px;font-size:13px;font-weight:bold;}
+  </style>
+</head>
+<body>
+<div class="hdr">
+  <a href="index.html" class="back-btn">← Wapas</a>
+  <h1>🌳 Factor Tree Lab</h1>
+  <p>Numbers ko prime factors mein todo, FTA samjho, missions complete karo!</p>
+</div>
+
+<div class="main">
+  <!-- Left: Input -->
+  <div class="panel left-panel">
+    <h3>🔢 Number Choose Karo</h3>
+    <input type="number" class="num-input" id="numInput" value="360" min="2" max="9999">
+    <div class="preset-btns">
+      <button class="preset-btn" onclick="setNum(12)">12</button>
+      <button class="preset-btn" onclick="setNum(36)">36</button>
+      <button class="preset-btn" onclick="setNum(60)">60</button>
+      <button class="preset-btn" onclick="setNum(100)">100</button>
+      <button class="preset-btn" onclick="setNum(360)">360</button>
+      <button class="preset-btn" onclick="setNum(1260)">1260</button>
+    </div>
+    <button class="factorize-btn" onclick="buildTree()">🌳 Factor Tree Banao</button>
+    <div class="result-box">
+      <div class="res-label">Prime Factorisation</div>
+      <div class="res-val" id="factorResult">—</div>
+    </div>
+    <div class="prime-list" id="primeList"></div>
+
+    <div class="hcf-section">
+      <h3 style="margin-top:12px;">🔗 HCF / LCM</h3>
+      <div class="hcf-nums">
+        <input type="number" class="hcf-input" id="hcfA" placeholder="a" value="12">
+        <input type="number" class="hcf-input" id="hcfB" placeholder="b" value="18">
+      </div>
+      <button class="hcf-btn" onclick="calcHCF()" style="width:100%;">Calculate</button>
+      <div class="result-box" style="margin-top:8px;">
+        <div class="res-label">HCF</div><div class="res-val" id="hcfResult">—</div>
+      </div>
+      <div class="result-box">
+        <div class="res-label">LCM</div><div class="res-val" id="lcmResult">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Middle: Tree canvas -->
+  <div class="panel mid-panel">
+    <h3>🌳 Factor Tree</h3>
+    <canvas id="tree-canvas" height="420"></canvas>
+  </div>
+
+  <!-- Right: Missions -->
+  <div class="panel right-panel">
+    <h3>🎯 Missions</h3>
+    <div class="score-num" id="scoreNum">0</div>
+    <div class="score-label">Score</div>
+    <div class="mission-prog" id="missionProg">Mission 1/5</div>
+
+    <div id="mission-panel" style="margin-top:12px;">
+      <div class="m-label" id="mLabel">MISSION</div>
+      <div class="m-q" id="mQ">Loading...</div>
+      <div class="m-hint" id="mHint"></div>
+    </div>
+
+    <div class="ans-area" id="ansArea"></div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('tree-canvas');
+const ctx = canvas.getContext('2d');
+
+// ── Prime factorisation ────────────────────────────────────────────
+function primeFactors(n) {
+  const factors = [];
+  for (let d = 2; d * d <= n; d++) {
+    while (n % d === 0) { factors.push(d); n = Math.floor(n / d); }
+  }
+  if (n > 1) factors.push(n);
+  return factors;
+}
+
+function factorsToExp(factors) {
+  const freq = {};
+  factors.forEach(f => freq[f] = (freq[f] || 0) + 1);
+  return Object.entries(freq).map(([p, e]) => e > 1 ? `${p}^${e}` : p).join(' × ');
+}
+
+function factorsToExpHTML(factors) {
+  const freq = {};
+  factors.forEach(f => freq[f] = (freq[f] || 0) + 1);
+  return Object.entries(freq).map(([p, e]) => e > 1 ? `${p}<sup>${e}</sup>` : p).join(' × ');
+}
+
+// ── Draw factor tree ───────────────────────────────────────────────
+function buildTree() {
+  const n = parseInt(document.getElementById('numInput').value);
+  if (isNaN(n) || n < 2 || n > 9999) { alert('2 se 9999 ke beech number daalo!'); return; }
+
+  const factors = primeFactors(n);
+  document.getElementById('factorResult').innerHTML = `${n} = ${factorsToExpHTML(factors)}`;
+
+  // Prime tags
+  const freq = {};
+  factors.forEach(f => freq[f] = (freq[f] || 0) + 1);
+  document.getElementById('primeList').innerHTML = Object.entries(freq).map(
+    ([p, e]) => `<span class="prime-tag">${p}${e > 1 ? `<sup>${e}</sup>` : ''}</span>`
+  ).join('');
+
+  drawTree(n, factors);
+}
+
+function drawTree(n, factors) {
+  const W = canvas.offsetWidth || 400;
+  canvas.width = W; canvas.height = 420;
+  ctx.clearRect(0, 0, W, 420);
+
+  // Build tree structure
+  const nodes = [];
+  const edges = [];
+  let queue = [{val: n, x: W / 2, y: 40, id: 0}];
+  let nodeId = 0;
+  let remaining = [...factors];
+  nodes.push(queue[0]);
+
+  while (queue.length > 0) {
+    const cur = queue.shift();
+    if (isPrime(cur.val) || cur.val === 1) continue;
+    const d = remaining[0]; remaining = remaining.slice(1);
+    const quotient = cur.val / d;
+    const leftId = ++nodeId;
+    const rightId = ++nodeId;
+    const spread = Math.max(60, W / (nodes.length + 1));
+    const leftNode = {val: d, x: cur.x - spread * 0.7, y: cur.y + 72, id: leftId};
+    const rightNode = {val: quotient, x: cur.x + spread * 0.7, y: cur.y + 72, id: rightId};
+    nodes.push(leftNode); nodes.push(rightNode);
+    edges.push({from: cur, to: leftNode}); edges.push({from: cur, to: rightNode});
+    if (!isPrime(quotient) && quotient > 1) queue.push(rightNode);
+    if (!isPrime(d)) queue.push(leftNode);
+  }
+
+  // Draw edges
+  ctx.strokeStyle = '#4b5563'; ctx.lineWidth = 1.5;
+  edges.forEach(e => {
+    ctx.beginPath(); ctx.moveTo(e.from.x, e.from.y + 16); ctx.lineTo(e.to.x, e.to.y - 16); ctx.stroke();
+  });
+
+  // Draw nodes
+  nodes.forEach(node => {
+    const isPr = isPrime(node.val);
+    ctx.beginPath(); ctx.arc(node.x, node.y, 18, 0, Math.PI * 2);
+    ctx.fillStyle = isPr ? '#16a34a' : '#6366f1';
+    ctx.shadowBlur = isPr ? 10 : 6; ctx.shadowColor = isPr ? '#22c55e' : '#818cf8';
+    ctx.fill(); ctx.shadowBlur = 0;
+    ctx.fillStyle = '#fff'; ctx.font = `bold ${node.val > 99 ? '11' : '13'}px Segoe UI`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(node.val, node.x, node.y);
+  });
+
+  // Legend
+  ctx.fillStyle = '#16a34a'; ctx.beginPath(); ctx.arc(20, canvas.height - 20, 8, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#94a3b8'; ctx.font = '11px Segoe UI'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('Prime number', 35, canvas.height - 20);
+  ctx.fillStyle = '#6366f1'; ctx.beginPath(); ctx.arc(20, canvas.height - 40, 8, 0, Math.PI * 2); ctx.fill();
+  ctx.fillText('Composite / Original', 35, canvas.height - 40);
+}
+
+function isPrime(n) {
+  if (n < 2) return false;
+  for (let i = 2; i * i <= n; i++) if (n % i === 0) return false;
+  return true;
+}
+
+function setNum(n) {
+  document.getElementById('numInput').value = n;
+  buildTree();
+}
+
+// ── HCF / LCM ─────────────────────────────────────────────────────
+function calcHCF() {
+  const a = parseInt(document.getElementById('hcfA').value);
+  const b = parseInt(document.getElementById('hcfB').value);
+  if (isNaN(a) || isNaN(b)) return;
+  const h = gcd(a, b);
+  const l = (a * b) / h;
+  document.getElementById('hcfResult').textContent = h;
+  document.getElementById('lcmResult').textContent = l;
+}
+function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
+
+// ── Missions ───────────────────────────────────────────────────────
+const MISSIONS = [
+  { q: '360 ke prime factors mein kaunsa prime sabse zyada baar aata hai?',
+    hint: '360 = 2³ × 3² × 5 — powers compare karo',
+    opts: ['2 (3 baar)', '3 (2 baar)', '5 (1 baar)', '7 (1 baar)'], ans: '2 (3 baar)' },
+  { q: 'HCF(12, 18) = ?',
+    hint: '12 = 2²×3, 18 = 2×3² — common factors ka minimum power',
+    opts: ['6', '36', '3', '12'], ans: '6' },
+  { q: 'LCM(4, 6) = ?',
+    hint: '4 = 2², 6 = 2×3 — all factors ka maximum power = 2² × 3',
+    opts: ['12', '24', '6', '36'], ans: '12' },
+  { q: 'Kaunsa number prime hai?',
+    hint: 'Prime = sirf 1 aur khud se divisible',
+    opts: ['15', '21', '17', '9'], ans: '17' },
+  { q: 'HCF(a,b) × LCM(a,b) = ?',
+    hint: 'Yeh ek important formula hai!',
+    opts: ['a × b', 'a + b', 'a − b', 'a / b'], ans: 'a × b' },
+];
+
+let score = 0, mIdx = 0, locked = false;
+
+function shuffle(a) { return [...a].sort(() => Math.random() - .5); }
+
+function startMission() {
+  if (mIdx >= MISSIONS.length) { allDone(); return; }
+  locked = false;
+  const m = MISSIONS[mIdx];
+  document.getElementById('mLabel').textContent = `MISSION ${mIdx + 1}/${MISSIONS.length}`;
+  document.getElementById('mLabel').style.color = '#fde047';
+  document.getElementById('mQ').textContent = m.q;
+  document.getElementById('mHint').textContent = '💡 ' + m.hint;
+  document.getElementById('mission-panel').className = '';
+  document.getElementById('missionProg').textContent = `Mission ${mIdx + 1}/${MISSIONS.length}`;
+  const area = document.getElementById('ansArea');
+  area.innerHTML = '';
+  shuffle(m.opts).forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'ans-btn'; btn.textContent = opt;
+    btn.onclick = () => checkAnswer(opt, m.ans, btn);
+    area.appendChild(btn);
+  });
+}
+
+function checkAnswer(chosen, correct, btn) {
+  if (locked) return; locked = true;
+  const panel = document.getElementById('mission-panel');
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    panel.classList.add('success');
+    document.getElementById('mLabel').textContent = '✅ SAHI HAI!';
+    document.getElementById('mQ').textContent = 'Bahut badhiya! 🎉';
+    document.getElementById('mHint').textContent = '';
+    score += 20; document.getElementById('scoreNum').textContent = score;
+    setTimeout(() => { mIdx++; startMission(); }, 1800);
+  } else {
+    btn.classList.add('wrong-ans');
+    panel.classList.add('wrong');
+    document.getElementById('mLabel').textContent = '❌ GALAT!';
+    document.getElementById('mQ').textContent = `Sahi jawab: ${correct}`;
+    setTimeout(() => {
+      panel.className = '';
+      btn.classList.remove('wrong-ans');
+      locked = false;
+      const m = MISSIONS[mIdx];
+      document.getElementById('mLabel').textContent = `MISSION ${mIdx + 1}/${MISSIONS.length}`;
+      document.getElementById('mLabel').style.color = '#fde047';
+      document.getElementById('mQ').textContent = m.q;
+      document.getElementById('mHint').textContent = '💡 ' + m.hint;
+    }, 1700);
+  }
+}
+
+function allDone() {
+  document.getElementById('mLabel').textContent = '🏆 ALL DONE!';
+  document.getElementById('mQ').textContent = `Score: ${score}/100 — Prime Detective!`;
+  document.getElementById('mHint').textContent = 'Doosre numbers try karo!';
+  document.getElementById('mission-panel').classList.add('success');
+  document.getElementById('ansArea').innerHTML = '';
+  document.getElementById('missionProg').textContent = '✅ Complete!';
+}
+
+// Init
+buildTree();
+startMission();
+
+// Resize
+window.addEventListener('resize', () => buildTree());
+</script>
+</body>
+</html>

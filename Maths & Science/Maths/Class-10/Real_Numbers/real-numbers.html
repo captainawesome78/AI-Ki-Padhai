@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Real Numbers | Class 10 Maths | AIkiPadhai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;line-height:1.7;}
+    .content-wrap{max-width:900px;margin:0 auto;padding:28px 20px;}
+    h2{font-size:1.55rem;color:#1e1b4b;border-bottom:3px solid #6366f1;padding-bottom:8px;margin:2.2rem 0 1rem;}
+    h3{font-size:1.15rem;color:#312e81;margin:1.5rem 0 .6rem;}
+    .story-box{background:#f0f4ff;border-left:5px solid #6366f1;padding:1.2rem 1.5rem;border-radius:0 10px 10px 0;margin:1.2rem 0;}
+    .story-box .story-title{font-weight:700;color:#312e81;font-size:1rem;margin-bottom:6px;}
+    .concept-box{background:#eff6ff;border-left:4px solid #3b82f6;padding:1.1rem 1.4rem;border-radius:0 8px 8px 0;margin:1rem 0;}
+    .key-point{background:#fefce8;border-left:4px solid #eab308;padding:1.1rem 1.4rem;border-radius:0 8px 8px 0;margin:1rem 0;}
+    .formula-box{background:#1e1b4b;color:#c7d2fe;border-radius:10px;padding:1.2rem 1.5rem;margin:1rem 0;font-family:monospace;font-size:.95rem;}
+    .formula-box .label{color:#a5b4fc;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+    .example-box{background:#fff7ed;border-left:4px solid #f97316;padding:1.2rem 1.5rem;border-radius:0 8px 8px 0;margin:1.2rem 0;}
+    .example-box .ex-title{font-weight:700;color:#9a3412;margin-bottom:8px;}
+    .warn-box{background:#fef2f2;border-left:4px solid #ef4444;padding:1.1rem 1.4rem;border-radius:0 8px 8px 0;margin:1rem 0;}
+    table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.92rem;}
+    th{background:#6366f1;color:white;padding:10px 14px;text-align:left;}
+    td{padding:9px 14px;border-bottom:1px solid #e2e8f0;}
+    tr:nth-child(even) td{background:#f8f8ff;}
+    .steps{counter-reset:step;list-style:none;padding:0;}
+    .steps li{counter-increment:step;padding:.5rem .5rem .5rem 2.6rem;position:relative;margin:.3rem 0;}
+    .steps li::before{content:counter(step);position:absolute;left:0;top:.45rem;background:#6366f1;color:white;border-radius:50%;width:22px;height:22px;font-size:.8rem;font-weight:700;display:flex;align-items:center;justify-content:center;}
+    .practice-q{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1.2rem;margin:.8rem 0;box-shadow:0 1px 3px rgba(0,0,0,.05);}
+    .practice-q h4{color:#1e293b;margin:0 0 .5rem;}
+    .answer{background:#f1f5f9;border-radius:6px;padding:.8rem 1rem;margin-top:.7rem;font-size:.9rem;display:none;border-left:3px solid #6366f1;}
+    .show-ans{background:none;border:1px solid #6366f1;color:#6366f1;padding:5px 14px;border-radius:6px;cursor:pointer;font-size:.85rem;margin-top:.5rem;}
+    .show-ans:hover{background:#6366f1;color:white;}
+    svg{display:block;margin:1rem auto;overflow:visible;}
+    .step-row{display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:start;padding:.6rem 0;border-bottom:1px dashed #e2e8f0;}
+    .step-num{width:28px;height:28px;background:#6366f1;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0;}
+    .chip-grid{display:flex;flex-wrap:wrap;gap:8px;margin:.8rem 0;}
+    .chip{padding:5px 14px;border-radius:20px;font-size:.85rem;font-weight:600;}
+    .chip-natural{background:#dcfce7;color:#15803d;}
+    .chip-whole{background:#dbeafe;color:#1d4ed8;}
+    .chip-int{background:#ede9fe;color:#6d28d9;}
+    .chip-rat{background:#fef9c3;color:#854d0e;}
+    .chip-irr{background:#fce7f3;color:#9d174d;}
+    .chip-real{background:#f0fdf4;color:#166534;border:2px solid #16a34a;}
+    .proof-step{background:#f8fafc;border-radius:8px;padding:.9rem 1.1rem;margin:.5rem 0;border:1px solid #e2e8f0;}
+    .proof-step .ps-label{font-size:.75rem;font-weight:700;color:#6366f1;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+      <nav>
+        <a href="../index.html">Class 10</a>
+        <a href="index.html">Real Numbers</a>
+        <a href="real-numbers.html" class="active">Notes</a>
+      </nav>
+    </div>
+  </header>
+  <section class="hero" style="background:linear-gradient(135deg,#1e1b4b,#6366f1);">
+    <div class="container">
+      <h1>Real Numbers 🔢</h1>
+      <p>Euclid ka algorithm, prime factorisation, HCF, LCM, aur irrational numbers ke saare proofs.</p>
+    </div>
+  </section>
+
+  <div class="content-wrap">
+
+    <!-- Number System -->
+    <h2>🌐 Number System — Ek Badi Tasveer</h2>
+    <div class="story-box">
+      <div class="story-title">🤔 Socho aise:</div>
+      <p>Counting karte waqt hum 1, 2, 3... use karte hain — ye <strong>Natural Numbers</strong> hain. Jab 0 add kiya — <strong>Whole Numbers</strong>. Jab negative bhi aaye — <strong>Integers</strong>. Jab fraction aaye — <strong>Rational Numbers</strong>. Aur jo fraction mein express hi nahi ho sakti — woh <strong>Irrational Numbers</strong>. Sab mila ke — <strong>Real Numbers</strong>!</p>
+    </div>
+    <div class="chip-grid">
+      <span class="chip chip-natural">Natural: 1,2,3,4...</span>
+      <span class="chip chip-whole">Whole: 0,1,2,3...</span>
+      <span class="chip chip-int">Integer: ...−2,−1,0,1,2...</span>
+      <span class="chip chip-rat">Rational: p/q form</span>
+      <span class="chip chip-irr">Irrational: √2, π, e</span>
+      <span class="chip chip-real">Real = Rational ∪ Irrational</span>
+    </div>
+    <!-- SVG Number line -->
+    <svg viewBox="0 0 560 80" width="560" height="80">
+      <line x1="20" y1="40" x2="540" y2="40" stroke="#6366f1" stroke-width="2"/>
+      <line x1="540" y1="34" x2="540" y2="46" stroke="#6366f1" stroke-width="2"/>
+      <text x="545" y="44" font-size="12" fill="#6366f1">→</text>
+      <g font-size="11" fill="#1e293b" text-anchor="middle">
+        <line x1="60" y1="34" x2="60" y2="46" stroke="#475569" stroke-width="1.5"/>
+        <text x="60" y="58">−3</text>
+        <line x1="120" y1="34" x2="120" y2="46" stroke="#475569" stroke-width="1.5"/>
+        <text x="120" y="58">−2</text>
+        <line x1="180" y1="34" x2="180" y2="46" stroke="#475569" stroke-width="1.5"/>
+        <text x="180" y="58">−1</text>
+        <line x1="240" y1="34" x2="240" y2="46" stroke="#475569" stroke-width="1.5"/>
+        <text x="240" y="58">0</text>
+        <line x1="300" y1="34" x2="300" y2="46" stroke="#475569" stroke-width="1.5"/>
+        <text x="300" y="58">1</text>
+        <line x1="360" y1="34" x2="360" y2="46" stroke="#475569" stroke-width="1.5"/>
+        <text x="360" y="58">2</text>
+        <line x1="420" y1="34" x2="420" y2="46" stroke="#475569" stroke-width="1.5"/>
+        <text x="420" y="58">3</text>
+      </g>
+      <!-- irrational markers -->
+      <circle cx="325" cy="40" r="4" fill="#9d174d"/>
+      <text x="325" y="28" font-size="10" fill="#9d174d" text-anchor="middle">√2≈1.41</text>
+      <circle cx="389" cy="40" r="4" fill="#9d174d"/>
+      <text x="389" y="28" font-size="10" fill="#9d174d" text-anchor="middle">π≈3.14</text>
+    </svg>
+
+    <!-- Euclid's Division Lemma -->
+    <h2>1️⃣ Euclid ka Division Lemma (Vibhaajan Pramaeyika)</h2>
+    <div class="concept-box">
+      <strong>Theorem:</strong> Koi bhi do positive integers a aur b diye jaayein, to unique integers q (quotient) aur r (remainder) exist karte hain jaise:<br><br>
+      <code style="font-size:1.1rem;color:#1e40af;font-weight:700;">a = bq + r ,&nbsp;&nbsp; 0 ≤ r &lt; b</code>
+    </div>
+    <div class="story-box">
+      <div class="story-title">📦 Real-life example:</div>
+      <p>Tumhare paas 47 chocolates hain aur 5 friends ko equally baantni hain. 47 ÷ 5 = 9 remainder 2. Matlab: 47 = 5×9 + 2. Yahi Euclid ka Division Lemma hai!</p>
+    </div>
+    <div class="example-box">
+      <div class="ex-title">Example: a=135, b=12</div>
+      135 = 12 × 11 + 3<br>
+      <em>Here q=11, r=3. Check: 12×11+3 = 132+3 = 135 ✓</em>
+    </div>
+
+    <!-- HCF by Euclid's Algorithm -->
+    <h2>2️⃣ Euclid ka Division Algorithm — HCF Nikalna</h2>
+    <p>Euclid ka lemma use karke hum do numbers ka <strong>HCF (Highest Common Factor)</strong> nikal sakte hain:</p>
+    <div class="formula-box">
+      <div class="label">Algorithm</div>
+      Step 1: a = bq + r likhो (a > b)<br>
+      Step 2: Agar r = 0, to HCF = b<br>
+      Step 3: Agar r ≠ 0, to naya problem: HCF(b, r) karo — wapas Step 1
+    </div>
+
+    <div class="example-box">
+      <div class="ex-title">Example: HCF(455, 42) nikalo</div>
+      <div class="proof-step"><div class="ps-label">Step 1</div>455 = 42 × 10 + 35 &nbsp;(r=35 ≠ 0)</div>
+      <div class="proof-step"><div class="ps-label">Step 2</div>42 = 35 × 1 + 7 &nbsp;(r=7 ≠ 0)</div>
+      <div class="proof-step"><div class="ps-label">Step 3</div>35 = 7 × 5 + 0 &nbsp;(r=0 ✓)</div>
+      <strong>∴ HCF(455, 42) = 7</strong>
+    </div>
+
+    <div class="example-box">
+      <div class="ex-title">Example: HCF(867, 255)</div>
+      867 = 255×3 + 102<br>
+      255 = 102×2 + 51<br>
+      102 = 51×2 + 0<br>
+      <strong>HCF = 51</strong>
+    </div>
+
+    <!-- FTA -->
+    <h2>3️⃣ Fundamental Theorem of Arithmetic (FTA)</h2>
+    <div class="concept-box">
+      <strong>FTA:</strong> Har composite number ko <strong>unique</strong> way mein prime numbers ka product likha ja sakta hai (order ki parwah kiye bina).<br><br>
+      Ye ek bahut powerful theorem hai — isi ki wajah se HCF aur LCM nikalna possible hai!
+    </div>
+
+    <!-- Factor tree SVG for 360 -->
+    <h3>Factor Tree: 360 = ?</h3>
+    <svg viewBox="0 0 400 220" width="400" height="220">
+      <defs><marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#6366f1"/></marker></defs>
+      <!-- Root -->
+      <ellipse cx="200" cy="20" rx="24" ry="14" fill="#6366f1"/>
+      <text x="200" y="25" font-size="13" fill="white" text-anchor="middle" font-weight="bold">360</text>
+      <!-- Level 1 -->
+      <line x1="185" y1="34" x2="130" y2="64" stroke="#6366f1" stroke-width="1.5" marker-end="url(#arr)"/>
+      <line x1="215" y1="34" x2="270" y2="64" stroke="#6366f1" stroke-width="1.5" marker-end="url(#arr)"/>
+      <ellipse cx="130" cy="78" rx="18" ry="13" fill="#818cf8"/>
+      <text x="130" y="83" font-size="12" fill="white" text-anchor="middle">2</text>
+      <ellipse cx="270" cy="78" rx="22" ry="13" fill="#6366f1"/>
+      <text x="270" y="83" font-size="12" fill="white" text-anchor="middle">180</text>
+      <!-- Level 2 from 180 -->
+      <line x1="258" y1="90" x2="220" y2="118" stroke="#6366f1" stroke-width="1.5" marker-end="url(#arr)"/>
+      <line x1="282" y1="90" x2="320" y2="118" stroke="#6366f1" stroke-width="1.5" marker-end="url(#arr)"/>
+      <ellipse cx="220" cy="132" rx="18" ry="13" fill="#818cf8"/>
+      <text x="220" y="137" font-size="12" fill="white" text-anchor="middle">2</text>
+      <ellipse cx="320" cy="132" rx="22" ry="13" fill="#6366f1"/>
+      <text x="320" y="137" font-size="12" fill="white" text-anchor="middle">90</text>
+      <!-- Level 3 from 90 -->
+      <line x1="308" y1="144" x2="280" y2="170" stroke="#6366f1" stroke-width="1.5" marker-end="url(#arr)"/>
+      <line x1="332" y1="144" x2="360" y2="170" stroke="#6366f1" stroke-width="1.5" marker-end="url(#arr)"/>
+      <ellipse cx="280" cy="184" rx="18" ry="13" fill="#818cf8"/>
+      <text x="280" y="189" font-size="12" fill="white" text-anchor="middle">2</text>
+      <ellipse cx="360" cy="184" rx="22" ry="13" fill="#6366f1"/>
+      <text x="360" y="189" font-size="12" fill="white" text-anchor="middle">45</text>
+      <!-- 45 = 9×5 -->
+      <line x1="348" y1="196" x2="330" y2="208" stroke="#6366f1" stroke-width="1"/>
+      <line x1="372" y1="196" x2="390" y2="208" stroke="#6366f1" stroke-width="1"/>
+      <ellipse cx="320" cy="212" rx="18" ry="12" fill="#16a34a"/>
+      <text x="320" y="217" font-size="11" fill="white" text-anchor="middle">9</text>
+      <ellipse cx="395" cy="212" rx="14" ry="12" fill="#16a34a"/>
+      <text x="395" y="217" font-size="11" fill="white" text-anchor="middle">5</text>
+      <!-- result text -->
+      <text x="10" y="215" font-size="11" fill="#6366f1" font-weight="bold">360 = 2³ × 3² × 5</text>
+    </svg>
+
+    <div class="key-point">
+      <strong>HCF aur LCM — Prime Factorisation Method:</strong><br>
+      <strong>HCF</strong> = sabse chhotey powers ka product (common primes mein)<br>
+      <strong>LCM</strong> = sabse bade powers ka product (sab primes mein)<br>
+      <strong>HCF × LCM = a × b</strong> (do numbers ke liye)
+    </div>
+
+    <div class="example-box">
+      <div class="ex-title">Example: HCF aur LCM of 12 and 18</div>
+      12 = 2² × 3<br>
+      18 = 2 × 3²<br><br>
+      HCF = 2¹ × 3¹ = <strong>6</strong> (minimum powers)<br>
+      LCM = 2² × 3² = <strong>36</strong> (maximum powers)<br>
+      Check: HCF × LCM = 6 × 36 = 216 = 12 × 18 ✓
+    </div>
+
+    <div class="example-box">
+      <div class="ex-title">Example: HCF aur LCM of 96 aur 404</div>
+      96 = 2⁵ × 3<br>
+      404 = 2² × 101<br>
+      HCF = 2² = <strong>4</strong><br>
+      LCM = 2⁵ × 3 × 101 = <strong>9696</strong><br>
+      Check: 4 × 9696 = 38784 = 96 × 404 ✓
+    </div>
+
+    <!-- Irrational proofs -->
+    <h2>4️⃣ Irrational Numbers ke Proofs</h2>
+    <p>Class 9 mein tumne √2 ka irrational proof seekha tha. Ab Class 10 mein hum zyada numbers prove karte hain ki woh irrational hain — aur <strong>contradiction method</strong> use karte hain.</p>
+
+    <div class="concept-box">
+      <strong>Contradiction Method (Kya hai?):</strong> Hum pehle assume karte hain ki number rational hai (yaani p/q form mein, jahan p aur q coprime integers hain, q≠0). Phir dikhate hain ki yeh assumption galat hai — contradiction aata hai. Therefore number irrational hai.
+    </div>
+
+    <h3>Proof 1: √2 Irrational Hai</h3>
+    <div class="proof-step"><div class="ps-label">Assume</div>√2 rational hai. To √2 = p/q jahan HCF(p,q)=1</div>
+    <div class="proof-step"><div class="ps-label">Square karo</div>2 = p²/q² → p² = 2q²</div>
+    <div class="proof-step"><div class="ps-label">Conclusion</div>p² even hai → p even hai (kyunki odd ka square odd hota hai)</div>
+    <div class="proof-step"><div class="ps-label">p=2m likhein</div>(2m)² = 2q² → 4m² = 2q² → q² = 2m²</div>
+    <div class="proof-step"><div class="ps-label">Contradiction</div>q² even → q even. Par ab p aur q dono even hain — HCF(p,q)≥2. Yeh humari assumption ke viruddh hai!</div>
+    <div class="proof-step"><div class="ps-label">Conclusion</div>∴ √2 irrational hai ■</div>
+
+    <h3>Proof 2: √3 Irrational Hai</h3>
+    <div class="example-box">
+      Assume √3 = p/q (HCF=1). Square karo: p²=3q² → p divisible by 3 → p=3m → 9m²=3q² → q²=3m² → q divisible by 3. Ab p aur q dono 3 se divisible — contradiction! ∴ <strong>√3 irrational</strong>
+    </div>
+
+    <h3>Proof 3: √5 Irrational Hai (same method)</h3>
+    <div class="example-box">
+      Assume √5 = p/q. p²=5q² → p=5m → q²=5m² → q divisible by 5. Contradiction! ∴ <strong>√5 irrational</strong>
+    </div>
+
+    <h3>Proof 4: 3 + 2√5 Irrational Hai (Given √5 irrational)</h3>
+    <div class="proof-step"><div class="ps-label">Assume</div>3 + 2√5 rational hai. To 3 + 2√5 = r (rational number)</div>
+    <div class="proof-step"><div class="ps-label">Rearrange</div>2√5 = r − 3 → √5 = (r−3)/2</div>
+    <div class="proof-step"><div class="ps-label">Contradiction</div>RHS rational hai (rational numbers ka arithmetic rational hota hai). Par √5 irrational hai — contradiction!</div>
+    <div class="proof-step"><div class="ps-label">Conclusion</div>∴ 3 + 2√5 irrational hai ■</div>
+
+    <!-- Decimal Expansion -->
+    <h2>5️⃣ Rational Numbers ka Decimal Expansion</h2>
+    <div class="concept-box">
+      <strong>Theorem:</strong> p/q (simplest form) ka decimal expansion <strong>terminating</strong> hoga agar q = 2ⁿ × 5ᵐ (sirf 2 aur 5 ke powers) — warna <strong>non-terminating repeating</strong>.
+    </div>
+    <table>
+      <tr><th>Number</th><th>q ki factorisation</th><th>Decimal Type</th><th>Value</th></tr>
+      <tr><td>7/8</td><td>8 = 2³</td><td>Terminating ✓</td><td>0.875</td></tr>
+      <tr><td>1/6</td><td>6 = 2×3</td><td>Non-terminating repeating</td><td>0.1666...</td></tr>
+      <tr><td>13/125</td><td>125 = 5³</td><td>Terminating ✓</td><td>0.104</td></tr>
+      <tr><td>17/6</td><td>6 = 2×3</td><td>Non-terminating repeating</td><td>2.8333...</td></tr>
+      <tr><td>7/20</td><td>20 = 2²×5</td><td>Terminating ✓</td><td>0.35</td></tr>
+    </table>
+
+    <div class="key-point">
+      <strong>Yaad rakhne ki baat:</strong> Irrational numbers ka decimal expansion <em>non-terminating aur non-repeating</em> hota hai — jaise π = 3.14159265..., √2 = 1.41421356...
+    </div>
+
+    <!-- Practice -->
+    <h2>6️⃣ Practice Questions</h2>
+
+    <div class="practice-q">
+      <h4>Q1. Euclid ke algorithm se HCF(336, 54) nikalo.</h4>
+      <button class="show-ans" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Answer Dekho</button>
+      <div class="answer">
+        336 = 54 × 6 + 12<br>
+        54 = 12 × 4 + 6<br>
+        12 = 6 × 2 + 0<br>
+        <strong>HCF = 6</strong>
+      </div>
+    </div>
+
+    <div class="practice-q">
+      <h4>Q2. 26 aur 91 ka HCF aur LCM prime factorisation se nikalo. Verify karo ki HCF×LCM = a×b.</h4>
+      <button class="show-ans" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Answer Dekho</button>
+      <div class="answer">
+        26 = 2 × 13; &nbsp; 91 = 7 × 13<br>
+        HCF = 13, &nbsp; LCM = 2 × 7 × 13 = 182<br>
+        Check: 13 × 182 = 2366 = 26 × 91 ✓
+      </div>
+    </div>
+
+    <div class="practice-q">
+      <h4>Q3. 17/8 aur 64/455 — in mein se kaun terminating decimal hai?</h4>
+      <button class="show-ans" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Answer Dekho</button>
+      <div class="answer">
+        8 = 2³ → only factor 2 → <strong>17/8 terminating</strong> = 2.125<br>
+        455 = 5 × 7 × 13 → has 7 and 13 → 64/455 non-terminating repeating
+      </div>
+    </div>
+
+    <div class="practice-q">
+      <h4>Q4. Prove karo ki 5 − 2√3 irrational hai.</h4>
+      <button class="show-ans" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Answer Dekho</button>
+      <div class="answer">
+        Assume 5−2√3 = r (rational)<br>
+        2√3 = 5−r → √3 = (5−r)/2<br>
+        RHS rational, par √3 irrational — contradiction!<br>
+        ∴ 5−2√3 irrational hai ■
+      </div>
+    </div>
+
+    <div class="practice-q">
+      <h4>Q5. Ek dakiya 18 minute mein aur doosra 24 minute mein ek chakkar lagaata hai. Dono ek saath start karte hain — kitne minute baad phir milenge?</h4>
+      <button class="show-ans" onclick="this.nextElementSibling.style.display='block';this.style.display='none'">Answer Dekho</button>
+      <div class="answer">
+        LCM(18, 24): 18=2×3², 24=2³×3. LCM = 2³×3² = <strong>72 minutes</strong>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin:2.5rem 0 1rem;">
+      <a href="real-numbers-interactive.html" class="btn" style="background:#6366f1;font-size:1rem;padding:12px 28px;">🎮 Factor Tree Lab →</a>
+    </div>
+  </div>
+  <footer><p>© 2025 AIkiPadhai</p></footer>
+  <script src="../../../../script.js"></script>
+</body>
+</html>

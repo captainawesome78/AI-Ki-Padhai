@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AP Builder Lab | AIkiPadhai</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:#050a05;color:#fff;font-family:'Segoe UI',sans-serif;min-height:100vh;}
+    .hdr{background:linear-gradient(135deg,#064e3b,#f59e0b);padding:14px 20px;text-align:center;position:relative;}
+    .hdr h1{font-size:20px;color:#fff;}
+    .hdr p{font-size:11px;color:#fef3c7;margin-top:2px;}
+    .back-btn{position:absolute;top:14px;left:14px;color:rgba(255,255,255,.8);text-decoration:none;border:1px solid rgba(255,255,255,.3);padding:5px 10px;border-radius:5px;font-size:11px;}
+    .main{display:flex;gap:14px;padding:14px;max-width:1100px;margin:0 auto;flex-wrap:wrap;}
+    .panel{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px;}
+    .ctrl{width:200px;flex-shrink:0;}
+    .viz{flex:1;min-width:320px;}
+    .right{width:195px;flex-shrink:0;}
+    .panel h3{font-size:11px;color:#fcd34d;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+    .sl-row{margin-bottom:10px;}
+    .sl-lbl{font-size:11px;color:#94a3b8;margin-bottom:2px;}
+    .sl-val{font-size:18px;color:#fbbf24;font-weight:bold;}
+    input[type=range]{width:100%;accent-color:#f59e0b;}
+    .n-input{width:100%;background:rgba(255,255,255,.08);border:1px solid #f59e0b;border-radius:6px;color:#fff;font-size:16px;text-align:center;padding:6px;margin-bottom:8px;}
+
+    /* Sequence display */
+    .seq-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;min-height:50px;}
+    .term-chip{background:rgba(245,158,11,.2);border:2px solid #f59e0b;border-radius:8px;padding:6px 10px;text-align:center;min-width:46px;}
+    .term-chip .tval{font-size:15px;font-weight:bold;color:#fef3c7;}
+    .term-chip .tlbl{font-size:9px;color:#94a3b8;}
+    .term-chip.nth{background:rgba(167,139,250,.3);border-color:#a78bfa;}
+    .term-chip.nth .tval{color:#e9d5ff;}
+
+    /* Bar chart canvas */
+    #bar-canvas{width:100%;border-radius:8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);}
+
+    .result-row{margin-bottom:8px;}
+    .rlbl{font-size:10px;color:#94a3b8;margin-bottom:1px;}
+    .rval{font-size:18px;color:#fbbf24;font-weight:bold;}
+
+    #mission-panel{background:rgba(0,0,0,.7);border:2px solid #fbbf24;border-radius:12px;padding:10px 14px;text-align:center;margin-bottom:10px;}
+    #mission-panel.success{border-color:#22c55e;background:rgba(20,83,45,.8);}
+    #mission-panel.wrong{border-color:#ef4444;}
+    .m-lbl{font-size:10px;color:#fde047;text-transform:uppercase;font-weight:bold;letter-spacing:1px;}
+    .m-q{font-size:13px;font-weight:700;color:#fff;margin:3px 0;}
+    .m-hint{font-size:10px;color:#94a3b8;}
+    .ans-area{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:8px;}
+    .ans-btn{background:rgba(245,158,11,.2);border:2px solid #f59e0b;color:#fef3c7;padding:7px 12px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:bold;transition:all .2s;}
+    .ans-btn:hover{background:#f59e0b;color:#000;}
+    .ans-btn.correct{background:#166534;border-color:#22c55e;}
+    .ans-btn.wrong-ans{background:#7f1d1d;border-color:#ef4444;}
+    .score-big{font-size:34px;font-weight:900;color:#fbbf24;text-align:center;}
+    .score-lbl{font-size:10px;color:#fcd34d;text-align:center;text-transform:uppercase;letter-spacing:1px;}
+  </style>
+</head>
+<body>
+<div class="hdr">
+  <a href="index.html" class="back-btn">← Wapas</a>
+  <h1>➕ AP Builder Lab</h1>
+  <p>First term aur common difference choose karo — AP banao, sum calculate karo, missions complete karo!</p>
+</div>
+
+<div class="main">
+  <div class="panel ctrl">
+    <h3>⚙️ AP Settings</h3>
+    <div class="sl-row">
+      <div class="sl-lbl">First Term (a) = <span class="sl-val" id="va">2</span></div>
+      <input type="range" id="sa" min="-10" max="20" step="1" value="2" oninput="rebuild()">
+    </div>
+    <div class="sl-row">
+      <div class="sl-lbl">Common Diff (d) = <span class="sl-val" id="vd">3</span></div>
+      <input type="range" id="sd" min="-10" max="10" step="1" value="3" oninput="rebuild()">
+    </div>
+    <div class="sl-lbl">n (terms to show) = <span class="sl-val" id="vn">8</span></div>
+    <input type="range" id="sn" min="3" max="15" step="1" value="8" oninput="rebuild()">
+
+    <div style="margin-top:14px;">
+      <div class="result-row"><div class="rlbl">nth term (aₙ)</div><div class="rval" id="rNth">—</div></div>
+      <div class="result-row"><div class="rlbl">Sum (Sₙ)</div><div class="rval" id="rSum">—</div></div>
+      <div class="result-row"><div class="rlbl">Formula</div><div class="rval" id="rFormula" style="font-size:12px;color:#94a3b8;">—</div></div>
+    </div>
+
+    <div style="margin-top:14px;">
+      <div class="sl-lbl" style="margin-bottom:4px;">Find aₙ for n =</div>
+      <input type="number" class="n-input" id="findN" value="10" min="1" max="50">
+      <div class="rval" id="findResult">a₁₀ = ?</div>
+    </div>
+  </div>
+
+  <div class="panel viz">
+    <h3>🔢 Sequence</h3>
+    <div class="seq-wrap" id="seqWrap"></div>
+    <canvas id="bar-canvas" height="220"></canvas>
+  </div>
+
+  <div class="panel right">
+    <div class="score-big" id="scoreNum">0</div>
+    <div class="score-lbl">Score</div>
+    <div style="font-size:11px;color:#fcd34d;text-align:center;margin:4px 0 10px;" id="mProg">Mission 1/5</div>
+    <div id="mission-panel">
+      <div class="m-lbl" id="mLbl">MISSION</div>
+      <div class="m-q" id="mQ">Loading...</div>
+      <div class="m-hint" id="mH"></div>
+    </div>
+    <div class="ans-area" id="ansArea"></div>
+  </div>
+</div>
+
+<script>
+let a_val=2, d_val=3, n_val=8, score=0, mIdx=0, locked=false;
+
+function getSeq(a,d,n){ return Array.from({length:n}, (_,i)=>a+i*d); }
+function getSum(a,d,n){ return n/2*(2*a+(n-1)*d); }
+function getNth(a,d,n){ return a+(n-1)*d; }
+
+function rebuild(){
+  a_val=parseInt(document.getElementById('sa').value);
+  d_val=parseInt(document.getElementById('sd').value);
+  n_val=parseInt(document.getElementById('sn').value);
+  document.getElementById('va').textContent=a_val;
+  document.getElementById('vd').textContent=d_val;
+  document.getElementById('vn').textContent=n_val;
+
+  const seq=getSeq(a_val,d_val,n_val);
+  const sn=getSum(a_val,d_val,n_val);
+  const an=getNth(a_val,d_val,n_val);
+
+  document.getElementById('rNth').textContent=`a${n_val} = ${an}`;
+  document.getElementById('rSum').textContent=`S${n_val} = ${sn}`;
+  document.getElementById('rFormula').textContent=`${a_val} + (n−1)×${d_val}`;
+
+  // Find n input
+  const fn=parseInt(document.getElementById('findN').value)||10;
+  document.getElementById('findResult').textContent=`a${fn} = ${getNth(a_val,d_val,fn)}`;
+
+  // Sequence chips
+  const wrap=document.getElementById('seqWrap'); wrap.innerHTML='';
+  seq.forEach((v,i)=>{
+    const chip=document.createElement('div');
+    chip.className='term-chip'+(i===n_val-1?' nth':'');
+    chip.innerHTML=`<div class="tval">${v}</div><div class="tlbl">a${i+1}</div>`;
+    wrap.appendChild(chip);
+    if(i<seq.length-1){const arr=document.createElement('span');arr.textContent='+'+d_val;arr.style.cssText='color:#6ee7b7;font-size:11px;display:flex;align-items:center;';wrap.appendChild(arr);}
+  });
+
+  drawBars(seq);
+}
+
+function drawBars(seq){
+  const canvas=document.getElementById('bar-canvas');
+  const W=canvas.offsetWidth||400; canvas.width=W; canvas.height=220;
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,W,220);
+
+  const maxAbs=Math.max(...seq.map(Math.abs),1);
+  const baseline=110; // center-ish
+  const barW=Math.max(16, Math.min(38, (W-60)/seq.length-4));
+  const gap=(W-60)/seq.length;
+
+  // Baseline
+  ctx.strokeStyle='#334155';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(40,baseline);ctx.lineTo(W-10,baseline);ctx.stroke();
+
+  seq.forEach((v,i)=>{
+    const x=40+i*gap+gap/2-barW/2;
+    const bh=Math.abs(v/maxAbs)*90;
+    const y=v>=0?baseline-bh:baseline;
+    ctx.fillStyle=v>=0?'rgba(245,158,11,0.7)':'rgba(239,68,68,0.7)';
+    ctx.fillRect(x,y,barW,bh||2);
+    // Value
+    ctx.fillStyle='#fff';ctx.font=`bold ${barW>24?11:9}px Segoe UI`;ctx.textAlign='center';
+    ctx.fillText(v,x+barW/2,v>=0?y-4:y+bh+11);
+    // Label
+    ctx.fillStyle='#6b7280';ctx.font='9px Segoe UI';ctx.fillText(`a${i+1}`,x+barW/2,210);
+  });
+}
+
+// Missions
+const MISSIONS=[
+  {q:'AP banao jisme common difference = 5 ho',hint:'d slider 5 pe set karo',check:()=>d_val===5,success:'Sahi! d=5 wali AP!'},
+  {q:'8th term (a₈) kya hai jab a=3, d=4?',hint:'a₈ = 3 + 7×4 = ?',opts:['31','27','35','28'],ans:'31'},
+  {q:'Pehle 10 terms ka sum (a=1, d=2)?',hint:'S₁₀ = 10/2 × [2 + 9×2]',opts:['100','110','90','120'],ans:'100'},
+  {q:'AP: 5, 9, 13, 17, ... ka 20th term kya hai?',hint:'a=5, d=4 → a₂₀ = 5+19×4',opts:['81','77','85','80'],ans:'81'},
+  {q:'Negative AP banao: d = −3',hint:'d slider ko −3 pe le jao',check:()=>d_val===-3,success:'Wah! Decreasing AP — d negative hota hai!'},
+];
+
+function shuffle(arr){return[...arr].sort(()=>Math.random()-.5);}
+
+function startMission(){
+  if(mIdx>=MISSIONS.length){allDone();return;}
+  locked=false;
+  const m=MISSIONS[mIdx];
+  document.getElementById('mLbl').textContent=`MISSION ${mIdx+1}/5`;
+  document.getElementById('mLbl').style.color='#fde047';
+  document.getElementById('mQ').textContent=m.q;
+  document.getElementById('mH').textContent='💡 '+m.hint;
+  document.getElementById('mission-panel').className='';
+  document.getElementById('mProg').textContent=`Mission ${mIdx+1}/5`;
+  const area=document.getElementById('ansArea'); area.innerHTML='';
+
+  if(m.opts){
+    shuffle(m.opts).forEach(opt=>{
+      const btn=document.createElement('button');
+      btn.className='ans-btn';btn.textContent=opt;
+      btn.onclick=()=>checkAns(opt,m.ans,btn);
+      area.appendChild(btn);
+    });
+  } else if(m.check){
+    // slider mission — check live in rebuild
+  }
+}
+
+function checkAns(chosen,correct,btn){
+  if(locked)return;locked=true;
+  const panel=document.getElementById('mission-panel');
+  if(chosen===correct){
+    btn.classList.add('correct');panel.classList.add('success');
+    document.getElementById('mLbl').textContent='✅ SAHI!';
+    document.getElementById('mQ').textContent='Bahut badhiya! 🎉';
+    document.getElementById('mH').textContent='';
+    score+=20;document.getElementById('scoreNum').textContent=score;
+    setTimeout(()=>{mIdx++;startMission();},1800);
+  } else {
+    btn.classList.add('wrong-ans');panel.classList.add('wrong');
+    document.getElementById('mLbl').textContent='❌ GALAT!';
+    document.getElementById('mQ').textContent=`Sahi: ${correct}`;
+    setTimeout(()=>{
+      panel.className='';btn.classList.remove('wrong-ans');locked=false;
+      const m=MISSIONS[mIdx];
+      document.getElementById('mLbl').textContent=`MISSION ${mIdx+1}/5`;
+      document.getElementById('mLbl').style.color='#fde047';
+      document.getElementById('mQ').textContent=m.q;
+      document.getElementById('mH').textContent='💡 '+m.hint;
+    },1700);
+  }
+}
+
+// Intercept rebuild for slider missions
+const origRebuild=rebuild;
+function rebuild(){
+  origRebuild();
+  if(mIdx<MISSIONS.length && !locked && MISSIONS[mIdx].check && MISSIONS[mIdx].check()){
+    locked=true;
+    const panel=document.getElementById('mission-panel');
+    panel.classList.add('success');
+    document.getElementById('mLbl').textContent='✅ SAHI!';
+    document.getElementById('mQ').textContent=MISSIONS[mIdx].success;
+    document.getElementById('mH').textContent='';
+    document.getElementById('ansArea').innerHTML='';
+    score+=20;document.getElementById('scoreNum').textContent=score;
+    setTimeout(()=>{mIdx++;startMission();},2000);
+  }
+}
+
+document.getElementById('findN').addEventListener('input',()=>{
+  const fn=parseInt(document.getElementById('findN').value)||1;
+  document.getElementById('findResult').textContent=`a${fn} = ${getNth(a_val,d_val,fn)}`;
+});
+
+function allDone(){
+  document.getElementById('mLbl').textContent='🏆 ALL DONE!';
+  document.getElementById('mQ').textContent=`Score: ${score}/100 — AP Master!`;
+  document.getElementById('mH').textContent='Naye values try karo!';
+  document.getElementById('mission-panel').classList.add('success');
+  document.getElementById('ansArea').innerHTML='';
+  document.getElementById('mProg').textContent='✅ Complete!';
+}
+
+rebuild();startMission();
+window.addEventListener('resize',rebuild);
+</script>
+</body>
+</html>

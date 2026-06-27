@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Statistics Lab | Class 10 | AIkiPadhai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:#050505;color:#e2e8f0;font-family:'Inter',sans-serif;}
+    header{background:#0a0a0a;border-bottom:1px solid #1e293b;padding:14px 0;}
+    header .hc{max-width:1100px;margin:0 auto;padding:0 20px;display:flex;justify-content:space-between;align-items:center;}
+    .logo{font-family:'Outfit',sans-serif;font-weight:800;font-size:1.25rem;color:#60a5fa;text-decoration:none;}
+    nav a{color:#94a3b8;text-decoration:none;margin-left:20px;font-size:.9rem;}
+    nav a:hover,nav a.active{color:#60a5fa;}
+    .lab-hero{background:linear-gradient(135deg,#0f172a,#1e3a5f);padding:32px 20px;text-align:center;}
+    .lab-hero h1{font-family:'Outfit',sans-serif;font-size:2rem;color:#fff;margin-bottom:6px;}
+    .lab-hero p{color:#93c5fd;font-size:1rem;}
+    .lab-wrap{max-width:1100px;margin:0 auto;padding:20px;display:grid;grid-template-columns:1fr 340px;gap:20px;}
+    @media(max-width:780px){.lab-wrap{grid-template-columns:1fr;}}
+    .canvas-wrap{background:#0d1117;border-radius:14px;border:1px solid #1e293b;overflow:hidden;position:relative;}
+    canvas{display:block;width:100%;}
+    .right-panel{display:flex;flex-direction:column;gap:16px;}
+    .panel-box{background:#0d1117;border:1px solid #1e293b;border-radius:12px;padding:16px;}
+    .panel-box h3{font-size:.9rem;font-weight:700;color:#60a5fa;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
+    .dataset-btn{display:block;width:100%;background:#1e293b;border:1px solid #334155;color:#e2e8f0;padding:9px 14px;border-radius:8px;cursor:pointer;font-size:.85rem;margin-bottom:8px;text-align:left;transition:all .2s;}
+    .dataset-btn:hover,.dataset-btn.active{background:#1e3a5f;border-color:#60a5fa;color:#60a5fa;}
+    .stat-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1e293b;font-size:.9rem;}
+    .stat-row:last-child{border:none;}
+    .stat-label{color:#94a3b8;}
+    .stat-val{color:#60a5fa;font-weight:700;font-family:monospace;}
+    .method-toggle{display:flex;gap:8px;margin-bottom:12px;}
+    .method-btn{flex:1;padding:7px;border:1px solid #334155;background:#1e293b;color:#94a3b8;border-radius:7px;cursor:pointer;font-size:.8rem;text-align:center;transition:all .2s;}
+    .method-btn.active{background:#1e3a5f;border-color:#60a5fa;color:#60a5fa;}
+    #mission-panel{background:#0d1117;border-radius:12px;padding:14px;border:1px solid #334155;}
+    #mission-panel h3{font-size:.85rem;font-weight:700;color:#fbbf24;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+    #mission-q{font-size:.9rem;color:#e2e8f0;line-height:1.5;margin-bottom:10px;min-height:44px;}
+    .ans-btn{display:block;width:100%;background:#1e293b;border:1px solid #334155;color:#e2e8f0;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:.85rem;margin-bottom:7px;text-align:left;}
+    .ans-btn:hover{background:#1e3a5f;border-color:#60a5fa;}
+    .ans-btn.correct{background:#14532d;border-color:#16a34a;color:#86efac;}
+    .ans-btn.wrong{background:#450a0a;border-color:#dc2626;color:#fca5a5;}
+    #score-display{font-size:.8rem;color:#94a3b8;margin-top:8px;}
+    #mission-hint{font-size:.8rem;color:#fbbf24;margin-bottom:8px;display:none;}
+    #next-mission-btn{display:none;width:100%;background:#1e3a5f;border:1px solid #60a5fa;color:#60a5fa;padding:8px;border-radius:8px;cursor:pointer;font-size:.85rem;margin-top:8px;}
+    .calc-input{width:100%;background:#1e293b;border:1px solid #334155;color:#e2e8f0;padding:8px 10px;border-radius:8px;font-size:.85rem;margin-bottom:8px;}
+    .calc-btn{background:#1e3a5f;border:1px solid #60a5fa;color:#60a5fa;padding:8px 14px;border-radius:8px;cursor:pointer;font-size:.85rem;}
+    #calc-result{font-size:.85rem;color:#86efac;margin-top:8px;font-family:monospace;}
+    footer{background:#0a0a0a;border-top:1px solid #1e293b;padding:20px;text-align:center;color:#475569;font-size:.85rem;margin-top:30px;}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="hc">
+      <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+      <nav>
+        <a href="../index.html">Class 10</a>
+        <a href="index.html">Stats &amp; Prob</a>
+        <a href="statistics-interactive.html" class="active">Stats Lab</a>
+      </nav>
+    </div>
+  </header>
+  <section class="lab-hero">
+    <h1>📊 Statistics Lab — Class 10</h1>
+    <p>Grouped data ka histogram dekho, Mean/Median/Mode live calculate karo</p>
+  </section>
+
+  <div class="lab-wrap">
+    <!-- Canvas -->
+    <div class="canvas-wrap">
+      <canvas id="c" height="440"></canvas>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="right-panel">
+
+      <!-- Dataset selector -->
+      <div class="panel-box">
+        <h3>📁 Dataset Chunno</h3>
+        <button class="dataset-btn active" onclick="loadDataset(0,this)">Marks (0-100)</button>
+        <button class="dataset-btn" onclick="loadDataset(1,this)">Heights (cm)</button>
+        <button class="dataset-btn" onclick="loadDataset(2,this)">Ages (colony survey)</button>
+      </div>
+
+      <!-- Method toggle -->
+      <div class="panel-box">
+        <h3>⚙️ Mean Method</h3>
+        <div class="method-toggle">
+          <div class="method-btn active" onclick="setMethod(0,this)">Direct</div>
+          <div class="method-btn" onclick="setMethod(1,this)">Assumed</div>
+          <div class="method-btn" onclick="setMethod(2,this)">Step Dev</div>
+        </div>
+        <div class="stat-row"><span class="stat-label">Mean</span><span class="stat-val" id="sv-mean">—</span></div>
+        <div class="stat-row"><span class="stat-label">Median</span><span class="stat-val" id="sv-median">—</span></div>
+        <div class="stat-row"><span class="stat-label">Mode</span><span class="stat-val" id="sv-mode">—</span></div>
+        <div class="stat-row"><span class="stat-label">Modal Class</span><span class="stat-val" id="sv-modal">—</span></div>
+        <div class="stat-row"><span class="stat-label">Σf</span><span class="stat-val" id="sv-n">—</span></div>
+      </div>
+
+      <!-- Calculator -->
+      <div class="panel-box">
+        <h3>🔢 Quick Calculator</h3>
+        <p style="font-size:.8rem;color:#94a3b8;margin-bottom:8px;">Apna data enter karo (class size, n, cf, f):</p>
+        <input class="calc-input" id="ci-l" placeholder="l (lower boundary)" type="number"/>
+        <input class="calc-input" id="ci-n" placeholder="n (Σf)" type="number"/>
+        <input class="calc-input" id="ci-cf" placeholder="cf (cumulative freq before)" type="number"/>
+        <input class="calc-input" id="ci-f" placeholder="f (median class freq)" type="number"/>
+        <input class="calc-input" id="ci-h" placeholder="h (class width)" type="number"/>
+        <button class="calc-btn" onclick="calcMedian()">Median Nikalo</button>
+        <div id="calc-result"></div>
+      </div>
+
+      <!-- Missions -->
+      <div id="mission-panel">
+        <h3>🎯 Missions</h3>
+        <div id="mission-q">Loading...</div>
+        <div id="mission-hint"></div>
+        <div id="mission-opts"></div>
+        <div id="score-display">Score: 0 / 100</div>
+        <button id="next-mission-btn" onclick="nextMission()">Next Mission →</button>
+      </div>
+
+    </div>
+  </div>
+
+  <footer><p>© 2025 AIkiPadhai — Class 10 Statistics Lab</p></footer>
+
+  <script>
+  const DATASETS = [
+    {
+      label: 'Students ke Marks',
+      classes: ['0-20','20-40','40-60','60-80','80-100'],
+      lower: [0,20,40,60,80], h: 20,
+      freq: [5, 10, 18, 12, 5]
+    },
+    {
+      label: 'Heights (cm)',
+      classes: ['140-145','145-150','150-155','155-160','160-165'],
+      lower: [140,145,150,155,160], h: 5,
+      freq: [4, 8, 14, 10, 4]
+    },
+    {
+      label: 'Ages (Years)',
+      classes: ['0-10','10-20','20-30','30-40','40-50','50-60'],
+      lower: [0,10,20,30,40,50], h: 10,
+      freq: [6, 11, 21, 23, 14, 5]
+    }
+  ];
+
+  let curData = DATASETS[0];
+  let curMethod = 0; // 0=direct, 1=assumed mean, 2=step deviation
+
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+
+  function resize() {
+    W = canvas.offsetWidth; H = 440;
+    canvas.width = W; canvas.height = H;
+    draw();
+  }
+
+  function loadDataset(idx, btn) {
+    document.querySelectorAll('.dataset-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    curData = DATASETS[idx];
+    draw();
+  }
+
+  function setMethod(idx, btn) {
+    document.querySelectorAll('.method-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    curMethod = idx;
+    draw();
+  }
+
+  function classMarks(data) {
+    return data.lower.map((l,i) => l + data.h/2);
+  }
+
+  function computeStats(data) {
+    const xm = classMarks(data);
+    const f = data.freq;
+    const n = f.reduce((a,b)=>a+b,0);
+
+    // Mean
+    let mean;
+    if (curMethod === 0) {
+      const sfx = xm.reduce((s,x,i)=>s+f[i]*x, 0);
+      mean = sfx / n;
+    } else if (curMethod === 1) {
+      const a = xm[Math.floor(xm.length/2)];
+      const sfd = xm.reduce((s,x,i)=>s+f[i]*(x-a), 0);
+      mean = a + sfd/n;
+    } else {
+      const a = xm[Math.floor(xm.length/2)];
+      const h = data.h;
+      const sfu = xm.reduce((s,x,i)=>s+f[i]*((x-a)/h), 0);
+      mean = a + h * sfu/n;
+    }
+
+    // Cumulative freq for median
+    const cf = [];
+    let cum = 0;
+    for (let i=0;i<f.length;i++){cf.push(cum);cum+=f[i];}
+
+    // Median
+    const half = n/2;
+    let medIdx = 0;
+    const cumTotal = [];
+    cum=0;
+    for(let i=0;i<f.length;i++){cum+=f[i];cumTotal.push(cum);}
+    for(let i=0;i<f.length;i++){if(cumTotal[i]>=half){medIdx=i;break;}}
+    const l_med = data.lower[medIdx];
+    const cf_med = cf[medIdx];
+    const f_med = f[medIdx];
+    const median = l_med + ((half - cf_med)/f_med)*data.h;
+
+    // Mode
+    let maxF = Math.max(...f);
+    let modeIdx = f.indexOf(maxF);
+    const l_mode = data.lower[modeIdx];
+    const f0 = modeIdx>0 ? f[modeIdx-1] : 0;
+    const f1 = maxF;
+    const f2 = modeIdx<f.length-1 ? f[modeIdx+1] : 0;
+    const mode = l_mode + ((f1-f0)/(2*f1-f0-f2))*data.h;
+
+    return { mean, median, mode, n, modeClass: data.classes[modeIdx], modeIdx };
+  }
+
+  function draw() {
+    if(!W) return;
+    ctx.clearRect(0,0,W,H);
+
+    // Background
+    ctx.fillStyle = '#0d1117';
+    ctx.fillRect(0,0,W,H);
+
+    const data = curData;
+    const stats = computeStats(data);
+    const f = data.freq;
+    const maxF = Math.max(...f);
+    const n = f.length;
+
+    // Chart area
+    const cL = 60, cR = W - 20, cT = 40, cB = H - 80;
+    const cW = cR - cL, cH = cB - cT;
+    const barW = cW / n;
+
+    // Grid lines
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 1;
+    for(let i=0;i<=5;i++){
+      const y = cB - (i/5)*cH;
+      ctx.beginPath();ctx.moveTo(cL,y);ctx.lineTo(cR,y);ctx.stroke();
+      const val = Math.round((i/5)*maxF*1.1);
+      ctx.fillStyle='#475569';ctx.font='11px Inter';ctx.textAlign='right';
+      ctx.fillText(val, cL-6, y+4);
+    }
+
+    // Bars
+    f.forEach((fv,i)=>{
+      const x = cL + i*barW;
+      const bH = (fv/(maxF*1.1))*cH;
+      const y = cB - bH;
+
+      // Bar fill — modal class highlighted
+      const isModal = (i===stats.modeIdx);
+      const grad = ctx.createLinearGradient(x,y,x,cB);
+      if(isModal){
+        grad.addColorStop(0,'#fbbf24');grad.addColorStop(1,'#d97706');
+      } else {
+        grad.addColorStop(0,'#3b82f6');grad.addColorStop(1,'#1d4ed8');
+      }
+      ctx.fillStyle = grad;
+      ctx.fillRect(x+2, y, barW-4, bH);
+
+      // Frequency label
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 13px Inter';
+      ctx.textAlign = 'center';
+      if(bH > 25) {
+        ctx.fillText(fv, x+barW/2, y+18);
+      } else {
+        ctx.fillStyle = '#60a5fa';
+        ctx.fillText(fv, x+barW/2, y-6);
+      }
+
+      // Class label
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '11px Inter';
+      ctx.save();
+      ctx.translate(x+barW/2, cB+8);
+      ctx.rotate(-Math.PI/6);
+      ctx.fillText(data.classes[i], 0, 0);
+      ctx.restore();
+    });
+
+    // Axes
+    ctx.strokeStyle = '#475569';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(cL,cT);ctx.lineTo(cL,cB);ctx.lineTo(cR,cB);ctx.stroke();
+
+    // Title
+    ctx.fillStyle='#e2e8f0';ctx.font='bold 15px Outfit';ctx.textAlign='center';
+    ctx.fillText(`${data.label} — Histogram`, W/2, 24);
+
+    // Mean/Median/Mode lines
+    const totalRange = data.lower[data.lower.length-1]+data.h - data.lower[0];
+    function valToX(v){ return cL + ((v-data.lower[0])/totalRange)*cW; }
+
+    const meanX = valToX(stats.mean);
+    const medX = valToX(stats.median);
+    const modeX = valToX(stats.mode);
+
+    function drawLine(x,color,label,offset){
+      if(x<cL||x>cR) return;
+      ctx.strokeStyle=color;ctx.lineWidth=1.5;ctx.setLineDash([5,4]);
+      ctx.beginPath();ctx.moveTo(x,cT);ctx.lineTo(x,cB);ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle=color;ctx.font='bold 11px Inter';ctx.textAlign='center';
+      ctx.fillText(label, x, cT-4+offset);
+    }
+    drawLine(meanX,'#34d399','x̄='+stats.mean.toFixed(1),0);
+    drawLine(medX,'#a78bfa','Med='+stats.median.toFixed(1),-14);
+    drawLine(modeX,'#f97316','Mo='+stats.mode.toFixed(1),-28);
+
+    // Legend
+    const legY = H-18;
+    [[meanX,'#34d399','Mean'],[medX,'#a78bfa','Median'],[modeX,'#f97316','Mode']].forEach(([x,c,l],i)=>{
+      ctx.fillStyle=c;ctx.fillRect(cL+i*120,legY-8,14,10);
+      ctx.fillStyle='#94a3b8';ctx.font='11px Inter';ctx.textAlign='left';
+      ctx.fillText(l, cL+i*120+18, legY);
+    });
+    ctx.fillStyle='#fbbf24';ctx.fillRect(cL+360,legY-8,14,10);
+    ctx.fillStyle='#94a3b8';ctx.fillText('Modal class', cL+378, legY);
+
+    // Update stats panel
+    document.getElementById('sv-mean').textContent = stats.mean.toFixed(2);
+    document.getElementById('sv-median').textContent = stats.median.toFixed(2);
+    document.getElementById('sv-mode').textContent = stats.mode.toFixed(2);
+    document.getElementById('sv-modal').textContent = stats.modeClass;
+    document.getElementById('sv-n').textContent = stats.n;
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+
+  // Median calculator
+  function calcMedian(){
+    const l=+document.getElementById('ci-l').value||0;
+    const n=+document.getElementById('ci-n').value||0;
+    const cf=+document.getElementById('ci-cf').value||0;
+    const f=+document.getElementById('ci-f').value||1;
+    const h=+document.getElementById('ci-h').value||1;
+    const med = l + ((n/2 - cf)/f)*h;
+    document.getElementById('calc-result').textContent = `Median = ${l} + [(${n}/2 − ${cf})/${f}] × ${h} = ${med.toFixed(2)}`;
+  }
+
+  // ---- MISSIONS ----
+  const MISSIONS = [
+    {
+      q:'Marks dataset mein (5,10,18,12,5 frequencies), Modal class kaunsi hai?',
+      hint:'Sabse zyada frequency wali class chunna',
+      opts:['0-20','40-60','60-80','20-40'],
+      ans:1
+    },
+    {
+      q:'Agar class marks xᵢ = 10 aur frequency = 4 ho, to fᵢxᵢ kya hai?',
+      hint:'Direct method: fᵢ × xᵢ',
+      opts:['14','40','2.5','0.4'],
+      ans:1
+    },
+    {
+      q:'Median formula: l + [(n/2 − cf)/f] × h. Yahan "cf" ka matlab kya hai?',
+      hint:'Cumulative frequency ka sequence dekho',
+      opts:['Class frequency','Before class ki cumulative frequency','After class ki cumulative frequency','Class width'],
+      ans:1
+    },
+    {
+      q:'Heights dataset (4,8,14,10,4). Mode formula mein f₀ aur f₂ kya hai? (Modal class: 150-155)',
+      hint:'f₀ = modal se pehle, f₂ = modal ke baad',
+      opts:['f₀=8, f₂=10','f₀=4, f₂=4','f₀=14, f₂=8','f₀=10, f₂=4'],
+      ans:0
+    },
+    {
+      q:'Empirical relation kya hai Mean, Median aur Mode ke beech?',
+      hint:'Teen formulas mein ek relation hota hai approximately',
+      opts:['Mean = 2×Median − Mode','Mode = 3×Median − 2×Mean','Median = Mean + Mode','Mean + Median + Mode = 100'],
+      ans:1
+    }
+  ];
+
+  let mIdx=0, score=0, answered=false;
+
+  function renderMission(){
+    if(mIdx>=MISSIONS.length){
+      document.getElementById('mission-q').textContent='🎉 Sab missions complete! Score: '+score+'/100';
+      document.getElementById('mission-opts').innerHTML='';
+      document.getElementById('mission-hint').style.display='none';
+      document.getElementById('next-mission-btn').style.display='none';
+      return;
+    }
+    const m = MISSIONS[mIdx];
+    document.getElementById('mission-q').textContent=`Mission ${mIdx+1}/5: ${m.q}`;
+    document.getElementById('mission-hint').style.display='none';
+    document.getElementById('next-mission-btn').style.display='none';
+    answered=false;
+    const div=document.getElementById('mission-opts');
+    div.innerHTML='';
+    m.opts.forEach((o,i)=>{
+      const b=document.createElement('button');
+      b.className='ans-btn';b.textContent=o;
+      b.onclick=()=>checkAns(i,b);
+      div.appendChild(b);
+    });
+    document.getElementById('score-display').textContent=`Score: ${score} / 100`;
+  }
+
+  function checkAns(i,btn){
+    if(answered) return;
+    answered=true;
+    const m=MISSIONS[mIdx];
+    const btns=document.querySelectorAll('.ans-btn');
+    if(i===m.ans){
+      btn.classList.add('correct');
+      score+=20;
+    } else {
+      btn.classList.add('wrong');
+      btns[m.ans].classList.add('correct');
+      document.getElementById('mission-hint').textContent='💡 Hint: '+m.hint;
+      document.getElementById('mission-hint').style.display='block';
+    }
+    document.getElementById('score-display').textContent=`Score: ${score} / 100`;
+    document.getElementById('next-mission-btn').style.display='block';
+  }
+
+  function nextMission(){mIdx++;renderMission();}
+  renderMission();
+  </script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Triangle Similarity Lab | AIkiPadhai</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:#0a0514;color:#fff;font-family:'Segoe UI',sans-serif;min-height:100vh;}
+    .hdr{background:linear-gradient(135deg,#1a1a2e,#7c3aed);padding:13px 20px;text-align:center;position:relative;}
+    .hdr h1{font-size:19px;color:#fff;text-shadow:0 0 10px rgba(124,58,237,.6);}
+    .hdr p{font-size:11px;color:#ddd6fe;margin-top:2px;}
+    .back-btn{position:absolute;top:13px;left:14px;color:rgba(255,255,255,.8);text-decoration:none;border:1px solid rgba(255,255,255,.3);padding:5px 10px;border-radius:5px;font-size:11px;}
+    .main{display:flex;gap:14px;padding:14px;max-width:1100px;margin:0 auto;flex-wrap:wrap;}
+    .panel{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px;}
+    .ctrl{width:210px;flex-shrink:0;}
+    .viz{flex:1;min-width:320px;}
+    .right{width:200px;flex-shrink:0;}
+    .panel h3{font-size:11px;color:#c4b5fd;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+    .sl-row{margin-bottom:10px;}
+    .sl-lbl{font-size:11px;color:#94a3b8;margin-bottom:2px;}
+    .sl-val{font-size:17px;color:#fbbf24;font-weight:bold;}
+    input[type=range]{width:100%;accent-color:#7c3aed;}
+    #tri-canvas{width:100%;border-radius:8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);display:block;}
+    .result-row{margin-bottom:8px;}
+    .rlbl{font-size:10px;color:#94a3b8;margin-bottom:1px;}
+    .rval{font-size:15px;color:#fbbf24;font-weight:bold;}
+    .status-badge{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:bold;text-align:center;margin:8px 0;}
+    .similar{background:rgba(34,197,94,.2);border:1px solid #22c55e;color:#4ade80;}
+    .not-similar{background:rgba(239,68,68,.2);border:1px solid #ef4444;color:#f87171;}
+    #mission-panel{background:rgba(0,0,0,.7);border:2px solid #fbbf24;border-radius:12px;padding:10px 14px;text-align:center;margin-bottom:10px;}
+    #mission-panel.success{border-color:#22c55e;background:rgba(20,83,45,.8);}
+    #mission-panel.wrong{border-color:#ef4444;}
+    .m-lbl{font-size:10px;color:#fde047;text-transform:uppercase;font-weight:bold;letter-spacing:1px;}
+    .m-q{font-size:13px;font-weight:700;color:#fff;margin:3px 0;}
+    .m-hint{font-size:10px;color:#94a3b8;}
+    .ans-area{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:8px;}
+    .ans-btn{background:rgba(124,58,237,.2);border:2px solid #7c3aed;color:#ddd6fe;padding:7px 12px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:bold;transition:all .2s;}
+    .ans-btn:hover{background:#7c3aed;color:#fff;}
+    .ans-btn.correct{background:#166534;border-color:#22c55e;}
+    .ans-btn.wrong-ans{background:#7f1d1d;border-color:#ef4444;}
+    .score-big{font-size:34px;font-weight:900;color:#fbbf24;text-align:center;}
+  </style>
+</head>
+<body>
+<div class="hdr">
+  <a href="index.html" class="back-btn">← Wapas</a>
+  <h1>🔺 Triangle Similarity Lab</h1>
+  <p>Dono triangles ke sides change karo — similarity conditions live dekho, missions complete karo!</p>
+</div>
+
+<div class="main">
+  <div class="panel ctrl">
+    <h3>🔺 Triangle 1 (ABC)</h3>
+    <div class="sl-row"><div class="sl-lbl">AB = <span class="sl-val" id="vab">3</span></div><input type="range" id="sab" min="1" max="10" step="0.5" value="3" oninput="update()"></div>
+    <div class="sl-row"><div class="sl-lbl">BC = <span class="sl-val" id="vbc">4</span></div><input type="range" id="sbc" min="1" max="10" step="0.5" value="4" oninput="update()"></div>
+    <div class="sl-row"><div class="sl-lbl">CA = <span class="sl-val" id="vca">5</span></div><input type="range" id="sca" min="1" max="10" step="0.5" value="5" oninput="update()"></div>
+
+    <h3 style="margin-top:14px;">🔺 Triangle 2 (PQR)</h3>
+    <div class="sl-row"><div class="sl-lbl">PQ = <span class="sl-val" id="vpq">6</span></div><input type="range" id="spq" min="1" max="20" step="0.5" value="6" oninput="update()"></div>
+    <div class="sl-row"><div class="sl-lbl">QR = <span class="sl-val" id="vqr">8</span></div><input type="range" id="sqr" min="1" max="20" step="0.5" value="8" oninput="update()"></div>
+    <div class="sl-row"><div class="sl-lbl">RP = <span class="sl-val" id="vrp">10</span></div><input type="range" id="srp" min="1" max="20" step="0.5" value="10" oninput="update()"></div>
+  </div>
+
+  <div class="panel viz">
+    <h3>📐 Visualization</h3>
+    <canvas id="tri-canvas" height="340"></canvas>
+  </div>
+
+  <div class="panel right">
+    <h3>📊 Properties</h3>
+    <div class="result-row"><div class="rlbl">AB/PQ</div><div class="rval" id="r1">—</div></div>
+    <div class="result-row"><div class="rlbl">BC/QR</div><div class="rval" id="r2">—</div></div>
+    <div class="result-row"><div class="rlbl">CA/RP</div><div class="rval" id="r3">—</div></div>
+    <div class="result-row"><div class="rlbl">∠A (ABC)</div><div class="rval" id="angA">—</div></div>
+    <div class="result-row"><div class="rlbl">∠P (PQR)</div><div class="rval" id="angP">—</div></div>
+    <div id="simStatus" class="status-badge not-similar">Not Similar</div>
+    <div class="result-row" style="margin-top:8px;"><div class="rlbl">Scale Factor</div><div class="rval" id="scale">—</div></div>
+
+    <div class="score-big" id="scoreNum" style="margin-top:12px;">0</div>
+    <div style="font-size:10px;color:#c4b5fd;text-align:center;text-transform:uppercase;">Score</div>
+    <div style="font-size:11px;color:#c4b5fd;text-align:center;margin:6px 0;" id="mProg">Mission 1/5</div>
+    <div id="mission-panel">
+      <div class="m-lbl" id="mLbl">MISSION</div>
+      <div class="m-q" id="mQ">Loading...</div>
+      <div class="m-hint" id="mH"></div>
+    </div>
+    <div class="ans-area" id="ansArea"></div>
+  </div>
+</div>
+
+<script>
+let ab=3,bc=4,ca=5,pq=6,qr=8,rp=10,score=0,mIdx=0,locked=false;
+
+function angleFromSides(a,b,c){return Math.acos((b*b+c*c-a*a)/(2*b*c))*180/Math.PI;}
+function isValidTri(a,b,c){return a+b>c&&b+c>a&&a+c>b;}
+
+function update(){
+  ab=parseFloat(document.getElementById('sab').value);
+  bc=parseFloat(document.getElementById('sbc').value);
+  ca=parseFloat(document.getElementById('sca').value);
+  pq=parseFloat(document.getElementById('spq').value);
+  qr=parseFloat(document.getElementById('sqr').value);
+  rp=parseFloat(document.getElementById('srp').value);
+  ['ab','bc','ca','pq','qr','rp'].forEach(k=>{
+    document.getElementById('v'+k).textContent=eval(k);
+  });
+
+  const r1=ab/pq, r2=bc/qr, r3=ca/rp;
+  document.getElementById('r1').textContent=r1.toFixed(3);
+  document.getElementById('r2').textContent=r2.toFixed(3);
+  document.getElementById('r3').textContent=r3.toFixed(3);
+
+  let aA='—',aP='—';
+  if(isValidTri(ab,bc,ca)) aA=angleFromSides(bc,ab,ca).toFixed(1)+'°';
+  if(isValidTri(pq,qr,rp)) aP=angleFromSides(qr,pq,rp).toFixed(1)+'°';
+  document.getElementById('angA').textContent=aA;
+  document.getElementById('angP').textContent=aP;
+
+  const sim=Math.abs(r1-r2)<0.05&&Math.abs(r2-r3)<0.05&&isValidTri(ab,bc,ca)&&isValidTri(pq,qr,rp);
+  const sb=document.getElementById('simStatus');
+  sb.textContent=sim?'✅ SIMILAR (SSS)':'❌ Not Similar';
+  sb.className='status-badge '+(sim?'similar':'not-similar');
+  document.getElementById('scale').textContent=sim?r1.toFixed(2)+'×':'—';
+
+  drawTriangles();
+
+  // Slider mission check
+  if(mIdx<MISSIONS.length&&!locked&&MISSIONS[mIdx].check&&MISSIONS[mIdx].check()){
+    locked=true;
+    document.getElementById('mission-panel').classList.add('success');
+    document.getElementById('mLbl').textContent='✅ SAHI!';
+    document.getElementById('mQ').textContent=MISSIONS[mIdx].success;
+    document.getElementById('mH').textContent='';
+    document.getElementById('ansArea').innerHTML='';
+    score+=20;document.getElementById('scoreNum').textContent=score;
+    setTimeout(()=>{mIdx++;startMission();},2000);
+  }
+}
+
+function drawTriangles(){
+  const canvas=document.getElementById('tri-canvas');
+  const W=canvas.offsetWidth||400;canvas.width=W;canvas.height=340;
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,W,340);
+
+  function drawTri(a,b,c,ox,oy,col,label){
+    if(!isValidTri(a,b,c)){
+      ctx.fillStyle='#ef4444';ctx.font='12px Segoe UI';ctx.textAlign='center';
+      ctx.fillText('Invalid Triangle!',ox,oy);return;
+    }
+    const scale=Math.min(140,60*10/Math.max(a,b,c));
+    const A=[0,0], B=[a*scale,0];
+    const cosC=(a*a+b*b-c*c)/(2*a*b); // wrong, let me recalc
+    // Place A at ox, B at ox+a*scale
+    // angle at A: cosA=(ab²+ca²-bc²)/(2*ab*ca)
+    const cosA=(a*a+c*c-b*b)/(2*a*c);
+    const Cx=Math.cos(Math.acos(cosA))*c*scale, Cy=-Math.sin(Math.acos(cosA))*c*scale;
+    const pts=[[ox,oy],[ox+a*scale,oy],[ox+Cx,oy+Cy]];
+    ctx.strokeStyle=col;ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(...pts[0]);pts.forEach(p=>ctx.lineTo(...p));ctx.closePath();ctx.stroke();
+    ctx.fillStyle=col;ctx.font='bold 12px Segoe UI';ctx.textAlign='center';
+    const cx=(pts[0][0]+pts[1][0]+pts[2][0])/3;
+    const cy=(pts[0][1]+pts[1][1]+pts[2][1])/3;
+    ctx.fillText(label,cx,cy);
+    // Vertices
+    const vLabels=['A','B','C'];
+    pts.forEach((p,i)=>{ctx.fillStyle=col;ctx.font='11px Segoe UI';ctx.fillText(vLabels[i],p[0]+(i===0?-12:i===1?12:0),p[1]+(i<2?12:-8));});
+  }
+
+  drawTri(ab,ca,bc,30,100,'#a78bfa','△ABC');
+  drawTri(pq,rp,qr,30,270,'#34d399','△PQR');
+
+  // Show ratios
+  const isSim=Math.abs(ab/pq-bc/qr)<0.05&&Math.abs(bc/qr-ca/rp)<0.05&&isValidTri(ab,bc,ca)&&isValidTri(pq,qr,rp);
+  if(isSim){
+    ctx.fillStyle='#22c55e';ctx.font='bold 13px Segoe UI';ctx.textAlign='left';
+    ctx.fillText('Scale Factor: '+(ab/pq).toFixed(2),W-150,20);
+  }
+}
+
+const MISSIONS=[
+  {q:'SSS Similarity: Sides ka ratio 2:1 banao',hint:'Triangle 2 ke sides = Triangle 1 ke ×2',check:()=>Math.abs(ab/pq-0.5)<0.05&&Math.abs(bc/qr-0.5)<0.05&&Math.abs(ca/rp-0.5)<0.05&&isValidTri(ab,bc,ca)&&isValidTri(pq,qr,rp),success:'✅ SSS Criterion! Teeno sides ka ratio same hai!'},
+  {q:'3-4-5 Pythagorean triple set karo (Triangle 1)',hint:'AB=3, BC=4, CA=5',check:()=>ab===3&&bc===4&&ca===5,success:'Classic 3-4-5 right triangle! Pythagoras theorem verified!'},
+  {q:'If △ABC ~ △PQR with AB/PQ = 3/6, area ratio kya hai?',hint:'Area ratio = (side ratio)² = (1/2)²',opts:['1/4','1/2','1/3','1/9'],ans:'1/4'},
+  {q:'BPT: AD/DB = AE/EC = ?',hint:'Agar DE ∥ BC aur AD=2, DB=4, AE=3, EC=?',opts:['6','4','3','8'],ans:'6'},
+  {q:'Right triangle: legs = 5, 12. Hypotenuse = ?',hint:'h² = 5² + 12² = 25 + 144',opts:['13','14','11','15'],ans:'13'},
+];
+
+function shuffle(arr){return[...arr].sort(()=>Math.random()-.5);}
+
+function startMission(){
+  if(mIdx>=MISSIONS.length){allDone();return;}
+  locked=false;
+  const m=MISSIONS[mIdx];
+  document.getElementById('mLbl').textContent=`MISSION ${mIdx+1}/5`;
+  document.getElementById('mLbl').style.color='#fde047';
+  document.getElementById('mQ').textContent=m.q;
+  document.getElementById('mH').textContent='💡 '+m.hint;
+  document.getElementById('mission-panel').className='';
+  document.getElementById('mProg').textContent=`Mission ${mIdx+1}/5`;
+  const area=document.getElementById('ansArea');area.innerHTML='';
+  if(m.opts){
+    shuffle(m.opts).forEach(opt=>{
+      const btn=document.createElement('button');btn.className='ans-btn';btn.textContent=opt;
+      btn.onclick=()=>checkAns(opt,m.ans,btn);area.appendChild(btn);
+    });
+  }
+}
+
+function checkAns(chosen,correct,btn){
+  if(locked)return;locked=true;
+  const panel=document.getElementById('mission-panel');
+  if(chosen===correct){
+    btn.classList.add('correct');panel.classList.add('success');
+    document.getElementById('mLbl').textContent='✅ SAHI!';
+    document.getElementById('mQ').textContent='Bahut badhiya! 🎉';
+    document.getElementById('mH').textContent='';
+    score+=20;document.getElementById('scoreNum').textContent=score;
+    setTimeout(()=>{mIdx++;startMission();},1800);
+  } else {
+    btn.classList.add('wrong-ans');panel.classList.add('wrong');
+    document.getElementById('mLbl').textContent='❌ GALAT!';
+    document.getElementById('mQ').textContent=`Sahi: ${correct}`;
+    setTimeout(()=>{
+      panel.className='';btn.classList.remove('wrong-ans');locked=false;
+      const m=MISSIONS[mIdx];
+      document.getElementById('mLbl').textContent=`MISSION ${mIdx+1}/5`;
+      document.getElementById('mLbl').style.color='#fde047';
+      document.getElementById('mQ').textContent=m.q;
+      document.getElementById('mH').textContent='💡 '+m.hint;
+    },1700);
+  }
+}
+
+function allDone(){
+  document.getElementById('mLbl').textContent='🏆 ALL DONE!';
+  document.getElementById('mQ').textContent=`Score: ${score}/100 — Geometry Expert!`;
+  document.getElementById('mH').textContent='Naye values try karo!';
+  document.getElementById('mission-panel').classList.add('success');
+  document.getElementById('ansArea').innerHTML='';
+  document.getElementById('mProg').textContent='✅ Complete!';
+}
+
+update();startMission();
+window.addEventListener('resize',()=>drawTriangles());
+</script>
+</body>
+</html>
