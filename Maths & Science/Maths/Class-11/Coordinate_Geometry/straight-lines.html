@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Straight Lines - Class 11 Maths | AIkiPadhai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;line-height:1.75;}
+    h2{color:#1e1b4b;border-bottom:3px solid #16a34a;padding-bottom:8px;margin:2.2rem 0 1rem;}
+    h3{color:#166534;}
+    .concept-box{background:#dcfce7;border-left:5px solid #16a34a;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .concept-box p,.concept-box li{color:#14532d;}
+    .formula-box{background:#1e1b4b;color:#c7d2fe;border-radius:10px;padding:1.2rem 1.6rem;font-family:monospace;font-size:1.05rem;margin:1rem 0;}
+    .example-box{background:#f0fdf4;border-left:5px solid #10b981;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .example-box h4{color:#065f46;}
+    .example-box p,.example-box li{color:#14532d;}
+    .story-box{background:#fffbeb;border-left:5px solid #f59e0b;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .story-box h3{color:#92400e;}
+    .story-box p{color:#78350f;}
+    .proof-step{background:#f1f5f9;border-radius:6px;padding:.9rem 1.1rem;margin:.5rem 0;border-left:3px solid #16a34a;color:#1e293b;}
+    .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.1rem;margin:1.5rem 0;}
+    .form-card{background:#fff;border:2px solid #bbf7d0;border-radius:10px;padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    .form-card h4{color:#15803d;margin-bottom:.5rem;}
+    .form-card p{color:#1e293b;font-size:.9rem;}
+    .form-card .formula-box{font-size:.88rem;padding:.7rem 1rem;margin:.5rem 0;}
+    .practice-q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1.2rem;margin:.8rem 0;}
+    .practice-q p{color:#1e293b;}
+    .practice-q strong{color:#16a34a;}
+    details summary{cursor:pointer;color:#16a34a;font-weight:600;padding:.4rem 0;}
+    details p{color:#475569;padding:.5rem 0 0 1rem;}
+    table{width:100%;border-collapse:collapse;margin:1.2rem 0;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    th{background:#14532d;color:#86efac;padding:.9rem 1rem;text-align:left;}
+    td{padding:.75rem 1rem;border-bottom:1px solid #e2e8f0;color:#1e293b;}
+    .graph-wrap{background:#fff;border-radius:12px;padding:1.2rem;margin:1.5rem 0;box-shadow:0 2px 10px rgba(0,0,0,.08);}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+      <nav>
+        <a href="../../../../index.html">Home</a>
+        <a href="../index.html">Class 11 Maths</a>
+        <a href="index.html">Coordinate Geometry</a>
+        <a href="straight-lines.html" class="active">Straight Lines</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" style="background:linear-gradient(135deg,#052e16,#16a34a);">
+    <div class="container">
+      <h1>Straight Lines 📏</h1>
+      <p>Ek point se ek line draw karo — infinite lines possible hain. Do points do toh exactly ek line banti hai. Yahi hai geometry ka beauty!</p>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <div class="story-box">
+      <h3>🗺️ GPS aur Lines</h3>
+      <p>Jab GPS tumhe kisi jagah ka rasta batata hai — woh straight roads actually coordinate geometry ki lines hain! Ek city map par har road ek line equation se represent hoti hai. Ek road ki steepness (slope) batata hai woh kitni chadhai hai ya dhalaaan hai. Signals pe perpendicular roads (90° angle wali) — unke slopes ka product −1 hota hai. Yahi saari cheezein hum is chapter mein seekhte hain!</p>
+    </div>
+
+    <h2>1. Slope (Dhalaaan) — m kya hai?</h2>
+    <div class="concept-box">
+      <p>Slope batata hai line kitni "tilted" hai — kitni steep ya flat hai. Do points (x₁,y₁) aur (x₂,y₂) given ho toh slope:</p>
+      <div class="formula-box">m = (y₂ − y₁) / (x₂ − x₁) = Rise / Run</div>
+      <p style="margin-top:.7rem;">Angle θ se slope: m = tan θ (jahan θ x-axis ke saath angle hai)</p>
+      <ul style="padding-left:1.5rem;margin-top:.7rem;">
+        <li>m &gt; 0 → line upar jaati hai (left to right) — positive slope</li>
+        <li>m &lt; 0 → line neeche jaati hai — negative slope</li>
+        <li>m = 0 → horizontal line — koi slope nahi</li>
+        <li>m = undefined → vertical line (x₁=x₂)</li>
+      </ul>
+    </div>
+
+    <!-- Slope diagram SVG -->
+    <div class="graph-wrap">
+      <p style="font-weight:600;color:#166534;margin-bottom:.8rem;">Alag alag slopes ka visual</p>
+      <svg viewBox="0 0 420 160" width="100%" style="max-width:420px;display:block;margin:0 auto;">
+        <!-- m > 0 -->
+        <line x1="20" y1="140" x2="90" y2="40" stroke="#16a34a" stroke-width="2.5"/>
+        <text x="55" y="158" text-anchor="middle" font-size="11" fill="#166534" font-weight="bold">m &gt; 0</text>
+        <text x="55" y="170" text-anchor="middle" font-size="10" fill="#475569">(upar jaati)</text>
+        <!-- m = 0 -->
+        <line x1="120" y1="90" x2="210" y2="90" stroke="#2563eb" stroke-width="2.5"/>
+        <text x="165" y="110" text-anchor="middle" font-size="11" fill="#1d4ed8" font-weight="bold">m = 0</text>
+        <text x="165" y="122" text-anchor="middle" font-size="10" fill="#475569">(horizontal)</text>
+        <!-- m < 0 -->
+        <line x1="230" y1="40" x2="310" y2="140" stroke="#ef4444" stroke-width="2.5"/>
+        <text x="270" y="158" text-anchor="middle" font-size="11" fill="#dc2626" font-weight="bold">m &lt; 0</text>
+        <text x="270" y="170" text-anchor="middle" font-size="10" fill="#475569">(neeche jaati)</text>
+        <!-- vertical -->
+        <line x1="360" y1="20" x2="360" y2="150" stroke="#f59e0b" stroke-width="2.5"/>
+        <text x="360" y="165" text-anchor="middle" font-size="11" fill="#92400e" font-weight="bold">m = ∞</text>
+        <text x="360" y="177" text-anchor="middle" font-size="9" fill="#475569">(vertical)</text>
+      </svg>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ A(2,3) aur B(5,9) ke beech slope nikalo</h4>
+      <div class="proof-step">m = (9−3)/(5−2) = 6/3 = <strong>2</strong></div>
+      <p style="color:#065f46;margin-top:.5rem;">matlab: x mein 1 unit badhne par y mein 2 unit badhti hai — yeh moderate slope hai.</p>
+    </div>
+
+    <h2>2. Parallel aur Perpendicular Lines</h2>
+    <div class="concept-box">
+      <p><strong>Parallel lines:</strong> Dono lines ka slope equal hota hai. Woh kabhi nahi milti.</p>
+      <div class="formula-box">m₁ = m₂  (parallel lines)</div>
+      <p style="margin-top:.7rem;"><strong>Perpendicular lines:</strong> Dono slopes ka product = −1. Yeh 90° par milti hain.</p>
+      <div class="formula-box">m₁ × m₂ = −1  →  m₂ = −1/m₁  (perpendicular)</div>
+      <p style="margin-top:.7rem;">Trick: Perpendicular slope = original ka negative reciprocal. Agar m=2 hai toh perpendicular slope = −1/2.</p>
+    </div>
+
+    <h2>3. Line ke Different Forms</h2>
+    <p>Ek straight line ko alag alag situations mein alag alag equations se likha ja sakta hai. Yeh saari forms same line ko represent karti hain — bas starting information alag hoti hai:</p>
+
+    <div class="form-grid">
+      <div class="form-card">
+        <h4>① Slope-Intercept Form</h4>
+        <p>Slope aur y-intercept given. Sabse common aur useful form.</p>
+        <div class="formula-box">y = mx + c</div>
+        <p>m = slope, c = y-intercept (jahan line y-axis ko kaati hai)</p>
+      </div>
+      <div class="form-card">
+        <h4>② Point-Slope Form</h4>
+        <p>Ek point (x₁,y₁) aur slope m given ho toh use karo.</p>
+        <div class="formula-box">y − y₁ = m(x − x₁)</div>
+        <p>Real life: direction aur ek location know ho toh path nikalna.</p>
+      </div>
+      <div class="form-card">
+        <h4>③ Two-Point Form</h4>
+        <p>Do points given ho aur slope calculate karke point-slope use karo.</p>
+        <div class="formula-box">(y−y₁)/(y₂−y₁) = (x−x₁)/(x₂−x₁)</div>
+        <p>Do locations pata ho toh line ka equation nikalna.</p>
+      </div>
+      <div class="form-card">
+        <h4>④ Intercept Form</h4>
+        <p>x-intercept (a) aur y-intercept (b) dono given ho.</p>
+        <div class="formula-box">x/a + y/b = 1</div>
+        <p>Jab line dono axes par kahan milti hai yeh pata ho.</p>
+      </div>
+      <div class="form-card">
+        <h4>⑤ Normal Form</h4>
+        <p>Origin se perpendicular distance p aur angle ω given.</p>
+        <div class="formula-box">x·cosω + y·sinω = p</div>
+        <p>Advanced form — physics mein projection problems mein aata hai.</p>
+      </div>
+      <div class="form-card">
+        <h4>⑥ General Form</h4>
+        <p>Ax + By + C = 0. Kisi bhi line ko is form mein likha ja sakta hai.</p>
+        <div class="formula-box">Ax + By + C = 0</div>
+        <p>Slope = −A/B, y-intercept = −C/B</p>
+      </div>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ Point-Slope: (3,−2) se guzarne wali line jiska slope 4 hai</h4>
+      <div class="proof-step">y − (−2) = 4(x − 3)</div>
+      <div class="proof-step">y + 2 = 4x − 12</div>
+      <div class="proof-step"><strong>y = 4x − 14</strong>  ya  <strong>4x − y − 14 = 0</strong></div>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ Two Points: A(1,2) aur B(4,8) se line ka equation</h4>
+      <div class="proof-step">m = (8−2)/(4−1) = 6/3 = 2</div>
+      <div class="proof-step">y − 2 = 2(x − 1) → y = 2x (y-intercept = 0, line passes through origin!)</div>
+    </div>
+
+    <h2>4. Distance Formulas</h2>
+    <div class="concept-box">
+      <p><strong>Point se line ki perpendicular distance:</strong> Point P(x₀,y₀) aur line Ax+By+C=0 ke beech:</p>
+      <div class="formula-box">d = |Ax₀ + By₀ + C| / √(A² + B²)</div>
+      <p style="margin-top:.7rem;"><strong>Do parallel lines ke beech distance:</strong> Ax+By+C₁=0 aur Ax+By+C₂=0 ke beech:</p>
+      <div class="formula-box">d = |C₁ − C₂| / √(A² + B²)</div>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ Point (3,4) ki line 3x − 4y + 5 = 0 se distance nikalo</h4>
+      <div class="proof-step">A=3, B=−4, C=5, x₀=3, y₀=4</div>
+      <div class="proof-step">d = |3(3) + (−4)(4) + 5| / √(9+16)</div>
+      <div class="proof-step">= |9 − 16 + 5| / √25 = |−2| / 5 = <strong>2/5</strong></div>
+    </div>
+
+    <h2>5. Two Lines ka Angle</h2>
+    <div class="concept-box">
+      <p>Jab do lines milti hain unke beech ka angle θ nikalna ho:</p>
+      <div class="formula-box">tan θ = |(m₁ − m₂) / (1 + m₁m₂)|</div>
+      <p style="margin-top:.7rem;">Agar m₁m₂ = −1 → lines perpendicular (θ = 90°). Agar m₁ = m₂ → lines parallel (θ = 0°).</p>
+    </div>
+
+    <h2>6. Practice Questions</h2>
+    <div class="practice-q">
+      <p><strong>Q1.</strong> A(−1,3) aur B(4,−2) se guzarne wali line ka slope aur equation nikalo.</p>
+      <details><summary>Solution</summary><p>m = (−2−3)/(4+1) = −1. y−3=−1(x+1) → y=−x+2 → x+y−2=0</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q2.</strong> 3x + 4y = 12 ki slope aur intercepts nikalo.</p>
+      <details><summary>Solution</summary><p>x/4 + y/3 = 1 → x-intercept=4, y-intercept=3. Slope = −3/4</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q3.</strong> y = 3x + 5 ke parallel aur perpendicular line jo (2,1) se guzre — equations nikalo.</p>
+      <details><summary>Solution</summary><p>Parallel (m=3): y−1=3(x−2) → y=3x−5. Perpendicular (m=−1/3): y−1=−1/3(x−2) → x+3y=5</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q4.</strong> Point (5,6) aur line 2x − y + 4 = 0 ke beech perpendicular distance nikalo.</p>
+      <details><summary>Solution</summary><p>d = |2(5)−6+4|/√(4+1) = |8|/√5 = 8/√5 = 8√5/5</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q5.</strong> Lines y=2x+3 aur y=−x+1 ke beech angle nikalo.</p>
+      <details><summary>Solution</summary><p>tan θ = |(2−(−1))/(1+2×(−1))| = |3/(1−2)| = |3/−1| = 3 → θ = arctan(3) ≈ 71.6°</p></details>
+    </div>
+
+    <div style="text-align:center;margin-top:2.5rem;">
+      <a href="../Algebra/sequences-series.html" class="btn btn-outline" style="padding:.8rem 2rem;border-radius:8px;text-decoration:none;margin:0 .5rem;">← Sequences &amp; Series</a>
+      <a href="conic-sections.html" class="btn" style="background:#16a34a;color:#fff;padding:.8rem 2rem;border-radius:8px;text-decoration:none;margin:0 .5rem;">Next: Conic Sections →</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ to teach Maths in Roman Hindi</p>
+    <div style="margin-top:1rem;"><a href="../../../../about.html">About</a> | <a href="../../../../contact.html">Contact</a> | <a href="../../../../privacy-policy.html">Privacy Policy</a></div>
+  </footer>
+  <script src="../../../../script.js"></script>
+</body>
+</html>

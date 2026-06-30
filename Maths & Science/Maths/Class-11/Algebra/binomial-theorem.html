@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Binomial Theorem - Class 11 Maths | AIkiPadhai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;line-height:1.75;}
+    h2{color:#1e1b4b;border-bottom:3px solid #2563eb;padding-bottom:8px;margin:2.2rem 0 1rem;}
+    h3{color:#1e40af;}
+    .concept-box{background:#dbeafe;border-left:5px solid #2563eb;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .concept-box p,.concept-box li{color:#1e3a8a;}
+    .formula-box{background:#1e1b4b;color:#c7d2fe;border-radius:10px;padding:1.2rem 1.6rem;font-family:monospace;font-size:1.05rem;margin:1rem 0;}
+    .example-box{background:#f0fdf4;border-left:5px solid #10b981;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .example-box h4{color:#065f46;}
+    .example-box p,.example-box li{color:#14532d;}
+    .story-box{background:#fffbeb;border-left:5px solid #f59e0b;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .story-box h3{color:#92400e;}
+    .story-box p{color:#78350f;}
+    .proof-step{background:#f1f5f9;border-radius:6px;padding:.9rem 1.1rem;margin:.5rem 0;border-left:3px solid #2563eb;color:#1e293b;}
+    .pascal-wrap{background:#fff;border-radius:12px;padding:1.2rem;margin:1.5rem 0;box-shadow:0 2px 10px rgba(0,0,0,.08);text-align:center;}
+    .pascal-row{display:flex;justify-content:center;gap:.5rem;margin:.4rem 0;}
+    .pascal-cell{background:#dbeafe;border-radius:6px;padding:.4rem .8rem;min-width:2.5rem;text-align:center;color:#1e40af;font-weight:700;border:1px solid #93c5fd;}
+    .big-formula{background:#1e1b4b;border:2px solid #2563eb;border-radius:12px;padding:1.8rem;text-align:center;margin:1.5rem 0;}
+    .big-formula p{color:#93c5fd;}
+    .practice-q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1.2rem;margin:.8rem 0;}
+    .practice-q p{color:#1e293b;}
+    .practice-q strong{color:#2563eb;}
+    details summary{cursor:pointer;color:#2563eb;font-weight:600;padding:.4rem 0;}
+    details p{color:#475569;padding:.5rem 0 0 1rem;}
+    table{width:100%;border-collapse:collapse;margin:1.2rem 0;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    th{background:#1e3a8a;color:#93c5fd;padding:.9rem 1rem;text-align:center;}
+    td{padding:.75rem 1rem;border-bottom:1px solid #e2e8f0;color:#1e293b;text-align:center;}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+      <nav>
+        <a href="../../../../index.html">Home</a>
+        <a href="../index.html">Class 11 Maths</a>
+        <a href="index.html">Algebra</a>
+        <a href="binomial-theorem.html" class="active">Binomial Theorem</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" style="background:linear-gradient(135deg,#1e3a5f,#2563eb);">
+    <div class="container">
+      <h1>Binomial Theorem 🔺</h1>
+      <p>(a+b)¹⁰⁰ expand karna? Haath se impossible hai — lekin Binomial Theorem se seconds mein! Pascal ka 400 saal purana discovery.</p>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <div class="story-box">
+      <h3>🔢 Pascal ka Triangle</h3>
+      <p>Blaise Pascal (1623–1662) ek French mathematician the. Unhone observe kiya ki (a+b)ⁿ expand karne par jo coefficients aate hain woh ek beautiful triangle pattern follow karte hain. Har number uske upar wale dono numbers ka sum hota hai. Yeh pattern India mein pehle hi Halayudha (10th century) ne discover kiya tha — "Meru Prastara" ke naam se! Pascal ka naam Western world mein popular hua.</p>
+    </div>
+
+    <h2>1. Pascal's Triangle — Coefficients ka Pattern</h2>
+    <p>Neeche Pascal's Triangle dekho — (a+b)⁰ se (a+b)⁵ tak ke coefficients:</p>
+
+    <div class="pascal-wrap">
+      <p style="color:#1e40af;font-weight:600;margin-bottom:.8rem;">n=0 se n=5 (a+b)ⁿ ke coefficients:</p>
+      <p style="color:#475569;font-size:.85rem;margin-bottom:.5rem;">n=0:</p>
+      <div class="pascal-row"><div class="pascal-cell">1</div></div>
+      <p style="color:#475569;font-size:.85rem;margin:.3rem 0 .1rem;">n=1:</p>
+      <div class="pascal-row"><div class="pascal-cell">1</div><div class="pascal-cell">1</div></div>
+      <p style="color:#475569;font-size:.85rem;margin:.3rem 0 .1rem;">n=2:</p>
+      <div class="pascal-row"><div class="pascal-cell">1</div><div class="pascal-cell">2</div><div class="pascal-cell">1</div></div>
+      <p style="color:#475569;font-size:.85rem;margin:.3rem 0 .1rem;">n=3:</p>
+      <div class="pascal-row"><div class="pascal-cell">1</div><div class="pascal-cell">3</div><div class="pascal-cell">3</div><div class="pascal-cell">1</div></div>
+      <p style="color:#475569;font-size:.85rem;margin:.3rem 0 .1rem;">n=4:</p>
+      <div class="pascal-row"><div class="pascal-cell">1</div><div class="pascal-cell">4</div><div class="pascal-cell">6</div><div class="pascal-cell">4</div><div class="pascal-cell">1</div></div>
+      <p style="color:#475569;font-size:.85rem;margin:.3rem 0 .1rem;">n=5:</p>
+      <div class="pascal-row"><div class="pascal-cell">1</div><div class="pascal-cell">5</div><div class="pascal-cell">10</div><div class="pascal-cell">10</div><div class="pascal-cell">5</div><div class="pascal-cell">1</div></div>
+      <p style="color:#475569;font-size:.85rem;margin-top:.8rem;">Rule: Har cell = uske upar wale dono cells ka sum | Har row ke corner mein 1 hamesha!</p>
+    </div>
+
+    <p>Yeh coefficients exactly ⁿC₀, ⁿC₁, ⁿC₂, ... ⁿCₙ hain — yahi connection Combinations aur Binomial Theorem ko jodta hai!</p>
+
+    <h2>2. Binomial Theorem — Main Formula</h2>
+
+    <div class="big-formula">
+      <p style="font-size:1.2rem;font-weight:700;">(a+b)ⁿ = Σ(r=0 to n) ⁿCᵣ · aⁿ⁻ʳ · bʳ</p>
+      <p style="margin-top:1rem;font-size:.95rem;color:#94a3b8;">= ⁿC₀aⁿ + ⁿC₁aⁿ⁻¹b + ⁿC₂aⁿ⁻²b² + ⁿC₃aⁿ⁻³b³ + ... + ⁿCₙbⁿ</p>
+    </div>
+
+    <div class="concept-box">
+      <p>Kaise yaad karo: Har term mein a aur b ke powers ka sum n hota hai (aⁿ⁻ʳ × bʳ → powers = n−r+r = n). r = 0 se shuru hota hai n tak. Coefficient = ⁿCᵣ (Combinations!)</p>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ (x+y)⁴ expand karo</h4>
+      <div class="proof-step">n=4. Row 4 of Pascal: 1, 4, 6, 4, 1 (yani ⁴C₀,⁴C₁,⁴C₂,⁴C₃,⁴C₄)</div>
+      <div class="proof-step">(x+y)⁴ = 1·x⁴ + 4·x³y + 6·x²y² + 4·xy³ + 1·y⁴</div>
+      <div class="proof-step"><strong>= x⁴ + 4x³y + 6x²y² + 4xy³ + y⁴</strong></div>
+      <p style="margin-top:.7rem;color:#065f46;">Notice: x ka power ghatta hai (4,3,2,1,0), y ka power badhta hai (0,1,2,3,4)!</p>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ (2x − 3y)³ expand karo</h4>
+      <div class="proof-step">a = 2x, b = −3y, n = 3. Coefficients: 1, 3, 3, 1</div>
+      <div class="proof-step">= (2x)³ + 3(2x)²(−3y) + 3(2x)(−3y)² + (−3y)³</div>
+      <div class="proof-step">= 8x³ + 3·4x²·(−3y) + 3·2x·9y² + (−27y³)</div>
+      <div class="proof-step">= 8x³ − 36x²y + 54xy² − 27y³</div>
+      <p style="color:#065f46;margin-top:.7rem;">Jab b negative ho, alternating signs aate hain: +, −, +, −</p>
+    </div>
+
+    <h2>3. General Term Tᵣ₊₁</h2>
+
+    <div class="concept-box">
+      <p>Kisi bhi ek specific term ko nikalna ho — direct formula hai. (r+1)th term ko T(r+1) likhte hain:</p>
+      <div class="formula-box">T(r+1) = ⁿCᵣ · aⁿ⁻ʳ · bʳ</div>
+      <p style="margin-top:.7rem;">r = 0 → T₁ (first term), r = 1 → T₂ (second term), aur aise hi aage. Ek specific term ka coefficient ya variable power nikalna hai toh pehle r dhundo!</p>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ (x + 2)⁸ mein x⁵ wala term nikalo</h4>
+      <div class="proof-step">T(r+1) = ⁸Cᵣ · x⁸⁻ʳ · 2ʳ</div>
+      <div class="proof-step">x ka power chahiye = 5 → 8−r = 5 → r = 3</div>
+      <div class="proof-step">T₄ = ⁸C₃ · x⁵ · 2³ = 56 · 8 · x⁵ = <strong>448x⁵</strong></div>
+      <p style="color:#065f46;margin-top:.7rem;">Steps: pehle r set karo, phir coefficient calculate karo!</p>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ (x/2 − 2/x)⁶ mein x² wala term nikalo</h4>
+      <div class="proof-step">a = x/2, b = −2/x, n = 6</div>
+      <div class="proof-step">T(r+1) = ⁶Cᵣ · (x/2)⁶⁻ʳ · (−2/x)ʳ</div>
+      <div class="proof-step">= ⁶Cᵣ · x⁶⁻ʳ/2⁶⁻ʳ · (−2)ʳ/xʳ = ⁶Cᵣ · (−1)ʳ · 2ʳ/2⁶⁻ʳ · x⁶⁻ʳ⁻ʳ</div>
+      <div class="proof-step">x ka power = 6−2r = 2 → r = 2</div>
+      <div class="proof-step">T₃ = ⁶C₂ · (−1)² · 2²/2⁴ · x² = 15 · 1 · (4/16) · x² = 15/4 · x² = <strong>(15/4)x²</strong></div>
+    </div>
+
+    <h2>4. Middle Term</h2>
+    <div class="concept-box">
+      <p>(a+b)ⁿ mein n+1 terms hote hain. Middle term:</p>
+      <ul style="padding-left:1.5rem;margin-top:.5rem;">
+        <li><strong>n even hai:</strong> Exactly ek middle term = T(n/2 + 1) <em>Example: n=6 → T₄</em></li>
+        <li><strong>n odd hai:</strong> Do middle terms = T((n+1)/2) aur T((n+3)/2) <em>Example: n=5 → T₃ aur T₄</em></li>
+      </ul>
+    </div>
+
+    <h2>5. Important Special Cases — Binomial Sums</h2>
+    <div class="concept-box">
+      <p>a=b=1 rakho, ya a=1, b=−1 rakho → powerful results milte hain:</p>
+      <div class="formula-box">(1+1)ⁿ = 2ⁿ → ⁿC₀ + ⁿC₁ + ⁿC₂ + ... + ⁿCₙ = 2ⁿ</div>
+      <div class="formula-box">(1−1)ⁿ = 0 → ⁿC₀ − ⁿC₁ + ⁿC₂ − ... = 0</div>
+      <div class="formula-box">Even terms ka sum = Odd terms ka sum = 2ⁿ⁻¹</div>
+    </div>
+
+    <h2>6. Approximations using Binomial</h2>
+    <div class="example-box">
+      <h4>✅ (1.02)⁵ approximately nikalo</h4>
+      <div class="proof-step">(1.02)⁵ = (1 + 0.02)⁵</div>
+      <div class="proof-step">≈ 1 + 5(0.02) + 10(0.02)² + ... (higher powers negligible)</div>
+      <div class="proof-step">≈ 1 + 0.10 + 10(0.0004) = 1 + 0.10 + 0.004 = <strong>1.104</strong></div>
+      <p style="color:#065f46;margin-top:.7rem;">Real value = 1.10408 — approximation kaafi close hai!</p>
+    </div>
+
+    <h2>7. Practice Questions</h2>
+    <div class="practice-q">
+      <p><strong>Q1.</strong> (1+x)¹⁰ mein x³ ka coefficient nikalo.</p>
+      <details><summary>Solution</summary><p>T₄: ¹⁰C₃ = 120. Coefficient = <strong>120</strong></p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q2.</strong> (x − 1/x)⁶ mein constant term nikalo (x⁰ term).</p>
+      <details><summary>Solution</summary><p>T(r+1) = ⁶Cᵣ x⁶⁻ʳ(−1/x)ʳ = ⁶Cᵣ(−1)ʳx⁶⁻²ʳ. Constant: 6−2r=0 → r=3. T₄ = ⁶C₃(−1)³ = 20×(−1) = <strong>−20</strong></p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q3.</strong> ⁿC₀+ⁿC₁+...+ⁿCₙ = 1024. n ki value kya hai?</p>
+      <details><summary>Solution</summary><p>2ⁿ = 1024 = 2¹⁰ → n = <strong>10</strong></p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q4.</strong> (3+x)⁶ ka 4th term likho.</p>
+      <details><summary>Solution</summary><p>T₄ = ⁶C₃ · 3³ · x³ = 20 × 27 × x³ = <strong>540x³</strong></p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q5.</strong> (√x − √y)⁸ ka middle term nikalo.</p>
+      <details><summary>Solution</summary><p>n=8 (even) → Middle term = T₅ = ⁸C₄(√x)⁴(−√y)⁴ = 70 · x² · y² = <strong>70x²y²</strong></p></details>
+    </div>
+
+    <div style="text-align:center;margin-top:2.5rem;">
+      <a href="permutations-combinations.html" class="btn btn-outline" style="padding:.8rem 2rem;border-radius:8px;text-decoration:none;margin:0 .5rem;">← P&amp;C</a>
+      <a href="sequences-series.html" class="btn" style="background:#2563eb;color:#fff;padding:.8rem 2rem;border-radius:8px;text-decoration:none;margin:0 .5rem;">Next: Sequences &amp; Series →</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ to teach Maths in Roman Hindi</p>
+    <div style="margin-top:1rem;"><a href="../../../../about.html">About</a> | <a href="../../../../contact.html">Contact</a> | <a href="../../../../privacy-policy.html">Privacy Policy</a></div>
+  </footer>
+  <script src="../../../../script.js"></script>
+</body>
+</html>

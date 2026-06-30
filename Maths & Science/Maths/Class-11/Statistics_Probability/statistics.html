@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Statistics - Class 11 Maths | AIkiPadhai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;line-height:1.75;}
+    h2{color:#1e1b4b;border-bottom:3px solid #f59e0b;padding-bottom:8px;margin:2.2rem 0 1rem;}
+    h3{color:#92400e;}
+    .concept-box{background:#fffbeb;border-left:5px solid #f59e0b;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .concept-box p,.concept-box li{color:#78350f;}
+    .formula-box{background:#1e1b4b;color:#c7d2fe;border-radius:10px;padding:1.2rem 1.6rem;font-family:monospace;font-size:1.05rem;margin:1rem 0;}
+    .example-box{background:#f0fdf4;border-left:5px solid #10b981;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .example-box h4{color:#065f46;}
+    .example-box p,.example-box li{color:#14532d;}
+    .story-box{background:#fef3c7;border-left:5px solid #d97706;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .story-box h3{color:#92400e;}
+    .story-box p{color:#78350f;}
+    .proof-step{background:#f1f5f9;border-radius:6px;padding:.9rem 1.1rem;margin:.5rem 0;border-left:3px solid #f59e0b;color:#1e293b;}
+    .measure-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:1.5rem 0;}
+    .measure-card{background:#fff;border:2px solid #fde68a;border-radius:10px;padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    .measure-card h4{color:#b45309;margin-bottom:.4rem;}
+    .measure-card p{color:#1e293b;font-size:.9rem;}
+    .measure-card .formula-box{font-size:.85rem;padding:.7rem 1rem;margin:.4rem 0;}
+    .practice-q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1.2rem;margin:.8rem 0;}
+    .practice-q p{color:#1e293b;}
+    .practice-q strong{color:#d97706;}
+    details summary{cursor:pointer;color:#d97706;font-weight:600;padding:.4rem 0;}
+    details p{color:#475569;padding:.5rem 0 0 1rem;}
+    table{width:100%;border-collapse:collapse;margin:1.2rem 0;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    th{background:#78350f;color:#fde68a;padding:.9rem 1rem;text-align:center;}
+    td{padding:.75rem 1rem;border-bottom:1px solid #e2e8f0;color:#1e293b;text-align:center;}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+      <nav>
+        <a href="../../../../index.html">Home</a>
+        <a href="../index.html">Class 11 Maths</a>
+        <a href="index.html">Stats &amp; Probability</a>
+        <a href="statistics.html" class="active">Statistics</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" style="background:linear-gradient(135deg,#451a03,#f59e0b);">
+    <div class="container">
+      <h1>Statistics 📊</h1>
+      <p>Data mein se meaningful information nikalna — average toh Class 9 mein seekha tha. Ab Class 11 mein dispersion seekhenge — data kitna spread hai!</p>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <div class="story-box">
+      <h3>🏏 Two Batsmen — Kaun Better?</h3>
+      <p>Rahul aur Virat dono ke 5 matches ke scores dekhte hain: Rahul: 50, 50, 50, 50, 50 (Average = 50). Virat: 10, 20, 80, 90, 50 (Average = 50). Average same hai! Lekin clearly Rahul zyada consistent hai — Virat ka performance bahut vary karta hai. Average akela data describe nahi kar sakta — humhe <strong>Dispersion</strong> bhi measure karna hoga — data kitna spread hai mean ke aas paas!</p>
+    </div>
+
+    <h2>1. Measures of Central Tendency — Quick Recap</h2>
+    <div class="concept-box">
+      <p>Class 9-10 mein yeh seekhe the — yahan quick revision:</p>
+      <ul style="padding-left:1.5rem;margin-top:.5rem;">
+        <li><strong>Mean (x̄):</strong> Saare numbers ka sum ÷ count. Sabse common average. Outliers se affect hota hai.</li>
+        <li><strong>Median:</strong> Arranged data ka middle value. Outliers se affect nahi hota. Odd n → middle term. Even n → average of 2 middle terms.</li>
+        <li><strong>Mode:</strong> Sabse frequently aane wala value. No formula — bas dhundo!</li>
+      </ul>
+    </div>
+
+    <h2>2. Measures of Dispersion — Class 11 ka Main Topic</h2>
+    <p>Dispersion batata hai ki data points mean ke kitne door hain — spread kitna hai. Kum dispersion = consistent data. Zyada dispersion = variable data.</p>
+
+    <div class="measure-grid">
+      <div class="measure-card">
+        <h4>📏 Range</h4>
+        <p>Sabse simple dispersion. Maximum aur minimum ka difference.</p>
+        <div class="formula-box">Range = Max − Min</div>
+        <p>Easy lekin outliers se bahut affect hota hai.</p>
+      </div>
+      <div class="measure-card">
+        <h4>📐 Mean Deviation (MD)</h4>
+        <p>Har data point ki mean se absolute distance ka average.</p>
+        <div class="formula-box">MD = Σ|xᵢ − x̄| / n</div>
+        <p>Mean ya Median kisi ke bhi baare mein calculate hota hai.</p>
+      </div>
+      <div class="measure-card">
+        <h4>📊 Variance (σ²)</h4>
+        <p>Squared deviations ka average — zyada accurate lekin unit square ho jaati hai.</p>
+        <div class="formula-box">σ² = Σ(xᵢ − x̄)² / n</div>
+        <p>Outliers ko extra weight milta hai (square ki wajah se).</p>
+      </div>
+      <div class="measure-card">
+        <h4>📈 Std Deviation (σ)</h4>
+        <p>Variance ka square root — units original data jaisi wapas aati hain. Sabse important!</p>
+        <div class="formula-box">σ = √[Σ(xᵢ−x̄)²/n]</div>
+        <p>Zyada σ = zyada spread. Less σ = data mean ke paas.</p>
+      </div>
+    </div>
+
+    <h2>3. Variance aur Standard Deviation — Step by Step</h2>
+
+    <div class="example-box">
+      <h4>✅ Data: 4, 7, 8, 11, 15 ke liye Mean, Variance aur SD nikalo</h4>
+      <div class="proof-step">Step 1 — Mean: x̄ = (4+7+8+11+15)/5 = 45/5 = <strong>9</strong></div>
+      <div class="proof-step">Step 2 — Deviations from mean: (4−9)=−5, (7−9)=−2, (8−9)=−1, (11−9)=2, (15−9)=6</div>
+      <div class="proof-step">Step 3 — Squared deviations: 25, 4, 1, 4, 36</div>
+      <div class="proof-step">Step 4 — Variance σ² = (25+4+1+4+36)/5 = 70/5 = <strong>14</strong></div>
+      <div class="proof-step">Step 5 — SD σ = √14 ≈ <strong>3.74</strong></div>
+      <p style="color:#065f46;margin-top:.7rem;">Matlab: Average data point mean se approximately 3.74 units door hai!</p>
+    </div>
+
+    <table>
+      <tr><th>xᵢ</th><th>xᵢ − x̄</th><th>(xᵢ − x̄)²</th></tr>
+      <tr><td>4</td><td>−5</td><td>25</td></tr>
+      <tr><td>7</td><td>−2</td><td>4</td></tr>
+      <tr><td>8</td><td>−1</td><td>1</td></tr>
+      <tr><td>11</td><td>2</td><td>4</td></tr>
+      <tr><td>15</td><td>6</td><td>36</td></tr>
+      <tr><td><strong>Σ=45</strong></td><td><strong>0</strong></td><td><strong>70</strong></td></tr>
+    </table>
+
+    <p style="color:#78350f;font-weight:600;">Note: Deviations ka sum hamesha 0 hota hai (Σ(xᵢ−x̄) = 0) — yeh check ke liye use karo!</p>
+
+    <h2>4. Shortcut Formula for Variance</h2>
+    <div class="concept-box">
+      <p>Bade data mein har baar mean se subtract karna tedious hota hai. Yeh shortcut formula directly nikalta hai:</p>
+      <div class="formula-box">σ² = Σxᵢ²/n − (x̄)²  =  Σxᵢ²/n − (Σxᵢ/n)²</div>
+      <p style="margin-top:.7rem;">"Mean of squares minus square of mean" — yaad karo yaise! Yeh formula calculation bahut fast karta hai.</p>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ Shortcut se check karo: Data 4,7,8,11,15</h4>
+      <div class="proof-step">Σxᵢ² = 16+49+64+121+225 = 475</div>
+      <div class="proof-step">σ² = 475/5 − (9)² = 95 − 81 = <strong>14</strong> ✓</div>
+      <p style="color:#065f46;margin-top:.5rem;">Same answer! Shortcut formula aur long method dono check ho gaye.</p>
+    </div>
+
+    <h2>5. Coefficient of Variation (CV)</h2>
+    <div class="concept-box">
+      <p>Sirf SD se do alag datasets compare nahi kar sakte — agar units alag hoon ya means bahut alag hoon. CV ek relative measure hai — percentage mein:</p>
+      <div class="formula-box">CV = (σ / x̄) × 100 %</div>
+      <p style="margin-top:.7rem;">Kam CV = zyada consistent (less variable). Zyada CV = zyada variable (less consistent). Jab do datasets compare karne hoon toh CV use karo!</p>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ Rahul aur Virat ka CV compare karo</h4>
+      <div class="proof-step">Rahul scores: 50,50,50,50,50. x̄=50, σ=0. CV = 0%</div>
+      <div class="proof-step">Virat scores: 10,20,80,90,50. x̄=50.</div>
+      <div class="proof-step">Deviations²: 1600+900+900+1600+0 = 5000. σ²=1000. σ=√1000≈31.6</div>
+      <div class="proof-step">CV Virat = (31.6/50)×100 = 63.2%</div>
+      <div class="proof-step">Rahul ka CV=0% — perfectly consistent! Virat ka CV=63.2% — highly variable.</div>
+    </div>
+
+    <h2>6. Grouped Data ka SD</h2>
+    <div class="concept-box">
+      <p>Jab data groups/classes mein ho (frequency distribution) toh:</p>
+      <div class="formula-box">x̄ = Σfᵢxᵢ / Σfᵢ  (weighted mean)</div>
+      <div class="formula-box">σ² = Σfᵢ(xᵢ−x̄)² / Σfᵢ</div>
+      <p style="margin-top:.7rem;">Yahan xᵢ = class midpoint, fᵢ = class frequency. Ek ek class ka midpoint aur frequency use hoti hai.</p>
+    </div>
+
+    <h2>7. Practice Questions</h2>
+    <div class="practice-q">
+      <p><strong>Q1.</strong> 6, 8, 10, 12, 14 ka mean deviation (mean ke baare mein) nikalo.</p>
+      <details><summary>Solution</summary><p>Mean = 10. |deviations| = 4,2,0,2,4. MD = 12/5 = 2.4</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q2.</strong> 2, 4, 6, 8, 10 ka variance aur SD nikalo.</p>
+      <details><summary>Solution</summary><p>x̄=6. (xᵢ−x̄)²: 16,4,0,4,16. σ²=40/5=8. σ=2√2≈2.83</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q3.</strong> Ek dataset ka mean 20 aur SD 4 hai. CV nikalo.</p>
+      <details><summary>Solution</summary><p>CV = (4/20)×100 = <strong>20%</strong></p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q4.</strong> Shortcut se 3,6,9,12,15 ka variance nikalo.</p>
+      <details><summary>Solution</summary><p>x̄=9. Σxᵢ²=9+36+81+144+225=495. σ²=495/5−81=99−81=18. σ=√18=3√2</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q5.</strong> Factory A ka CV=25%, Factory B ka CV=18% hai. Kaun zyada consistent hai?</p>
+      <details><summary>Solution</summary><p>Kam CV = zyada consistent. Factory <strong>B</strong> zyada consistent hai!</p></details>
+    </div>
+
+    <div style="text-align:center;margin-top:2.5rem;">
+      <a href="../Calculus/limits-derivatives.html" class="btn btn-outline" style="padding:.8rem 2rem;border-radius:8px;text-decoration:none;margin:0 .5rem;">← Limits &amp; Derivatives</a>
+      <a href="probability.html" class="btn" style="background:#f59e0b;color:#fff;padding:.8rem 2rem;border-radius:8px;text-decoration:none;margin:0 .5rem;">Next: Probability →</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ to teach Maths in Roman Hindi</p>
+    <div style="margin-top:1rem;"><a href="../../../../about.html">About</a> | <a href="../../../../contact.html">Contact</a> | <a href="../../../../privacy-policy.html">Privacy Policy</a></div>
+  </footer>
+  <script src="../../../../script.js"></script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Conic Sections - Class 11 Maths | AIkiPadhai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;line-height:1.75;}
+    h2{color:#1e1b4b;border-bottom:3px solid #16a34a;padding-bottom:8px;margin:2.2rem 0 1rem;}
+    h3{color:#166534;}
+    .concept-box{background:#dcfce7;border-left:5px solid #16a34a;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .concept-box p,.concept-box li{color:#14532d;}
+    .formula-box{background:#1e1b4b;color:#c7d2fe;border-radius:10px;padding:1.2rem 1.6rem;font-family:monospace;font-size:1.05rem;margin:1rem 0;}
+    .example-box{background:#f0fdf4;border-left:5px solid #10b981;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .example-box h4{color:#065f46;}
+    .example-box p,.example-box li{color:#14532d;}
+    .story-box{background:#fffbeb;border-left:5px solid #f59e0b;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .story-box h3{color:#92400e;}
+    .story-box p{color:#78350f;}
+    .proof-step{background:#f1f5f9;border-radius:6px;padding:.9rem 1.1rem;margin:.5rem 0;border-left:3px solid #16a34a;color:#1e293b;}
+    .conic-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.2rem;margin:1.5rem 0;}
+    .conic-card{background:#fff;border:2px solid #e2e8f0;border-radius:10px;padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    .conic-card h4{color:#166534;margin-bottom:.5rem;font-size:1.05rem;}
+    .conic-card p{color:#1e293b;font-size:.9rem;}
+    .conic-card .formula-box{font-size:.85rem;padding:.7rem 1rem;margin:.5rem 0;}
+    .practice-q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1.2rem;margin:.8rem 0;}
+    .practice-q p{color:#1e293b;}
+    .practice-q strong{color:#16a34a;}
+    details summary{cursor:pointer;color:#16a34a;font-weight:600;padding:.4rem 0;}
+    details p{color:#475569;padding:.5rem 0 0 1rem;}
+    table{width:100%;border-collapse:collapse;margin:1.2rem 0;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    th{background:#14532d;color:#86efac;padding:.9rem 1rem;text-align:center;}
+    td{padding:.75rem 1rem;border-bottom:1px solid #e2e8f0;color:#1e293b;text-align:center;}
+    .svg-wrap{background:#fff;border-radius:12px;padding:1.2rem;margin:1.5rem 0;box-shadow:0 2px 10px rgba(0,0,0,.08);}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+      <nav>
+        <a href="../../../../index.html">Home</a>
+        <a href="../index.html">Class 11 Maths</a>
+        <a href="index.html">Coordinate Geometry</a>
+        <a href="conic-sections.html" class="active">Conic Sections</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" style="background:linear-gradient(135deg,#052e16,#16a34a);">
+    <div class="container">
+      <h1>Conic Sections 🔵</h1>
+      <p>Ek cone ko alag angles par kaato — circle, ellipse, parabola, hyperbola milte hain! Nature aur engineering mein everywhere hain yeh curves.</p>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <div class="story-box">
+      <h3>🌍 Real World mein Conics</h3>
+      <p>Yeh ek amazing fact hai — ek double cone ko alag angle par katne se 4 alag shapes milte hain. <strong>Circle:</strong> wheels, plates, pizza! <strong>Ellipse:</strong> Earth sun ke around elliptical orbit mein ghoomti hai. <strong>Parabola:</strong> Cricket ball ka trajectory (air resistance ignore karo), satellite dish ka shape. <strong>Hyperbola:</strong> Ek lamp se wall par light ka shadow. In saari shapes ka ek general equation hai — aur yahi hum sikhenge!</p>
+    </div>
+
+    <!-- Cone cutting diagram SVG -->
+    <div class="svg-wrap">
+      <p style="font-weight:600;color:#166534;margin-bottom:.8rem;">Double Cone ko alag angles par kaatne se milte hain 4 conics:</p>
+      <svg viewBox="0 0 480 200" width="100%" style="max-width:480px;display:block;margin:0 auto;">
+        <!-- Circle -->
+        <ellipse cx="60" cy="100" rx="40" ry="40" fill="none" stroke="#2563eb" stroke-width="2.5"/>
+        <text x="60" y="155" text-anchor="middle" font-size="12" fill="#1d4ed8" font-weight="bold">Circle</text>
+        <text x="60" y="168" text-anchor="middle" font-size="10" fill="#475569">horizontal cut</text>
+        <!-- Ellipse -->
+        <ellipse cx="180" cy="100" rx="50" ry="30" fill="none" stroke="#16a34a" stroke-width="2.5"/>
+        <text x="180" y="145" text-anchor="middle" font-size="12" fill="#166534" font-weight="bold">Ellipse</text>
+        <text x="180" y="158" text-anchor="middle" font-size="10" fill="#475569">tilted cut</text>
+        <!-- Parabola -->
+        <path d="M280,60 Q320,130 360,60" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+        <text x="320" y="150" text-anchor="middle" font-size="12" fill="#92400e" font-weight="bold">Parabola</text>
+        <text x="320" y="163" text-anchor="middle" font-size="10" fill="#475569">parallel to side</text>
+        <!-- Hyperbola -->
+        <path d="M400,40 Q420,100 400,160" fill="none" stroke="#ef4444" stroke-width="2.5"/>
+        <path d="M460,40 Q440,100 460,160" fill="none" stroke="#ef4444" stroke-width="2.5"/>
+        <text x="430" y="180" text-anchor="middle" font-size="12" fill="#dc2626" font-weight="bold">Hyperbola</text>
+        <text x="430" y="193" text-anchor="middle" font-size="10" fill="#475569">steep cut (2 parts)</text>
+      </svg>
+    </div>
+
+    <h2>1. Circle</h2>
+    <div class="concept-box">
+      <p>Circle: Ek fixed point (centre) se ek fixed distance (radius) par ke saare points ka set. Simple aur symmetric — sabse easy conic!</p>
+      <div class="formula-box">Standard form: x² + y² = r²  (centre at origin)</div>
+      <div class="formula-box">General form: (x−h)² + (y−k)² = r²  (centre at (h,k))</div>
+      <p style="margin-top:.7rem;">General equation x²+y²+2gx+2fy+c=0 mein: centre = (−g,−f), radius = √(g²+f²−c)</p>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ Circle ka equation: centre (3,−2), radius 5</h4>
+      <div class="proof-step">(x−3)² + (y+2)² = 25</div>
+      <div class="proof-step">Expand karo: x²−6x+9 + y²+4y+4 = 25</div>
+      <div class="proof-step"><strong>x² + y² − 6x + 4y − 12 = 0</strong></div>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ x²+y²−4x+6y−3=0 ka centre aur radius nikalo</h4>
+      <div class="proof-step">Complete the square: (x²−4x+4) + (y²+6y+9) = 3+4+9</div>
+      <div class="proof-step">(x−2)² + (y+3)² = 16</div>
+      <div class="proof-step">Centre = (2,−3), Radius = <strong>4</strong></div>
+    </div>
+
+    <h2>2. Parabola</h2>
+    <div class="concept-box">
+      <p>Parabola: Ek fixed point (focus F) aur ek fixed line (directrix) se equal distance par ke saare points. Yeh symmetrical U-shape curve hai jisme ek axis of symmetry hoti hai.</p>
+      <p style="margin-top:.7rem;"><strong>a</strong> = focus ki origin se distance. Vertex = origin par (standard form mein).</p>
+      <div class="formula-box">y² = 4ax  (rightward, focus at (a,0), directrix x=−a)</div>
+      <div class="formula-box">y² = −4ax  (leftward)</div>
+      <div class="formula-box">x² = 4ay  (upward, focus at (0,a))</div>
+      <div class="formula-box">x² = −4ay  (downward)</div>
+    </div>
+
+    <!-- Parabola SVG -->
+    <div class="svg-wrap">
+      <svg viewBox="0 0 300 200" width="100%" style="max-width:280px;display:block;margin:0 auto;">
+        <line x1="20" y1="100" x2="280" y2="100" stroke="#e2e8f0" stroke-width="1"/>
+        <line x1="150" y1="10" x2="150" y2="190" stroke="#e2e8f0" stroke-width="1"/>
+        <!-- Parabola y²=4x (a=1) -->
+        <path d="M150,100 C180,70 230,40 270,20" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+        <path d="M150,100 C180,130 230,160 270,180" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+        <!-- Focus -->
+        <circle cx="175" cy="100" r="5" fill="#ef4444"/>
+        <text x="178" y="95" font-size="10" fill="#dc2626">F(1,0)</text>
+        <!-- Directrix -->
+        <line x1="125" y1="15" x2="125" y2="185" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="5"/>
+        <text x="100" y="185" font-size="10" fill="#7c3aed">x=−1</text>
+        <!-- Vertex -->
+        <circle cx="150" cy="100" r="4" fill="#16a34a"/>
+        <text x="155" y="115" font-size="10" fill="#166534">Vertex(0,0)</text>
+        <!-- Axis -->
+        <text x="265" y="95" font-size="10" fill="#94a3b8">x-axis</text>
+        <text x="155" y="20" font-size="10" fill="#94a3b8">Axis of symmetry</text>
+        <text x="10" y="130" font-size="11" fill="#92400e" font-weight="bold">y²=4x</text>
+      </svg>
+    </div>
+
+    <h2>3. Ellipse</h2>
+    <div class="concept-box">
+      <p>Ellipse: Do fixed points (foci F₁,F₂) se milne wali distances ka sum constant rehta hai. Circle ka generalised version — ek axis dusre se bada hota hai. a = semi-major axis, b = semi-minor axis, c = focus ki centre se distance.</p>
+      <div class="formula-box">x²/a² + y²/b² = 1  (horizontal major axis, a &gt; b)</div>
+      <div class="formula-box">x²/b² + y²/a² = 1  (vertical major axis)</div>
+      <div class="formula-box">Relation: c² = a² − b²  |  Eccentricity: e = c/a  (0 &lt; e &lt; 1)</div>
+      <p style="margin-top:.7rem;">e=0 → circle, e closer to 1 → more elongated ellipse. Earth ka e ≈ 0.017 (nearly circular orbit!)</p>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ x²/25 + y²/16 = 1 ke liye foci, vertices, eccentricity nikalo</h4>
+      <div class="proof-step">a² = 25, b² = 16 → a = 5, b = 4 (a &gt; b → horizontal major axis)</div>
+      <div class="proof-step">c² = a²−b² = 25−16 = 9 → c = 3</div>
+      <div class="proof-step">Foci: (±3, 0), Vertices: (±5, 0) aur (0, ±4)</div>
+      <div class="proof-step">Eccentricity e = c/a = 3/5 = <strong>0.6</strong></div>
+    </div>
+
+    <h2>4. Hyperbola</h2>
+    <div class="concept-box">
+      <p>Hyperbola: Do fixed points (foci) se milne wali distances ka <em>difference</em> constant rehta hai (sum nahi!). Do branches milti hain jo opposite directions mein jaati hain — asymptotes ke close aati jaati hain.</p>
+      <div class="formula-box">x²/a² − y²/b² = 1  (horizontal transverse axis)</div>
+      <div class="formula-box">y²/a² − x²/b² = 1  (vertical transverse axis)</div>
+      <div class="formula-box">c² = a² + b²  (notice: + not −, unlike ellipse!)</div>
+      <div class="formula-box">Asymptotes: y = ±(b/a)x</div>
+    </div>
+
+    <h2>5. Comparison Table — Saare Conics</h2>
+    <table>
+      <tr><th>Conic</th><th>Standard Equation</th><th>Key Feature</th><th>Eccentricity e</th></tr>
+      <tr><td><strong>Circle</strong></td><td>x²+y²=r²</td><td>All points equidistant from centre</td><td>e = 0</td></tr>
+      <tr><td><strong>Parabola</strong></td><td>y²=4ax</td><td>1 focus, 1 directrix, equal distance</td><td>e = 1</td></tr>
+      <tr><td><strong>Ellipse</strong></td><td>x²/a²+y²/b²=1</td><td>Sum of distances to foci = 2a</td><td>0 &lt; e &lt; 1</td></tr>
+      <tr><td><strong>Hyperbola</strong></td><td>x²/a²−y²/b²=1</td><td>Difference of distances = 2a</td><td>e &gt; 1</td></tr>
+    </table>
+
+    <h2>6. Practice Questions</h2>
+    <div class="practice-q">
+      <p><strong>Q1.</strong> Circle x²+y²−6x+8y+9=0 ka centre aur radius nikalo.</p>
+      <details><summary>Solution</summary><p>(x−3)²+(y+4)² = 9+16−9 = 16. Centre=(3,−4), radius=4</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q2.</strong> Parabola y²=12x ke focus aur directrix nikalo.</p>
+      <details><summary>Solution</summary><p>4a=12 → a=3. Focus=(3,0), Directrix: x=−3</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q3.</strong> Ellipse x²/36+y²/20=1 ke foci aur eccentricity nikalo.</p>
+      <details><summary>Solution</summary><p>a²=36, b²=20, c²=16 → c=4. Foci=(±4,0), e=4/6=2/3</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q4.</strong> Hyperbola x²/9−y²/16=1 ke asymptotes likho.</p>
+      <details><summary>Solution</summary><p>y = ±(b/a)x = ±(4/3)x</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q5.</strong> Focus (2,0) aur directrix x=−2 wali parabola ka equation likho.</p>
+      <details><summary>Solution</summary><p>a=2 → y² = 4(2)x = <strong>y²=8x</strong></p></details>
+    </div>
+
+    <div style="text-align:center;margin-top:2.5rem;">
+      <a href="straight-lines.html" class="btn btn-outline" style="padding:.8rem 2rem;border-radius:8px;text-decoration:none;margin:0 .5rem;">← Straight Lines</a>
+      <a href="intro-3d-geometry.html" class="btn" style="background:#16a34a;color:#fff;padding:.8rem 2rem;border-radius:8px;text-decoration:none;margin:0 .5rem;">Next: 3D Geometry →</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ to teach Maths in Roman Hindi</p>
+    <div style="margin-top:1rem;"><a href="../../../../about.html">About</a> | <a href="../../../../contact.html">Contact</a> | <a href="../../../../privacy-policy.html">Privacy Policy</a></div>
+  </footer>
+  <script src="../../../../script.js"></script>
+</body>
+</html>

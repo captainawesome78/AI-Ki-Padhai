@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Introduction to 3D Geometry - Class 11 Maths | AIkiPadhai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;line-height:1.75;}
+    h2{color:#1e1b4b;border-bottom:3px solid #16a34a;padding-bottom:8px;margin:2.2rem 0 1rem;}
+    h3{color:#166534;}
+    .concept-box{background:#dcfce7;border-left:5px solid #16a34a;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .concept-box p,.concept-box li{color:#14532d;}
+    .formula-box{background:#1e1b4b;color:#c7d2fe;border-radius:10px;padding:1.2rem 1.6rem;font-family:monospace;font-size:1.05rem;margin:1rem 0;}
+    .example-box{background:#f0fdf4;border-left:5px solid #10b981;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .example-box h4{color:#065f46;}
+    .example-box p,.example-box li{color:#14532d;}
+    .story-box{background:#fffbeb;border-left:5px solid #f59e0b;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .story-box h3{color:#92400e;}
+    .story-box p{color:#78350f;}
+    .proof-step{background:#f1f5f9;border-radius:6px;padding:.9rem 1.1rem;margin:.5rem 0;border-left:3px solid #16a34a;color:#1e293b;}
+    .oct-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin:1.5rem 0;}
+    .oct-card{background:#fff;border:2px solid #bbf7d0;border-radius:8px;padding:.9rem;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.05);}
+    .oct-card h4{color:#15803d;font-size:.9rem;margin-bottom:.3rem;}
+    .oct-card p{color:#1e293b;font-size:.82rem;font-family:monospace;}
+    .practice-q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1.2rem;margin:.8rem 0;}
+    .practice-q p{color:#1e293b;}
+    .practice-q strong{color:#16a34a;}
+    details summary{cursor:pointer;color:#16a34a;font-weight:600;padding:.4rem 0;}
+    details p{color:#475569;padding:.5rem 0 0 1rem;}
+    table{width:100%;border-collapse:collapse;margin:1.2rem 0;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    th{background:#14532d;color:#86efac;padding:.9rem 1rem;text-align:center;}
+    td{padding:.75rem 1rem;border-bottom:1px solid #e2e8f0;color:#1e293b;text-align:center;}
+    .axes-wrap{background:#fff;border-radius:12px;padding:1.2rem;margin:1.5rem 0;box-shadow:0 2px 10px rgba(0,0,0,.08);}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+      <nav>
+        <a href="../../../../index.html">Home</a>
+        <a href="../index.html">Class 11 Maths</a>
+        <a href="index.html">Coordinate Geometry</a>
+        <a href="intro-3d-geometry.html" class="active">3D Geometry</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" style="background:linear-gradient(135deg,#052e16,#16a34a);">
+    <div class="container">
+      <h1>Introduction to 3D Geometry 🧊</h1>
+      <p>2D se 3D — ek aur dimension add karo, duniya badal jaati hai! Z-axis ke saath teen coordinates se har point describe hota hai.</p>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <div class="story-box">
+      <h3>📦 Apna Kamra — 3D Space</h3>
+      <p>Socho tum apne kamre mein khade ho. Ek kona dhundho jahan do deewarain aur zameen milti hain — yahi origin hai. Ek deewaar ke saath x-axis, doosri deewaar ke saath y-axis, aur chhath/zameen ki taraf z-axis. Ab kamre mein koi bhi point (x, y, z) — jaise ceiling par light ka position ya almaari ka corner — teen numbers se bilkul exactly describe ho sakta hai! Yahi hai 3D coordinate system.</p>
+    </div>
+
+    <h2>1. 3D Coordinate System</h2>
+    <div class="concept-box">
+      <p>2D mein sirf 2 axes the (x aur y) — humara plane. 3D mein teen mutually perpendicular axes hain: <strong>X-axis, Y-axis, Z-axis</strong>. Teeno ek common point par milte hain jise <strong>Origin O(0,0,0)</strong> kehte hain.</p>
+      <p style="margin-top:.7rem;">Har point ko <strong>ordered triple (x,y,z)</strong> se represent karte hain. Yahan x, y, z ko coordinates kehte hain — woh wo distances hain jo origin se us point tak teen axes ke parallel hain.</p>
+    </div>
+
+    <!-- 3D Axes SVG -->
+    <div class="axes-wrap">
+      <p style="font-weight:600;color:#166534;margin-bottom:.8rem;">3D Coordinate Axes aur ek Point P(3,2,4)</p>
+      <svg viewBox="0 0 340 280" width="100%" style="max-width:320px;display:block;margin:0 auto;">
+        <!-- Origin -->
+        <circle cx="150" cy="180" r="5" fill="#1e293b"/>
+        <text x="135" y="200" font-size="11" fill="#1e293b" font-weight="bold">O(0,0,0)</text>
+        <!-- X axis (right-down) -->
+        <line x1="150" y1="180" x2="280" y2="230" stroke="#ef4444" stroke-width="2.5" marker-end="url(#rx)"/>
+        <text x="285" y="232" font-size="13" fill="#dc2626" font-weight="bold">X</text>
+        <!-- Y axis (right-up direction) -->
+        <line x1="150" y1="180" x2="270" y2="110" stroke="#16a34a" stroke-width="2.5" marker-end="url(#gy)"/>
+        <text x="272" y="108" font-size="13" fill="#166534" font-weight="bold">Y</text>
+        <!-- Z axis (straight up) -->
+        <line x1="150" y1="180" x2="150" y2="30" stroke="#2563eb" stroke-width="2.5" marker-end="url(#bz)"/>
+        <text x="153" y="24" font-size="13" fill="#1d4ed8" font-weight="bold">Z</text>
+        <!-- Point P(3,2,4) approximately -->
+        <circle cx="220" cy="90" r="7" fill="#f59e0b"/>
+        <text x="226" y="88" font-size="11" fill="#92400e" font-weight="bold">P(3,2,4)</text>
+        <!-- dashed projection lines -->
+        <line x1="150" y1="180" x2="220" y2="90" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="5"/>
+        <!-- Markers -->
+        <defs>
+          <marker id="rx" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#ef4444"/></marker>
+          <marker id="gy" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3z" fill="#16a34a"/></marker>
+          <marker id="bz" markerWidth="8" markerHeight="8" refX="3" refY="6" orient="auto"><path d="M0,8 L6,8 L3,0z" fill="#2563eb"/></marker>
+        </defs>
+        <text x="80" y="140" font-size="10" fill="#94a3b8">Right-hand rule:</text>
+        <text x="80" y="153" font-size="10" fill="#94a3b8">X=red, Y=green, Z=blue</text>
+      </svg>
+    </div>
+
+    <h2>2. Octants — 3D mein 8 Regions</h2>
+    <div class="concept-box">
+      <p>2D plane mein 4 quadrants the — teen axes se space 8 parts mein bant jaata hai jise <strong>Octants</strong> kehte hain. Har octant mein x, y, z ka sign (+ ya −) alag hota hai.</p>
+      <p style="margin-top:.7rem;">Point ka octant dekhne ke liye bas uske x, y, z ke signs dekho!</p>
+    </div>
+
+    <div class="oct-grid">
+      <div class="oct-card"><h4>I Octant</h4><p>(+,+,+)</p></div>
+      <div class="oct-card"><h4>II Octant</h4><p>(−,+,+)</p></div>
+      <div class="oct-card"><h4>III Octant</h4><p>(−,−,+)</p></div>
+      <div class="oct-card"><h4>IV Octant</h4><p>(+,−,+)</p></div>
+      <div class="oct-card"><h4>V Octant</h4><p>(+,+,−)</p></div>
+      <div class="oct-card"><h4>VI Octant</h4><p>(−,+,−)</p></div>
+      <div class="oct-card"><h4>VII Octant</h4><p>(−,−,−)</p></div>
+      <div class="oct-card"><h4>VIII Octant</h4><p>(+,−,−)</p></div>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ Bolo yeh points kaunse octant mein hain</h4>
+      <div class="proof-step">A(3, 2, 5) → (+,+,+) → <strong>I Octant</strong></div>
+      <div class="proof-step">B(−1, 4, 2) → (−,+,+) → <strong>II Octant</strong></div>
+      <div class="proof-step">C(2, −3, −1) → (+,−,−) → <strong>VIII Octant</strong></div>
+      <div class="proof-step">D(−2, −1, 6) → (−,−,+) → <strong>III Octant</strong></div>
+    </div>
+
+    <h2>3. Coordinate Planes</h2>
+    <div class="concept-box">
+      <p>Teeno axes se 3 planes bante hain jo do-do axes milne se banate hain:</p>
+      <ul style="padding-left:1.5rem;margin-top:.7rem;">
+        <li><strong>XY-Plane:</strong> X aur Y axes se bana plane — isme z = 0 hamesha. Zameen ki tarah.</li>
+        <li><strong>YZ-Plane:</strong> Y aur Z axes se bana plane — isme x = 0 hamesha. Ek deewaar ki tarah.</li>
+        <li><strong>XZ-Plane:</strong> X aur Z axes se bana plane — isme y = 0 hamesha. Doosri deewaar ki tarah.</li>
+      </ul>
+      <p style="margin-top:.7rem;">Kisi point ka kisi plane par projection = us coordinate ko 0 kar do!</p>
+    </div>
+
+    <table>
+      <tr><th>Plane</th><th>Axes</th><th>Fixed Coord</th><th>Example Point on plane</th></tr>
+      <tr><td><strong>XY-Plane</strong></td><td>X &amp; Y</td><td>z = 0</td><td>(3, 4, 0)</td></tr>
+      <tr><td><strong>YZ-Plane</strong></td><td>Y &amp; Z</td><td>x = 0</td><td>(0, 2, 5)</td></tr>
+      <tr><td><strong>XZ-Plane</strong></td><td>X &amp; Z</td><td>y = 0</td><td>(1, 0, 7)</td></tr>
+    </table>
+
+    <h2>4. Distance Formula in 3D</h2>
+    <div class="concept-box">
+      <p>2D mein Pythagoras theorem se distance formula tha: √((x₂−x₁)²+(y₂−y₁)²). 3D mein ek aur term add hota hai:</p>
+      <div class="formula-box">d = √[(x₂−x₁)² + (y₂−y₁)² + (z₂−z₁)²]</div>
+      <p style="margin-top:.7rem;">Intuition: Pehle xy-plane mein horizontal distance nikalo, phir z ke saath vertical — yahi 3D distance formula ka essence hai (Pythagoras do baar!).</p>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ A(1,2,3) aur B(4,6,3) ke beech distance nikalo</h4>
+      <div class="proof-step">d = √[(4−1)² + (6−2)² + (3−3)²]</div>
+      <div class="proof-step">= √[9 + 16 + 0] = √25 = <strong>5</strong></div>
+      <p style="color:#065f46;margin-top:.5rem;">z-coordinates same hain → yeh points XY-plane ke parallel plane par hain → distance same as 2D!</p>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ P(2,−1,2) ki origin se distance nikalo</h4>
+      <div class="proof-step">d = √[2² + (−1)² + 2²] = √[4+1+4] = √9 = <strong>3</strong></div>
+    </div>
+
+    <h2>5. Section Formula in 3D</h2>
+    <div class="concept-box">
+      <p>Jab ek point P line segment AB ko m:n ratio mein divide kare (internally), toh P ki coordinates:</p>
+      <div class="formula-box">P = ((mx₂+nx₁)/(m+n), (my₂+ny₁)/(m+n), (mz₂+nz₁)/(m+n))</div>
+      <p style="margin-top:.7rem;">Midpoint (m=n=1): P = ((x₁+x₂)/2, (y₁+y₂)/2, (z₁+z₂)/2)</p>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ A(1,2,3) aur B(5,6,7) ka midpoint nikalo</h4>
+      <div class="proof-step">Midpoint = ((1+5)/2, (2+6)/2, (3+7)/2)</div>
+      <div class="proof-step">= (3, 4, 5)</div>
+    </div>
+
+    <h2>6. Important Points on Axes aur Planes</h2>
+    <div class="concept-box">
+      <p>Kisi bhi point ka special location samajhna bahut important hai:</p>
+      <ul style="padding-left:1.5rem;margin-top:.5rem;">
+        <li>X-axis par koi bhi point: (x, 0, 0) form mein hota hai (y=z=0)</li>
+        <li>Y-axis par: (0, y, 0) form</li>
+        <li>Z-axis par: (0, 0, z) form</li>
+        <li>XY-plane par: (x, y, 0) — z coordinate zero</li>
+        <li>Origin: (0, 0, 0) — saari coordinates zero</li>
+      </ul>
+    </div>
+
+    <h2>7. Practice Questions</h2>
+    <div class="practice-q">
+      <p><strong>Q1.</strong> A(2,3,−4) aur B(−1,2,2) ke beech distance nikalo.</p>
+      <details><summary>Solution</summary><p>d=√[(−3)²+(−1)²+(6)²]=√[9+1+36]=√46</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q2.</strong> (3,−4,5), (−2,1,0), (−1,2,4) — har ek kaunse octant mein hai?</p>
+      <details><summary>Solution</summary><p>(3,−4,5)→IV | (−2,1,0)→YZ plane (x<0,y>0,z=0) → II/VI boundary | (−1,2,4)→II Octant</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q3.</strong> A(1,1,1) aur B(7,7,7) ko 1:2 mein divide karne wala point nikalo.</p>
+      <details><summary>Solution</summary><p>P=((1×7+2×1)/3, (1×7+2×1)/3, (1×7+2×1)/3) = (9/3,9/3,9/3) = (3,3,3)</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q4.</strong> Prove karo ki A(0,1,2), B(2,−1,3), C(1,−3,1) ek isosceles triangle banate hain.</p>
+      <details><summary>Solution</summary><p>AB=√[4+4+1]=3, BC=√[1+4+4]=3, AC=√[1+16+1]=√18. AB=BC, AC≠AB → isosceles ✓</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q5.</strong> Origin se distance 7 wale points X-axis par kaunse hain?</p>
+      <details><summary>Solution</summary><p>X-axis par point (x,0,0). Distance=|x|=7 → points = (7,0,0) aur (−7,0,0)</p></details>
+    </div>
+
+    <div style="text-align:center;margin-top:2.5rem;">
+      <a href="conic-sections.html" class="btn btn-outline" style="padding:.8rem 2rem;border-radius:8px;text-decoration:none;margin:0 .5rem;">← Conic Sections</a>
+      <a href="../Calculus/limits-derivatives.html" class="btn" style="background:#16a34a;color:#fff;padding:.8rem 2rem;border-radius:8px;text-decoration:none;margin:0 .5rem;">Next: Limits &amp; Derivatives →</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ to teach Maths in Roman Hindi</p>
+    <div style="margin-top:1rem;"><a href="../../../../about.html">About</a> | <a href="../../../../contact.html">Contact</a> | <a href="../../../../privacy-policy.html">Privacy Policy</a></div>
+  </footer>
+  <script src="../../../../script.js"></script>
+</body>
+</html>

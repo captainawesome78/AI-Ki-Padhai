@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Trigonometric Functions - Class 11 Maths | AIkiPadhai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css" />
+  <style>
+    body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;line-height:1.75;}
+    h2{color:#1e1b4b;border-bottom:3px solid #7c3aed;padding-bottom:8px;margin:2.2rem 0 1rem;}
+    h3{color:#3730a3;}
+    .concept-box{background:#ede9fe;border-left:5px solid #7c3aed;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .concept-box p,.concept-box li{color:#312e81;}
+    .formula-box{background:#1e1b4b;color:#c7d2fe;border-radius:10px;padding:1.2rem 1.6rem;font-family:monospace;font-size:1.05rem;margin:1rem 0;}
+    .example-box{background:#f0fdf4;border-left:5px solid #10b981;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .example-box h4{color:#065f46;}
+    .example-box p,.example-box li{color:#14532d;}
+    .story-box{background:#fffbeb;border-left:5px solid #f59e0b;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .story-box h3{color:#92400e;}
+    .story-box p{color:#78350f;}
+    .proof-step{background:#f1f5f9;border-radius:6px;padding:.9rem 1.1rem;margin:.5rem 0;border-left:3px solid #6366f1;color:#1e293b;}
+    .trig-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.5rem 0;}
+    .trig-card{background:#fff;border:2px solid #e2e8f0;border-radius:10px;padding:1.1rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    .trig-card h4{color:#7c3aed;font-size:1.1rem;margin-bottom:.4rem;}
+    .trig-card p{color:#475569;font-size:.88rem;}
+    .trig-card .ratio{font-family:monospace;color:#3730a3;font-size:.95rem;font-weight:600;}
+    .identity-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1.5rem 0;}
+    .id-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1rem;}
+    .id-card h4{color:#3730a3;margin-bottom:.5rem;font-size:.95rem;}
+    .id-card .formula-box{font-size:.9rem;padding:.7rem 1rem;margin:.4rem 0;}
+    .practice-q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1.2rem;margin:.8rem 0;}
+    .practice-q p{color:#1e293b;}
+    .practice-q strong{color:#7c3aed;}
+    details summary{cursor:pointer;color:#7c3aed;font-weight:600;padding:.4rem 0;}
+    details p{color:#475569;padding:.5rem 0 0 1rem;}
+    table{width:100%;border-collapse:collapse;margin:1.2rem 0;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    th{background:#1e1b4b;color:#a78bfa;padding:.9rem 1rem;text-align:left;}
+    td{padding:.75rem 1rem;border-bottom:1px solid #e2e8f0;color:#1e293b;text-align:center;}
+    .circle-wrap{background:#fff;border-radius:12px;padding:1rem;margin:1.5rem 0;box-shadow:0 2px 10px rgba(0,0,0,.08);text-align:center;}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+      <nav>
+        <a href="../../../../index.html">Home</a>
+        <a href="../index.html">Class 11 Maths</a>
+        <a href="index.html">Sets &amp; Functions</a>
+        <a href="trigonometric-functions.html" class="active">Trigonometric Functions</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" style="background:linear-gradient(135deg,#3b0764,#7c3aed);">
+    <div class="container">
+      <h1>Trigonometric Functions 📐</h1>
+      <p>Class 10 mein right triangle mein sin/cos/tan seekha tha — ab Class 11 mein yeh functions poore number line par extend ho jaate hain!</p>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <div class="story-box">
+      <h3>🌊 Waves aur Cycles</h3>
+      <p>Socho ek wheel ek circle par ghoom raha hai. Agar us wheel ki height ko time ke saath plot karo, toh sine wave banta hai! Yahi reason hai ki trigonometric functions physics, music, aur engineering mein everywhere hain. Class 10 mein humne sirf 0°–90° ke angles ke liye trig seekha tha. Ab Class 11 mein hum <strong>saare angles ke liye</strong> — negative angles bhi, 360° se bade angles bhi — trig extend karte hain. Iske liye Unit Circle ka concept use karte hain.</p>
+    </div>
+
+    <h2>1. Degree se Radian — kyun aur kaise?</h2>
+    <div class="concept-box">
+      <p>Degree ek arbitrary unit hai (360 kyon? Babylonians ne choose kiya tha!). <strong>Radian</strong> ek natural unit hai: 1 radian = angle jab arc length = radius. Yahi reason hai ki advanced maths mein hamesha radians use hote hain — formulas simpler hote hain.</p>
+      <div class="formula-box">π radians = 180°  ⟹  1° = π/180 rad  |  1 rad = 180°/π ≈ 57.3°</div>
+      <p style="margin-top:.7rem;">Conversion trick: Degree → Radian: ×(π/180) | Radian → Degree: ×(180/π)</p>
+    </div>
+
+    <table>
+      <tr><th>Degree</th><th>Radian</th><th>Degree</th><th>Radian</th></tr>
+      <tr><td>0°</td><td>0</td><td>180°</td><td>π</td></tr>
+      <tr><td>30°</td><td>π/6</td><td>270°</td><td>3π/2</td></tr>
+      <tr><td>45°</td><td>π/4</td><td>360°</td><td>2π</td></tr>
+      <tr><td>60°</td><td>π/3</td><td>−90°</td><td>−π/2</td></tr>
+      <tr><td>90°</td><td>π/2</td><td>−180°</td><td>−π</td></tr>
+    </table>
+
+    <h2>2. Unit Circle — Trig Functions ka Asli Matlab</h2>
+    <p>Unit circle ka radius = 1 hota hai aur center origin par. Kisi bhi angle θ ke liye, circle par point P = (cos θ, sin θ) hota hai. Yahi definition hai Class 11 mein — right triangle nahi, unit circle!</p>
+
+    <div class="circle-wrap">
+      <svg viewBox="0 0 300 300" width="100%" style="max-width:280px;display:block;margin:0 auto;">
+        <circle cx="150" cy="150" r="100" fill="none" stroke="#e2e8f0" stroke-width="2"/>
+        <line x1="50" y1="150" x2="250" y2="150" stroke="#94a3b8" stroke-width="1"/>
+        <line x1="150" y1="50" x2="150" y2="250" stroke="#94a3b8" stroke-width="1"/>
+        <!-- angle 45° point -->
+        <line x1="150" y1="150" x2="221" y2="79" stroke="#7c3aed" stroke-width="2"/>
+        <circle cx="221" cy="79" r="5" fill="#7c3aed"/>
+        <!-- sin line (vertical) -->
+        <line x1="221" y1="79" x2="221" y2="150" stroke="#ef4444" stroke-width="2" stroke-dasharray="5"/>
+        <!-- cos line (horizontal) -->
+        <line x1="150" y1="150" x2="221" y2="150" stroke="#3b82f6" stroke-width="2" stroke-dasharray="5"/>
+        <!-- arc for angle -->
+        <path d="M170,150 A20,20 0 0,0 164,136" fill="none" stroke="#f59e0b" stroke-width="2"/>
+        <text x="230" y="77" font-size="11" fill="#7c3aed" font-weight="bold">P(cos θ, sin θ)</text>
+        <text x="225" y="115" font-size="11" fill="#ef4444">sin θ</text>
+        <text x="178" y="163" font-size="11" fill="#3b82f6">cos θ</text>
+        <text x="170" y="140" font-size="10" fill="#f59e0b">θ</text>
+        <text x="242" y="152" font-size="11" fill="#475569">1</text>
+        <text x="152" y="47" font-size="11" fill="#475569">1</text>
+        <!-- quadrant labels -->
+        <text x="195" y="110" font-size="10" fill="#94a3b8">Q1</text>
+        <text x="100" y="110" font-size="10" fill="#94a3b8">Q2</text>
+        <text x="100" y="200" font-size="10" fill="#94a3b8">Q3</text>
+        <text x="195" y="200" font-size="10" fill="#94a3b8">Q4</text>
+      </svg>
+      <p style="color:#475569;font-size:.9rem;margin-top:.5rem;">Unit Circle: radius = 1. Koi bhi angle θ ke liye P = (cos θ, sin θ)</p>
+    </div>
+
+    <h2>3. 6 Trigonometric Ratios</h2>
+    <p>P = (x, y) unit circle par hai, angle θ ke liye — toh 6 trig functions yahan se define hote hain:</p>
+
+    <div class="trig-grid">
+      <div class="trig-card">
+        <h4>sin θ</h4>
+        <p class="ratio">y/r = y</p>
+        <p>"Perpendicular/Hypotenuse" — y-coordinate</p>
+      </div>
+      <div class="trig-card">
+        <h4>cos θ</h4>
+        <p class="ratio">x/r = x</p>
+        <p>"Base/Hypotenuse" — x-coordinate</p>
+      </div>
+      <div class="trig-card">
+        <h4>tan θ</h4>
+        <p class="ratio">y/x = sin/cos</p>
+        <p>"P/B" — slope of radius</p>
+      </div>
+      <div class="trig-card">
+        <h4>cosec θ</h4>
+        <p class="ratio">1/sin θ</p>
+        <p>sin ka reciprocal. Defined jab sin≠0</p>
+      </div>
+      <div class="trig-card">
+        <h4>sec θ</h4>
+        <p class="ratio">1/cos θ</p>
+        <p>cos ka reciprocal. Defined jab cos≠0</p>
+      </div>
+      <div class="trig-card">
+        <h4>cot θ</h4>
+        <p class="ratio">1/tan θ = cos/sin</p>
+        <p>tan ka reciprocal. Defined jab tan≠0</p>
+      </div>
+    </div>
+
+    <h2>4. Standard Values Table (Yaad karo!)</h2>
+    <table>
+      <tr><th>θ</th><th>sin θ</th><th>cos θ</th><th>tan θ</th><th>cosec θ</th><th>sec θ</th><th>cot θ</th></tr>
+      <tr><td>0°</td><td>0</td><td>1</td><td>0</td><td>∞</td><td>1</td><td>∞</td></tr>
+      <tr><td>30° (π/6)</td><td>1/2</td><td>√3/2</td><td>1/√3</td><td>2</td><td>2/√3</td><td>√3</td></tr>
+      <tr><td>45° (π/4)</td><td>1/√2</td><td>1/√2</td><td>1</td><td>√2</td><td>√2</td><td>1</td></tr>
+      <tr><td>60° (π/3)</td><td>√3/2</td><td>1/2</td><td>√3</td><td>2/√3</td><td>2</td><td>1/√3</td></tr>
+      <tr><td>90° (π/2)</td><td>1</td><td>0</td><td>∞</td><td>1</td><td>∞</td><td>0</td></tr>
+      <tr><td>180° (π)</td><td>0</td><td>−1</td><td>0</td><td>∞</td><td>−1</td><td>∞</td></tr>
+    </table>
+
+    <div class="story-box">
+      <h3>✋ "All Silver Tea Cups" — Quadrant Sign Trick</h3>
+      <p>Har quadrant mein kaunse trig functions positive hain — yeh yaad karne ka trick hai <strong>"All Silver Tea Cups"</strong>:</p>
+      <p>Q1: <strong>All</strong> (sin, cos, tan sab positive) | Q2: <strong>S</strong>in positive (baaki negative) | Q3: <strong>T</strong>an positive (baaki negative) | Q4: <strong>C</strong>os positive (baaki negative)</p>
+    </div>
+
+    <h2>5. Pythagorean Identities</h2>
+    <div class="identity-grid">
+      <div class="id-card">
+        <h4>Identity 1 (sin²+cos²)</h4>
+        <div class="formula-box">sin²θ + cos²θ = 1</div>
+        <p style="color:#475569;font-size:.9rem;">Unit circle se directly — x²+y²=1. Sabse important identity!</p>
+      </div>
+      <div class="id-card">
+        <h4>Identity 2 (tan²+1)</h4>
+        <div class="formula-box">1 + tan²θ = sec²θ</div>
+        <p style="color:#475569;font-size:.9rem;">Identity 1 ko cos²θ se divide karo.</p>
+      </div>
+      <div class="id-card">
+        <h4>Identity 3 (cot²+1)</h4>
+        <div class="formula-box">1 + cot²θ = cosec²θ</div>
+        <p style="color:#475569;font-size:.9rem;">Identity 1 ko sin²θ se divide karo.</p>
+      </div>
+    </div>
+
+    <h2>6. Sum aur Difference Formulas</h2>
+    <div class="concept-box">
+      <p>Jab two angles ka sum ya difference ka trig value chahiye — yeh formulas kaam aate hain:</p>
+      <div class="formula-box">sin(A+B) = sinA·cosB + cosA·sinB</div>
+      <div class="formula-box">sin(A−B) = sinA·cosB − cosA·sinB</div>
+      <div class="formula-box">cos(A+B) = cosA·cosB − sinA·sinB</div>
+      <div class="formula-box">cos(A−B) = cosA·cosB + sinA·sinB</div>
+      <div class="formula-box">tan(A+B) = (tanA + tanB)/(1 − tanA·tanB)</div>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ sin 75° nikalo (75 = 45 + 30)</h4>
+      <div class="proof-step">sin 75° = sin(45°+30°) = sin45°·cos30° + cos45°·sin30°</div>
+      <div class="proof-step">= (1/√2)(√3/2) + (1/√2)(1/2)</div>
+      <div class="proof-step">= √3/(2√2) + 1/(2√2) = (√3+1)/(2√2)</div>
+      <div class="proof-step">= <strong>(√6+√2)/4</strong> &nbsp; (rationalize karke)</div>
+    </div>
+
+    <h2>7. Double Angle Formulas</h2>
+    <div class="concept-box">
+      <div class="formula-box">sin 2A = 2 sinA cosA</div>
+      <div class="formula-box">cos 2A = cos²A − sin²A = 2cos²A − 1 = 1 − 2sin²A</div>
+      <div class="formula-box">tan 2A = 2tanA / (1 − tan²A)</div>
+      <p style="margin-top:.7rem;">Trick: A+A = 2A — sum formula mein A=B rakh do!</p>
+    </div>
+
+    <h2>8. General Solutions</h2>
+    <div class="concept-box">
+      <p>Trig equations ke infinite solutions hote hain (kyunki sin/cos periodic hain with period 2π). General solution batata hai saare possible values:</p>
+      <div class="formula-box">sin θ = 0  ⟹  θ = nπ,  n ∈ ℤ</div>
+      <div class="formula-box">cos θ = 0  ⟹  θ = (2n+1)π/2,  n ∈ ℤ</div>
+      <div class="formula-box">tan θ = 0  ⟹  θ = nπ,  n ∈ ℤ</div>
+      <div class="formula-box">sin θ = sin α  ⟹  θ = nπ + (−1)ⁿα,  n ∈ ℤ</div>
+      <div class="formula-box">cos θ = cos α  ⟹  θ = 2nπ ± α,  n ∈ ℤ</div>
+    </div>
+
+    <h2>9. Practice Questions</h2>
+    <div class="practice-q">
+      <p><strong>Q1.</strong> 210° ko radians mein convert karo.</p>
+      <details><summary>Solution</summary><p>210 × π/180 = 7π/6 radians</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q2.</strong> Prove karo: (sin θ + cosec θ)² = sin²θ + cosec²θ + 2</p>
+      <details><summary>Solution</summary><p>LHS = sin²θ + 2sinθ·cosecθ + cosec²θ = sin²θ + 2sinθ·(1/sinθ) + cosec²θ = sin²θ + 2 + cosec²θ = RHS ✓</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q3.</strong> cos 15° ki value nikalo using cos(45°−30°).</p>
+      <details><summary>Solution</summary><p>cos 15° = cos45°cos30° + sin45°sin30° = (1/√2)(√3/2)+(1/√2)(1/2) = (√3+1)/(2√2) = (√6+√2)/4</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q4.</strong> tan²θ + 1 = sec²θ prove karo.</p>
+      <details><summary>Solution</summary><p>sin²θ + cos²θ = 1 ko cos²θ se divide karo → tan²θ + 1 = sec²θ ✓</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q5.</strong> sin θ = 1/2 ka general solution likho.</p>
+      <details><summary>Solution</summary><p>sin θ = sin(π/6) → θ = nπ + (−1)ⁿ(π/6), n ∈ ℤ</p></details>
+    </div>
+
+    <div style="text-align:center;margin-top:2.5rem;">
+      <a href="relations-functions.html" class="btn btn-outline" style="padding:.8rem 2rem;border-radius:8px;text-decoration:none;margin:0 .5rem;">← Relations &amp; Functions</a>
+      <a href="trig-interactive.html" class="btn" style="background:#7c3aed;color:#fff;padding:.8rem 2rem;border-radius:8px;text-decoration:none;margin:0 .5rem;">🧪 Unit Circle Lab →</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ to teach Maths in Roman Hindi</p>
+    <div style="margin-top:1rem;"><a href="../../../../about.html">About</a> | <a href="../../../../contact.html">Contact</a> | <a href="../../../../privacy-policy.html">Privacy Policy</a></div>
+  </footer>
+  <script src="../../../../script.js"></script>
+</body>
+</html>

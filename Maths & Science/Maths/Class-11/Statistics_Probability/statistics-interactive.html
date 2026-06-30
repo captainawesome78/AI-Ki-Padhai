@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Statistics Lab - Class 11 | AIkiPadhai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css" />
+  <style>
+    /* === DARK THEME TEXT FIXES === */
+    body{color:#e2e8f0;}
+    h1,h2,h3,h4{color:#f1f5f9 !important;}
+    p{color:#cbd5e1;}
+    .mission-card p{color:#e2e8f0;}
+    .mission-card strong{color:#f1f5f9;}
+    .info-panel{color:#e2e8f0;}
+    .info-panel strong{color:#f1f5f9;}
+    .info-box{color:#e2e8f0;}
+    .info-box strong{color:#f1f5f9;}
+    .slider-wrap label{color:#94a3b8;}
+    .result-formula{color:#94a3b8;}
+    .result-label{color:#94a3b8;}
+    .stat-card .lbl{color:#94a3b8;}
+    .val-card .label{color:#94a3b8;}
+    .val-card .lbl{color:#94a3b8;}
+    .result-card .lbl{color:#94a3b8;}
+    label{color:#94a3b8;}
+    .hero h1{color:#ffffff !important;}
+    .hero p{color:#e2e8f0 !important;}
+    .header-content a{color:#e2e8f0;}
+    nav a{color:#94a3b8;}
+    nav a.active{color:#ffffff;}
+    body{background:#0d1117;}
+    .lab-wrap{max-width:900px;margin:0 auto;padding:1rem;}
+    canvas{display:block;margin:0 auto;border-radius:12px;}
+    .ctrl-bar{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin:1rem 0;}
+    .ctrl-btn{padding:.6rem 1.2rem;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:.9rem;}
+    .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1rem 0;}
+    .stat-card{background:#1e293b;border-radius:8px;padding:1rem;text-align:center;}
+    .stat-card .lbl{color:#94a3b8;font-size:.8rem;}
+    .stat-card .num{color:#fbbf24;font-size:1.4rem;font-weight:700;font-family:monospace;}
+    .mission-card{background:#1e293b;border-radius:10px;padding:1rem;margin:.5rem 0;}
+    .mission-opts{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem;}
+    .opt-btn{padding:.4rem .8rem;border:1px solid #334155;border-radius:6px;background:#0f172a;color:#e2e8f0;cursor:pointer;font-size:.9rem;}
+    .opt-btn.correct{background:#065f46;border-color:#10b981;color:#10b981;}
+    .opt-btn.wrong{background:#7f1d1d;border-color:#ef4444;color:#ef4444;}
+    .score-box{background:#1c1000;border-radius:8px;padding:.8rem;text-align:center;font-size:1.1rem;font-weight:700;color:#fbbf24;}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+      <nav>
+        <a href="index.html">Stats &amp; Probability</a>
+        <a href="statistics.html">Statistics Theory</a>
+        <a href="statistics-interactive.html" class="active">🎮 Statistics Lab</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" style="background:linear-gradient(135deg,#78350f,#d97706);padding:1.5rem 0;">
+    <div class="container" style="text-align:center;">
+      <h1 style="font-size:1.8rem;">📊 Statistics Lab</h1>
+      <p>Dataset choose karo — Mean, Variance, SD live compute karo. Bar chart dekho!</p>
+    </div>
+  </section>
+
+  <div class="lab-wrap">
+    <div class="ctrl-bar">
+      <button class="ctrl-btn" id="d0" onclick="loadDataset(0)" style="background:#d97706;color:#fff;">📚 Exam Scores</button>
+      <button class="ctrl-btn" id="d1" onclick="loadDataset(1)" style="background:#1e293b;color:#fbbf24;border:1px solid #d97706;">📏 Heights (cm)</button>
+      <button class="ctrl-btn" id="d2" onclick="loadDataset(2)" style="background:#1e293b;color:#fbbf24;border:1px solid #d97706;">🌡️ Temperatures</button>
+    </div>
+
+    <div id="dataDisplay" style="background:#1e293b;border-radius:8px;padding:1rem;text-align:center;margin:.5rem 0;font-family:monospace;color:#e2e8f0;"></div>
+
+    <canvas id="statCanvas" width="700" height="300"></canvas>
+
+    <div class="stat-grid">
+      <div class="stat-card"><div class="lbl">Mean (x̄)</div><div class="num" id="statMean">-</div></div>
+      <div class="stat-card"><div class="lbl">Variance (σ²)</div><div class="num" id="statVar">-</div></div>
+      <div class="stat-card"><div class="lbl">SD (σ)</div><div class="num" id="statSD">-</div></div>
+      <div class="stat-card"><div class="lbl">Range</div><div class="num" id="statRange">-</div></div>
+      <div class="stat-card"><div class="lbl">Min</div><div class="num" id="statMin">-</div></div>
+      <div class="stat-card"><div class="lbl">Max</div><div class="num" id="statMax">-</div></div>
+    </div>
+
+    <!-- Mean deviation line -->
+    <div id="mdInfo" style="background:#1e293b;border-radius:8px;padding:1rem;text-align:center;margin:.5rem 0;">
+      <span id="mdText" style="color:#94a3b8;"></span>
+    </div>
+
+    <!-- Missions -->
+    <h2 style="margin-top:1.5rem;">🎯 Missions</h2>
+    <div class="score-box" id="scoreBox">Score: 0 / 100</div>
+
+    <div class="mission-card">
+      <p><strong>Mission 1:</strong> 2, 4, 6, 8, 10 ka variance kya hai?</p>
+      <div class="mission-opts">
+        <button class="opt-btn" onclick="checkAns(1,this,'8')">8</button>
+        <button class="opt-btn" onclick="checkAns(1,this,'4')">4</button>
+        <button class="opt-btn" onclick="checkAns(1,this,'10')">10</button>
+        <button class="opt-btn" onclick="checkAns(1,this,'16')">16</button>
+      </div>
+    </div>
+
+    <div class="mission-card">
+      <p><strong>Mission 2:</strong> Variance=25 hai. SD kya hai?</p>
+      <div class="mission-opts">
+        <button class="opt-btn" onclick="checkAns(2,this,'5')">5</button>
+        <button class="opt-btn" onclick="checkAns(2,this,'25')">25</button>
+        <button class="opt-btn" onclick="checkAns(2,this,'√5')">√5</button>
+        <button class="opt-btn" onclick="checkAns(2,this,'625')">625</button>
+      </div>
+    </div>
+
+    <div class="mission-card">
+      <p><strong>Mission 3:</strong> Kaunsa measure sabse sensitive to outliers hai?</p>
+      <div class="mission-opts">
+        <button class="opt-btn" onclick="checkAns(3,this,'Range')">Range</button>
+        <button class="opt-btn" onclick="checkAns(3,this,'SD')">SD</button>
+        <button class="opt-btn" onclick="checkAns(3,this,'MD')">MD</button>
+        <button class="opt-btn" onclick="checkAns(3,this,'Mean')">Mean</button>
+      </div>
+    </div>
+
+    <div class="mission-card">
+      <p><strong>Mission 4:</strong> Ek dataset {5,5,5,5,5} ka SD kya hai?</p>
+      <div class="mission-opts">
+        <button class="opt-btn" onclick="checkAns(4,this,'0')">0</button>
+        <button class="opt-btn" onclick="checkAns(4,this,'5')">5</button>
+        <button class="opt-btn" onclick="checkAns(4,this,'1')">1</button>
+        <button class="opt-btn" onclick="checkAns(4,this,'25')">25</button>
+      </div>
+    </div>
+
+    <div class="mission-card">
+      <p><strong>Mission 5:</strong> CV (Coefficient of Variation) = ?</p>
+      <div class="mission-opts">
+        <button class="opt-btn" onclick="checkAns(5,this,'(σ/x̄)×100')">(σ/x̄)×100</button>
+        <button class="opt-btn" onclick="checkAns(5,this,'σ×x̄')">σ×x̄</button>
+        <button class="opt-btn" onclick="checkAns(5,this,'σ²/x̄')">σ²/x̄</button>
+        <button class="opt-btn" onclick="checkAns(5,this,'x̄/σ')">x̄/σ</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ to teach Maths in Roman Hindi</p>
+  </footer>
+
+<script>
+const datasets = [
+  {name:'Exam Scores', data:[45,52,67,71,73,75,80,82,85,90,91,94]},
+  {name:'Heights (cm)', data:[155,158,160,162,163,165,167,170,172,175,178,180]},
+  {name:'Temperatures', data:[22,24,27,30,33,35,38,36,32,28,25,23]}
+];
+
+let currentData = datasets[0].data;
+
+function computeStats(arr) {
+  const n=arr.length;
+  const mean=arr.reduce((a,b)=>a+b,0)/n;
+  const variance=arr.reduce((a,x)=>a+(x-mean)**2,0)/n;
+  const sd=Math.sqrt(variance);
+  const min=Math.min(...arr), max=Math.max(...arr);
+  return{mean,variance,sd,min,max,range:max-min,n};
+}
+
+function loadDataset(i) {
+  [0,1,2].forEach(j=>document.getElementById('d'+j).style.background='#1e293b');
+  document.getElementById('d'+i).style.background='#d97706';
+  currentData=datasets[i].data;
+  document.getElementById('dataDisplay').textContent='Data: ['+currentData.join(', ')+']';
+  const s=computeStats(currentData);
+  document.getElementById('statMean').textContent=s.mean.toFixed(2);
+  document.getElementById('statVar').textContent=s.variance.toFixed(2);
+  document.getElementById('statSD').textContent=s.sd.toFixed(2);
+  document.getElementById('statRange').textContent=s.range;
+  document.getElementById('statMin').textContent=s.min;
+  document.getElementById('statMax').textContent=s.max;
+  document.getElementById('mdText').textContent=`Mean=${s.mean.toFixed(2)} | ±1σ: [${(s.mean-s.sd).toFixed(1)}, ${(s.mean+s.sd).toFixed(1)}] | ±2σ: [${(s.mean-2*s.sd).toFixed(1)}, ${(s.mean+2*s.sd).toFixed(1)}]`;
+  drawChart(currentData, s);
+}
+
+function drawChart(data, s) {
+  const canvas=document.getElementById('statCanvas');
+  const ctx=canvas.getContext('2d');
+  const W=700,H=300;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#0d1117';ctx.fillRect(0,0,W,H);
+
+  const pad={l:40,r:20,t:30,b:40};
+  const chartW=W-pad.l-pad.r, chartH=H-pad.t-pad.b;
+  const n=data.length;
+  const bw=chartW/n*0.7, gap=chartW/n;
+  const maxV=s.max*1.1;
+
+  // Bars
+  data.forEach((v,i)=>{
+    const x=pad.l+i*gap+(gap-bw)/2;
+    const bh=(v/maxV)*chartH;
+    const y=pad.t+chartH-bh;
+    const dev=Math.abs(v-s.mean);
+    const pct=dev/s.sd;
+    ctx.fillStyle=pct<1?'#d97706':pct<2?'#f59e0b':'#fbbf24';
+    ctx.fillRect(x,y,bw,bh);
+    // Value label
+    ctx.fillStyle='#e2e8f0';ctx.font='10px Inter';ctx.textAlign='center';
+    ctx.fillText(v,x+bw/2,y-3);
+  });
+
+  // Mean line
+  const meanY=pad.t+chartH-(s.mean/maxV)*chartH;
+  ctx.beginPath();ctx.moveTo(pad.l,meanY);ctx.lineTo(W-pad.r,meanY);
+  ctx.strokeStyle='#10b981';ctx.lineWidth=2;ctx.setLineDash([6,3]);ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='#10b981';ctx.font='bold 11px Inter';ctx.textAlign='left';
+  ctx.fillText('Mean='+s.mean.toFixed(1),pad.l+3,meanY-5);
+
+  // SD lines
+  [[1,'#3b82f6'],[2,'#64748b']].forEach(([m,c])=>{
+    const y1=pad.t+chartH-((s.mean+m*s.sd)/maxV)*chartH;
+    const y2=pad.t+chartH-((s.mean-m*s.sd)/maxV)*chartH;
+    [y1,y2].forEach(y=>{
+      if(y>=pad.t && y<=H-pad.b){
+        ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);
+        ctx.strokeStyle=c;ctx.lineWidth=1;ctx.setLineDash([3,3]);ctx.stroke();
+        ctx.setLineDash([]);
+      }
+    });
+  });
+
+  // Axis
+  ctx.strokeStyle='#334155';ctx.lineWidth=1.5;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,H-pad.b);ctx.lineTo(W-pad.r,H-pad.b);ctx.stroke();
+
+  // Legend
+  ctx.fillStyle='#10b981';ctx.fillRect(W-120,15,15,8);ctx.fillStyle='#e2e8f0';ctx.font='10px Inter';ctx.textAlign='left';ctx.fillText('Mean',W-100,23);
+  ctx.fillStyle='#3b82f6';ctx.fillRect(W-120,28,15,8);ctx.fillStyle='#e2e8f0';ctx.fillText('±1σ',W-100,36);
+}
+
+// Score
+let score=0;const answered={};
+const correct={1:'8',2:'5',3:'Range',4:'0',5:'(σ/x̄)×100'};
+function checkAns(id,btn,val){
+  if(answered[id])return;answered[id]=true;
+  if(val===correct[id]){btn.classList.add('correct');score+=20;}
+  else{btn.classList.add('wrong');btn.parentElement.querySelectorAll('.opt-btn').forEach(o=>{if(o.textContent===correct[id])o.classList.add('correct');});}
+  document.getElementById('scoreBox').textContent='Score: '+score+' / 100';
+}
+
+loadDataset(0);
+</script>
+</body>
+</html>

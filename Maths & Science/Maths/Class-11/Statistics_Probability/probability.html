@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Probability - Class 11 Maths | AIkiPadhai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;line-height:1.75;}
+    h2{color:#1e1b4b;border-bottom:3px solid #f59e0b;padding-bottom:8px;margin:2.2rem 0 1rem;}
+    h3{color:#92400e;}
+    .concept-box{background:#fffbeb;border-left:5px solid #f59e0b;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .concept-box p,.concept-box li{color:#78350f;}
+    .formula-box{background:#1e1b4b;color:#c7d2fe;border-radius:10px;padding:1.2rem 1.6rem;font-family:monospace;font-size:1.05rem;margin:1rem 0;}
+    .example-box{background:#f0fdf4;border-left:5px solid #10b981;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .example-box h4{color:#065f46;}
+    .example-box p,.example-box li{color:#14532d;}
+    .story-box{background:#fef3c7;border-left:5px solid #d97706;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .story-box h3{color:#92400e;}
+    .story-box p{color:#78350f;}
+    .proof-step{background:#f1f5f9;border-radius:6px;padding:.9rem 1.1rem;margin:.5rem 0;border-left:3px solid #f59e0b;color:#1e293b;}
+    .axiom-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:1.5rem 0;}
+    .axiom-card{background:#fff;border:2px solid #fde68a;border-radius:10px;padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    .axiom-card h4{color:#b45309;margin-bottom:.5rem;}
+    .axiom-card p{color:#1e293b;font-size:.9rem;}
+    .axiom-card .formula-box{font-size:.88rem;padding:.7rem 1rem;margin:.4rem 0;}
+    .event-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:1.5rem 0;}
+    .event-card{background:#fff;border:2px solid #e2e8f0;border-radius:10px;padding:1.2rem;box-shadow:0 2px 6px rgba(0,0,0,.05);}
+    .event-card h4{color:#d97706;margin-bottom:.4rem;}
+    .event-card p{color:#1e293b;font-size:.9rem;}
+    .practice-q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1.2rem;margin:.8rem 0;}
+    .practice-q p{color:#1e293b;}
+    .practice-q strong{color:#d97706;}
+    details summary{cursor:pointer;color:#d97706;font-weight:600;padding:.4rem 0;}
+    details p{color:#475569;padding:.5rem 0 0 1rem;}
+    table{width:100%;border-collapse:collapse;margin:1.2rem 0;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    th{background:#78350f;color:#fde68a;padding:.9rem 1rem;text-align:center;}
+    td{padding:.75rem 1rem;border-bottom:1px solid #e2e8f0;color:#1e293b;text-align:center;}
+    .venn-wrap{background:#fff;border-radius:12px;padding:1.2rem;margin:1.5rem 0;box-shadow:0 2px 10px rgba(0,0,0,.08);}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+      <nav>
+        <a href="../../../../index.html">Home</a>
+        <a href="../index.html">Class 11 Maths</a>
+        <a href="index.html">Stats &amp; Probability</a>
+        <a href="probability.html" class="active">Probability</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" style="background:linear-gradient(135deg,#451a03,#f59e0b);">
+    <div class="container">
+      <h1>Probability 🎲</h1>
+      <p>Chance, luck, uncertainty — in sab ko mathematically measure karna yahi hai Probability! Class 9 se aage — ab Axiomatic approach seekhenge.</p>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <div class="story-box">
+      <h3>🌧️ Weather Forecast aur Probability</h3>
+      <p>News par sunते ho: "Kal baarish ki 70% probability hai." Yeh kya matlab hai? 100 aisi hi days mein 70 times baarish hogi? Ya kuch aur? Class 9 mein humne basic probability seekhi thi — classical definition. Lekin real life mein events equal likely nahi hote. Ek loaded dice mein 6 aane ki probability 1/6 nahi ho sakti! Isliye Class 11 mein Probability ka <strong>Axiomatic Approach</strong> sikhate hain — jo zyada rigorous aur universal hai.</p>
+    </div>
+
+    <h2>1. Kuch Important Terms — Seedha Clear Karo</h2>
+
+    <div class="event-grid">
+      <div class="event-card">
+        <h4>🎯 Random Experiment</h4>
+        <p>Woh experiment jiska result pehle se predict nahi kar sakte — lekin saare possible results pata hain. Example: Coin tossna, dice phenkna, card draw karna.</p>
+      </div>
+      <div class="event-card">
+        <h4>📋 Sample Space (S)</h4>
+        <p>Random experiment ke <em>saare possible outcomes</em> ka set. Coin: S={H,T}. Dice: S={1,2,3,4,5,6}. Two coins: S={HH,HT,TH,TT}.</p>
+      </div>
+      <div class="event-card">
+        <h4>🎪 Event (E)</h4>
+        <p>Sample space ka koi bhi subset. "Even number aana" on dice = E={2,4,6} — yeh ek event hai. P(E) = n(E)/n(S) is classical approach mein.</p>
+      </div>
+      <div class="event-card">
+        <h4>⚡ Elementary Event</h4>
+        <p>Sirf ek outcome wala event. Dice par E={3} — sirf ek elementary event. P(elementary event) = 1/n(S) jab equally likely hoon.</p>
+      </div>
+    </div>
+
+    <!-- Sample Space SVG for 2 dice -->
+    <div class="venn-wrap">
+      <p style="font-weight:600;color:#92400e;margin-bottom:.8rem;">Do dice phenko — Sample Space S (36 outcomes)</p>
+      <svg viewBox="0 0 380 220" width="100%" style="max-width:380px;display:block;margin:0 auto;">
+        <!-- Grid background -->
+        <rect x="30" y="30" width="340" height="180" rx="8" fill="#fef9c3" stroke="#f59e0b" stroke-width="1.5"/>
+        <!-- Column and row labels -->
+        <text x="15" y="18" font-size="10" fill="#92400e" font-weight="bold">Die 2 →</text>
+        <text x="35" y="18" font-size="9" fill="#475569">1</text>
+        <text x="90" y="18" font-size="9" fill="#475569">2</text>
+        <text x="145" y="18" font-size="9" fill="#475569">3</text>
+        <text x="200" y="18" font-size="9" fill="#475569">4</text>
+        <text x="255" y="18" font-size="9" fill="#475569">5</text>
+        <text x="310" y="18" font-size="9" fill="#475569">6</text>
+        <!-- Row labels -->
+        <text x="5" y="55" font-size="9" fill="#475569">1</text>
+        <text x="5" y="85" font-size="9" fill="#475569">2</text>
+        <text x="5" y="115" font-size="9" fill="#475569">3</text>
+        <text x="5" y="145" font-size="9" fill="#475569">4</text>
+        <text x="5" y="175" font-size="9" fill="#475569">5</text>
+        <text x="5" y="205" font-size="9" fill="#475569">6</text>
+        <!-- Sample points — just show select ones for readability -->
+        <!-- Row 1 -->
+        <text x="34" y="52" font-size="8" fill="#1e293b">(1,1)</text><text x="89" y="52" font-size="8" fill="#1e293b">(1,2)</text><text x="144" y="52" font-size="8" fill="#1e293b">(1,3)</text><text x="199" y="52" font-size="8" fill="#1e293b">(1,4)</text><text x="254" y="52" font-size="8" fill="#1e293b">(1,5)</text><text x="309" y="52" font-size="8" fill="#1e293b">(1,6)</text>
+        <!-- Row 2 -->
+        <text x="34" y="82" font-size="8" fill="#1e293b">(2,1)</text><text x="89" y="82" font-size="8" fill="#1e293b">(2,2)</text><text x="144" y="82" font-size="8" fill="#1e293b">(2,3)</text><text x="199" y="82" font-size="8" fill="#1e293b">(2,4)</text><text x="254" y="82" font-size="8" fill="#1e293b">(2,5)</text><text x="309" y="82" font-size="8" fill="#1e293b">(2,6)</text>
+        <!-- Row 3 -->
+        <text x="34" y="112" font-size="8" fill="#1e293b">(3,1)</text><text x="89" y="112" font-size="8" fill="#1e293b">(3,2)</text><text x="144" y="112" font-size="8" fill="#f59e0b" font-weight="bold">(3,3)</text><text x="199" y="112" font-size="8" fill="#1e293b">(3,4)</text><text x="254" y="112" font-size="8" fill="#1e293b">(3,5)</text><text x="309" y="112" font-size="8" fill="#1e293b">(3,6)</text>
+        <!-- Row 4-6 abbreviated -->
+        <text x="34" y="142" font-size="8" fill="#1e293b">(4,1)</text><text x="89" y="142" font-size="8" fill="#1e293b">...</text><text x="309" y="142" font-size="8" fill="#1e293b">(4,6)</text>
+        <text x="34" y="172" font-size="8" fill="#1e293b">(5,1)</text><text x="309" y="172" font-size="8" fill="#1e293b">(5,6)</text>
+        <text x="34" y="202" font-size="8" fill="#1e293b">(6,1)</text><text x="309" y="202" font-size="8" fill="#1e293b">(6,6)</text>
+        <!-- Total label -->
+        <text x="190" y="215" text-anchor="middle" font-size="10" fill="#92400e" font-weight="bold">Total = 6×6 = 36 outcomes</text>
+      </svg>
+    </div>
+
+    <h2>2. Axiomatic Approach — Class 11 ka New Way</h2>
+    <div class="concept-box">
+      <p>Axiomatic approach mein probability ko 3 axioms (rules) ke basis par define karte hain. Yeh sirf "favourable/total" se zyada powerful hai — non-equal likely events bhi handle kar sakta hai!</p>
+    </div>
+
+    <div class="axiom-grid">
+      <div class="axiom-card">
+        <h4>Axiom 1</h4>
+        <p>Har event ki probability 0 aur 1 ke beech (inclusive) hoti hai.</p>
+        <div class="formula-box">0 ≤ P(E) ≤ 1</div>
+        <p>Probability kabhi negative ya 1 se badi nahi hoti!</p>
+      </div>
+      <div class="axiom-card">
+        <h4>Axiom 2</h4>
+        <p>Puri sample space ki probability = 1 (certain event).</p>
+        <div class="formula-box">P(S) = 1</div>
+        <p>Kuch toh result aayega — guarantee!</p>
+      </div>
+      <div class="axiom-card">
+        <h4>Axiom 3</h4>
+        <p>Mutually exclusive events ke liye probabilities add hoti hain.</p>
+        <div class="formula-box">P(A∪B) = P(A)+P(B)<br>jab A∩B = ∅</div>
+        <p>Ek saath nahi ho sakte → add kar do.</p>
+      </div>
+    </div>
+
+    <h2>3. Types of Events</h2>
+    <table>
+      <tr><th>Event Type</th><th>Matlab</th><th>Example</th></tr>
+      <tr><td><strong>Sure Event</strong></td><td>Hamesha hoga — P=1</td><td>Dice par 1-6 ke beech koi number aayega</td></tr>
+      <tr><td><strong>Impossible Event</strong></td><td>Kabhi nahi hoga — P=0</td><td>Dice par 7 aana</td></tr>
+      <tr><td><strong>Complementary A'</strong></td><td>A nahi hoga</td><td>A = even, A' = odd (dice)</td></tr>
+      <tr><td><strong>Mutually Exclusive</strong></td><td>Ek saath nahi ho sakte — A∩B=∅</td><td>Even number aur odd number (same toss)</td></tr>
+      <tr><td><strong>Exhaustive</strong></td><td>Milake pura S cover karte hain</td><td>{Even} ∪ {Odd} = S</td></tr>
+      <tr><td><strong>Independent</strong></td><td>Ek ka outcome doosre par asar nahi</td><td>2 alag coins tossna</td></tr>
+    </table>
+
+    <h2>4. Important Probability Formulas</h2>
+    <div class="concept-box">
+      <div class="formula-box">P(A') = 1 − P(A)  &nbsp; (Complement)</div>
+      <div class="formula-box">P(A∪B) = P(A) + P(B) − P(A∩B)  &nbsp; (Addition Theorem)</div>
+      <div class="formula-box">P(A∩B) = 0  jab A,B mutually exclusive</div>
+      <p style="margin-top:.7rem;">Addition Theorem wahi hai jo Sets wala formula tha: n(A∪B) = n(A)+n(B)−n(A∩B) — probability mein probability version!</p>
+    </div>
+
+    <!-- Venn diagram SVG for events -->
+    <div class="venn-wrap">
+      <p style="font-weight:600;color:#92400e;margin-bottom:.8rem;">P(A∪B) = P(A) + P(B) − P(A∩B) — visually</p>
+      <svg viewBox="0 0 320 160" width="100%" style="max-width:300px;display:block;margin:0 auto;">
+        <rect x="10" y="10" width="300" height="140" rx="8" fill="#fef9c3" stroke="#f59e0b" stroke-width="1.5"/>
+        <!-- A circle -->
+        <circle cx="120" cy="80" r="55" fill="#fde68a" opacity=".7" stroke="#d97706" stroke-width="2"/>
+        <!-- B circle -->
+        <circle cx="200" cy="80" r="55" fill="#fca5a5" opacity=".7" stroke="#ef4444" stroke-width="2"/>
+        <!-- Labels -->
+        <text x="95" y="76" text-anchor="middle" font-size="13" fill="#78350f" font-weight="bold">A</text>
+        <text x="95" y="92" text-anchor="middle" font-size="10" fill="#78350f">only A</text>
+        <text x="225" y="76" text-anchor="middle" font-size="13" fill="#7f1d1d" font-weight="bold">B</text>
+        <text x="225" y="92" text-anchor="middle" font-size="10" fill="#7f1d1d">only B</text>
+        <text x="160" y="76" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="bold">A∩B</text>
+        <text x="160" y="90" text-anchor="middle" font-size="10" fill="#1e293b">both</text>
+        <text x="290" y="145" text-anchor="end" font-size="10" fill="#92400e">S (Sample Space)</text>
+        <text x="15" y="145" font-size="9" fill="#94a3b8">A∪B = orange + red + overlap</text>
+      </svg>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ Dice phenkne par: P(even), P(multiple of 3), P(even OR multiple of 3) nikalo</h4>
+      <div class="proof-step">S = {1,2,3,4,5,6}, n(S) = 6</div>
+      <div class="proof-step">A = Even = {2,4,6}, P(A) = 3/6 = 1/2</div>
+      <div class="proof-step">B = Multiple of 3 = {3,6}, P(B) = 2/6 = 1/3</div>
+      <div class="proof-step">A∩B = {6} (even AND multiple of 3), P(A∩B) = 1/6</div>
+      <div class="proof-step">P(A∪B) = 1/2 + 1/3 − 1/6 = 3/6 + 2/6 − 1/6 = <strong>4/6 = 2/3</strong></div>
+    </div>
+
+    <h2>5. Classical Probability — Quick Problems</h2>
+    <div class="example-box">
+      <h4>✅ 52 cards ki deck mein se ek card draw karo. P(king or heart) nikalo.</h4>
+      <div class="proof-step">P(King) = 4/52. P(Heart) = 13/52.</div>
+      <div class="proof-step">P(King AND Heart) = 1/52 (King of Hearts)</div>
+      <div class="proof-step">P(King or Heart) = 4/52 + 13/52 − 1/52 = <strong>16/52 = 4/13</strong></div>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ 3 coins toss karo. P(atleast 2 heads) nikalo.</h4>
+      <div class="proof-step">S = {HHH,HHT,HTH,HTT,THH,THT,TTH,TTT}, n(S) = 8</div>
+      <div class="proof-step">Atleast 2H = {HHH,HHT,HTH,THH} — 4 outcomes</div>
+      <div class="proof-step">P(atleast 2H) = 4/8 = <strong>1/2</strong></div>
+    </div>
+
+    <h2>6. Practice Questions</h2>
+    <div class="practice-q">
+      <p><strong>Q1.</strong> Ek bag mein 5 red, 3 blue, 2 green balls hain. Ek ball nikalo. P(red), P(not green) nikalo.</p>
+      <details><summary>Solution</summary><p>Total=10. P(red)=5/10=1/2. P(not green)=P(red or blue)=8/10=4/5</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q2.</strong> Do dice phenko. P(sum = 7) nikalo.</p>
+      <details><summary>Solution</summary><p>Sum=7: (1,6),(2,5),(3,4),(4,3),(5,2),(6,1) = 6 outcomes. P=6/36=1/6</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q3.</strong> P(A)=0.4, P(B)=0.3, P(A∩B)=0.1. P(A∪B) nikalo.</p>
+      <details><summary>Solution</summary><p>P(A∪B)=0.4+0.3−0.1=<strong>0.6</strong></p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q4.</strong> P(A)=2/5. P(A') nikalo.</p>
+      <details><summary>Solution</summary><p>P(A')=1−2/5=<strong>3/5</strong></p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q5.</strong> 52 cards se ek draw karo. P(face card) nikalo. (Face cards = J,Q,K)</p>
+      <details><summary>Solution</summary><p>Face cards = 3×4=12. P=12/52=<strong>3/13</strong></p></details>
+    </div>
+
+    <div style="text-align:center;margin-top:2.5rem;">
+      <a href="statistics.html" class="btn btn-outline" style="padding:.8rem 2rem;border-radius:8px;text-decoration:none;margin:0 .5rem;">← Statistics</a>
+      <a href="probability-interactive.html" class="btn" style="background:#f59e0b;color:#fff;padding:.8rem 2rem;border-radius:8px;text-decoration:none;margin:0 .5rem;">🧪 Probability Lab →</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ to teach Maths in Roman Hindi</p>
+    <div style="margin-top:1rem;"><a href="../../../../about.html">About</a> | <a href="../../../../contact.html">Contact</a> | <a href="../../../../privacy-policy.html">Privacy Policy</a></div>
+  </footer>
+  <script src="../../../../script.js"></script>
+</body>
+</html>

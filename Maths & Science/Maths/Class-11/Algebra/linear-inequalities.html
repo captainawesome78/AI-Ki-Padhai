@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Linear Inequalities - Class 11 Maths | AIkiPadhai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;line-height:1.75;}
+    h2{color:#1e1b4b;border-bottom:3px solid #2563eb;padding-bottom:8px;margin:2.2rem 0 1rem;}
+    h3{color:#1e40af;}
+    .concept-box{background:#dbeafe;border-left:5px solid #2563eb;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .concept-box p,.concept-box li{color:#1e3a8a;}
+    .formula-box{background:#1e1b4b;color:#c7d2fe;border-radius:10px;padding:1.2rem 1.6rem;font-family:monospace;font-size:1.05rem;margin:1rem 0;}
+    .example-box{background:#f0fdf4;border-left:5px solid #10b981;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .example-box h4{color:#065f46;}
+    .example-box p,.example-box li{color:#14532d;}
+    .story-box{background:#fffbeb;border-left:5px solid #f59e0b;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .story-box h3{color:#92400e;}
+    .story-box p{color:#78350f;}
+    .proof-step{background:#f1f5f9;border-radius:6px;padding:.9rem 1.1rem;margin:.5rem 0;border-left:3px solid #2563eb;color:#1e293b;}
+    .rule-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin:1.5rem 0;}
+    .rule-card{background:#fff;border:2px solid #bfdbfe;border-radius:10px;padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    .rule-card h4{color:#1d4ed8;margin-bottom:.5rem;}
+    .rule-card p{color:#1e3a8a;font-size:.92rem;}
+    .number-line{background:#fff;border-radius:10px;padding:1rem;margin:1rem 0;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    .practice-q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1.2rem;margin:.8rem 0;}
+    .practice-q p{color:#1e293b;}
+    .practice-q strong{color:#2563eb;}
+    details summary{cursor:pointer;color:#2563eb;font-weight:600;padding:.4rem 0;}
+    details p{color:#475569;padding:.5rem 0 0 1rem;}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+      <nav>
+        <a href="../../../../index.html">Home</a>
+        <a href="../index.html">Class 11 Maths</a>
+        <a href="index.html">Algebra</a>
+        <a href="linear-inequalities.html" class="active">Linear Inequalities</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" style="background:linear-gradient(135deg,#1e3a5f,#2563eb);">
+    <div class="container">
+      <h1>Linear Inequalities ⚖️</h1>
+      <p>Equations mein = tha, ab &lt;, &gt;, ≤, ≥ aate hain — ek value nahi, ek range milti hai answer mein!</p>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <div class="story-box">
+      <h3>🛒 Shopping Budget</h3>
+      <p>Tum ek mela mein gaye ho aur tumhare paas ₹500 hain. Ek ride ki ticket ₹30 ki hai. Toh tum kitni rides le sakte ho? Agar x = rides ki sankhya ho, toh: 30x ≤ 500, yaani x ≤ 16.66, yaani x ≤ 16 (kyunki x integer hona chahiye). Yeh ek <strong>linear inequality</strong> hai! Equations se yeh is tarah alag hai ki ek fixed answer ki jagah answers ka ek pura range milta hai.</p>
+    </div>
+
+    <h2>1. Inequality ke Symbols</h2>
+    <div class="concept-box">
+      <p>Inequalities mein 4 symbols hote hain, inhe clearly samajh lo:</p>
+      <ul style="padding-left:1.5rem;margin-top:.5rem;">
+        <li><strong>a &lt; b</strong> — a strictly b se chota (a is less than b)</li>
+        <li><strong>a &gt; b</strong> — a strictly b se bada (a is greater than b)</li>
+        <li><strong>a ≤ b</strong> — a, b se chota ya barabar (a ≤ b includes a=b)</li>
+        <li><strong>a ≥ b</strong> — a, b se bada ya barabar (includes equality)</li>
+      </ul>
+      <p style="margin-top:.7rem;"><strong>Open interval (a,b):</strong> a aur b included nahi (strict inequality). <strong>Closed interval [a,b]:</strong> a aur b bhi included (≤ ya ≥).</p>
+    </div>
+
+    <h2>2. Rules for Solving Inequalities</h2>
+    <p>Equations ki tarah hi solve karte hain, lekin ek <strong>important difference</strong> hai — negative number se multiply/divide karte waqt inequality ka sign palat jaata hai!</p>
+
+    <div class="rule-grid">
+      <div class="rule-card">
+        <h4>✅ Addition/Subtraction</h4>
+        <p>Dono sides par same number add/subtract karo — inequality sign nahi badlta.</p>
+        <div class="formula-box" style="font-size:.9rem;">x+3 &gt; 7 ⟹ x &gt; 4</div>
+      </div>
+      <div class="rule-card">
+        <h4>✅ Multiply/Divide (Positive)</h4>
+        <p>Positive number se multiply/divide karo — sign nahi badlta.</p>
+        <div class="formula-box" style="font-size:.9rem;">2x &lt; 8 ⟹ x &lt; 4</div>
+      </div>
+      <div class="rule-card">
+        <h4>⚠️ Multiply/Divide (NEGATIVE)</h4>
+        <p>Negative number se multiply/divide karte waqt <strong>inequality sign PALAT JATA HAI!</strong></p>
+        <div class="formula-box" style="font-size:.9rem;">−2x &lt; 8 ⟹ x &gt; −4 ⚠️</div>
+      </div>
+      <div class="rule-card">
+        <h4>🔗 Adding Inequalities</h4>
+        <p>Same direction ki do inequalities add kar sakte ho.</p>
+        <div class="formula-box" style="font-size:.9rem;">a&gt;b aur c&gt;d ⟹ a+c &gt; b+d</div>
+      </div>
+    </div>
+
+    <h2>3. Solving Linear Inequalities — Step by Step</h2>
+
+    <div class="example-box">
+      <h4>✅ Solve: 3x − 2 &gt; 4x + 1</h4>
+      <div class="proof-step">Step 1: x terms ek side le jao → 3x − 4x &gt; 1 + 2</div>
+      <div class="proof-step">Step 2: −x &gt; 3</div>
+      <div class="proof-step">Step 3: −1 se divide karo → sign palte ga! → x &lt; −3</div>
+      <div class="proof-step">Solution: x ∈ (−∞, −3) — yaani x ki value −3 se strictly choti</div>
+    </div>
+
+    <!-- Number Line SVG -->
+    <div class="number-line">
+      <p style="color:#1e40af;font-weight:600;margin-bottom:.8rem;">Number Line: x &lt; −3 ka solution</p>
+      <svg viewBox="0 0 380 60" width="100%" style="max-width:380px;display:block;margin:0 auto;">
+        <line x1="20" y1="30" x2="360" y2="30" stroke="#94a3b8" stroke-width="2"/>
+        <!-- Arrow -->
+        <polygon points="360,30 350,24 350,36" fill="#94a3b8"/>
+        <!-- Tick marks -->
+        <line x1="80" y1="23" x2="80" y2="37" stroke="#64748b" stroke-width="1.5"/>
+        <line x1="140" y1="23" x2="140" y2="37" stroke="#64748b" stroke-width="1.5"/>
+        <line x1="200" y1="23" x2="200" y2="37" stroke="#64748b" stroke-width="1.5"/>
+        <line x1="260" y1="23" x2="260" y2="37" stroke="#64748b" stroke-width="1.5"/>
+        <line x1="320" y1="23" x2="320" y2="37" stroke="#64748b" stroke-width="1.5"/>
+        <text x="80" y="50" text-anchor="middle" font-size="11" fill="#475569">−5</text>
+        <text x="140" y="50" text-anchor="middle" font-size="11" fill="#475569">−4</text>
+        <text x="200" y="50" text-anchor="middle" font-size="11" fill="#2563eb" font-weight="bold">−3</text>
+        <text x="260" y="50" text-anchor="middle" font-size="11" fill="#475569">−2</text>
+        <text x="320" y="50" text-anchor="middle" font-size="11" fill="#475569">−1</text>
+        <!-- Solution: everything left of -3, open circle at -3 -->
+        <line x1="20" y1="30" x2="200" y2="30" stroke="#2563eb" stroke-width="4"/>
+        <circle cx="200" cy="30" r="6" fill="#fff" stroke="#2563eb" stroke-width="2.5"/>
+        <polygon points="20,30 30,24 30,36" fill="#2563eb"/>
+        <text x="100" y="18" text-anchor="middle" font-size="10" fill="#2563eb">x &lt; −3 (open circle = −3 included nahi)</text>
+      </svg>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ Solve: −3 ≤ 4x + 1 ≤ 13 (Double Inequality)</h4>
+      <div class="proof-step">Sabse pehle sab parts mein se 1 ghataao: −3−1 ≤ 4x ≤ 13−1</div>
+      <div class="proof-step">−4 ≤ 4x ≤ 12</div>
+      <div class="proof-step">4 se divide karo (positive, sign nahi badlega): −1 ≤ x ≤ 3</div>
+      <div class="proof-step">Solution: x ∈ [−1, 3]</div>
+    </div>
+
+    <!-- Number Line for double inequality -->
+    <div class="number-line">
+      <p style="color:#1e40af;font-weight:600;margin-bottom:.8rem;">Number Line: −1 ≤ x ≤ 3</p>
+      <svg viewBox="0 0 380 60" width="100%" style="max-width:380px;display:block;margin:0 auto;">
+        <line x1="20" y1="30" x2="360" y2="30" stroke="#94a3b8" stroke-width="2"/>
+        <polygon points="360,30 350,24 350,36" fill="#94a3b8"/>
+        <line x1="80" y1="23" x2="80" y2="37" stroke="#64748b" stroke-width="1.5"/>
+        <line x1="140" y1="23" x2="140" y2="37" stroke="#64748b" stroke-width="1.5"/>
+        <line x1="200" y1="23" x2="200" y2="37" stroke="#64748b" stroke-width="1.5"/>
+        <line x1="260" y1="23" x2="260" y2="37" stroke="#64748b" stroke-width="1.5"/>
+        <line x1="320" y1="23" x2="320" y2="37" stroke="#64748b" stroke-width="1.5"/>
+        <text x="80" y="50" text-anchor="middle" font-size="11" fill="#475569">−2</text>
+        <text x="140" y="50" text-anchor="middle" font-size="11" fill="#2563eb" font-weight="bold">−1</text>
+        <text x="200" y="50" text-anchor="middle" font-size="11" fill="#475569">0</text>
+        <text x="260" y="50" text-anchor="middle" font-size="11" fill="#475569">1</text>
+        <text x="320" y="50" text-anchor="middle" font-size="11" fill="#2563eb" font-weight="bold">3</text>
+        <!-- Solution between -1 and 3, closed circles -->
+        <line x1="140" y1="30" x2="320" y2="30" stroke="#10b981" stroke-width="4"/>
+        <circle cx="140" cy="30" r="6" fill="#10b981"/>
+        <circle cx="320" cy="30" r="6" fill="#10b981"/>
+        <text x="230" y="18" text-anchor="middle" font-size="10" fill="#065f46">filled circle = endpoint included (≤)</text>
+      </svg>
+    </div>
+
+    <h2>4. Inequalities aur Interval Notation</h2>
+    <div class="concept-box">
+      <p>Solution ko interval notation mein likhna sikhna zaroori hai — exams mein frequently aata hai:</p>
+      <div class="formula-box">x &gt; a  → (a, ∞)    &nbsp;&nbsp;   x ≥ a  → [a, ∞)</div>
+      <div class="formula-box">x &lt; b  → (−∞, b)   &nbsp;&nbsp;   x ≤ b  → (−∞, b]</div>
+      <div class="formula-box">a &lt; x &lt; b  → (a, b)   &nbsp;&nbsp;   a ≤ x ≤ b  → [a, b]</div>
+      <p style="margin-top:.7rem;">( ) = open = endpoint NOT included. [ ] = closed = endpoint included.</p>
+    </div>
+
+    <h2>5. Word Problems — Real Life Inequalities</h2>
+
+    <div class="example-box">
+      <h4>✅ Riya ke final exams mein 5 subjects hain. Pehle 4 mein 72, 68, 85, 90 marks aaye. 5th mein kitne marks chahiye ki average 80 se zyada ho?</h4>
+      <div class="proof-step">Let 5th subject mein marks = x</div>
+      <div class="proof-step">Average > 80 → (72+68+85+90+x)/5 > 80</div>
+      <div class="proof-step">(315+x)/5 > 80</div>
+      <div class="proof-step">315+x > 400</div>
+      <div class="proof-step">x > 85</div>
+      <div class="proof-step">Riya ko 5th subject mein <strong>85 se zyada marks chahiye</strong></div>
+    </div>
+
+    <h2>6. Practice Questions</h2>
+    <div class="practice-q">
+      <p><strong>Q1.</strong> 5x − 3 ≥ 3x + 7 solve karo aur interval notation mein likho.</p>
+      <details><summary>Solution</summary><p>2x ≥ 10 → x ≥ 5 → x ∈ [5, ∞)</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q2.</strong> −8 ≤ 3x + 1 &lt; 16 solve karo.</p>
+      <details><summary>Solution</summary><p>−9 ≤ 3x &lt; 15 → −3 ≤ x &lt; 5 → x ∈ [−3, 5)</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q3.</strong> (2x−1)/3 &gt; (3x+2)/5 solve karo.</p>
+      <details><summary>Solution</summary><p>5(2x−1) > 3(3x+2) → 10x−5 > 9x+6 → x > 11 → x ∈ (11,∞)</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q4.</strong> |x−3| &lt; 5 solve karo.</p>
+      <details><summary>Solution</summary><p>−5 &lt; x−3 &lt; 5 → −2 &lt; x &lt; 8 → x ∈ (−2, 8)</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q5.</strong> Ek number x aisa ho ki uska teen guna uske char gune se 5 zyada ho. Inequality banao aur solve karo.</p>
+      <details><summary>Solution</summary><p>3x > 4x + 5 nahi... sahi padhna: "teen guna, char gune se 5 zyada" → 3x > 4x+5 → −x > 5 → x < −5</p></details>
+    </div>
+
+    <div style="text-align:center;margin-top:2.5rem;">
+      <a href="complex-numbers.html" class="btn btn-outline" style="padding:.8rem 2rem;border-radius:8px;text-decoration:none;margin:0 .5rem;">← Complex Numbers</a>
+      <a href="permutations-combinations.html" class="btn" style="background:#2563eb;color:#fff;padding:.8rem 2rem;border-radius:8px;text-decoration:none;margin:0 .5rem;">Next: P&amp;C →</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ to teach Maths in Roman Hindi</p>
+    <div style="margin-top:1rem;"><a href="../../../../about.html">About</a> | <a href="../../../../contact.html">Contact</a> | <a href="../../../../privacy-policy.html">Privacy Policy</a></div>
+  </footer>
+  <script src="../../../../script.js"></script>
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Permutations & Combinations - Class 11 Maths | AIkiPadhai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;line-height:1.75;}
+    h2{color:#1e1b4b;border-bottom:3px solid #2563eb;padding-bottom:8px;margin:2.2rem 0 1rem;}
+    h3{color:#1e40af;}
+    .concept-box{background:#dbeafe;border-left:5px solid #2563eb;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .concept-box p,.concept-box li{color:#1e3a8a;}
+    .formula-box{background:#1e1b4b;color:#c7d2fe;border-radius:10px;padding:1.2rem 1.6rem;font-family:monospace;font-size:1.05rem;margin:1rem 0;}
+    .example-box{background:#f0fdf4;border-left:5px solid #10b981;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .example-box h4{color:#065f46;}
+    .example-box p,.example-box li{color:#14532d;}
+    .story-box{background:#fffbeb;border-left:5px solid #f59e0b;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .story-box h3{color:#92400e;}
+    .story-box p{color:#78350f;}
+    .proof-step{background:#f1f5f9;border-radius:6px;padding:.9rem 1.1rem;margin:.5rem 0;border-left:3px solid #2563eb;color:#1e293b;}
+    .pc-compare{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:1.5rem 0;}
+    .pbox{background:#dbeafe;border:2px solid #2563eb;border-radius:10px;padding:1.2rem;}
+    .pbox h4{color:#1e40af;margin-bottom:.5rem;}
+    .pbox p{color:#1e3a8a;font-size:.92rem;}
+    .cbox{background:#dcfce7;border:2px solid #22c55e;border-radius:10px;padding:1.2rem;}
+    .cbox h4{color:#15803d;margin-bottom:.5rem;}
+    .cbox p{color:#14532d;font-size:.92rem;}
+    .practice-q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1.2rem;margin:.8rem 0;}
+    .practice-q p{color:#1e293b;}
+    .practice-q strong{color:#2563eb;}
+    details summary{cursor:pointer;color:#2563eb;font-weight:600;padding:.4rem 0;}
+    details p{color:#475569;padding:.5rem 0 0 1rem;}
+    table{width:100%;border-collapse:collapse;margin:1.2rem 0;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    th{background:#1e3a8a;color:#93c5fd;padding:.9rem 1rem;text-align:center;}
+    td{padding:.75rem 1rem;border-bottom:1px solid #e2e8f0;color:#1e293b;text-align:center;}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+      <nav>
+        <a href="../../../../index.html">Home</a>
+        <a href="../index.html">Class 11 Maths</a>
+        <a href="index.html">Algebra</a>
+        <a href="permutations-combinations.html" class="active">Permutations &amp; Combinations</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" style="background:linear-gradient(135deg,#1e3a5f,#2563eb);">
+    <div class="container">
+      <h1>Permutations &amp; Combinations 🎲</h1>
+      <p>Arrangements aur selections — kitne tareekon se kaam kar sakte ho? Yahi counting chapter hai!</p>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <div class="story-box">
+      <h3>🎭 Order Matters ya Nahi?</h3>
+      <p>Imagine karo 3 doston ka group hai: Ali, Bhavna, Chetan. Ek race mein <strong>pehle, doosre, teesre</strong> kaun hoga? Yahan order matter karta hai — ABC aur BAC alag results hain. Lekin ek committee mein sirf 2 choose karne hain — koi bhi 2. Yahan {Ali,Bhavna} aur {Bhavna,Ali} ek hi cheez hai — order matter nahi karta! Yahi hai Permutation vs Combination ka fark.</p>
+    </div>
+
+    <h2>1. Fundamental Counting Principle</h2>
+    <div class="concept-box">
+      <p>Agar ek kaam ko m tareekon se kiya ja sake aur doosra kaam n tareekon se, toh <strong>dono saath</strong> karne ke m × n tareeqe hain. Yeh principle P&C ki neev hai!</p>
+      <div class="formula-box">Ek ke baad ek kaam: m × n × p × ... tareeqe</div>
+      <p style="margin-top:.7rem;">Example: Agar 3 shirts hain aur 4 pants hain, toh 3×4 = 12 alag combinations pehne ja sakte hain.</p>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ Ek 3-digit PIN mein: First digit 1-9, baaki 0-9. Total PINs kitne?</h4>
+      <div class="proof-step">First digit: 9 choices (1-9, not 0)</div>
+      <div class="proof-step">Second digit: 10 choices (0-9)</div>
+      <div class="proof-step">Third digit: 10 choices (0-9)</div>
+      <div class="proof-step">Total = 9 × 10 × 10 = <strong>900 PINs</strong></div>
+    </div>
+
+    <h2>2. Factorial — n!</h2>
+    <div class="concept-box">
+      <p>n! (n factorial) = n se lekar 1 tak ke saare natural numbers ka product. Yeh counting ka building block hai.</p>
+      <div class="formula-box">n! = n × (n−1) × (n−2) × ... × 2 × 1</div>
+      <div class="formula-box">0! = 1  (yeh definition hai, proof nahi — isliye yaad karo!)</div>
+      <p style="margin-top:.7rem;">Values: 1!=1, 2!=2, 3!=6, 4!=24, 5!=120, 6!=720, 7!=5040</p>
+      <p style="margin-top:.5rem;">Shortcut: n! = n × (n−1)!</p>
+    </div>
+
+    <h2>3. Permutation — Order matters!</h2>
+    <div class="concept-box">
+      <p>n distinct objects mein se r objects select karke <strong>arrange</strong> karne ke tareeqe — yahan order important hai. P ko "nPr" ya "P(n,r)" likhte hain.</p>
+      <div class="formula-box">ⁿPᵣ = n! / (n−r)!  &nbsp;&nbsp;  (jab n ≥ r)</div>
+      <p style="margin-top:.7rem;">Intuition: Pehli jagah n choices, doosri jagah (n−1) choices, ... r-vi jagah (n−r+1) choices → n×(n−1)×...×(n−r+1) = n!/(n−r)!</p>
+    </div>
+
+    <!-- Tree diagram SVG for 3P2 -->
+    <div style="background:#fff;border-radius:12px;padding:1.2rem;margin:1.5rem 0;box-shadow:0 2px 10px rgba(0,0,0,.08);">
+      <p style="font-weight:600;color:#1e40af;margin-bottom:.8rem;">Tree Diagram: {A,B,C} mein se 2 arrange karo (³P₂)</p>
+      <svg viewBox="0 0 420 200" width="100%" style="max-width:420px;display:block;margin:0 auto;">
+        <!-- Root -->
+        <circle cx="30" cy="100" r="18" fill="#2563eb"/>
+        <text x="30" y="104" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">Start</text>
+        <!-- Level 1: A, B, C -->
+        <line x1="48" y1="100" x2="122" y2="40" stroke="#94a3b8" stroke-width="1.5"/>
+        <line x1="48" y1="100" x2="122" y2="100" stroke="#94a3b8" stroke-width="1.5"/>
+        <line x1="48" y1="100" x2="122" y2="160" stroke="#94a3b8" stroke-width="1.5"/>
+        <circle cx="140" cy="40" r="16" fill="#7c3aed"/>
+        <text x="140" y="44" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">A</text>
+        <circle cx="140" cy="100" r="16" fill="#7c3aed"/>
+        <text x="140" y="104" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">B</text>
+        <circle cx="140" cy="160" r="16" fill="#7c3aed"/>
+        <text x="140" y="164" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">C</text>
+        <!-- Level 2: from A → B,C -->
+        <line x1="156" y1="40" x2="230" y2="20" stroke="#94a3b8" stroke-width="1"/>
+        <line x1="156" y1="40" x2="230" y2="55" stroke="#94a3b8" stroke-width="1"/>
+        <circle cx="248" cy="20" r="14" fill="#10b981"/>
+        <text x="248" y="24" text-anchor="middle" font-size="11" fill="#fff">B</text>
+        <circle cx="248" cy="55" r="14" fill="#10b981"/>
+        <text x="248" y="59" text-anchor="middle" font-size="11" fill="#fff">C</text>
+        <!-- Level 2: from B → A,C -->
+        <line x1="156" y1="100" x2="230" y2="85" stroke="#94a3b8" stroke-width="1"/>
+        <line x1="156" y1="100" x2="230" y2="115" stroke="#94a3b8" stroke-width="1"/>
+        <circle cx="248" cy="85" r="14" fill="#10b981"/>
+        <text x="248" y="89" text-anchor="middle" font-size="11" fill="#fff">A</text>
+        <circle cx="248" cy="115" r="14" fill="#10b981"/>
+        <text x="248" y="119" text-anchor="middle" font-size="11" fill="#fff">C</text>
+        <!-- Level 2: from C → A,B -->
+        <line x1="156" y1="160" x2="230" y2="145" stroke="#94a3b8" stroke-width="1"/>
+        <line x1="156" y1="160" x2="230" y2="175" stroke="#94a3b8" stroke-width="1"/>
+        <circle cx="248" cy="145" r="14" fill="#10b981"/>
+        <text x="248" y="149" text-anchor="middle" font-size="11" fill="#fff">A</text>
+        <circle cx="248" cy="175" r="14" fill="#10b981"/>
+        <text x="248" y="179" text-anchor="middle" font-size="11" fill="#fff">B</text>
+        <!-- Result labels -->
+        <text x="275" y="24" font-size="10" fill="#065f46" font-weight="bold">AB</text>
+        <text x="275" y="59" font-size="10" fill="#065f46" font-weight="bold">AC</text>
+        <text x="275" y="89" font-size="10" fill="#065f46" font-weight="bold">BA</text>
+        <text x="275" y="119" font-size="10" fill="#065f46" font-weight="bold">BC</text>
+        <text x="275" y="149" font-size="10" fill="#065f46" font-weight="bold">CA</text>
+        <text x="275" y="179" font-size="10" fill="#065f46" font-weight="bold">CB</text>
+        <text x="360" y="104" text-anchor="middle" font-size="11" fill="#1e40af" font-weight="bold">Total = 6</text>
+        <text x="360" y="118" text-anchor="middle" font-size="10" fill="#1e40af">³P₂ = 6 ✓</text>
+      </svg>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ 8 logon mein se 3 logon ko first, second, third rank deni hai. Kitne tareeqe?</h4>
+      <div class="proof-step">n=8, r=3 → ⁸P₃ = 8!/(8−3)! = 8!/5!</div>
+      <div class="proof-step">= 8 × 7 × 6 = <strong>336 tareeqe</strong></div>
+    </div>
+
+    <h2>4. Combination — Order matters nahi!</h2>
+    <div class="concept-box">
+      <p>n distinct objects mein se r objects <strong>select</strong> karne ke tareeqe (arrange nahi, sirf choose). Yahan {A,B} aur {B,A} same selection hai.</p>
+      <div class="formula-box">ⁿCᵣ = n! / (r! × (n−r)!)</div>
+      <p style="margin-top:.7rem;">Relation: ⁿCᵣ = ⁿPᵣ / r! &nbsp; (permutations ko r! se divide karo kyunki r! arrangements same selection represent karte hain)</p>
+    </div>
+
+    <div class="pc-compare">
+      <div class="pbox">
+        <h4>🔴 Permutation ⁿPᵣ</h4>
+        <p>Order MATTERS. Har arrangement alag.</p>
+        <p>AB ≠ BA</p>
+        <p>Formula: n!/(n−r)!</p>
+        <p>Use: Races, ranks, passwords</p>
+      </div>
+      <div class="cbox">
+        <h4>🟢 Combination ⁿCᵣ</h4>
+        <p>Order DOESN'T MATTER. Sirf selection.</p>
+        <p>{A,B} = {B,A}</p>
+        <p>Formula: n!/(r!(n−r)!)</p>
+        <p>Use: Teams, committees, sets</p>
+      </div>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ 10 students mein se 3 ki committee banani hai. Kitne tareeqe?</h4>
+      <div class="proof-step">n=10, r=3 → ¹⁰C₃ = 10!/(3! × 7!)</div>
+      <div class="proof-step">= (10 × 9 × 8)/(3 × 2 × 1) = 720/6 = <strong>120 tareeqe</strong></div>
+    </div>
+
+    <h2>5. Important Properties of ⁿCᵣ</h2>
+    <div class="concept-box">
+      <div class="formula-box">ⁿCᵣ = ⁿC(n−r)  &nbsp; (complement property)</div>
+      <div class="formula-box">ⁿC₀ = ⁿCₙ = 1</div>
+      <div class="formula-box">ⁿCᵣ + ⁿC(r−1) = ⁿ⁺¹Cᵣ  &nbsp; (Pascal's identity)</div>
+      <p style="margin-top:.7rem;">¹⁰C₇ = ¹⁰C₃ = 120 — complement property se bade r wale easier nikale ja sakte hain!</p>
+    </div>
+
+    <h2>6. Special Cases</h2>
+    <table>
+      <tr><th>Situation</th><th>Formula</th><th>Example</th></tr>
+      <tr><td>n objects mein se sabko arrange karo</td><td>n! ways</td><td>5 log = 5! = 120</td></tr>
+      <tr><td>Kuch identical objects ke saath</td><td>n! / (p! × q! × ...)</td><td>MISSISSIPPI = 11!/(4!4!2!)</td></tr>
+      <tr><td>Circle mein arrange karo</td><td>(n−1)!</td><td>6 log round table = 5! = 120</td></tr>
+      <tr><td>Atleast ek select karo</td><td>2ⁿ − 1</td><td>n items mein se: 2ⁿ−1 non-empty subsets</td></tr>
+    </table>
+
+    <h2>7. Practice Questions</h2>
+    <div class="practice-q">
+      <p><strong>Q1.</strong> ⁷P₃ aur ⁷C₃ nikalo.</p>
+      <details><summary>Solution</summary><p>⁷P₃ = 7×6×5 = 210 | ⁷C₃ = 210/6 = <strong>35</strong></p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q2.</strong> "INDIA" ke letters ko kitne tareeqon se arrange kar sakte hain?</p>
+      <details><summary>Solution</summary><p>5 letters mein I do baar → 5!/2! = 120/2 = <strong>60</strong></p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q3.</strong> 12 teams hain, top 4 choose karne hain. Kitni ways mein selection ho sakta hai?</p>
+      <details><summary>Solution</summary><p>¹²C₄ = (12×11×10×9)/(4×3×2×1) = 11880/24 = <strong>495</strong></p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q4.</strong> ⁿCᵣ = ⁿC(r+1), agar n=11 aur r=5 to check karo.</p>
+      <details><summary>Solution</summary><p>¹¹C₅ = 462, ¹¹C₆ = 462 — haan, complement property se equal hain! (r + (r+1) = n → 5+6=11 ✓)</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q5.</strong> 6 logon mein se 4 logon ki team banani hai jisme ek specific person hamesha included ho. Kitne tareeqe?</p>
+      <details><summary>Solution</summary><p>Woh 1 person fix hai. Baaki 5 mein se 3 choose karo: ⁵C₃ = 10 tareeqe</p></details>
+    </div>
+
+    <div style="text-align:center;margin-top:2.5rem;">
+      <a href="linear-inequalities.html" class="btn btn-outline" style="padding:.8rem 2rem;border-radius:8px;text-decoration:none;margin:0 .5rem;">← Linear Inequalities</a>
+      <a href="binomial-theorem.html" class="btn" style="background:#2563eb;color:#fff;padding:.8rem 2rem;border-radius:8px;text-decoration:none;margin:0 .5rem;">Next: Binomial Theorem →</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ to teach Maths in Roman Hindi</p>
+    <div style="margin-top:1rem;"><a href="../../../../about.html">About</a> | <a href="../../../../contact.html">Contact</a> | <a href="../../../../privacy-policy.html">Privacy Policy</a></div>
+  </footer>
+  <script src="../../../../script.js"></script>
+</body>
+</html>

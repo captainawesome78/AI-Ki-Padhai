@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Complex Numbers - Class 11 Maths | AIkiPadhai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css" />
+  <style>
+    body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;line-height:1.75;}
+    h2{color:#1e1b4b;border-bottom:3px solid #2563eb;padding-bottom:8px;margin:2.2rem 0 1rem;}
+    h3{color:#1e40af;}
+    .concept-box{background:#dbeafe;border-left:5px solid #2563eb;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .concept-box p,.concept-box li{color:#1e3a8a;}
+    .formula-box{background:#1e1b4b;color:#c7d2fe;border-radius:10px;padding:1.2rem 1.6rem;font-family:monospace;font-size:1.05rem;margin:1rem 0;}
+    .example-box{background:#f0fdf4;border-left:5px solid #10b981;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .example-box h4{color:#065f46;}
+    .example-box p,.example-box li{color:#14532d;}
+    .story-box{background:#fffbeb;border-left:5px solid #f59e0b;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .story-box h3{color:#92400e;}
+    .story-box p{color:#78350f;}
+    .proof-step{background:#f1f5f9;border-radius:6px;padding:.9rem 1.1rem;margin:.5rem 0;border-left:3px solid #2563eb;color:#1e293b;}
+    .number-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin:1.5rem 0;}
+    .number-card{background:#fff;border:2px solid #e2e8f0;border-radius:10px;padding:1.1rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    .number-card h4{color:#2563eb;margin-bottom:.3rem;}
+    .number-card p{color:#475569;font-size:.88rem;}
+    .practice-q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1.2rem;margin:.8rem 0;}
+    .practice-q p{color:#1e293b;}
+    .practice-q strong{color:#2563eb;}
+    details summary{cursor:pointer;color:#2563eb;font-weight:600;padding:.4rem 0;}
+    details p{color:#475569;padding:.5rem 0 0 1rem;}
+    table{width:100%;border-collapse:collapse;margin:1.2rem 0;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    th{background:#1e3a8a;color:#93c5fd;padding:.9rem 1rem;text-align:left;}
+    td{padding:.75rem 1rem;border-bottom:1px solid #e2e8f0;color:#1e293b;}
+    .argand-wrap{background:#fff;border-radius:12px;padding:1.2rem;margin:1.5rem 0;box-shadow:0 2px 10px rgba(0,0,0,.08);}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+      <nav>
+        <a href="../../../../index.html">Home</a>
+        <a href="../index.html">Class 11 Maths</a>
+        <a href="index.html">Algebra</a>
+        <a href="complex-numbers.html" class="active">Complex Numbers</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" style="background:linear-gradient(135deg,#1e3a5f,#2563eb);">
+    <div class="container">
+      <h1>Complex Numbers 🔢</h1>
+      <p>√−1 impossible lagta tha — lekin mathematicians ne isko define karke poori mathematics badal di! Complex numbers = Real + Imaginary.</p>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <div class="story-box">
+      <h3>🤯 Ek Impossible Sawaal</h3>
+      <p>x² + 1 = 0 ko solve karo. Koi bhi real number ka square negative nahi hota — toh koi solution hi nahi? Lekin mathematicians ne socha: "Kya hoga agar hum ek aisa number imagine karein jiska square −1 ho?" Unhone use 'i' (imaginary unit) naam diya. Aur yahi se Complex Numbers ka janam hua! Aaj complex numbers sirf imagination nahi — electricity, quantum physics, signal processing mein use hote hain.</p>
+    </div>
+
+    <h2>1. Imaginary Unit 'i'</h2>
+    <div class="concept-box">
+      <p>i ko define kiya gaya hai: <strong>i = √(−1)</strong>, matlab i² = −1. Yeh real number nahi hai — yeh ek naya type ka number hai. i ki powers ek pattern follow karti hain:</p>
+      <div class="formula-box">i¹ = i  |  i² = −1  |  i³ = −i  |  i⁴ = 1  |  i⁵ = i  ... (cycle of 4)</div>
+      <p style="margin-top:.7rem;">Tip: iⁿ nikalna hai → n ko 4 se divide karo, remainder dekhо: rem=1→i, rem=2→−1, rem=3→−i, rem=0→1</p>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ i²³ ki value nikalo</h4>
+      <div class="proof-step">23 ÷ 4 = 5 remainder 3</div>
+      <div class="proof-step">Toh i²³ = i³ = <strong>−i</strong></div>
+    </div>
+
+    <h2>2. Complex Number z = a + ib</h2>
+    <div class="concept-box">
+      <p>Ek complex number z = a + ib hota hai jahan a aur b real numbers hain:</p>
+      <ul style="padding-left:1.5rem;margin-top:.7rem;">
+        <li><strong>a = Re(z)</strong> — Real part (real number)</li>
+        <li><strong>b = Im(z)</strong> — Imaginary part (real number, coefficient of i)</li>
+        <li>Agar b = 0: z pure real number hai (jaise hamesha jaante the)</li>
+        <li>Agar a = 0: z = ib — pure imaginary number</li>
+        <li>Agar a ≠ 0 aur b ≠ 0: proper complex number</li>
+      </ul>
+    </div>
+
+    <div class="number-grid">
+      <div class="number-card"><h4>3 + 4i</h4><p>a=3, b=4<br>Mixed complex</p></div>
+      <div class="number-card"><h4>−2 + 0i</h4><p>a=−2, b=0<br>Pure real = −2</p></div>
+      <div class="number-card"><h4>0 + 5i</h4><p>a=0, b=5<br>Pure imaginary = 5i</p></div>
+      <div class="number-card"><h4>√3 − i</h4><p>a=√3, b=−1<br>Mixed complex</p></div>
+    </div>
+
+    <h2>3. Operations on Complex Numbers</h2>
+
+    <div class="concept-box">
+      <p>z₁ = a + ib aur z₂ = c + id ke saath:</p>
+      <div class="formula-box">Addition:    (a+ib) + (c+id) = (a+c) + i(b+d)</div>
+      <div class="formula-box">Subtraction: (a+ib) − (c+id) = (a−c) + i(b−d)</div>
+      <div class="formula-box">Multiply:    (a+ib)(c+id) = (ac−bd) + i(ad+bc)</div>
+      <p style="margin-top:.7rem;">Multiplication mein remember karo: i·i = i² = −1 → real part mein jaata hai!</p>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ z₁ = 3+2i, z₂ = 1−4i. z₁·z₂ nikalo.</h4>
+      <div class="proof-step">(3+2i)(1−4i) = 3(1) + 3(−4i) + 2i(1) + 2i(−4i)</div>
+      <div class="proof-step">= 3 − 12i + 2i − 8i²</div>
+      <div class="proof-step">= 3 − 10i − 8(−1) &nbsp;&nbsp; [kyunki i² = −1]</div>
+      <div class="proof-step">= 3 − 10i + 8 = <strong>11 − 10i</strong></div>
+    </div>
+
+    <h2>4. Conjugate aur Modulus</h2>
+    <div class="concept-box">
+      <p><strong>Conjugate z̄:</strong> Imaginary part ka sign palat do. z = a+ib ka conjugate z̄ = a−ib. Trick: complex number mein bas i ki jagah −i rakh do.</p>
+      <p style="margin-top:.7rem;"><strong>Modulus |z|:</strong> z ka magnitude — Argand plane par origin se distance. Pythagoras theorem use hota hai:</p>
+      <div class="formula-box">z̄ = a − ib</div>
+      <div class="formula-box">|z| = √(a² + b²)</div>
+      <p style="margin-top:.7rem;">Important: z · z̄ = a² + b² = |z|²  (always real aur positive!)</p>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ z = 5 − 12i ke liye z̄ aur |z| nikalo</h4>
+      <div class="proof-step">Conjugate z̄ = 5 + 12i</div>
+      <div class="proof-step">|z| = √(5² + (−12)²) = √(25+144) = √169 = <strong>13</strong></div>
+      <p style="color:#065f46;margin-top:.7rem;">5, 12, 13 ek Pythagorean triplet hai — isliye |z| neat nikla!</p>
+    </div>
+
+    <h2>5. Division of Complex Numbers</h2>
+    <div class="concept-box">
+      <p>Complex numbers divide karne ke liye: denominator ka conjugate se multiply karo (rationalize):</p>
+      <div class="formula-box">z₁/z₂ = (z₁ · z̄₂) / (z₂ · z̄₂) = (z₁ · z̄₂) / |z₂|²</div>
+      <p style="margin-top:.7rem;">Denominator real ho jaata hai — phir aasani se simplify kar sakte hain.</p>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ (3+2i)/(1+i) simplify karo</h4>
+      <div class="proof-step">Conjugate of denominator: (1+i) ka conjugate = (1−i)</div>
+      <div class="proof-step">= (3+2i)(1−i) / (1+i)(1−i)</div>
+      <div class="proof-step">Numerator: 3−3i+2i−2i² = 3−i+2 = 5−i</div>
+      <div class="proof-step">Denominator: 1−i² = 1+1 = 2</div>
+      <div class="proof-step">= (5−i)/2 = <strong>5/2 − i/2</strong></div>
+    </div>
+
+    <h2>6. Argand Plane (Complex Plane)</h2>
+    <p>Complex numbers ko 2D plane par represent karte hain jahan x-axis = Real part aur y-axis = Imaginary part. Ise <strong>Argand Plane</strong> kehte hain.</p>
+
+    <div class="argand-wrap">
+      <svg viewBox="0 0 300 280" width="100%" style="max-width:280px;display:block;margin:0 auto;">
+        <line x1="30" y1="140" x2="270" y2="140" stroke="#94a3b8" stroke-width="1.5"/>
+        <line x1="150" y1="20" x2="150" y2="260" stroke="#94a3b8" stroke-width="1.5"/>
+        <!-- Axes labels -->
+        <text x="265" y="135" font-size="11" fill="#475569">Re</text>
+        <text x="153" y="20" font-size="11" fill="#475569">Im</text>
+        <!-- z = 3+4i -->
+        <circle cx="210" cy="80" r="6" fill="#2563eb"/>
+        <line x1="150" y1="140" x2="210" y2="80" stroke="#2563eb" stroke-width="2" stroke-dasharray="5"/>
+        <line x1="210" y1="80" x2="210" y2="140" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3"/>
+        <line x1="150" y1="140" x2="210" y2="140" stroke="#10b981" stroke-width="1.5" stroke-dasharray="3"/>
+        <text x="215" y="78" font-size="11" fill="#2563eb" font-weight="bold">z=3+4i</text>
+        <text x="212" y="110" font-size="10" fill="#ef4444">b=4 (Im)</text>
+        <text x="170" y="155" font-size="10" fill="#10b981">a=3 (Re)</text>
+        <text x="175" y="108" font-size="10" fill="#7c3aed">|z|=5</text>
+        <!-- z conjugate = 3-4i -->
+        <circle cx="210" cy="200" r="6" fill="#7c3aed"/>
+        <line x1="150" y1="140" x2="210" y2="200" stroke="#7c3aed" stroke-width="2" stroke-dasharray="5"/>
+        <text x="215" y="203" font-size="11" fill="#7c3aed">z̄=3−4i</text>
+        <!-- Grid dots -->
+        <text x="210" y="135" text-anchor="middle" font-size="9" fill="#94a3b8">3</text>
+        <text x="145" y="82" text-anchor="end" font-size="9" fill="#94a3b8">4</text>
+        <text x="145" y="202" text-anchor="end" font-size="9" fill="#94a3b8">−4</text>
+      </svg>
+      <p style="text-align:center;color:#475569;font-size:.9rem;margin-top:.5rem;">Argand Plane: z=3+4i aur z̄=3−4i real axis ke reflection hain!</p>
+    </div>
+
+    <h2>7. Practice Questions</h2>
+    <div class="practice-q">
+      <p><strong>Q1.</strong> i⁵⁵ ki value nikalo.</p>
+      <details><summary>Solution</summary><p>55 ÷ 4 = 13 remainder 3 → i⁵⁵ = i³ = <strong>−i</strong></p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q2.</strong> z₁ = 4+3i, z₂ = 2−i. z₁−z₂ aur z₁·z₂ nikalo.</p>
+      <details><summary>Solution</summary><p>z₁−z₂ = (4−2)+(3+1)i = 2+4i | z₁·z₂ = (8+3)+(4·(−1)·(−1)+6)i... = (8+3)+(-4+6)i = 11+2i</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q3.</strong> (2+3i)/(3−2i) simplify karo.</p>
+      <details><summary>Solution</summary><p>×(3+2i)/(3+2i): Num = 6+4i+9i+6i² = 6+13i−6 = 13i. Den = 9+4 = 13. Answer = <strong>i</strong></p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q4.</strong> |3−4i| aur conjugate nikalo.</p>
+      <details><summary>Solution</summary><p>|z| = √(9+16) = √25 = <strong>5</strong>. Conjugate = 3+4i</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q5.</strong> x²+4 = 0 ke roots nikalo complex numbers mein.</p>
+      <details><summary>Solution</summary><p>x² = −4 → x = ±√(−4) = ±2i</p></details>
+    </div>
+
+    <div style="text-align:center;margin-top:2.5rem;">
+      <a href="../Sets_Functions/trigonometric-functions.html" class="btn btn-outline" style="padding:.8rem 2rem;border-radius:8px;text-decoration:none;margin:0 .5rem;">← Trig Functions</a>
+      <a href="linear-inequalities.html" class="btn" style="background:#2563eb;color:#fff;padding:.8rem 2rem;border-radius:8px;text-decoration:none;margin:0 .5rem;">Next: Linear Inequalities →</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ to teach Maths in Roman Hindi</p>
+    <div style="margin-top:1rem;"><a href="../../../../about.html">About</a> | <a href="../../../../contact.html">Contact</a> | <a href="../../../../privacy-policy.html">Privacy Policy</a></div>
+  </footer>
+  <script src="../../../../script.js"></script>
+</body>
+</html>

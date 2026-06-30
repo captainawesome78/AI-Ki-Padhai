@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Sets Venn Explorer - Class 11 | AIkiPadhai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css" />
+  <style>
+    /* === DARK THEME TEXT FIXES === */
+    body{color:#e2e8f0;}
+    h1,h2,h3,h4{color:#f1f5f9 !important;}
+    p{color:#cbd5e1;}
+    .mission-card p{color:#e2e8f0;}
+    .mission-card strong{color:#f1f5f9;}
+    .info-panel{color:#e2e8f0;}
+    .info-panel strong{color:#f1f5f9;}
+    .info-box{color:#e2e8f0;}
+    .info-box strong{color:#f1f5f9;}
+    .slider-wrap label{color:#94a3b8;}
+    .result-formula{color:#94a3b8;}
+    .result-label{color:#94a3b8;}
+    .stat-card .lbl{color:#94a3b8;}
+    .val-card .label{color:#94a3b8;}
+    .val-card .lbl{color:#94a3b8;}
+    .result-card .lbl{color:#94a3b8;}
+    label{color:#94a3b8;}
+    .hero h1{color:#ffffff !important;}
+    .hero p{color:#e2e8f0 !important;}
+    .header-content a{color:#e2e8f0;}
+    nav a{color:#94a3b8;}
+    nav a.active{color:#ffffff;}
+    body{background:#0d1117;}
+    .lab-wrap{max-width:900px;margin:0 auto;padding:1rem;}
+    canvas{display:block;margin:0 auto;border-radius:12px;cursor:pointer;}
+    .ctrl-bar{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin:1rem 0;}
+    .ctrl-btn{padding:.6rem 1.2rem;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:.9rem;transition:all .2s;}
+    .ctrl-btn.active{box-shadow:0 0 12px currentColor;}
+    .info-panel{background:#1e293b;border-radius:10px;padding:1rem;margin:.5rem 0;text-align:center;font-size:1rem;}
+    .mission-card{background:#1e293b;border-radius:10px;padding:1rem;margin:.5rem 0;}
+    .mission-opts{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem;}
+    .opt-btn{padding:.4rem .8rem;border:1px solid #334155;border-radius:6px;background:#0f172a;color:#e2e8f0;cursor:pointer;font-size:.9rem;}
+    .opt-btn:hover{border-color:#7c3aed;}
+    .opt-btn.correct{background:#065f46;border-color:#10b981;color:#10b981;}
+    .opt-btn.wrong{background:#7f1d1d;border-color:#ef4444;color:#ef4444;}
+    .score-box{background:#1e1b4b;border-radius:8px;padding:.8rem;text-align:center;font-size:1.1rem;font-weight:700;color:#a78bfa;}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+      <nav>
+        <a href="index.html">Sets &amp; Functions</a>
+        <a href="sets.html">Sets Theory</a>
+        <a href="sets-interactive.html" class="active">🎮 Venn Lab</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" style="background:linear-gradient(135deg,#3b0764,#7c3aed);padding:1.5rem 0;">
+    <div class="container" style="text-align:center;">
+      <h1 style="font-size:1.8rem;">🔵 Venn Diagram Explorer</h1>
+      <p>Set operations ko live dekho — buttons click karo ya elements pe click karo!</p>
+    </div>
+  </section>
+
+  <div class="lab-wrap">
+    <div class="ctrl-bar">
+      <button class="ctrl-btn active" id="btnUnion" onclick="setOp('union')" style="background:#7c3aed;color:#fff;">A ∪ B (Union)</button>
+      <button class="ctrl-btn" id="btnInter" onclick="setOp('intersection')" style="background:#1e293b;color:#a78bfa;border:1px solid #7c3aed;">A ∩ B (Intersection)</button>
+      <button class="ctrl-btn" id="btnAminB" onclick="setOp('AminusB')" style="background:#1e293b;color:#93c5fd;border:1px solid #2563eb;">A − B</button>
+      <button class="ctrl-btn" id="btnBminA" onclick="setOp('BminusA')" style="background:#1e293b;color:#6ee7b7;border:1px solid #059669;">B − A</button>
+      <button class="ctrl-btn" id="btnCompA" onclick="setOp('compA')" style="background:#1e293b;color:#fca5a5;border:1px solid #dc2626;">A' (Complement)</button>
+    </div>
+
+    <canvas id="vennCanvas" width="700" height="380"></canvas>
+
+    <div class="info-panel" id="infoPanel">
+      <span id="opDesc">A ∪ B = A ya B mein jo bhi ho — dono circles highlighted hain</span>
+    </div>
+
+    <div class="info-panel" style="margin-top:.5rem;">
+      <strong>U = {1..20} &nbsp;|&nbsp; A = {2,4,6,8,10,12} &nbsp;|&nbsp; B = {3,6,9,12,15,18}</strong><br>
+      <span id="resultSet" style="color:#a78bfa;"></span>
+    </div>
+
+    <!-- Missions -->
+    <h2 style="margin-top:1.5rem;">🎯 Missions</h2>
+    <div class="score-box" id="scoreBox">Score: 0 / 100</div>
+
+    <div class="mission-card" id="m1">
+      <p><strong>Mission 1:</strong> A = {1,2,3,4} aur B = {3,4,5,6}. n(A∪B) = ?</p>
+      <div class="mission-opts">
+        <button class="opt-btn" onclick="checkAns(1,this,'6')">6</button>
+        <button class="opt-btn" onclick="checkAns(1,this,'8')">8</button>
+        <button class="opt-btn" onclick="checkAns(1,this,'4')">4</button>
+        <button class="opt-btn" onclick="checkAns(1,this,'10')">10</button>
+      </div>
+    </div>
+
+    <div class="mission-card" id="m2">
+      <p><strong>Mission 2:</strong> A = {1,2,3,4,5}, B = {4,5,6,7}. A∩B = ?</p>
+      <div class="mission-opts">
+        <button class="opt-btn" onclick="checkAns(2,this,'{4,5}')">&#123;4,5&#125;</button>
+        <button class="opt-btn" onclick="checkAns(2,this,'{5}')">&#123;5&#125;</button>
+        <button class="opt-btn" onclick="checkAns(2,this,'{1,2,3}')">&#123;1,2,3&#125;</button>
+        <button class="opt-btn" onclick="checkAns(2,this,'{6,7}')">&#123;6,7&#125;</button>
+      </div>
+    </div>
+
+    <div class="mission-card" id="m3">
+      <p><strong>Mission 3:</strong> U = {1..10}, A = {1,3,5,7,9}. A' = ?</p>
+      <div class="mission-opts">
+        <button class="opt-btn" onclick="checkAns(3,this,'{2,4,6,8,10}')">&#123;2,4,6,8,10&#125;</button>
+        <button class="opt-btn" onclick="checkAns(3,this,'{1,3,5,7,9}')">&#123;1,3,5,7,9&#125;</button>
+        <button class="opt-btn" onclick="checkAns(3,this,'{0}')">&#123;0&#125;</button>
+        <button class="opt-btn" onclick="checkAns(3,this,'empty')">∅</button>
+      </div>
+    </div>
+
+    <div class="mission-card" id="m4">
+      <p><strong>Mission 4:</strong> n(A) = 30, n(B) = 25, n(A∩B) = 10. n(A∪B) = ?</p>
+      <div class="mission-opts">
+        <button class="opt-btn" onclick="checkAns(4,this,'45')">45</button>
+        <button class="opt-btn" onclick="checkAns(4,this,'55')">55</button>
+        <button class="opt-btn" onclick="checkAns(4,this,'65')">65</button>
+        <button class="opt-btn" onclick="checkAns(4,this,'40')">40</button>
+      </div>
+    </div>
+
+    <div class="mission-card" id="m5">
+      <p><strong>Mission 5:</strong> P(A) mein kitne elements hote hain agar |A| = 4?</p>
+      <div class="mission-opts">
+        <button class="opt-btn" onclick="checkAns(5,this,'4')">4</button>
+        <button class="opt-btn" onclick="checkAns(5,this,'8')">8</button>
+        <button class="opt-btn" onclick="checkAns(5,this,'16')">16</button>
+        <button class="opt-btn" onclick="checkAns(5,this,'12')">12</button>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ to teach Maths in Roman Hindi</p>
+  </footer>
+
+<script>
+const canvas = document.getElementById('vennCanvas');
+const ctx = canvas.getContext('2d');
+
+const A = new Set([2,4,6,8,10,12]);
+const B = new Set([3,6,9,12,15,18]);
+const U = new Set([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]);
+
+let currentOp = 'union';
+const opInfo = {
+  union:        { desc:'A ∪ B = A ya B mein jo bhi ho', colorA:'rgba(124,58,237,0.5)', colorB:'rgba(37,99,235,0.5)' },
+  intersection: { desc:'A ∩ B = A aur B dono mein', colorA:'rgba(124,58,237,0.15)', colorB:'rgba(37,99,235,0.15)', colorI:'rgba(16,185,129,0.7)' },
+  AminusB:      { desc:'A − B = A mein hai, B mein nahi', colorA:'rgba(124,58,237,0.6)', colorB:'rgba(37,99,235,0.05)' },
+  BminusA:      { desc:'B − A = B mein hai, A mein nahi', colorA:'rgba(124,58,237,0.05)', colorB:'rgba(37,99,235,0.6)' },
+  compA:        { desc:"A' = U mein hai par A mein nahi", colorA:'rgba(124,58,237,0.05)', colorB:'rgba(37,99,235,0.1)', outside:'rgba(220,38,38,0.2)' }
+};
+
+function getResult(op) {
+  const inter = new Set([...A].filter(x => B.has(x)));
+  const union = new Set([...A, ...B]);
+  const AminB = new Set([...A].filter(x => !B.has(x)));
+  const BminA = new Set([...B].filter(x => !A.has(x)));
+  const compA = new Set([...U].filter(x => !A.has(x)));
+  return {union,intersection:inter,AminusB:AminB,BminusA:BminA,compA}[op];
+}
+
+function draw() {
+  ctx.clearRect(0, 0, 700, 380);
+  ctx.fillStyle = '#0d1117';
+  ctx.fillRect(0, 0, 700, 380);
+
+  const info = opInfo[currentOp];
+  const cx1=260, cx2=440, cy=190, r=130;
+
+  // outer U box
+  ctx.strokeStyle = '#334155'; ctx.lineWidth=1;
+  ctx.strokeRect(30,30,640,320);
+  ctx.fillStyle='#334155'; ctx.font='12px Inter'; ctx.fillText('Universal Set U = {1,2,...,20}',40,50);
+
+  // A circle fill
+  ctx.beginPath(); ctx.arc(cx1,cy,r,0,2*Math.PI);
+  ctx.fillStyle = info.colorA || 'rgba(124,58,237,0.3)'; ctx.fill();
+  ctx.strokeStyle='#7c3aed'; ctx.lineWidth=2; ctx.stroke();
+
+  // B circle fill
+  ctx.beginPath(); ctx.arc(cx2,cy,r,0,2*Math.PI);
+  ctx.fillStyle = info.colorB || 'rgba(37,99,235,0.3)'; ctx.fill();
+  ctx.strokeStyle='#2563eb'; ctx.lineWidth=2; ctx.stroke();
+
+  // intersection highlight
+  if(currentOp==='intersection' && info.colorI) {
+    ctx.save();
+    ctx.beginPath(); ctx.arc(cx1,cy,r,0,2*Math.PI); ctx.clip();
+    ctx.beginPath(); ctx.arc(cx2,cy,r,0,2*Math.PI);
+    ctx.fillStyle=info.colorI; ctx.fill();
+    ctx.restore();
+  }
+  if(currentOp==='AminusB') {
+    ctx.save();
+    ctx.beginPath(); ctx.arc(cx1,cy,r,0,2*Math.PI); ctx.clip();
+    ctx.beginPath(); ctx.arc(cx2,cy,r,0,2*Math.PI);
+    ctx.fillStyle='rgba(124,58,237,0.05)'; ctx.fill();
+    ctx.restore();
+  }
+
+  // Labels
+  ctx.fillStyle='#c4b5fd'; ctx.font='bold 16px Outfit';
+  ctx.fillText('A',cx1-50,cy-10);
+  ctx.fillStyle='#93c5fd';
+  ctx.fillText('B',cx2+30,cy-10);
+
+  // Elements A only
+  const AonlyEls = [2,4,8,10]; 
+  ctx.fillStyle='#e2e8f0'; ctx.font='11px Inter';
+  AonlyEls.forEach((n,i)=>{ ctx.fillText(n, cx1-60, cy-30+i*22); });
+  // Elements B only
+  const BonlyEls = [3,9,15,18];
+  BonlyEls.forEach((n,i)=>{ ctx.fillText(n, cx2+25, cy-30+i*22); });
+  // Intersection
+  const interEls=[6,12];
+  ctx.fillStyle='#34d399';
+  interEls.forEach((n,i)=>{ ctx.fillText(n, 348, cy-10+i*20); });
+
+  // Result display
+  const res = getResult(currentOp);
+  const resArr = [...res].sort((a,b)=>a-b);
+  document.getElementById('resultSet').textContent = 'Result: {' + resArr.join(', ') + '} — n = ' + res.size;
+}
+
+function setOp(op) {
+  currentOp = op;
+  const info = opInfo[op];
+  document.getElementById('infoPanel').innerHTML = '<span id="opDesc">'+info.desc+'</span>';
+  ['btnUnion','btnInter','btnAminB','btnBminA','btnCompA'].forEach(id=>{
+    const el = document.getElementById(id);
+    el.style.background='#1e293b';
+    el.classList.remove('active');
+  });
+  const map={union:'btnUnion',intersection:'btnInter',AminusB:'btnAminB',BminusA:'btnBminA',compA:'btnCompA'};
+  document.getElementById(map[op]).style.background='#7c3aed';
+  draw();
+}
+
+// Score
+let score=0;
+const answered={};
+const correct={1:'6',2:'{4,5}',3:'{2,4,6,8,10}',4:'45',5:'16'};
+
+function checkAns(id,btn,val) {
+  if(answered[id]) return;
+  answered[id]=true;
+  if(val===correct[id]) {
+    btn.classList.add('correct'); score+=20;
+  } else {
+    btn.classList.add('wrong');
+    // highlight correct
+    const opts = btn.parentElement.querySelectorAll('.opt-btn');
+    opts.forEach(o=>{ if(o.textContent.replace(/[{}]/g,'')===correct[id].replace(/[{}]/g,'')) o.classList.add('correct'); });
+  }
+  document.getElementById('scoreBox').textContent='Score: '+score+' / 100';
+}
+
+draw();
+</script>
+</body>
+</html>

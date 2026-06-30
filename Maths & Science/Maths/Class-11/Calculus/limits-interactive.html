@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Limits Explorer Lab - Class 11 | AIkiPadhai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css" />
+  <style>
+    /* === DARK THEME TEXT FIXES === */
+    body{color:#e2e8f0;}
+    h1,h2,h3,h4{color:#f1f5f9 !important;}
+    p{color:#cbd5e1;}
+    .mission-card p{color:#e2e8f0;}
+    .mission-card strong{color:#f1f5f9;}
+    .info-panel{color:#e2e8f0;}
+    .info-panel strong{color:#f1f5f9;}
+    .info-box{color:#e2e8f0;}
+    .info-box strong{color:#f1f5f9;}
+    .slider-wrap label{color:#94a3b8;}
+    .result-formula{color:#94a3b8;}
+    .result-label{color:#94a3b8;}
+    .stat-card .lbl{color:#94a3b8;}
+    .val-card .label{color:#94a3b8;}
+    .val-card .lbl{color:#94a3b8;}
+    .result-card .lbl{color:#94a3b8;}
+    label{color:#94a3b8;}
+    .hero h1{color:#ffffff !important;}
+    .hero p{color:#e2e8f0 !important;}
+    .header-content a{color:#e2e8f0;}
+    nav a{color:#94a3b8;}
+    nav a.active{color:#ffffff;}
+    body{background:#0d1117;}
+    .lab-wrap{max-width:900px;margin:0 auto;padding:1rem;}
+    canvas{display:block;margin:0 auto;border-radius:12px;}
+    .ctrl-bar{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin:1rem 0;}
+    .ctrl-btn{padding:.6rem 1.2rem;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:.9rem;}
+    .slider-wrap{text-align:center;margin:1rem 0;}
+    .slider-wrap input{width:80%;accent-color:#dc2626;}
+    .val-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1rem 0;}
+    .val-card{background:#1e293b;border-radius:8px;padding:1rem;text-align:center;}
+    .val-card .lbl{color:#94a3b8;font-size:.8rem;}
+    .val-card .num{color:#f87171;font-size:1.3rem;font-weight:700;font-family:monospace;}
+    .mission-card{background:#1e293b;border-radius:10px;padding:1rem;margin:.5rem 0;}
+    .mission-opts{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem;}
+    .opt-btn{padding:.4rem .8rem;border:1px solid #334155;border-radius:6px;background:#0f172a;color:#e2e8f0;cursor:pointer;font-size:.9rem;}
+    .opt-btn.correct{background:#065f46;border-color:#10b981;color:#10b981;}
+    .opt-btn.wrong{background:#7f1d1d;border-color:#ef4444;color:#ef4444;}
+    .score-box{background:#2d0a0a;border-radius:8px;padding:.8rem;text-align:center;font-size:1.1rem;font-weight:700;color:#fca5a5;}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+      <nav>
+        <a href="index.html">Calculus</a>
+        <a href="limits-derivatives.html">Limits Theory</a>
+        <a href="limits-interactive.html" class="active">🎮 Limits Lab</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" style="background:linear-gradient(135deg,#7f1d1d,#dc2626);padding:1.5rem 0;">
+    <div class="container" style="text-align:center;">
+      <h1 style="font-size:1.8rem;">∂ Limits Explorer Lab</h1>
+      <p>x ko kisi value ki taraf approach karke f(x) track karo — limit visually samjho!</p>
+    </div>
+  </section>
+
+  <div class="lab-wrap">
+    <!-- Function selector -->
+    <div class="ctrl-bar">
+      <button class="ctrl-btn" onclick="setFunc(0)" id="f0" style="background:#dc2626;color:#fff;">f(x) = x²</button>
+      <button class="ctrl-btn" onclick="setFunc(1)" id="f1" style="background:#1e293b;color:#fca5a5;border:1px solid #dc2626;">f(x) = sin(x)/x</button>
+      <button class="ctrl-btn" onclick="setFunc(2)" id="f2" style="background:#1e293b;color:#fca5a5;border:1px solid #dc2626;">f(x) = (x²−4)/(x−2)</button>
+      <button class="ctrl-btn" onclick="setFunc(3)" id="f3" style="background:#1e293b;color:#fca5a5;border:1px solid #dc2626;">f(x) = 1/x</button>
+    </div>
+
+    <!-- x value slider -->
+    <div class="slider-wrap">
+      <label style="color:#94a3b8;">x = <span id="xDisplay">0.50</span> (Approach value: <span id="approachVal">0</span>)</label><br>
+      <input type="range" id="xSlider" min="-50" max="50" value="5" oninput="moveX(this.value)">
+    </div>
+
+    <canvas id="limitCanvas" width="700" height="400"></canvas>
+
+    <div class="val-grid">
+      <div class="val-card"><div class="lbl">Current x</div><div class="num" id="xVal">0.50</div></div>
+      <div class="val-card"><div class="lbl">f(x) at x</div><div class="num" id="fxVal">0.25</div></div>
+      <div class="val-card"><div class="lbl" id="limLabel">Limit (x→0)</div><div class="num" id="limVal">0</div></div>
+    </div>
+
+    <!-- Tangent info -->
+    <div style="background:#1e293b;border-radius:8px;padding:1rem;text-align:center;margin:.5rem 0;" id="derivInfo">
+      <strong style="color:#fca5a5;">Derivative (slope of tangent) at x = <span id="derivX">0.5</span>: f'(x) = <span id="derivVal">1.00</span></strong>
+    </div>
+
+    <!-- Missions -->
+    <h2 style="margin-top:1.5rem;">🎯 Missions</h2>
+    <div class="score-box" id="scoreBox">Score: 0 / 100</div>
+
+    <div class="mission-card">
+      <p><strong>Mission 1:</strong> lim(x→0) sin(x)/x = ?</p>
+      <div class="mission-opts">
+        <button class="opt-btn" onclick="checkAns(1,this,'1')">1</button>
+        <button class="opt-btn" onclick="checkAns(1,this,'0')">0</button>
+        <button class="opt-btn" onclick="checkAns(1,this,'∞')">∞</button>
+        <button class="opt-btn" onclick="checkAns(1,this,'undefined')">undefined</button>
+      </div>
+    </div>
+
+    <div class="mission-card">
+      <p><strong>Mission 2:</strong> d/dx (x³) = ?</p>
+      <div class="mission-opts">
+        <button class="opt-btn" onclick="checkAns(2,this,'3x²')">3x²</button>
+        <button class="opt-btn" onclick="checkAns(2,this,'x²')">x²</button>
+        <button class="opt-btn" onclick="checkAns(2,this,'3x')">3x</button>
+        <button class="opt-btn" onclick="checkAns(2,this,'x³')">x³</button>
+      </div>
+    </div>
+
+    <div class="mission-card">
+      <p><strong>Mission 3:</strong> lim(x→2) (x²−4)/(x−2) = ?</p>
+      <div class="mission-opts">
+        <button class="opt-btn" onclick="checkAns(3,this,'4')">4</button>
+        <button class="opt-btn" onclick="checkAns(3,this,'0')">0</button>
+        <button class="opt-btn" onclick="checkAns(3,this,'2')">2</button>
+        <button class="opt-btn" onclick="checkAns(3,this,'undefined')">undefined</button>
+      </div>
+    </div>
+
+    <div class="mission-card">
+      <p><strong>Mission 4:</strong> d/dx (sin x) = ?</p>
+      <div class="mission-opts">
+        <button class="opt-btn" onclick="checkAns(4,this,'cos x')">cos x</button>
+        <button class="opt-btn" onclick="checkAns(4,this,'-sin x')">−sin x</button>
+        <button class="opt-btn" onclick="checkAns(4,this,'-cos x')">−cos x</button>
+        <button class="opt-btn" onclick="checkAns(4,this,'tan x')">tan x</button>
+      </div>
+    </div>
+
+    <div class="mission-card">
+      <p><strong>Mission 5:</strong> Product rule: d/dx[uv] = ?</p>
+      <div class="mission-opts">
+        <button class="opt-btn" onclick="checkAns(5,this,'u\'v+uv\'')">u'v + uv'</button>
+        <button class="opt-btn" onclick="checkAns(5,this,'u\'v\'')">u'v'</button>
+        <button class="opt-btn" onclick="checkAns(5,this,'uv\'-u\'v')">uv'−u'v</button>
+        <button class="opt-btn" onclick="checkAns(5,this,'u\'+v\'')">u'+v'</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ to teach Maths in Roman Hindi</p>
+  </footer>
+
+<script>
+const canvas = document.getElementById('limitCanvas');
+const ctx = canvas.getContext('2d');
+const W=700, H=400, cx=350, cy=200, scale=40;
+
+const funcs = [
+  { fn: x=>x*x, fn_str:'f(x)=x²', deriv: x=>2*x, lim_a:0, lim_val:0 },
+  { fn: x=>x===0?1:Math.sin(x)/x, fn_str:'f(x)=sinx/x', deriv: x=>(x*Math.cos(x)-Math.sin(x))/(x*x||0.0001), lim_a:0, lim_val:1 },
+  { fn: x=>x===2?4:(x*x-4)/(x-2), fn_str:'f(x)=(x²−4)/(x−2)', deriv: x=>1, lim_a:2, lim_val:4 },
+  { fn: x=>x===0?Infinity:1/x, fn_str:'f(x)=1/x', deriv: x=>-1/(x*x), lim_a:1, lim_val:1 }
+];
+
+let curFunc=0;
+let xVal=0.5;
+
+function toScreen(x,y){return[cx+x*scale,cy-y*scale];}
+
+function setFunc(i){
+  curFunc=i;
+  [0,1,2,3].forEach(j=>{
+    document.getElementById('f'+j).style.background='#1e293b';
+  });
+  document.getElementById('f'+i).style.background='#dc2626';
+  const f=funcs[i];
+  document.getElementById('limLabel').textContent=`Limit (x→${f.lim_a})`;
+  document.getElementById('limVal').textContent=f.lim_val;
+  document.getElementById('approachVal').textContent=f.lim_a;
+  draw();
+}
+
+function moveX(v){
+  xVal = parseFloat(v)/10;
+  document.getElementById('xDisplay').textContent=xVal.toFixed(2);
+  const f=funcs[curFunc];
+  const fx=f.fn(xVal);
+  document.getElementById('xVal').textContent=xVal.toFixed(3);
+  document.getElementById('fxVal').textContent=isFinite(fx)?fx.toFixed(4):'∞';
+  document.getElementById('derivX').textContent=xVal.toFixed(2);
+  document.getElementById('derivVal').textContent=isFinite(f.deriv(xVal))?f.deriv(xVal).toFixed(4):'∞';
+  draw();
+}
+
+function drawAxes(){
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#0d1117'; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='#1e293b'; ctx.lineWidth=1;
+  for(let i=-8;i<=8;i++){
+    ctx.beginPath(); ctx.moveTo(cx+i*scale,0); ctx.lineTo(cx+i*scale,H); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0,cy+i*scale); ctx.lineTo(W,cy+i*scale); ctx.stroke();
+  }
+  ctx.strokeStyle='#334155'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(0,cy); ctx.lineTo(W,cy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx,0); ctx.lineTo(cx,H); ctx.stroke();
+  // Tick numbers
+  ctx.fillStyle='#64748b'; ctx.font='10px Inter'; ctx.textAlign='center';
+  for(let i=-7;i<=7;i+=2){if(i!==0){ctx.fillText(i,cx+i*scale,cy+15);ctx.fillText(i,cx+4,cy-i*scale+4);}}
+}
+
+function draw(){
+  drawAxes();
+  const f=funcs[curFunc];
+  ctx.beginPath(); ctx.strokeStyle='#dc2626'; ctx.lineWidth=2;
+  let first=true;
+  for(let px=0;px<W;px++){
+    const x=(px-cx)/scale;
+    const y=f.fn(x);
+    if(!isFinite(y)||Math.abs(y)>10){first=true;continue;}
+    const [sx,sy]=toScreen(x,y);
+    if(first){ctx.moveTo(sx,sy);first=false;}else ctx.lineTo(sx,sy);
+  }
+  ctx.stroke();
+
+  // Current x point
+  const [px,py]=toScreen(xVal,f.fn(xVal));
+  if(isFinite(py)){
+    ctx.beginPath();ctx.arc(px,py,6,0,2*Math.PI);
+    ctx.fillStyle='#f59e0b';ctx.fill();
+    // Tangent line
+    const m=f.deriv(xVal);
+    if(isFinite(m)){
+      const x1=-5,x2=5;
+      const y1=f.fn(xVal)+m*(x1-xVal);
+      const y2=f.fn(xVal)+m*(x2-xVal);
+      const[sx1,sy1]=toScreen(x1,y1);
+      const[sx2,sy2]=toScreen(x2,y2);
+      ctx.beginPath();ctx.moveTo(sx1,sy1);ctx.lineTo(sx2,sy2);
+      ctx.strokeStyle='#f59e0b';ctx.lineWidth=1.5;ctx.setLineDash([5,3]);ctx.stroke();
+      ctx.setLineDash([]);
+    }
+    // Dotted lines to axes
+    ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(px,cy);
+    ctx.strokeStyle='#4b5563';ctx.lineWidth=1;ctx.setLineDash([3,3]);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(cx,py);ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // Limit approach point
+  const la=f.lim_a;
+  const lv=f.lim_val;
+  const[lpx,lpy]=toScreen(la,lv);
+  ctx.beginPath();ctx.arc(lpx,lpy,7,0,2*Math.PI);
+  ctx.strokeStyle='#10b981';ctx.lineWidth=2;ctx.stroke();
+
+  // Function name
+  ctx.fillStyle='#fca5a5';ctx.font='bold 14px Outfit';ctx.textAlign='left';
+  ctx.fillText(f.fn_str,15,25);
+  ctx.fillStyle='#94a3b8';ctx.font='12px Inter';
+  ctx.fillText('🟡 Current point  🟢 Limit point',15,45);
+}
+
+// Score
+let score=0;const answered={};
+const correct={1:'1',2:'3x²',3:'4',4:'cos x',5:"u'v+uv'"};
+function checkAns(id,btn,val){
+  if(answered[id])return;answered[id]=true;
+  if(val===correct[id]){btn.classList.add('correct');score+=20;}
+  else{btn.classList.add('wrong');btn.parentElement.querySelectorAll('.opt-btn').forEach(o=>{if(o.textContent===correct[id])o.classList.add('correct');});}
+  document.getElementById('scoreBox').textContent='Score: '+score+' / 100';
+}
+
+setFunc(0);
+moveX(5);
+</script>
+</body>
+</html>

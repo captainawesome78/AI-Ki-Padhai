@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Relations & Functions - Class 11 Maths | AIkiPadhai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css" />
+  <style>
+    body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;line-height:1.75;}
+    h2{color:#1e1b4b;border-bottom:3px solid #7c3aed;padding-bottom:8px;margin:2.2rem 0 1rem;}
+    h3{color:#3730a3;}
+    .concept-box{background:#ede9fe;border-left:5px solid #7c3aed;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .concept-box p,.concept-box li{color:#312e81;}
+    .formula-box{background:#1e1b4b;color:#c7d2fe;border-radius:10px;padding:1.2rem 1.6rem;font-family:monospace;font-size:1.05rem;margin:1rem 0;}
+    .example-box{background:#f0fdf4;border-left:5px solid #10b981;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .example-box h4{color:#065f46;}
+    .example-box p,.example-box li{color:#14532d;}
+    .story-box{background:#fffbeb;border-left:5px solid #f59e0b;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .story-box h3{color:#92400e;}
+    .story-box p{color:#78350f;}
+    .proof-step{background:#f1f5f9;border-radius:6px;padding:.9rem 1.1rem;margin:.5rem 0;border-left:3px solid #6366f1;color:#1e293b;}
+    .type-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1rem;margin:1.5rem 0;}
+    .type-card{background:#fff;border:2px solid #e2e8f0;border-radius:10px;padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    .type-card h4{color:#7c3aed;margin-bottom:.4rem;}
+    .type-card p{color:#475569;font-size:.9rem;}
+    .practice-q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1.2rem;margin:.8rem 0;}
+    .practice-q p{color:#1e293b;}
+    .practice-q strong{color:#7c3aed;}
+    details summary{cursor:pointer;color:#7c3aed;font-weight:600;padding:.4rem 0;}
+    details p{color:#475569;padding:.5rem 0 0 1rem;}
+    table{width:100%;border-collapse:collapse;margin:1.2rem 0;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    th{background:#1e1b4b;color:#a78bfa;padding:.9rem 1rem;text-align:left;}
+    td{padding:.75rem 1rem;border-bottom:1px solid #e2e8f0;color:#1e293b;}
+    .mapping-wrap{background:#fff;border-radius:12px;padding:1.2rem;margin:1.5rem 0;box-shadow:0 2px 10px rgba(0,0,0,.08);}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+      <nav>
+        <a href="../../../../index.html">Home</a>
+        <a href="../index.html">Class 11 Maths</a>
+        <a href="index.html">Sets &amp; Functions</a>
+        <a href="relations-functions.html" class="active">Relations &amp; Functions</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" style="background:linear-gradient(135deg,#3b0764,#7c3aed);">
+    <div class="container">
+      <h1>Relations &amp; Functions 🔗</h1>
+      <p>Do sets ke beech ka connection — Relations. Har input ka exactly ek output — Functions. Ye dono maths ki rooh hain!</p>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <div class="story-box">
+      <h3>👨‍👩‍👧 Rishton ki Duniya</h3>
+      <p>Students = {Ali, Bhavna, Chetan} aur Marks = {85, 72, 91}. Agar Ali ne 85, Bhavna ne 72, Chetan ne 91 marks liye — toh yeh ek <strong>relation</strong> hai do sets ke beech. Aur kyunki har student ka exactly ek hi marks score hai, yeh ek <strong>function</strong> bhi hai! Lekin agar Ali ne do subjects mein alag marks liye hote (say 85 aur 90), toh woh sirf relation hota, function nahi.</p>
+    </div>
+
+    <h2>1. Cartesian Product (A × B)</h2>
+    <div class="concept-box">
+      <p>Cartesian Product A × B woh set hai jisme A ke har element ko B ke har element ke saath pair banaya jaata hai. Ise "ordered pairs" kehte hain kyunki order matter karta hai: (a,b) ≠ (b,a).</p>
+      <div class="formula-box">A × B = {(a,b) : a ∈ A aur b ∈ B}</div>
+      <p style="margin-top:.7rem;">Agar n(A) = m aur n(B) = n, toh n(A × B) = m × n ordered pairs honge.</p>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ A = {1,2}, B = {a,b,c} → A×B nikalo</h4>
+      <div class="proof-step">A × B = {(1,a), (1,b), (1,c), (2,a), (2,b), (2,c)}</div>
+      <div class="proof-step">n(A×B) = 2 × 3 = 6 ordered pairs ✓</div>
+      <p style="margin-top:.7rem;color:#065f46;">Note: B×A = {(a,1),(a,2),(b,1),(b,2),(c,1),(c,2)} — yeh alag set hai!</p>
+    </div>
+
+    <h2>2. Relation Kya Hota Hai?</h2>
+    <div class="concept-box">
+      <p>A se B mein ek Relation R, A×B ka koi bhi subset hota hai. Matlab hum A×B mein se kuch ordered pairs choose karte hain — woh pairs hi relation banata hai.</p>
+      <div class="formula-box">R ⊆ A × B</div>
+      <p style="margin-top:.8rem;">Ek relation ko teen tareekon se represent karte hain:</p>
+      <ul style="padding-left:1.5rem;margin-top:.5rem;">
+        <li><strong>Roster form:</strong> Saare pairs list karo — R = {(1,a),(2,b)}</li>
+        <li><strong>Set builder form:</strong> R = {(a,b) : koi condition}</li>
+        <li><strong>Arrow diagram:</strong> Ek set se doosre set par arrows draw karo</li>
+      </ul>
+    </div>
+
+    <!-- Arrow diagram SVG -->
+    <div class="mapping-wrap">
+      <p style="text-align:center;font-weight:600;color:#3730a3;margin-bottom:1rem;">Relation: A = {1,2,3} → B = {1,4,9} where (a,b) means b = a²</p>
+      <svg viewBox="0 0 320 180" width="100%" style="max-width:320px;display:block;margin:0 auto;">
+        <rect x="20" y="20" width="100" height="140" rx="10" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+        <rect x="200" y="20" width="100" height="140" rx="10" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+        <text x="70" y="12" text-anchor="middle" font-size="13" fill="#3730a3" font-weight="bold">A</text>
+        <text x="250" y="12" text-anchor="middle" font-size="13" fill="#1e40af" font-weight="bold">B</text>
+        <circle cx="70" cy="60" r="12" fill="#7c3aed"/>
+        <circle cx="70" cy="100" r="12" fill="#7c3aed"/>
+        <circle cx="70" cy="140" r="12" fill="#7c3aed"/>
+        <text x="70" y="64" text-anchor="middle" font-size="11" fill="#fff">1</text>
+        <text x="70" y="104" text-anchor="middle" font-size="11" fill="#fff">2</text>
+        <text x="70" y="144" text-anchor="middle" font-size="11" fill="#fff">3</text>
+        <circle cx="250" cy="55" r="12" fill="#3b82f6"/>
+        <circle cx="250" cy="100" r="12" fill="#3b82f6"/>
+        <circle cx="250" cy="148" r="12" fill="#3b82f6"/>
+        <text x="250" y="59" text-anchor="middle" font-size="11" fill="#fff">1</text>
+        <text x="250" y="104" text-anchor="middle" font-size="11" fill="#fff">4</text>
+        <text x="250" y="152" text-anchor="middle" font-size="11" fill="#fff">9</text>
+        <line x1="82" y1="60" x2="238" y2="55" stroke="#10b981" stroke-width="2" marker-end="url(#arr)"/>
+        <line x1="82" y1="100" x2="238" y2="100" stroke="#10b981" stroke-width="2" marker-end="url(#arr)"/>
+        <line x1="82" y1="140" x2="238" y2="148" stroke="#10b981" stroke-width="2" marker-end="url(#arr)"/>
+        <defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#10b981"/></marker></defs>
+      </svg>
+      <p style="text-align:center;color:#475569;font-size:.9rem;margin-top:.5rem;">R = {(1,1), (2,4), (3,9)} — yeh function bhi hai (har input ka exactly ek output)</p>
+    </div>
+
+    <h2>3. Domain, Codomain aur Range</h2>
+    <div class="concept-box">
+      <p><strong>Domain:</strong> Relation mein jo first elements (x-values) hain — jahan se arrows nikalte hain. Yeh "input" set hai.</p>
+      <p style="margin-top:.6rem;"><strong>Codomain:</strong> Woh pura set B jahan arrows ja sakte hain — chahe sab elements use ho ya nahi.</p>
+      <p style="margin-top:.6rem;"><strong>Range:</strong> B ke sirf woh elements jinhe actually use kiya gaya — jahan arrows actually pahunche. Range ⊆ Codomain hamesha!</p>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ R = {(1,3),(2,6),(3,9),(4,12)} — Domain, Range, Codomain (B={3,6,9,12,15}) nikalo</h4>
+      <div class="proof-step">Domain = {1, 2, 3, 4} (first elements — inputs)</div>
+      <div class="proof-step">Range = {3, 6, 9, 12} (actually use hue second elements)</div>
+      <div class="proof-step">Codomain = {3, 6, 9, 12, 15} (pura set B)</div>
+      <p style="margin-top:.7rem;color:#065f46;">15 ∈ Codomain hai lekin 15 ∉ Range — kyunki koi input 15 map nahi karta.</p>
+    </div>
+
+    <h2>4. Function Kya Hota Hai?</h2>
+    <div class="concept-box">
+      <p>Function ek <strong>special relation</strong> hai jisme Domain ke <strong>har element</strong> ka Codomain mein <strong>exactly ek</strong> image hota hai. Do conditions zaroori hain:</p>
+      <ul style="padding-left:1.5rem;margin-top:.7rem;">
+        <li><strong>Every input mapped:</strong> Domain ka har element kisi na kisi output se connected ho</li>
+        <li><strong>Unique output:</strong> Ek input ka do alag outputs nahi ho sakte</li>
+      </ul>
+      <div class="formula-box">f : A → B  iska matlab f, A se B ki taraf ek function hai</div>
+    </div>
+
+    <!-- Function vs Non-function SVG -->
+    <div class="mapping-wrap">
+      <svg viewBox="0 0 480 180" width="100%" style="max-width:480px;display:block;margin:0 auto;">
+        <!-- Function -->
+        <rect x="10" y="10" width="210" height="165" rx="8" fill="#f0fdf4" stroke="#22c55e" stroke-width="2"/>
+        <text x="115" y="28" text-anchor="middle" font-size="12" fill="#15803d" font-weight="bold">✅ Function</text>
+        <ellipse cx="60" cy="100" rx="28" ry="55" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
+        <ellipse cx="160" cy="100" rx="28" ry="55" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
+        <circle cx="60" cy="75" r="8" fill="#16a34a"/><text x="60" y="79" text-anchor="middle" font-size="9" fill="#fff">a</text>
+        <circle cx="60" cy="100" r="8" fill="#16a34a"/><text x="60" y="104" text-anchor="middle" font-size="9" fill="#fff">b</text>
+        <circle cx="60" cy="125" r="8" fill="#16a34a"/><text x="60" y="129" text-anchor="middle" font-size="9" fill="#fff">c</text>
+        <circle cx="160" cy="80" r="8" fill="#16a34a"/><text x="160" y="84" text-anchor="middle" font-size="9" fill="#fff">1</text>
+        <circle cx="160" cy="110" r="8" fill="#16a34a"/><text x="160" y="114" text-anchor="middle" font-size="9" fill="#fff">2</text>
+        <circle cx="160" cy="140" r="8" fill="#16a34a"/><text x="160" y="144" text-anchor="middle" font-size="9" fill="#fff">3</text>
+        <line x1="68" y1="75" x2="152" y2="80" stroke="#16a34a" stroke-width="1.5" marker-end="url(#ga)"/>
+        <line x1="68" y1="100" x2="152" y2="110" stroke="#16a34a" stroke-width="1.5" marker-end="url(#ga)"/>
+        <line x1="68" y1="125" x2="152" y2="140" stroke="#16a34a" stroke-width="1.5" marker-end="url(#ga)"/>
+        <defs><marker id="ga" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#16a34a"/></marker></defs>
+        <!-- Not a function -->
+        <rect x="260" y="10" width="210" height="165" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+        <text x="365" y="28" text-anchor="middle" font-size="12" fill="#dc2626" font-weight="bold">❌ Not a Function</text>
+        <ellipse cx="310" cy="100" rx="28" ry="55" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5"/>
+        <ellipse cx="410" cy="100" rx="28" ry="55" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5"/>
+        <circle cx="310" cy="85" r="8" fill="#dc2626"/><text x="310" y="89" text-anchor="middle" font-size="9" fill="#fff">a</text>
+        <circle cx="310" cy="115" r="8" fill="#dc2626"/><text x="310" y="119" text-anchor="middle" font-size="9" fill="#fff">b</text>
+        <circle cx="410" cy="75" r="8" fill="#dc2626"/><text x="410" y="79" text-anchor="middle" font-size="9" fill="#fff">1</text>
+        <circle cx="410" cy="105" r="8" fill="#dc2626"/><text x="410" y="109" text-anchor="middle" font-size="9" fill="#fff">2</text>
+        <circle cx="410" cy="135" r="8" fill="#dc2626"/><text x="410" y="139" text-anchor="middle" font-size="9" fill="#fff">3</text>
+        <!-- a goes to TWO outputs -->
+        <line x1="318" y1="83" x2="402" y2="75" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4"/>
+        <line x1="318" y1="87" x2="402" y2="105" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4"/>
+        <line x1="318" y1="115" x2="402" y2="135" stroke="#dc2626" stroke-width="1.5"/>
+        <text x="365" y="170" text-anchor="middle" font-size="9" fill="#dc2626">'a' ke 2 outputs → function nahi!</text>
+      </svg>
+    </div>
+
+    <h2>5. Types of Functions</h2>
+    <div class="type-grid">
+      <div class="type-card">
+        <h4>One-One (Injective)</h4>
+        <p>Alag inputs ke alag outputs. Koi do elements ek hi image nahi share karte: f(a) = f(b) → a = b</p>
+        <div class="formula-box" style="font-size:.85rem;">f(x) = 2x+1</div>
+      </div>
+      <div class="type-card">
+        <h4>Onto (Surjective)</h4>
+        <p>Codomain ka har element kisi na kisi input ka image hai. Range = Codomain exactly.</p>
+        <div class="formula-box" style="font-size:.85rem;">Range = Codomain</div>
+      </div>
+      <div class="type-card">
+        <h4>One-One &amp; Onto (Bijective)</h4>
+        <p>Dono conditions satisfy ho — perfect pairing! Inverse function tabhi exist karta hai.</p>
+        <div class="formula-box" style="font-size:.85rem;">f: A→B bijective<br>⟹ f⁻¹ exists</div>
+      </div>
+      <div class="type-card">
+        <h4>Many-One</h4>
+        <p>Do ya zyada inputs ka same output. One-one nahi hai. Example: f(x) = x² (f(2)=f(−2)=4)</p>
+        <div class="formula-box" style="font-size:.85rem;">f(x) = x²</div>
+      </div>
+    </div>
+
+    <h2>6. Special Functions</h2>
+
+    <table>
+      <tr><th>Function</th><th>Definition</th><th>Example / Graph</th></tr>
+      <tr><td><strong>Identity</strong></td><td>Har element apne aap se map hota hai: f(x) = x</td><td>f(1)=1, f(5)=5 (diagonal line)</td></tr>
+      <tr><td><strong>Constant</strong></td><td>Har input ka same output: f(x) = c</td><td>f(x) = 7 (horizontal line)</td></tr>
+      <tr><td><strong>Modulus |x|</strong></td><td>Positive value return karta hai: |x| = x if x≥0, −x if x&lt;0</td><td>|−5| = 5, |3| = 3 (V shape)</td></tr>
+      <tr><td><strong>Signum</strong></td><td>Sign batata hai: sgn(x) = 1, 0, or −1</td><td>sgn(−3)=−1, sgn(0)=0, sgn(4)=1</td></tr>
+      <tr><td><strong>Greatest Integer ⌊x⌋</strong></td><td>x se chota ya barabar sabse bada integer</td><td>⌊3.7⌋=3, ⌊−1.2⌋=−2 (step function)</td></tr>
+    </table>
+
+    <div class="example-box">
+      <h4>✅ f(x) = x² − 3x + 2 ke liye f(0), f(1), f(−1) nikalo</h4>
+      <div class="proof-step">f(0) = 0 − 0 + 2 = <strong>2</strong></div>
+      <div class="proof-step">f(1) = 1 − 3 + 2 = <strong>0</strong></div>
+      <div class="proof-step">f(−1) = (−1)² − 3(−1) + 2 = 1 + 3 + 2 = <strong>6</strong></div>
+      <p style="color:#065f46;margin-top:.7rem;">Note: f(1) = 0 ka matlab x=1, f ka zero (root) hai!</p>
+    </div>
+
+    <h2>7. Algebra of Functions</h2>
+    <div class="concept-box">
+      <p>Do functions ko add, subtract, multiply ya divide karke naye functions banate hain:</p>
+      <div class="formula-box">(f+g)(x) = f(x) + g(x)</div>
+      <div class="formula-box">(f·g)(x) = f(x) · g(x)</div>
+      <div class="formula-box">(f/g)(x) = f(x)/g(x) , jab g(x) ≠ 0</div>
+    </div>
+
+    <h2>8. Practice Questions</h2>
+    <div class="practice-q">
+      <p><strong>Q1.</strong> A = {1,2}, B = {3,4,5}. A×B ke saare elements likho aur total count batao.</p>
+      <details><summary>Solution dekhein</summary><p>A×B = {(1,3),(1,4),(1,5),(2,3),(2,4),(2,5)} — Total = 2×3 = 6</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q2.</strong> f(x) = 3x−2 ke liye prove karo ki yeh one-one hai.</p>
+      <details><summary>Solution dekhein</summary><p>Maan lo f(a)=f(b) → 3a−2=3b−2 → 3a=3b → a=b. Toh f one-one hai ✓</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q3.</strong> f(x) = |x−2| ke liye f(0), f(2), f(5) nikalo.</p>
+      <details><summary>Solution dekhein</summary><p>f(0)=|0−2|=2 | f(2)=|2−2|=0 | f(5)=|5−2|=3</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q4.</strong> ⌊−3.5⌋ aur ⌊7.9⌋ ki value nikalo.</p>
+      <details><summary>Solution dekhein</summary><p>⌊−3.5⌋ = −4 (−3.5 se chota ya barabar sabse bada integer = −4) | ⌊7.9⌋ = 7</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q5.</strong> f(x) = x² aur g(x) = 2x+1 ke liye (f+g)(x) aur (f·g)(2) nikalo.</p>
+      <details><summary>Solution dekhein</summary><p>(f+g)(x) = x²+2x+1 = (x+1)² | (f·g)(2) = f(2)·g(2) = 4×5 = 20</p></details>
+    </div>
+
+    <div style="text-align:center;margin-top:2.5rem;">
+      <a href="sets.html" class="btn btn-outline" style="padding:.8rem 2rem;border-radius:8px;text-decoration:none;margin:0 .5rem;">← Sets</a>
+      <a href="trigonometric-functions.html" class="btn" style="background:#7c3aed;color:#fff;padding:.8rem 2rem;border-radius:8px;text-decoration:none;margin:0 .5rem;">Next: Trigonometry →</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ to teach Maths in Roman Hindi</p>
+    <div style="margin-top:1rem;"><a href="../../../../about.html">About</a> | <a href="../../../../contact.html">Contact</a> | <a href="../../../../privacy-policy.html">Privacy Policy</a></div>
+  </footer>
+  <script src="../../../../script.js"></script>
+</body>
+</html>

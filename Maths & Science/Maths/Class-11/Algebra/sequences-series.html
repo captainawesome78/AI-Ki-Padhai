@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Sequences & Series - Class 11 Maths | AIkiPadhai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;line-height:1.75;}
+    h2{color:#1e1b4b;border-bottom:3px solid #2563eb;padding-bottom:8px;margin:2.2rem 0 1rem;}
+    h3{color:#1e40af;}
+    .concept-box{background:#dbeafe;border-left:5px solid #2563eb;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .concept-box p,.concept-box li{color:#1e3a8a;}
+    .formula-box{background:#1e1b4b;color:#c7d2fe;border-radius:10px;padding:1.2rem 1.6rem;font-family:monospace;font-size:1.05rem;margin:1rem 0;}
+    .example-box{background:#f0fdf4;border-left:5px solid #10b981;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .example-box h4{color:#065f46;}
+    .example-box p,.example-box li{color:#14532d;}
+    .story-box{background:#fffbeb;border-left:5px solid #f59e0b;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .story-box h3{color:#92400e;}
+    .story-box p{color:#78350f;}
+    .proof-step{background:#f1f5f9;border-radius:6px;padding:.9rem 1.1rem;margin:.5rem 0;border-left:3px solid #2563eb;color:#1e293b;}
+    .ap-gp{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:1.5rem 0;}
+    .ap-card{background:#dbeafe;border:2px solid #2563eb;border-radius:10px;padding:1.3rem;}
+    .ap-card h4{color:#1e40af;margin-bottom:.6rem;}
+    .ap-card p{color:#1e3a8a;font-size:.92rem;}
+    .ap-card .formula-box{font-size:.88rem;padding:.8rem 1rem;}
+    .gp-card{background:#dcfce7;border:2px solid #22c55e;border-radius:10px;padding:1.3rem;}
+    .gp-card h4{color:#15803d;margin-bottom:.6rem;}
+    .gp-card p{color:#14532d;font-size:.92rem;}
+    .gp-card .formula-box{font-size:.88rem;padding:.8rem 1rem;}
+    .practice-q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1.2rem;margin:.8rem 0;}
+    .practice-q p{color:#1e293b;}
+    .practice-q strong{color:#2563eb;}
+    details summary{cursor:pointer;color:#2563eb;font-weight:600;padding:.4rem 0;}
+    details p{color:#475569;padding:.5rem 0 0 1rem;}
+    table{width:100%;border-collapse:collapse;margin:1.2rem 0;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    th{background:#1e3a8a;color:#93c5fd;padding:.9rem 1rem;text-align:center;}
+    td{padding:.75rem 1rem;border-bottom:1px solid #e2e8f0;color:#1e293b;text-align:center;}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+      <nav>
+        <a href="../../../../index.html">Home</a>
+        <a href="../index.html">Class 11 Maths</a>
+        <a href="index.html">Algebra</a>
+        <a href="sequences-series.html" class="active">Sequences &amp; Series</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" style="background:linear-gradient(135deg,#1e3a5f,#2563eb);">
+    <div class="container">
+      <h1>Sequences &amp; Series 📈</h1>
+      <p>Patterns dhundhna — numbers ki duniya mein order nikalna. AP, GP, aur bhi bahut kuch!</p>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <div class="story-box">
+      <h3>💰 Bank mein Paisa</h3>
+      <p>Maan lo tumhare paas ₹1000 hain. Ek bank Simple Interest deta hai ₹100/year (fixed amount — yeh AP hai!). Doosra bank Compound Interest deta hai — pehle saal ₹100, doosre saal ₹110, teesre saal ₹121 (ratio fixed — yeh GP hai!). GP mein growth exponential hai — isliye long-term investment mein hamesha compound interest better hota hai. Yahi sequences ka real world magic hai!</p>
+    </div>
+
+    <h2>1. Sequence aur Series — Difference</h2>
+    <div class="concept-box">
+      <p><strong>Sequence:</strong> Numbers ka ek ordered list jisme ek pattern hota hai — har term aage wale se connected hai. Jaise: 1, 4, 9, 16, 25, ... (perfect squares)</p>
+      <p style="margin-top:.7rem;"><strong>Series:</strong> Sequence ke terms ko + se jodna. Jaise: 1 + 4 + 9 + 16 + 25 + ... Series ka sum 'Sₙ' se denote karte hain.</p>
+      <p style="margin-top:.7rem;"><strong>General term (aₙ):</strong> nth term ka formula — isse koi bhi term directly nikaal sakte hain.</p>
+    </div>
+
+    <h2>2. Arithmetic Progression (AP)</h2>
+    <p>Jab har consecutive terms ka difference constant ho — ise common difference 'd' kehte hain. Yeh common difference add karte raho, AP banata rehta hai.</p>
+
+    <div class="ap-card" style="margin:1.5rem 0;">
+      <h4>AP ke Basic Formulas</h4>
+      <p>First term = a, Common difference = d = a₂−a₁ = a₃−a₂ = ...</p>
+      <div class="formula-box">nth term: aₙ = a + (n−1)d</div>
+      <div class="formula-box">Sum of n terms: Sₙ = n/2 [2a + (n−1)d] = n/2 [a + l]</div>
+      <p>Jahan l = last term = a + (n−1)d</p>
+    </div>
+
+    <!-- AP Visual SVG -->
+    <div style="background:#fff;border-radius:12px;padding:1.2rem;margin:1.5rem 0;box-shadow:0 2px 10px rgba(0,0,0,.08);">
+      <p style="font-weight:600;color:#1e40af;margin-bottom:.8rem;">AP: 2, 5, 8, 11, 14 ... (d=3)</p>
+      <svg viewBox="0 0 400 80" width="100%" style="max-width:400px;display:block;margin:0 auto;">
+        <line x1="30" y1="50" x2="370" y2="50" stroke="#94a3b8" stroke-width="1"/>
+        <circle cx="60" cy="50" r="18" fill="#2563eb"/><text x="60" y="54" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">2</text>
+        <circle cx="130" cy="50" r="18" fill="#2563eb"/><text x="130" y="54" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">5</text>
+        <circle cx="200" cy="50" r="18" fill="#2563eb"/><text x="200" y="54" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">8</text>
+        <circle cx="270" cy="50" r="18" fill="#2563eb"/><text x="270" y="54" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">11</text>
+        <circle cx="340" cy="50" r="18" fill="#2563eb"/><text x="340" y="54" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">14</text>
+        <text x="95" y="25" text-anchor="middle" font-size="11" fill="#10b981" font-weight="bold">+3</text>
+        <text x="165" y="25" text-anchor="middle" font-size="11" fill="#10b981" font-weight="bold">+3</text>
+        <text x="235" y="25" text-anchor="middle" font-size="11" fill="#10b981" font-weight="bold">+3</text>
+        <text x="305" y="25" text-anchor="middle" font-size="11" fill="#10b981" font-weight="bold">+3</text>
+        <line x1="78" y1="20" x2="112" y2="20" stroke="#10b981" stroke-width="1.5" marker-end="url(#ap)"/>
+        <line x1="148" y1="20" x2="182" y2="20" stroke="#10b981" stroke-width="1.5" marker-end="url(#ap)"/>
+        <line x1="218" y1="20" x2="252" y2="20" stroke="#10b981" stroke-width="1.5" marker-end="url(#ap)"/>
+        <line x1="288" y1="20" x2="322" y2="20" stroke="#10b981" stroke-width="1.5" marker-end="url(#ap)"/>
+        <defs><marker id="ap" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3z" fill="#10b981"/></marker></defs>
+      </svg>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ AP: 3, 7, 11, 15, ... ka 20th term aur S₂₀ nikalo</h4>
+      <div class="proof-step">a = 3, d = 7−3 = 4, n = 20</div>
+      <div class="proof-step">a₂₀ = 3 + (20−1)×4 = 3 + 76 = <strong>79</strong></div>
+      <div class="proof-step">S₂₀ = 20/2 × [2(3) + 19×4] = 10 × [6 + 76] = 10 × 82 = <strong>820</strong></div>
+    </div>
+
+    <h2>3. Geometric Progression (GP)</h2>
+    <p>Jab har consecutive terms ka ratio constant ho — ise common ratio 'r' kehte hain. Pehle term ko r se multiply karte raho, GP banta rehta hai.</p>
+
+    <div class="gp-card" style="margin:1.5rem 0;">
+      <h4>GP ke Basic Formulas</h4>
+      <p>First term = a, Common ratio = r = a₂/a₁ = a₃/a₂ = ...</p>
+      <div class="formula-box">nth term: aₙ = a · rⁿ⁻¹</div>
+      <div class="formula-box">Sum (r ≠ 1): Sₙ = a(rⁿ−1)/(r−1)  jab r &gt; 1</div>
+      <div class="formula-box">Infinite GP (|r|&lt;1): S∞ = a/(1−r)</div>
+    </div>
+
+    <!-- GP Visual SVG -->
+    <div style="background:#fff;border-radius:12px;padding:1.2rem;margin:1.5rem 0;box-shadow:0 2px 10px rgba(0,0,0,.08);">
+      <p style="font-weight:600;color:#15803d;margin-bottom:.8rem;">GP: 2, 6, 18, 54, 162 ... (r=3)</p>
+      <svg viewBox="0 0 400 80" width="100%" style="max-width:400px;display:block;margin:0 auto;">
+        <circle cx="40" cy="50" r="16" fill="#22c55e"/><text x="40" y="54" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">2</text>
+        <circle cx="110" cy="50" r="16" fill="#22c55e"/><text x="110" y="54" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">6</text>
+        <circle cx="200" cy="50" r="16" fill="#22c55e"/><text x="200" y="54" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">18</text>
+        <circle cx="295" cy="50" r="16" fill="#22c55e"/><text x="295" y="54" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">54</text>
+        <circle cx="370" cy="50" r="19" fill="#22c55e"/><text x="370" y="54" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">162</text>
+        <text x="75" y="25" text-anchor="middle" font-size="11" fill="#f59e0b" font-weight="bold">×3</text>
+        <text x="155" y="25" text-anchor="middle" font-size="11" fill="#f59e0b" font-weight="bold">×3</text>
+        <text x="248" y="25" text-anchor="middle" font-size="11" fill="#f59e0b" font-weight="bold">×3</text>
+        <text x="333" y="25" text-anchor="middle" font-size="11" fill="#f59e0b" font-weight="bold">×3</text>
+      </svg>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ GP: 1, 2, 4, 8, ... ka 8th term aur S₆ nikalo</h4>
+      <div class="proof-step">a = 1, r = 2, n = 8</div>
+      <div class="proof-step">a₈ = 1 × 2⁷ = <strong>128</strong></div>
+      <div class="proof-step">S₆ = 1×(2⁶−1)/(2−1) = (64−1)/1 = <strong>63</strong></div>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ Infinite GP: 1 + 1/2 + 1/4 + 1/8 + ... ka sum nikalo</h4>
+      <div class="proof-step">a = 1, r = 1/2 (|r| &lt; 1, toh infinite sum exist karta hai)</div>
+      <div class="proof-step">S∞ = a/(1−r) = 1/(1−1/2) = 1/(1/2) = <strong>2</strong></div>
+      <p style="color:#065f46;margin-top:.7rem;">Interesting: Infinite terms add karo → exact finite answer milta hai jab |r|&lt;1!</p>
+    </div>
+
+    <h2>4. AP vs GP — Comparison</h2>
+    <table>
+      <tr><th>Property</th><th>AP</th><th>GP</th></tr>
+      <tr><td>Common feature</td><td>Common difference d (add)</td><td>Common ratio r (multiply)</td></tr>
+      <tr><td>nth term</td><td>a + (n−1)d</td><td>a·rⁿ⁻¹</td></tr>
+      <tr><td>Sum of n terms</td><td>n/2[2a+(n−1)d]</td><td>a(rⁿ−1)/(r−1)</td></tr>
+      <tr><td>Nature of growth</td><td>Linear (straight line)</td><td>Exponential (curve)</td></tr>
+      <tr><td>Example</td><td>2,5,8,11,14 ... (d=3)</td><td>2,6,18,54 ... (r=3)</td></tr>
+    </table>
+
+    <h2>5. Special Series — Σ Formulas (Important!)</h2>
+    <div class="concept-box">
+      <p>Yeh teen summation formulas bahut commonly exam mein aate hain — zaroor yaad karo:</p>
+      <div class="formula-box">Σk   = 1+2+3+...+n = n(n+1)/2</div>
+      <div class="formula-box">Σk²  = 1²+2²+3²+...+n² = n(n+1)(2n+1)/6</div>
+      <div class="formula-box">Σk³  = 1³+2³+...+n³ = [n(n+1)/2]²</div>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ 1² + 2² + 3² + ... + 10² nikalo</h4>
+      <div class="proof-step">n=10 → Σk² = 10(11)(21)/6 = 2310/6 = <strong>385</strong></div>
+    </div>
+
+    <h2>6. AM aur GM</h2>
+    <div class="concept-box">
+      <p><strong>Arithmetic Mean (AM):</strong> Do numbers a aur b ke beech ka term jo AP banaye = (a+b)/2</p>
+      <p style="margin-top:.5rem;"><strong>Geometric Mean (GM):</strong> Do numbers a aur b ke beech ka term jo GP banaye = √(ab)</p>
+      <div class="formula-box">AM ≥ GM  hamesha (equality jab a = b)</div>
+      <p style="margin-top:.7rem;">Yeh inequality bahut powerful hai — optimization problems mein aata hai!</p>
+    </div>
+
+    <h2>7. Practice Questions</h2>
+    <div class="practice-q">
+      <p><strong>Q1.</strong> AP: 5, 11, 17, 23, ... ka 15th term aur S₁₅ nikalo.</p>
+      <details><summary>Solution</summary><p>a=5, d=6. a₁₅=5+14×6=89. S₁₅=15/2×[10+84]=15/2×94=705</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q2.</strong> GP: 3, 9, 27, ... ka 6th term nikalo.</p>
+      <details><summary>Solution</summary><p>a=3, r=3. a₆=3×3⁵=3×243=<strong>729</strong></p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q3.</strong> Ek AP mein 5th term = 24 aur 10th term = 44. AP aur S₁₀ nikalo.</p>
+      <details><summary>Solution</summary><p>a₅=a+4d=24, a₁₀=a+9d=44. Subtract: 5d=20, d=4. a=8. AP: 8,12,16... S₁₀=10/2[16+36]=10/2×52=260</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q4.</strong> 1+2+3+...+50 ka sum kya hai?</p>
+      <details><summary>Solution</summary><p>n(n+1)/2 = 50×51/2 = <strong>1275</strong></p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q5.</strong> Infinite GP: 8, 4, 2, 1, ... ka sum nikalo.</p>
+      <details><summary>Solution</summary><p>a=8, r=1/2. S∞=8/(1−1/2)=8/(1/2)=<strong>16</strong></p></details>
+    </div>
+
+    <div style="text-align:center;margin-top:2.5rem;">
+      <a href="binomial-theorem.html" class="btn btn-outline" style="padding:.8rem 2rem;border-radius:8px;text-decoration:none;margin:0 .5rem;">← Binomial Theorem</a>
+      <a href="../Coordinate_Geometry/straight-lines.html" class="btn" style="background:#2563eb;color:#fff;padding:.8rem 2rem;border-radius:8px;text-decoration:none;margin:0 .5rem;">Next: Straight Lines →</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ to teach Maths in Roman Hindi</p>
+    <div style="margin-top:1rem;"><a href="../../../../about.html">About</a> | <a href="../../../../contact.html">Contact</a> | <a href="../../../../privacy-policy.html">Privacy Policy</a></div>
+  </footer>
+  <script src="../../../../script.js"></script>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Limits & Derivatives - Class 11 Maths | AIkiPadhai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;line-height:1.75;}
+    h2{color:#1e1b4b;border-bottom:3px solid #dc2626;padding-bottom:8px;margin:2.2rem 0 1rem;}
+    h3{color:#991b1b;}
+    .concept-box{background:#fee2e2;border-left:5px solid #dc2626;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .concept-box p,.concept-box li{color:#7f1d1d;}
+    .formula-box{background:#1e1b4b;color:#c7d2fe;border-radius:10px;padding:1.2rem 1.6rem;font-family:monospace;font-size:1.05rem;margin:1rem 0;}
+    .example-box{background:#f0fdf4;border-left:5px solid #10b981;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .example-box h4{color:#065f46;}
+    .example-box p,.example-box li{color:#14532d;}
+    .story-box{background:#fffbeb;border-left:5px solid #f59e0b;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .story-box h3{color:#92400e;}
+    .story-box p{color:#78350f;}
+    .proof-step{background:#f1f5f9;border-radius:6px;padding:.9rem 1.1rem;margin:.5rem 0;border-left:3px solid #dc2626;color:#1e293b;}
+    .limit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1.5rem 0;}
+    .limit-card{background:#fff;border:2px solid #fecaca;border-radius:10px;padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    .limit-card h4{color:#dc2626;margin-bottom:.5rem;}
+    .limit-card p{color:#1e293b;font-size:.9rem;}
+    .limit-card .formula-box{font-size:.85rem;padding:.7rem 1rem;margin:.4rem 0;}
+    .deriv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:1.5rem 0;}
+    .deriv-card{background:#fff;border:2px solid #fecaca;border-radius:10px;padding:1rem;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.05);}
+    .deriv-card h4{color:#dc2626;font-size:.9rem;margin-bottom:.3rem;}
+    .deriv-card .formula-box{font-size:.85rem;padding:.6rem;}
+    .practice-q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1.2rem;margin:.8rem 0;}
+    .practice-q p{color:#1e293b;}
+    .practice-q strong{color:#dc2626;}
+    details summary{cursor:pointer;color:#dc2626;font-weight:600;padding:.4rem 0;}
+    details p{color:#475569;padding:.5rem 0 0 1rem;}
+    .graph-wrap{background:#fff;border-radius:12px;padding:1.2rem;margin:1.5rem 0;box-shadow:0 2px 10px rgba(0,0,0,.08);}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+      <nav>
+        <a href="../../../../index.html">Home</a>
+        <a href="../index.html">Class 11 Maths</a>
+        <a href="index.html">Calculus</a>
+        <a href="limits-derivatives.html" class="active">Limits &amp; Derivatives</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" style="background:linear-gradient(135deg,#450a0a,#dc2626);">
+    <div class="container">
+      <h1>Limits &amp; Derivatives 🚀</h1>
+      <p>Calculus ka pehla step! "Approaching" ka concept — ek point ke bilkul paas jaana lekin wahan pahunchna nahi. Yahaan se shuru hota hai modern mathematics.</p>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <div class="story-box">
+      <h3>🚗 Car ki Speed — Limit ka Intuition</h3>
+      <p>Socho tumhari car ek junction ki taraf aa rahi hai — speed 60 km/h se 50, 40, 30 hoti ja rahi hai. Junction par pahunchoge toh ruk jaogi — speed 0. Lekin <em>just before</em> junction par speed kitni thi? Agar hum bahut chhotay time intervals mein speed measure karein — 0.1 sec, 0.01 sec, 0.001 sec pehle — toh ek specific value par approach karte hain. Yahi hai <strong>Limit</strong> ka concept! Aur agar woh speed measure kar rahe ho — change in position per change in time — yahi hai <strong>Derivative</strong>!</p>
+    </div>
+
+    <h2>1. Limit kya hai? — Intuition</h2>
+    <div class="concept-box">
+      <p>Limit batata hai ki jab x kisi value 'a' ke paas bahut paas aata hai (bilkul equal nahi, sirf approach karta hai) toh f(x) kis value ke paas aata hai.</p>
+      <div class="formula-box">lim(x→a) f(x) = L</div>
+      <p style="margin-top:.7rem;">Padhte hain: "x approaches a ke liye f(x) ki limit L hai". Important: x = a par f(x) defined hona zaroori nahi — bas approach karna zaroori hai!</p>
+      <p style="margin-top:.5rem;">Do sides se approach hota hai: Left Hand Limit (x→a⁻) aur Right Hand Limit (x→a⁺). Limit exist karta hai sirf tab jab LHL = RHL.</p>
+    </div>
+
+    <!-- Limit approach SVG -->
+    <div class="graph-wrap">
+      <p style="font-weight:600;color:#991b1b;margin-bottom:.8rem;">f(x) ka limit x→2 par — x=2 par hole (not defined) lekin limit exist karta hai</p>
+      <svg viewBox="0 0 320 180" width="100%" style="max-width:300px;display:block;margin:0 auto;">
+        <!-- Axes -->
+        <line x1="30" y1="150" x2="300" y2="150" stroke="#94a3b8" stroke-width="1.5"/>
+        <line x1="60" y1="10" x2="60" y2="165" stroke="#94a3b8" stroke-width="1.5"/>
+        <!-- Curve: simple parabola-like, f(x)=(x²-4)/(x-2)=x+2 for x≠2 -->
+        <path d="M70,135 C100,120 130,100 155,85 M165,80 C195,65 230,45 270,22" fill="none" stroke="#dc2626" stroke-width="2.5"/>
+        <!-- Hole at x=2, f(x)=4 (approx x=160, y=80 in our coords) -->
+        <circle cx="160" cy="82" r="6" fill="#fff" stroke="#dc2626" stroke-width="2.5"/>
+        <!-- Arrows approaching from left and right -->
+        <line x1="130" y1="100" x2="148" y2="88" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4" marker-end="url(#ya)"/>
+        <line x1="188" y1="74" x2="171" y2="83" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4" marker-end="url(#ya)"/>
+        <!-- Labels -->
+        <text x="118" y="115" font-size="10" fill="#92400e">x→2⁻</text>
+        <text x="193" y="68" font-size="10" fill="#92400e">x→2⁺</text>
+        <text x="164" y="70" font-size="10" fill="#dc2626">Limit=4</text>
+        <text x="155" y="163" text-anchor="middle" font-size="10" fill="#475569">x=2</text>
+        <line x1="160" y1="155" x2="160" y2="148" stroke="#475569" stroke-width="1"/>
+        <text x="52" y="85" font-size="10" fill="#475569">f(x)</text>
+        <defs><marker id="ya" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3z" fill="#f59e0b"/></marker></defs>
+      </svg>
+    </div>
+
+    <h2>2. Limit Nikalne ke Tareeqe</h2>
+
+    <div class="limit-grid">
+      <div class="limit-card">
+        <h4>① Direct Substitution</h4>
+        <p>Seedha x=a rakh do. Agar answer 0/0 nahi aata → yahi limit hai.</p>
+        <div class="formula-box">lim(x→3) x²+1 = 9+1 = 10</div>
+      </div>
+      <div class="limit-card">
+        <h4>② Factorisation</h4>
+        <p>0/0 form mile toh numerator/denominator factorize karo, common factor cancel karo.</p>
+        <div class="formula-box">lim(x→2) (x²−4)/(x−2)<br>= lim (x+2)(x−2)/(x−2)<br>= lim (x+2) = 4</div>
+      </div>
+      <div class="limit-card">
+        <h4>③ Rationalisation</h4>
+        <p>Square roots ho toh conjugate se multiply karo.</p>
+        <div class="formula-box">lim(x→0) (√(1+x)−1)/x<br>× (√(1+x)+1)/(same)<br>= lim 1/(√(1+x)+1) = 1/2</div>
+      </div>
+      <div class="limit-card">
+        <h4>④ Standard Results</h4>
+        <p>Yeh results yaad karo — exams mein seedha use hote hain:</p>
+        <div class="formula-box">lim(x→0) sinx/x = 1</div>
+        <div class="formula-box">lim(x→0) (1−cosx)/x = 0</div>
+        <div class="formula-box">lim(x→a) (xⁿ−aⁿ)/(x−a) = naⁿ⁻¹</div>
+      </div>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ lim(x→0) sin(3x)/x nikalo</h4>
+      <div class="proof-step">sin(3x)/x = 3·sin(3x)/(3x)</div>
+      <div class="proof-step">= 3 · [sin(3x)/(3x)] → 3 × 1 = <strong>3</strong> &nbsp; [kyunki lim(t→0) sint/t = 1]</div>
+      <p style="color:#065f46;margin-top:.5rem;">Trick: Argument same hona chahiye — sin(3x)/(3x) ka limit 1 hai, toh 3x/x = 3 bacha.</p>
+    </div>
+
+    <h2>3. Derivative — Rate of Change</h2>
+    <div class="concept-box">
+      <p>Derivative f'(x) batata hai ki x mein ek chota sa change dx hone par f(x) mein kitna change dx hota hai — yaani instant rate of change. Geometrically, yeh curve par ek point par <strong>tangent line ka slope</strong> hai.</p>
+      <p style="margin-top:.7rem;">Yeh First Principle (ya Limit Definition) se define hota hai:</p>
+      <div class="formula-box">f'(x) = lim(h→0) [f(x+h) − f(x)] / h</div>
+      <p style="margin-top:.7rem;">Ise "dy/dx" ya "f'(x)" ya "d/dx[f(x)]" likhte hain. Iska physical meaning: velocity = derivative of position with respect to time!</p>
+    </div>
+
+    <!-- Tangent SVG -->
+    <div class="graph-wrap">
+      <p style="font-weight:600;color:#991b1b;margin-bottom:.8rem;">Derivative = tangent line ka slope at a point</p>
+      <svg viewBox="0 0 320 200" width="100%" style="max-width:300px;display:block;margin:0 auto;">
+        <line x1="20" y1="170" x2="300" y2="170" stroke="#94a3b8" stroke-width="1.5"/>
+        <line x1="60" y1="10" x2="60" y2="180" stroke="#94a3b8" stroke-width="1.5"/>
+        <!-- Curve: x² parabola -->
+        <path d="M70,160 Q180,30 290,160" fill="none" stroke="#dc2626" stroke-width="2.5"/>
+        <!-- Point at x=1.5 (approx x=195, y=80) -->
+        <circle cx="195" cy="78" r="6" fill="#dc2626"/>
+        <!-- Tangent line at that point -->
+        <line x1="120" y1="120" x2="270" y2="38" stroke="#f59e0b" stroke-width="2" stroke-dasharray="6"/>
+        <!-- Labels -->
+        <text x="198" y="75" font-size="10" fill="#7f1d1d" font-weight="bold">P(x, f(x))</text>
+        <text x="240" y="35" font-size="10" fill="#92400e">Tangent line</text>
+        <text x="80" y="105" font-size="10" fill="#92400e">slope = f'(x)</text>
+        <!-- Curve label -->
+        <text x="270" y="155" font-size="11" fill="#dc2626" font-weight="bold">y=x²</text>
+        <text x="82" y="185" font-size="10" fill="#475569">f'(x) = 2x</text>
+      </svg>
+    </div>
+
+    <h2>4. First Principle se Derivative</h2>
+    <div class="example-box">
+      <h4>✅ f(x) = x² ka derivative First Principle se nikalo</h4>
+      <div class="proof-step">f'(x) = lim(h→0) [f(x+h) − f(x)] / h</div>
+      <div class="proof-step">= lim(h→0) [(x+h)² − x²] / h</div>
+      <div class="proof-step">= lim(h→0) [x²+2xh+h² − x²] / h</div>
+      <div class="proof-step">= lim(h→0) [2xh + h²] / h = lim(h→0) (2x + h)</div>
+      <div class="proof-step">h→0 rakhne par = <strong>2x</strong></div>
+      <p style="color:#065f46;margin-top:.5rem;">Yahi hai Power Rule: d/dx(xⁿ) = nxⁿ⁻¹ ka basis!</p>
+    </div>
+
+    <h2>5. Standard Derivative Formulas</h2>
+    <div class="deriv-grid">
+      <div class="deriv-card"><h4>Power Rule</h4><div class="formula-box">d/dx(xⁿ) = nxⁿ⁻¹</div></div>
+      <div class="deriv-card"><h4>Constant</h4><div class="formula-box">d/dx(c) = 0</div></div>
+      <div class="deriv-card"><h4>sin x</h4><div class="formula-box">d/dx(sinx) = cosx</div></div>
+      <div class="deriv-card"><h4>cos x</h4><div class="formula-box">d/dx(cosx) = −sinx</div></div>
+      <div class="deriv-card"><h4>tan x</h4><div class="formula-box">d/dx(tanx) = sec²x</div></div>
+      <div class="deriv-card"><h4>eˣ</h4><div class="formula-box">d/dx(eˣ) = eˣ</div></div>
+      <div class="deriv-card"><h4>ln x</h4><div class="formula-box">d/dx(lnx) = 1/x</div></div>
+      <div class="deriv-card"><h4>Constant×f</h4><div class="formula-box">d/dx(cf) = c·f'</div></div>
+    </div>
+
+    <h2>6. Rules — Product, Quotient, Chain</h2>
+    <div class="concept-box">
+      <p><strong>Sum/Difference Rule:</strong> d/dx[f±g] = f'±g' — seedha alag alag differentiate karo.</p>
+      <div class="formula-box">Product Rule: d/dx[f·g] = f'g + fg'</div>
+      <div class="formula-box">Quotient Rule: d/dx[f/g] = (f'g − fg') / g²</div>
+      <p style="margin-top:.7rem;">Mnemonic for Product Rule: "d-first times second PLUS first times d-second"</p>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ f(x) = x³ + 3x² − 5x + 2 differentiate karo</h4>
+      <div class="proof-step">f'(x) = 3x² + 3(2x) − 5(1) + 0</div>
+      <div class="proof-step">= <strong>3x² + 6x − 5</strong></div>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ Product Rule: f(x) = x² · sinx differentiate karo</h4>
+      <div class="proof-step">f'(x) = d/dx(x²)·sinx + x²·d/dx(sinx)</div>
+      <div class="proof-step">= 2x·sinx + x²·cosx</div>
+      <div class="proof-step">= <strong>x(2sinx + x·cosx)</strong></div>
+    </div>
+
+    <h2>7. Practice Questions</h2>
+    <div class="practice-q">
+      <p><strong>Q1.</strong> lim(x→2) (x²−4)/(x−2) nikalo.</p>
+      <details><summary>Solution</summary><p>= lim(x+2)(x−2)/(x−2) = lim(x+2) = 4</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q2.</strong> lim(x→0) sin(5x)/tan(3x) nikalo.</p>
+      <details><summary>Solution</summary><p>= lim [sin(5x)/5x] × [5x/3x] × [3x/tan(3x)] = 1 × 5/3 × 1 = <strong>5/3</strong></p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q3.</strong> f(x) = 3x⁴ − 2x³ + x − 7 differentiate karo.</p>
+      <details><summary>Solution</summary><p>f'(x) = 12x³ − 6x² + 1</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q4.</strong> First Principle se d/dx(sinx) nikalo.</p>
+      <details><summary>Solution</summary><p>= lim[sin(x+h)−sinx]/h = lim[sinx·cosh+cosx·sinh−sinx]/h = lim[sinx(cosh−1)/h + cosx·sinh/h] = sinx·0 + cosx·1 = cosx</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q5.</strong> f(x) = (x+1)/(x−1) differentiate karo using Quotient Rule.</p>
+      <details><summary>Solution</summary><p>f'(x) = [(1)(x−1)−(x+1)(1)]/(x−1)² = [x−1−x−1]/(x−1)² = −2/(x−1)²</p></details>
+    </div>
+
+    <div style="text-align:center;margin-top:2.5rem;">
+      <a href="../Coordinate_Geometry/intro-3d-geometry.html" class="btn btn-outline" style="padding:.8rem 2rem;border-radius:8px;text-decoration:none;margin:0 .5rem;">← 3D Geometry</a>
+      <a href="limits-interactive.html" class="btn" style="background:#dc2626;color:#fff;padding:.8rem 2rem;border-radius:8px;text-decoration:none;margin:0 .5rem;">🧪 Interactive Lab →</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ to teach Maths in Roman Hindi</p>
+    <div style="margin-top:1rem;"><a href="../../../../about.html">About</a> | <a href="../../../../contact.html">Contact</a> | <a href="../../../../privacy-policy.html">Privacy Policy</a></div>
+  </footer>
+  <script src="../../../../script.js"></script>
+</body>
+</html>

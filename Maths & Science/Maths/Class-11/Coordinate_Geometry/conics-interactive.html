@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Conic Sections Lab - Class 11 | AIkiPadhai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css" />
+  <style>
+    /* === DARK THEME TEXT FIXES === */
+    body{color:#e2e8f0;}
+    h1,h2,h3,h4{color:#f1f5f9 !important;}
+    p{color:#cbd5e1;}
+    .mission-card p{color:#e2e8f0;}
+    .mission-card strong{color:#f1f5f9;}
+    .info-panel{color:#e2e8f0;}
+    .info-panel strong{color:#f1f5f9;}
+    .info-box{color:#e2e8f0;}
+    .info-box strong{color:#f1f5f9;}
+    .slider-wrap label{color:#94a3b8;}
+    .result-formula{color:#94a3b8;}
+    .result-label{color:#94a3b8;}
+    .stat-card .lbl{color:#94a3b8;}
+    .val-card .label{color:#94a3b8;}
+    .val-card .lbl{color:#94a3b8;}
+    .result-card .lbl{color:#94a3b8;}
+    label{color:#94a3b8;}
+    .hero h1{color:#ffffff !important;}
+    .hero p{color:#e2e8f0 !important;}
+    .header-content a{color:#e2e8f0;}
+    nav a{color:#94a3b8;}
+    nav a.active{color:#ffffff;}
+    body{background:#0d1117;}
+    .lab-wrap{max-width:900px;margin:0 auto;padding:1rem;}
+    canvas{display:block;margin:0 auto;border-radius:12px;}
+    .ctrl-bar{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin:1rem 0;}
+    .ctrl-btn{padding:.6rem 1.2rem;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:.9rem;}
+    .slider-row{display:flex;gap:1rem;align-items:center;flex-wrap:wrap;margin:.5rem 0;}
+    .slider-row label{color:#94a3b8;min-width:60px;}
+    .slider-row input{accent-color:#059669;flex:1;}
+    .info-box{background:#1e293b;border-radius:10px;padding:1rem;margin:.5rem 0;text-align:center;}
+    .mission-card{background:#1e293b;border-radius:10px;padding:1rem;margin:.5rem 0;}
+    .mission-opts{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem;}
+    .opt-btn{padding:.4rem .8rem;border:1px solid #334155;border-radius:6px;background:#0f172a;color:#e2e8f0;cursor:pointer;font-size:.9rem;}
+    .opt-btn.correct{background:#065f46;border-color:#10b981;color:#10b981;}
+    .opt-btn.wrong{background:#7f1d1d;border-color:#ef4444;color:#ef4444;}
+    .score-box{background:#064e3b;border-radius:8px;padding:.8rem;text-align:center;font-size:1.1rem;font-weight:700;color:#34d399;}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+      <nav>
+        <a href="index.html">Coordinate Geometry</a>
+        <a href="conic-sections.html">Conic Sections</a>
+        <a href="conics-interactive.html" class="active">🎮 Conics Lab</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" style="background:linear-gradient(135deg,#064e3b,#059669);padding:1.5rem 0;">
+    <div class="container" style="text-align:center;">
+      <h1 style="font-size:1.8rem;">🪐 Conic Sections Explorer</h1>
+      <p>Conic type choose karo, parameters badhao — live graph dekho!</p>
+    </div>
+  </section>
+
+  <div class="lab-wrap">
+    <div class="ctrl-bar">
+      <button class="ctrl-btn" id="btnCircle" onclick="setType('circle')" style="background:#3b82f6;color:#fff;">⭕ Circle</button>
+      <button class="ctrl-btn" id="btnParab" onclick="setType('parabola')" style="background:#1e293b;color:#10b981;border:1px solid #059669;">∪ Parabola</button>
+      <button class="ctrl-btn" id="btnEllipse" onclick="setType('ellipse')" style="background:#1e293b;color:#f59e0b;border:1px solid #d97706;">🔵 Ellipse</button>
+      <button class="ctrl-btn" id="btnHyp" onclick="setType('hyperbola')" style="background:#1e293b;color:#f87171;border:1px solid #dc2626;">⊃⊂ Hyperbola</button>
+    </div>
+
+    <div id="sliderSection" style="background:#1e293b;border-radius:10px;padding:1rem;margin:.5rem 0;">
+      <div class="slider-row" id="sliderA">
+        <label>a = <span id="aVal">4</span></label>
+        <input type="range" id="sliderAInput" min="1" max="8" value="4" oninput="updateParam('a',this.value)">
+      </div>
+      <div class="slider-row" id="sliderB">
+        <label>b = <span id="bVal">3</span></label>
+        <input type="range" id="sliderBInput" min="1" max="7" value="3" oninput="updateParam('b',this.value)">
+      </div>
+    </div>
+
+    <canvas id="conicCanvas" width="700" height="500"></canvas>
+
+    <div class="info-box" id="infoBox">
+      <span id="eqLabel" style="color:#60a5fa;font-weight:700;font-family:monospace;font-size:1.1rem;">x² + y² = 16</span><br>
+      <span id="propLabel" style="color:#94a3b8;font-size:.9rem;">Circle: centre (0,0), r=4</span>
+    </div>
+
+    <!-- Missions -->
+    <h2 style="margin-top:1.5rem;">🎯 Missions</h2>
+    <div class="score-box" id="scoreBox">Score: 0 / 100</div>
+
+    <div class="mission-card">
+      <p><strong>Mission 1:</strong> Circle x²+y²=49 ka radius kya hai?</p>
+      <div class="mission-opts">
+        <button class="opt-btn" onclick="checkAns(1,this,'7')">7</button>
+        <button class="opt-btn" onclick="checkAns(1,this,'49')">49</button>
+        <button class="opt-btn" onclick="checkAns(1,this,'√7')">√7</button>
+        <button class="opt-btn" onclick="checkAns(1,this,'14')">14</button>
+      </div>
+    </div>
+
+    <div class="mission-card">
+      <p><strong>Mission 2:</strong> Parabola y²=20x ke focus ka x-coordinate kya hai?</p>
+      <div class="mission-opts">
+        <button class="opt-btn" onclick="checkAns(2,this,'5')">5</button>
+        <button class="opt-btn" onclick="checkAns(2,this,'20')">20</button>
+        <button class="opt-btn" onclick="checkAns(2,this,'4')">4</button>
+        <button class="opt-btn" onclick="checkAns(2,this,'10')">10</button>
+      </div>
+    </div>
+
+    <div class="mission-card">
+      <p><strong>Mission 3:</strong> Ellipse x²/25+y²/16=1 ki eccentricity kya hai?</p>
+      <div class="mission-opts">
+        <button class="opt-btn" onclick="checkAns(3,this,'3/5')">3/5</button>
+        <button class="opt-btn" onclick="checkAns(3,this,'4/5')">4/5</button>
+        <button class="opt-btn" onclick="checkAns(3,this,'5/3')">5/3</button>
+        <button class="opt-btn" onclick="checkAns(3,this,'1/5')">1/5</button>
+      </div>
+    </div>
+
+    <div class="mission-card">
+      <p><strong>Mission 4:</strong> Hyperbola ke liye e (eccentricity) ka range kya hai?</p>
+      <div class="mission-opts">
+        <button class="opt-btn" onclick="checkAns(4,this,'e>1')">e &gt; 1</button>
+        <button class="opt-btn" onclick="checkAns(4,this,'0<e<1')">0 &lt; e &lt; 1</button>
+        <button class="opt-btn" onclick="checkAns(4,this,'e=1')">e = 1</button>
+        <button class="opt-btn" onclick="checkAns(4,this,'e=0')">e = 0</button>
+      </div>
+    </div>
+
+    <div class="mission-card">
+      <p><strong>Mission 5:</strong> Parabola x²=−8y ka vertex kahan hai?</p>
+      <div class="mission-opts">
+        <button class="opt-btn" onclick="checkAns(5,this,'(0,0)')">(0,0)</button>
+        <button class="opt-btn" onclick="checkAns(5,this,'(0,-2)')">(0,−2)</button>
+        <button class="opt-btn" onclick="checkAns(5,this,'(0,2)')">(0,2)</button>
+        <button class="opt-btn" onclick="checkAns(5,this,'(-8,0)')">(−8,0)</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ to teach Maths in Roman Hindi</p>
+  </footer>
+
+<script>
+const canvas = document.getElementById('conicCanvas');
+const ctx = canvas.getContext('2d');
+const W=700, H=500, cx=350, cy=250, scale=35;
+let currentType='circle';
+let params={a:4,b:3};
+
+function toScreen(x,y) { return [cx+x*scale, cy-y*scale]; }
+
+function drawGrid() {
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#0d1117'; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='#1e293b'; ctx.lineWidth=1;
+  for(let i=-9;i<=9;i++){
+    ctx.beginPath(); ctx.moveTo(cx+i*scale,0); ctx.lineTo(cx+i*scale,H); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0,cy+i*scale); ctx.lineTo(W,cy+i*scale); ctx.stroke();
+  }
+  // Axes
+  ctx.strokeStyle='#334155'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(0,cy); ctx.lineTo(W,cy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx,0); ctx.lineTo(cx,H); ctx.stroke();
+  // Axis numbers
+  ctx.fillStyle='#64748b'; ctx.font='10px Inter'; ctx.textAlign='center';
+  for(let i=-8;i<=8;i+=2) {
+    if(i!==0) {
+      ctx.fillText(i, cx+i*scale, cy+15);
+      ctx.fillText(i, cx+3, cy-i*scale+4);
+    }
+  }
+}
+
+function drawCircle(r) {
+  drawGrid();
+  ctx.beginPath(); ctx.arc(cx, cy, r*scale, 0, 2*Math.PI);
+  ctx.strokeStyle='#3b82f6'; ctx.lineWidth=2.5; ctx.stroke();
+  // Centre dot
+  ctx.beginPath(); ctx.arc(cx,cy,4,0,2*Math.PI);
+  ctx.fillStyle='#3b82f6'; ctx.fill();
+  document.getElementById('eqLabel').textContent=`x² + y² = ${r*r}`;
+  document.getElementById('propLabel').textContent=`Circle: centre (0,0), r=${r}`;
+}
+
+function drawParabola(a) {
+  drawGrid();
+  ctx.beginPath(); ctx.strokeStyle='#10b981'; ctx.lineWidth=2.5;
+  for(let x=-8;x<=8;x+=0.05) {
+    const y = x*x/(4*a);
+    const [sx,sy]=toScreen(x,y);
+    if(x===-8) ctx.moveTo(sx,sy); else ctx.lineTo(sx,sy);
+  }
+  ctx.stroke();
+  // Focus
+  const [fx,fy]=toScreen(0,a);
+  ctx.beginPath(); ctx.arc(fx,fy,5,0,2*Math.PI);
+  ctx.fillStyle='#f59e0b'; ctx.fill();
+  ctx.fillStyle='#f59e0b'; ctx.font='12px Inter';
+  ctx.fillText(`Focus (0,${a})`,fx+8,fy-8);
+  document.getElementById('eqLabel').textContent=`x² = ${4*a}y`;
+  document.getElementById('propLabel').textContent=`Parabola: opens up, Focus=(0,${a}), Directrix: y=${-a}`;
+}
+
+function drawEllipse(a,b) {
+  if(b>=a) b=a-0.5;
+  drawGrid();
+  const c=Math.sqrt(a*a-b*b);
+  ctx.beginPath();
+  for(let t=0;t<=2*Math.PI;t+=0.01) {
+    const [sx,sy]=toScreen(a*Math.cos(t),b*Math.sin(t));
+    if(t===0) ctx.moveTo(sx,sy); else ctx.lineTo(sx,sy);
+  }
+  ctx.strokeStyle='#f59e0b'; ctx.lineWidth=2.5; ctx.stroke();
+  // Foci
+  [[c,0],[-c,0]].forEach(([fx,fy])=>{
+    const [sx,sy]=toScreen(fx,fy);
+    ctx.beginPath(); ctx.arc(sx,sy,5,0,2*Math.PI);
+    ctx.fillStyle='#f59e0b'; ctx.fill();
+  });
+  const e=(c/a).toFixed(3);
+  document.getElementById('eqLabel').textContent=`x²/${a*a} + y²/${b*b} = 1`;
+  document.getElementById('propLabel').textContent=`Ellipse: a=${a}, b=${b}, c=${c.toFixed(2)}, e=${e}`;
+}
+
+function drawHyperbola(a,b) {
+  drawGrid();
+  const c=Math.sqrt(a*a+b*b);
+  // Right branch
+  ctx.beginPath(); ctx.strokeStyle='#f87171'; ctx.lineWidth=2.5;
+  for(let y=-H/2;y<=H/2;y+=2){
+    const ys=(cy-y)/scale;
+    const xs=Math.sqrt(a*a*(1+ys*ys/(b*b)));
+    if(isFinite(xs)){const[sx,sy]=toScreen(xs,-ys);if(y===-H/2)ctx.moveTo(sx,sy);else ctx.lineTo(sx,sy);}
+  }
+  ctx.stroke();
+  // Left branch
+  ctx.beginPath();
+  for(let y=-H/2;y<=H/2;y+=2){
+    const ys=(cy-y)/scale;
+    const xs=-Math.sqrt(a*a*(1+ys*ys/(b*b)));
+    if(isFinite(xs)){const[sx,sy]=toScreen(xs,-ys);if(y===-H/2)ctx.moveTo(sx,sy);else ctx.lineTo(sx,sy);}
+  }
+  ctx.stroke();
+  // Asymptotes
+  ctx.setLineDash([6,3]);
+  ctx.strokeStyle='#64748b'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(0,cy+8*(b/a)*scale); ctx.lineTo(W,cy-8*(b/a)*scale); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0,cy-8*(b/a)*scale); ctx.lineTo(W,cy+8*(b/a)*scale); ctx.stroke();
+  ctx.setLineDash([]);
+  const e=(c/a).toFixed(3);
+  document.getElementById('eqLabel').textContent=`x²/${a*a} − y²/${b*b} = 1`;
+  document.getElementById('propLabel').textContent=`Hyperbola: a=${a}, b=${b}, c=${c.toFixed(2)}, e=${e} (>1)`;
+}
+
+function setType(type) {
+  currentType=type;
+  const colors={circle:'#3b82f6',parabola:'#059669',ellipse:'#d97706',hyperbola:'#dc2626'};
+  ['btnCircle','btnParab','btnEllipse','btnHyp'].forEach(id=>{
+    document.getElementById(id).style.background='#1e293b';
+  });
+  document.getElementById({circle:'btnCircle',parabola:'btnParab',ellipse:'btnEllipse',hyperbola:'btnHyp'}[type]).style.background=colors[type];
+  // Show/hide b slider
+  document.getElementById('sliderB').style.display=(type==='circle'||type==='parabola')?'none':'flex';
+  redraw();
+}
+
+function updateParam(p,v) {
+  params[p]=parseFloat(v);
+  document.getElementById(p+'Val').textContent=v;
+  redraw();
+}
+
+function redraw() {
+  const a=params.a, b=params.b;
+  if(currentType==='circle') drawCircle(a);
+  else if(currentType==='parabola') drawParabola(a);
+  else if(currentType==='ellipse') drawEllipse(a,Math.min(b,a-0.5));
+  else drawHyperbola(a,b);
+}
+
+// Score
+let score=0; const answered={};
+const correct={1:'7',2:'5',3:'3/5',4:'e>1',5:'(0,0)'};
+function checkAns(id,btn,val){
+  if(answered[id]) return; answered[id]=true;
+  if(val===correct[id]){btn.classList.add('correct');score+=20;}
+  else{btn.classList.add('wrong');btn.parentElement.querySelectorAll('.opt-btn').forEach(o=>{if(o.textContent.replace(/\s/,'')===correct[id])o.classList.add('correct');});}
+  document.getElementById('scoreBox').textContent='Score: '+score+' / 100';
+}
+
+setType('circle');
+</script>
+</body>
+</html>

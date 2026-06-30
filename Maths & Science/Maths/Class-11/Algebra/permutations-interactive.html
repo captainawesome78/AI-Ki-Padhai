@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Permutation & Combination Lab - Class 11 | AIkiPadhai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css" />
+  <style>
+    /* === DARK THEME TEXT FIXES === */
+    body{color:#e2e8f0;}
+    h1,h2,h3,h4{color:#f1f5f9 !important;}
+    p{color:#cbd5e1;}
+    .mission-card p{color:#e2e8f0;}
+    .mission-card strong{color:#f1f5f9;}
+    .info-panel{color:#e2e8f0;}
+    .info-panel strong{color:#f1f5f9;}
+    .info-box{color:#e2e8f0;}
+    .info-box strong{color:#f1f5f9;}
+    .slider-wrap label{color:#94a3b8;}
+    .result-formula{color:#94a3b8;}
+    .result-label{color:#94a3b8;}
+    .stat-card .lbl{color:#94a3b8;}
+    .val-card .label{color:#94a3b8;}
+    .val-card .lbl{color:#94a3b8;}
+    .result-card .lbl{color:#94a3b8;}
+    label{color:#94a3b8;}
+    .hero h1{color:#ffffff !important;}
+    .hero p{color:#e2e8f0 !important;}
+    .header-content a{color:#e2e8f0;}
+    nav a{color:#94a3b8;}
+    nav a.active{color:#ffffff;}
+    body{background:#0d1117;}
+    .lab-wrap{max-width:900px;margin:0 auto;padding:1rem;}
+    canvas{display:block;margin:0 auto;border-radius:12px;}
+    .ctrl-row{display:flex;gap:1rem;align-items:center;flex-wrap:wrap;justify-content:center;margin:1rem 0;}
+    .num-input{background:#1e293b;border:1px solid #334155;border-radius:8px;padding:.6rem 1rem;color:#e2e8f0;font-size:1.1rem;width:80px;text-align:center;}
+    .result-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:1.5rem 0;}
+    .result-card{background:#1e293b;border-radius:12px;padding:2rem;text-align:center;}
+    .result-label{color:#94a3b8;font-size:.9rem;margin-bottom:.5rem;}
+    .result-value{font-size:2.5rem;font-weight:800;font-family:monospace;}
+    .result-formula{color:#94a3b8;font-size:.85rem;margin-top:.5rem;font-family:monospace;}
+    .mission-card{background:#1e293b;border-radius:10px;padding:1rem;margin:.5rem 0;}
+    .mission-opts{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem;}
+    .opt-btn{padding:.4rem .8rem;border:1px solid #334155;border-radius:6px;background:#0f172a;color:#e2e8f0;cursor:pointer;font-size:.9rem;}
+    .opt-btn.correct{background:#065f46;border-color:#10b981;color:#10b981;}
+    .opt-btn.wrong{background:#7f1d1d;border-color:#ef4444;color:#ef4444;}
+    .score-box{background:#1e1b4b;border-radius:8px;padding:.8rem;text-align:center;font-size:1.1rem;font-weight:700;color:#a78bfa;}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+      <nav>
+        <a href="index.html">Algebra</a>
+        <a href="permutations-combinations.html">P&amp;C Theory</a>
+        <a href="permutations-interactive.html" class="active">🎮 P&amp;C Lab</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" style="background:linear-gradient(135deg,#1e3a5f,#2563eb);padding:1.5rem 0;">
+    <div class="container" style="text-align:center;">
+      <h1 style="font-size:1.8rem;">🔀 Permutation &amp; Combination Lab</h1>
+      <p>n aur r choose karo — nPr aur nCr live calculate karo. Step-by-step dekho.</p>
+    </div>
+  </section>
+
+  <div class="lab-wrap">
+    <div class="ctrl-row">
+      <label style="color:#94a3b8;">n =</label>
+      <input type="number" id="nVal" class="num-input" value="5" min="1" max="15" oninput="calculate()">
+      <label style="color:#94a3b8;">r =</label>
+      <input type="number" id="rVal" class="num-input" value="3" min="0" max="15" oninput="calculate()">
+    </div>
+
+    <div class="result-grid">
+      <div class="result-card" style="border:2px solid #2563eb;">
+        <div class="result-label">ⁿPᵣ (Permutation — order matters)</div>
+        <div class="result-value" id="pResult" style="color:#60a5fa;">60</div>
+        <div class="result-formula" id="pFormula">= 5! / (5−3)! = 60</div>
+      </div>
+      <div class="result-card" style="border:2px solid #7c3aed;">
+        <div class="result-label">ⁿCᵣ (Combination — order doesn't matter)</div>
+        <div class="result-value" id="cResult" style="color:#a78bfa;">10</div>
+        <div class="result-formula" id="cFormula">= 5! / (3! × 2!) = 10</div>
+      </div>
+    </div>
+
+    <!-- Step-by-step canvas -->
+    <canvas id="stepsCanvas" width="700" height="200"></canvas>
+
+    <!-- nCr triangle -->
+    <h2 style="text-align:center;margin-top:1.5rem;">Pascal's Triangle</h2>
+    <div id="pascal" style="text-align:center;line-height:2;font-family:monospace;font-size:.9rem;"></div>
+
+    <!-- Missions -->
+    <h2 style="margin-top:1.5rem;">🎯 Missions</h2>
+    <div class="score-box" id="scoreBox">Score: 0 / 100</div>
+
+    <div class="mission-card">
+      <p><strong>Mission 1:</strong> ⁷P₂ = ?</p>
+      <div class="mission-opts">
+        <button class="opt-btn" onclick="checkAns(1,this,'42')">42</button>
+        <button class="opt-btn" onclick="checkAns(1,this,'21')">21</button>
+        <button class="opt-btn" onclick="checkAns(1,this,'14')">14</button>
+        <button class="opt-btn" onclick="checkAns(1,this,'49')">49</button>
+      </div>
+    </div>
+
+    <div class="mission-card">
+      <p><strong>Mission 2:</strong> ⁶C₃ = ?</p>
+      <div class="mission-opts">
+        <button class="opt-btn" onclick="checkAns(2,this,'20')">20</button>
+        <button class="opt-btn" onclick="checkAns(2,this,'15')">15</button>
+        <button class="opt-btn" onclick="checkAns(2,this,'18')">18</button>
+        <button class="opt-btn" onclick="checkAns(2,this,'30')">30</button>
+      </div>
+    </div>
+
+    <div class="mission-card">
+      <p><strong>Mission 3:</strong> 5 books ko 5 shelves pe kitne tarike arrange kar sakte hain?</p>
+      <div class="mission-opts">
+        <button class="opt-btn" onclick="checkAns(3,this,'120')">120</button>
+        <button class="opt-btn" onclick="checkAns(3,this,'25')">25</button>
+        <button class="opt-btn" onclick="checkAns(3,this,'60')">60</button>
+        <button class="opt-btn" onclick="checkAns(3,this,'10')">10</button>
+      </div>
+    </div>
+
+    <div class="mission-card">
+      <p><strong>Mission 4:</strong> ⁿC₂ = 10. n = ?</p>
+      <div class="mission-opts">
+        <button class="opt-btn" onclick="checkAns(4,this,'5')">5</button>
+        <button class="opt-btn" onclick="checkAns(4,this,'4')">4</button>
+        <button class="opt-btn" onclick="checkAns(4,this,'6')">6</button>
+        <button class="opt-btn" onclick="checkAns(4,this,'8')">8</button>
+      </div>
+    </div>
+
+    <div class="mission-card">
+      <p><strong>Mission 5:</strong> ⁸C₅ = ?</p>
+      <div class="mission-opts">
+        <button class="opt-btn" onclick="checkAns(5,this,'56')">56</button>
+        <button class="opt-btn" onclick="checkAns(5,this,'40')">40</button>
+        <button class="opt-btn" onclick="checkAns(5,this,'70')">70</button>
+        <button class="opt-btn" onclick="checkAns(5,this,'28')">28</button>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>© 2025 AIkiPadhai | Made with ❤️ to teach Maths in Roman Hindi</p>
+  </footer>
+
+<script>
+function factorial(n) {
+  if(n<=1) return 1;
+  return n * factorial(n-1);
+}
+
+function calculate() {
+  const n = parseInt(document.getElementById('nVal').value) || 5;
+  const r = parseInt(document.getElementById('rVal').value) || 3;
+
+  if(r > n) {
+    document.getElementById('pResult').textContent='Invalid';
+    document.getElementById('cResult').textContent='Invalid';
+    return;
+  }
+
+  const P = factorial(n) / factorial(n-r);
+  const C = P / factorial(r);
+
+  document.getElementById('pResult').textContent = P;
+  document.getElementById('pFormula').textContent = `= ${n}! / (${n}−${r})! = ${factorial(n)} / ${factorial(n-r)} = ${P}`;
+  document.getElementById('cResult').textContent = C;
+  document.getElementById('cFormula').textContent = `= ${n}! / (${r}! × ${n-r}!) = ${C}`;
+
+  drawSteps(n, r, P, C);
+  drawPascal(Math.min(n,8));
+}
+
+function drawSteps(n, r, P, C) {
+  const canvas = document.getElementById('stepsCanvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,700,200);
+  ctx.fillStyle='#0d1117'; ctx.fillRect(0,0,700,200);
+
+  // Draw selection boxes
+  const items = Array.from({length:n},(_,i)=>String.fromCharCode(65+i));
+  const boxW = Math.min(60, 680/n);
+  const startX = (700 - n*boxW)/2;
+
+  ctx.font='bold 13px Outfit';
+  items.forEach((item,i)=>{
+    const x = startX + i*boxW;
+    const isSelected = i < r;
+    ctx.fillStyle = isSelected ? (i%2===0?'#2563eb':'#7c3aed') : '#1e293b';
+    ctx.beginPath(); ctx.roundRect(x+2,20,boxW-4,45,6); ctx.fill();
+    ctx.fillStyle = isSelected ? '#fff' : '#64748b';
+    ctx.textAlign='center';
+    ctx.fillText(item, x+boxW/2, 48);
+  });
+
+  ctx.fillStyle='#94a3b8'; ctx.font='12px Inter'; ctx.textAlign='left';
+  ctx.fillText(`Selecting ${r} from ${n} items`, 20, 90);
+
+  ctx.fillStyle='#60a5fa'; ctx.font='bold 14px Outfit';
+  ctx.fillText(`nPr = ${P} (order matters — ${r} positions fill karo)`, 20, 115);
+
+  ctx.fillStyle='#a78bfa';
+  ctx.fillText(`nCr = ${C} (order doesn't matter — ${C} groups)`, 20, 140);
+
+  ctx.fillStyle='#f59e0b'; ctx.font='12px Inter';
+  ctx.fillText(`Relation: nPr = nCr × r! → ${P} = ${C} × ${factorial(r)} ✓`, 20, 165);
+}
+
+function drawPascal(maxN) {
+  const div = document.getElementById('pascal');
+  let html='';
+  for(let n=0;n<=maxN;n++){
+    html+='<div style="color:#94a3b8;font-size:.85rem;">n='+n+': </div>';
+    html+='<div style="color:#a78bfa;">';
+    for(let r=0;r<=n;r++){
+      const c = factorial(n)/(factorial(r)*factorial(n-r));
+      html+=`<span style="display:inline-block;min-width:40px;background:#1e293b;border-radius:4px;padding:.2rem .4rem;margin:.1rem;">${c}</span>`;
+    }
+    html+='</div>';
+  }
+  div.innerHTML=html;
+}
+
+// Score
+let score=0; const answered={};
+const correct={1:'42',2:'20',3:'120',4:'5',5:'56'};
+function checkAns(id,btn,val){
+  if(answered[id]) return;
+  answered[id]=true;
+  if(val===correct[id]){btn.classList.add('correct');score+=20;}
+  else{btn.classList.add('wrong');btn.parentElement.querySelectorAll('.opt-btn').forEach(o=>{if(o.textContent===correct[id])o.classList.add('correct');});}
+  document.getElementById('scoreBox').textContent='Score: '+score+' / 100';
+}
+
+calculate();
+</script>
+</body>
+</html>
