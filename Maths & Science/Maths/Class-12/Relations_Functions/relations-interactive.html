@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Relations & Functions Lab — Class 12 | AIkiPadhai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#0d1117;color:#e2e8f0;font-family:'Inter',sans-serif;}
+    h1,h2,h3,h4{color:#f1f5f9!important;}
+    p{color:#cbd5e1;}
+    .hero h1{color:#fff!important;} .hero p{color:#e2e8f0!important;}
+    nav a{color:#94a3b8;}
+    .lab-wrap{max-width:960px;margin:2rem auto;padding:0 1.2rem;}
+    .lab-card{background:#161b22;border:1px solid #30363d;border-radius:14px;padding:1.6rem;margin:1.4rem 0;}
+    .lab-card h3{color:#a5b4fc!important;margin:0 0 .5rem;}
+    .lab-card p.hint{color:#64748b;font-size:.88rem;margin:.3rem 0 .8rem;}
+    canvas{border-radius:10px;display:block;margin:.6rem auto;cursor:crosshair;}
+    .controls{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;margin:.6rem 0;}
+    .btn{padding:.5rem 1.1rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:.88rem;transition:all .18s;}
+    .btn-v{background:linear-gradient(135deg,#6366f1,#4338ca);color:#fff;}
+    .btn-v:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(99,102,241,.4);}
+    .btn-g{background:#1e293b;color:#a5b4fc;border:1px solid #334155;}
+    select,input[type=range]{background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:.35rem .6rem;font-size:.88rem;}
+    input[type=range]{accent-color:#6366f1;width:140px;}
+    .status-badge{display:inline-block;padding:.3rem .9rem;border-radius:999px;font-weight:700;font-size:.85rem;margin-left:.5rem;}
+    .badge-green{background:#14532d;color:#86efac;}
+    .badge-red{background:#450a0a;color:#fca5a5;}
+    .badge-yellow{background:#422006;color:#fde68a;}
+    .info-row{display:flex;gap:1rem;flex-wrap:wrap;margin:.6rem 0;}
+    .info-pill{background:#1e293b;border:1px solid #334155;border-radius:8px;padding:.4rem .8rem;font-size:.85rem;color:#94a3b8;}
+    .info-pill span{color:#a5b4fc;font-weight:700;}
+    .eq-display{background:#0a0e1a;border-radius:8px;padding:.7rem 1rem;font-family:monospace;color:#a5b4fc;font-size:.92rem;margin:.5rem 0;}
+  </style>
+</head>
+<body>
+  <header><div class="container header-content">
+    <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+    <nav><a href="../index.html">Class 12 Maths</a><a href="index.html">Unit I</a><a href="relations-interactive.html" class="active">Lab</a></nav>
+  </div></header>
+
+  <section class="hero" style="background:linear-gradient(135deg,#1a0533,#3730a3);">
+    <div class="container">
+      <h1>Relations &amp; Functions Lab 🔬</h1>
+      <p>Concepts explore karo — sirf padho mat, try karo!</p>
+    </div>
+  </section>
+
+  <div class="lab-wrap">
+
+    <!-- LAB 1: Function Type Mapper -->
+    <div class="lab-card">
+      <h3>🗺️ Lab 1: Function Type Explorer</h3>
+      <p class="hint">Left side (Domain) se right side (Codomain) par click karo arrows draw karne ke liye. System automatically batayega — one-one hai ya onto ya bijective!</p>
+      <div class="controls">
+        <button class="btn btn-g" onclick="resetMapper()">🔄 Reset</button>
+        <button class="btn btn-v" onclick="autoExample('oneone')">Show One-One</button>
+        <button class="btn btn-v" onclick="autoExample('onto')">Show Onto</button>
+        <button class="btn btn-v" onclick="autoExample('bijective')">Show Bijective</button>
+        <button class="btn btn-v" onclick="autoExample('neither')">Show Neither</button>
+      </div>
+      <canvas id="mapCanvas" width="700" height="300" style="width:100%;background:#0a0e1a;"></canvas>
+      <div class="info-row" id="mapInfo">
+        <div class="info-pill">One-One: <span id="m_oo">?</span></div>
+        <div class="info-pill">Onto: <span id="m_onto">?</span></div>
+        <div class="info-pill">Bijective: <span id="m_bij">?</span></div>
+      </div>
+      <div class="eq-display" id="mapMsg">Arrows draw karo ya example button click karo!</div>
+    </div>
+
+    <!-- LAB 2: Graph + Horizontal Line Test -->
+    <div class="lab-card">
+      <h3>📈 Lab 2: Horizontal Line Test — One-One ka Visual Proof</h3>
+      <p class="hint">Function choose karo. Ek horizontal line move karke dekho — agar yeh line curve ko ek se zyada jagah kaate toh function one-one NAHI hai!</p>
+      <div class="controls">
+        <select id="hltFunc" onchange="drawHLT()">
+          <option value="linear">f(x) = x + 1</option>
+          <option value="cubic">f(x) = x³</option>
+          <option value="square">f(x) = x² (not one-one!)</option>
+          <option value="abs">f(x) = |x| (not one-one!)</option>
+          <option value="sin">f(x) = sin x (not one-one!)</option>
+        </select>
+        <label style="color:#94a3b8;">Line y = </label>
+        <input type="range" id="hltLine" min="-200" max="200" value="50" oninput="drawHLT()">
+        <span id="hltVal" style="color:#a5b4fc;font-weight:700;">1.00</span>
+      </div>
+      <canvas id="hltCanvas" width="700" height="300" style="width:100%;background:#0a0e1a;"></canvas>
+      <div class="eq-display" id="hltMsg">Slider move karo!</div>
+    </div>
+
+    <!-- LAB 3: Composition Visual -->
+    <div class="lab-card">
+      <h3>🔗 Lab 3: Composition of Functions — gof(x) = g(f(x))</h3>
+      <p class="hint">x ka value choose karo. Dekho kaise value pehle f mein jaati hai, phir uska output g mein jaata hai. Step-by-step chain!</p>
+      <div class="controls">
+        <select id="compF" onchange="drawComp()">
+          <option value="sq">f(x) = x²</option>
+          <option value="double">f(x) = 2x</option>
+          <option value="inc">f(x) = x+3</option>
+        </select>
+        <select id="compG" onchange="drawComp()">
+          <option value="sqrt">g(x) = √x</option>
+          <option value="sin">g(x) = sin(x)</option>
+          <option value="double">g(x) = 2x+1</option>
+        </select>
+        <label style="color:#94a3b8;">x = </label>
+        <input type="range" id="compX" min="-30" max="30" value="20" oninput="drawComp()">
+        <span id="compXval" style="color:#a5b4fc;font-weight:700;">2</span>
+      </div>
+      <canvas id="compCanvas" width="700" height="200" style="width:100%;background:#0a0e1a;"></canvas>
+      <div class="eq-display" id="compEq">Values select karo!</div>
+    </div>
+
+    <!-- LAB 4: Inverse Trig Unit Circle -->
+    <div class="lab-card">
+      <h3>🔄 Lab 4: Inverse Trig — Value se Angle Nikalo</h3>
+      <p class="hint">Slider se sin/cos/tan value choose karo. Unit circle par dekho — corresponding angle kaun sa hai? Yahi hai inverse trig ka kaam!</p>
+      <div class="controls">
+        <select id="itFunc" onchange="drawIT()">
+          <option value="sin">sin⁻¹(x)</option>
+          <option value="cos">cos⁻¹(x)</option>
+          <option value="tan">tan⁻¹(x)</option>
+        </select>
+        <label style="color:#94a3b8;">Value: </label>
+        <input type="range" id="itVal" min="-100" max="100" value="50" oninput="drawIT()">
+        <span id="itValDisp" style="color:#a5b4fc;font-weight:700;">0.50</span>
+      </div>
+      <canvas id="itCanvas" width="700" height="340" style="width:100%;background:#0a0e1a;"></canvas>
+      <div class="eq-display" id="itEq"></div>
+    </div>
+
+  </div>
+
+<script>
+// ==================== LAB 1: Mapper ====================
+const DOM = [1,2,3,4]; const COD = ['a','b','c','d'];
+let arrows = {}; // domain → codomain
+let selectedDom = null;
+const mapC = document.getElementById('mapCanvas');
+const mapCtx = mapC.getContext('2d');
+
+function nodePos(side, i, total, W, H) {
+  const x = side === 'dom' ? W*0.22 : W*0.78;
+  const y = H*0.18 + i*(H*0.64/(total-1));
+  return {x, y};
+}
+
+function drawMapper() {
+  const W=mapC.width, H=mapC.height;
+  mapCtx.clearRect(0,0,W,H);
+  mapCtx.fillStyle='#0a0e1a'; mapCtx.fillRect(0,0,W,H);
+  // Boxes
+  mapCtx.strokeStyle='#6366f1'; mapCtx.lineWidth=1.5;
+  mapCtx.strokeRect(W*0.06,H*0.08,W*0.28,H*0.84);
+  mapCtx.strokeStyle='#a855f7';
+  mapCtx.strokeRect(W*0.66,H*0.08,W*0.28,H*0.84);
+  mapCtx.fillStyle='#6366f1'; mapCtx.font='bold 12px Inter';
+  mapCtx.fillText('Domain A',W*0.09,H*0.07);
+  mapCtx.fillStyle='#a855f7';
+  mapCtx.fillText('Codomain B',W*0.67,H*0.07);
+  // Dom nodes
+  DOM.forEach((d,i)=>{
+    const p=nodePos('dom',i,DOM.length,W,H);
+    mapCtx.beginPath(); mapCtx.arc(p.x,p.y,18,0,Math.PI*2);
+    mapCtx.fillStyle=selectedDom===d?'#6366f1':'#1e293b';
+    mapCtx.fill(); mapCtx.strokeStyle='#6366f1'; mapCtx.lineWidth=2; mapCtx.stroke();
+    mapCtx.fillStyle='#f1f5f9'; mapCtx.font='bold 14px Inter'; mapCtx.textAlign='center';
+    mapCtx.fillText(d,p.x,p.y+5);
+  });
+  // Cod nodes
+  COD.forEach((c,i)=>{
+    const p=nodePos('cod',i,COD.length,W,H);
+    mapCtx.beginPath(); mapCtx.arc(p.x,p.y,18,0,Math.PI*2);
+    mapCtx.fillStyle='#1e293b'; mapCtx.fill();
+    mapCtx.strokeStyle='#a855f7'; mapCtx.lineWidth=2; mapCtx.stroke();
+    mapCtx.fillStyle='#f1f5f9'; mapCtx.font='bold 14px Inter'; mapCtx.textAlign='center';
+    mapCtx.fillText(c,p.x,p.y+5);
+  });
+  // Arrows
+  Object.entries(arrows).forEach(([d,c])=>{
+    const di=DOM.indexOf(+d), ci=COD.indexOf(c);
+    if(di<0||ci<0) return;
+    const sp=nodePos('dom',di,DOM.length,W,H);
+    const ep=nodePos('cod',ci,COD.length,W,H);
+    drawArrow(mapCtx,sp.x+18,sp.y,ep.x-18,ep.y,'#a5b4fc');
+  });
+  mapCtx.textAlign='left';
+  analyzeMapper();
+}
+
+function drawArrow(ctx,x1,y1,x2,y2,col){
+  ctx.strokeStyle=col; ctx.lineWidth=2; ctx.shadowColor=col; ctx.shadowBlur=4;
+  ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+  ctx.shadowBlur=0;
+  const a=Math.atan2(y2-y1,x2-x1);
+  ctx.fillStyle=col;
+  ctx.beginPath(); ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-12*Math.cos(a-0.4),y2-12*Math.sin(a-0.4));
+  ctx.lineTo(x2-12*Math.cos(a+0.4),y2-12*Math.sin(a+0.4));
+  ctx.closePath(); ctx.fill();
+}
+
+function analyzeMapper(){
+  const vals=Object.values(arrows);
+  const keys=Object.keys(arrows).map(Number);
+  if(keys.length===0){document.getElementById('mapMsg').textContent='Arrows draw karo!'; return;}
+  // one-one: no two domain elements map to same codomain
+  const oo=new Set(vals).size===vals.length;
+  // onto: every codomain element is covered
+  const onto=COD.every(c=>vals.includes(c));
+  const bij=oo&&onto;
+  document.getElementById('m_oo').textContent=oo?'✅ Haan':'❌ Nahi';
+  document.getElementById('m_onto').textContent=onto?'✅ Haan':'❌ Nahi';
+  document.getElementById('m_bij').textContent=bij?'✅ Haan':'❌ Nahi';
+  let msg='';
+  if(bij) msg='🎉 Bijective! One-one + Onto dono hain. Yeh function invertible hai!';
+  else if(oo&&!onto) msg='One-one hai (har element alag mapped) lekin Onto nahi (kuch codomain elements miss hain).';
+  else if(!oo&&onto) msg='Onto hai (saare codomain covered) lekin One-one nahi (do elements same jagah map ho rahe hain).';
+  else if(!oo&&!onto) msg='Neither one-one nor onto — do elements same jagah map, aur kuch codomain miss bhi.';
+  else msg='Mapping define karo...';
+  document.getElementById('mapMsg').textContent=msg;
+}
+
+mapC.addEventListener('click',e=>{
+  const rect=mapC.getBoundingClientRect();
+  const sx=e.clientX-rect.left, sy=e.clientY-rect.top;
+  const scaleX=mapC.width/rect.width, scaleY=mapC.height/rect.height;
+  const cx=sx*scaleX, cy=sy*scaleY;
+  const W=mapC.width, H=mapC.height;
+  // Check domain click
+  let hitDom=null;
+  DOM.forEach((d,i)=>{
+    const p=nodePos('dom',i,DOM.length,W,H);
+    if(Math.hypot(cx-p.x,cy-p.y)<22) hitDom=d;
+  });
+  if(hitDom!==null){selectedDom=hitDom; drawMapper(); return;}
+  // Check codomain click
+  if(selectedDom!==null){
+    let hitCod=null;
+    COD.forEach((c,i)=>{
+      const p=nodePos('cod',i,COD.length,W,H);
+      if(Math.hypot(cx-p.x,cy-p.y)<22) hitCod=c;
+    });
+    if(hitCod!==null){arrows[selectedDom]=hitCod; selectedDom=null; drawMapper(); return;}
+  }
+  selectedDom=null; drawMapper();
+});
+
+function resetMapper(){arrows={}; selectedDom=null; drawMapper();}
+function autoExample(type){
+  if(type==='oneone') arrows={1:'a',2:'b',3:'c'};
+  else if(type==='onto') arrows={1:'a',2:'b',3:'c',4:'d'};
+  else if(type==='bijective') arrows={1:'a',2:'b',3:'c',4:'d'};
+  else arrows={1:'a',2:'a',3:'b'};
+  selectedDom=null; drawMapper();
+}
+drawMapper();
+
+// ==================== LAB 2: Horizontal Line Test ====================
+const hltC=document.getElementById('hltCanvas');
+const hltCtx=hltC.getContext('2d');
+const hltFns={
+  linear:x=>x+1, cubic:x=>x*x*x/25, square:x=>x*x/40, abs:x=>Math.abs(x)/30, sin:x=>Math.sin(x)*1.5
+};
+const hltNames={linear:'f(x)=x+1',cubic:'f(x)=x³',square:'f(x)=x²',abs:'f(x)=|x|',sin:'f(x)=sin x'};
+function drawHLT(){
+  const W=hltC.width,H=hltC.height;
+  hltCtx.clearRect(0,0,W,H); hltCtx.fillStyle='#0a0e1a'; hltCtx.fillRect(0,0,W,H);
+  const cx=W/2,cy=H/2,sc=40;
+  // Grid
+  hltCtx.strokeStyle='#1e293b'; hltCtx.lineWidth=1;
+  for(let x=cx%sc;x<W;x+=sc){hltCtx.beginPath();hltCtx.moveTo(x,0);hltCtx.lineTo(x,H);hltCtx.stroke();}
+  for(let y=cy%sc;y<H;y+=sc){hltCtx.beginPath();hltCtx.moveTo(0,y);hltCtx.lineTo(W,y);hltCtx.stroke();}
+  // Axes
+  hltCtx.strokeStyle='#475569'; hltCtx.lineWidth=1.5;
+  hltCtx.beginPath();hltCtx.moveTo(0,cy);hltCtx.lineTo(W,cy);hltCtx.stroke();
+  hltCtx.beginPath();hltCtx.moveTo(cx,0);hltCtx.lineTo(cx,H);hltCtx.stroke();
+  // Curve
+  const fn=document.getElementById('hltFunc').value;
+  const f=hltFns[fn];
+  hltCtx.strokeStyle='#a5b4fc'; hltCtx.lineWidth=2.5; hltCtx.shadowColor='#6366f1'; hltCtx.shadowBlur=5;
+  hltCtx.beginPath(); let first=true;
+  for(let px=0;px<W;px++){
+    const xv=(px-cx)/sc, yv=f(xv), py=cy-yv*sc;
+    if(py<-50||py>H+50){first=true;continue;}
+    if(first){hltCtx.moveTo(px,py);first=false;}else hltCtx.lineTo(px,py);
+  }
+  hltCtx.stroke(); hltCtx.shadowBlur=0;
+  // Horizontal test line
+  const lineVal=+document.getElementById('hltLine').value/100;
+  document.getElementById('hltVal').textContent=lineVal.toFixed(2);
+  const lineY=cy-lineVal*sc;
+  hltCtx.strokeStyle='#fbbf24'; hltCtx.lineWidth=2; hltCtx.setLineDash([8,4]);
+  hltCtx.beginPath();hltCtx.moveTo(0,lineY);hltCtx.lineTo(W,lineY);hltCtx.stroke();
+  hltCtx.setLineDash([]);
+  // Find intersections
+  const intersections=[];
+  for(let px=1;px<W;px++){
+    const xv=(px-cx)/sc, yv=f(xv)*sc;
+    const prevX=(px-1-cx)/sc, prevY=f(prevX)*sc;
+    if((cy-prevY-lineY)*(cy-yv-lineY)<0){
+      intersections.push(px);
+      hltCtx.fillStyle='#f59e0b'; hltCtx.beginPath();
+      hltCtx.arc(px,lineY,7,0,Math.PI*2); hltCtx.fill();
+    }
+  }
+  const oo=intersections.length<=1;
+  const msg=oo?`✅ One-One! Horizontal line sirf ${intersections.length} jagah curve kaati hai. Yeh function one-one hai!`
+              :`❌ NOT One-One! Horizontal line ${intersections.length} jagah curve kaati hai — matlab alag alag x values par same y milta hai!`;
+  document.getElementById('hltMsg').textContent=hltNames[fn]+' — '+msg;
+}
+drawHLT();
+
+// ==================== LAB 3: Composition ====================
+const compC=document.getElementById('compCanvas');
+const compCtx=compC.getContext('2d');
+const compFs={sq:{f:x=>x*x,s:'f(x)=x²'},double:{f:x=>2*x,s:'f(x)=2x'},inc:{f:x=>x+3,s:'f(x)=x+3'}};
+const compGs={sqrt:{f:x=>Math.sqrt(Math.abs(x)),s:'g(x)=√x'},sin:{f:x=>Math.sin(x),s:'g(x)=sin(x)'},double:{f:x=>2*x+1,s:'g(x)=2x+1'}};
+function drawComp(){
+  const W=compC.width,H=compC.height;
+  compCtx.clearRect(0,0,W,H); compCtx.fillStyle='#0a0e1a'; compCtx.fillRect(0,0,W,H);
+  const xraw=+document.getElementById('compX').value/10;
+  document.getElementById('compXval').textContent=xraw.toFixed(1);
+  const fk=document.getElementById('compF').value, gk=document.getElementById('compG').value;
+  const F=compFs[fk], G=compGs[gk];
+  const fx=F.f(xraw), gfx=G.f(fx);
+  // Boxes
+  const boxes=[{label:'Input',val:xraw.toFixed(2),x:60,col:'#6366f1'},{label:F.s,val:'f('+xraw.toFixed(1)+') = '+fx.toFixed(3),x:260,col:'#a855f7'},{label:G.s,val:'g(f(x)) = '+gfx.toFixed(3),x:480,col:'#22c55e'}];
+  boxes.forEach(b=>{
+    compCtx.fillStyle=b.col+'33'; compCtx.strokeStyle=b.col; compCtx.lineWidth=2;
+    roundRect(compCtx,b.x,H*0.15,160,H*0.7,10); compCtx.fill(); compCtx.stroke();
+    compCtx.fillStyle=b.col; compCtx.font='bold 11px Inter'; compCtx.textAlign='center';
+    compCtx.fillText(b.label,b.x+80,H*0.35);
+    compCtx.fillStyle='#f1f5f9'; compCtx.font='12px Inter';
+    compCtx.fillText(b.val,b.x+80,H*0.62);
+  });
+  // Arrows between boxes
+  [0,1].forEach(i=>{
+    const from=boxes[i],to=boxes[i+1];
+    const x1=from.x+160,x2=to.x,y=H/2;
+    compCtx.strokeStyle='#fbbf24'; compCtx.lineWidth=2.5;
+    compCtx.beginPath();compCtx.moveTo(x1,y);compCtx.lineTo(x2,y);compCtx.stroke();
+    compCtx.fillStyle='#fbbf24';compCtx.beginPath();
+    compCtx.moveTo(x2,y);compCtx.lineTo(x2-10,y-6);compCtx.lineTo(x2-10,y+6);compCtx.closePath();compCtx.fill();
+  });
+  compCtx.textAlign='left';
+  document.getElementById('compEq').textContent=`gof(${xraw.toFixed(1)}) = g(f(${xraw.toFixed(1)})) = g(${fx.toFixed(3)}) = ${gfx.toFixed(3)}`;
+}
+function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
+drawComp();
+
+// ==================== LAB 4: Inverse Trig Circle ====================
+const itC=document.getElementById('itCanvas');
+const itCtx=itC.getContext('2d');
+function drawIT(){
+  const W=itC.width,H=itC.height;
+  itCtx.clearRect(0,0,W,H); itCtx.fillStyle='#0a0e1a'; itCtx.fillRect(0,0,W,H);
+  const fn=document.getElementById('itFunc').value;
+  let rawVal=+document.getElementById('itVal').value/100;
+  if(fn==='tan') rawVal=rawVal*4; // expand range for tan
+  document.getElementById('itValDisp').textContent=rawVal.toFixed(2);
+  const cx=W*0.38, cy=H/2, R=130;
+  // Circle
+  itCtx.strokeStyle='#334155'; itCtx.lineWidth=1.5;
+  itCtx.beginPath(); itCtx.arc(cx,cy,R,0,Math.PI*2); itCtx.stroke();
+  // Axes
+  itCtx.strokeStyle='#475569'; itCtx.lineWidth=1.5;
+  itCtx.beginPath();itCtx.moveTo(cx-R-20,cy);itCtx.lineTo(cx+R+20,cy);itCtx.stroke();
+  itCtx.beginPath();itCtx.moveTo(cx,cy-R-20);itCtx.lineTo(cx,cy+R+20);itCtx.stroke();
+  // Axis labels
+  itCtx.fillStyle='#64748b'; itCtx.font='11px Inter';
+  itCtx.fillText('1',cx+R+5,cy+14); itCtx.fillText('-1',cx-R-20,cy+14);
+  itCtx.fillText('1',cx+4,cy-R-5); itCtx.fillText('-1',cx+4,cy+R+14);
+  // Compute angle
+  let angle, valid=true, clamp=rawVal;
+  if(fn==='sin'){clamp=Math.max(-1,Math.min(1,rawVal)); angle=Math.asin(clamp);}
+  else if(fn==='cos'){clamp=Math.max(-1,Math.min(1,rawVal)); angle=Math.acos(clamp);}
+  else{angle=Math.atan(rawVal); clamp=rawVal;}
+  const px=cx+R*Math.cos(-angle), py=cy+R*Math.sin(-angle);
+  // Angle arc
+  itCtx.strokeStyle='#6366f1'; itCtx.lineWidth=2;
+  const startAngle=0, endAngle=-angle;
+  itCtx.beginPath(); itCtx.moveTo(cx,cy); itCtx.arc(cx,cy,40,startAngle,endAngle,angle>0); itCtx.lineTo(cx,cy); itCtx.stroke();
+  itCtx.fillStyle='#6366f180'; itCtx.fill();
+  // Radius line
+  itCtx.strokeStyle='#a5b4fc'; itCtx.lineWidth=2.5; itCtx.shadowColor='#6366f1'; itCtx.shadowBlur=6;
+  itCtx.beginPath(); itCtx.moveTo(cx,cy); itCtx.lineTo(px,py); itCtx.stroke(); itCtx.shadowBlur=0;
+  // Point
+  itCtx.fillStyle='#fbbf24'; itCtx.beginPath(); itCtx.arc(px,py,7,0,Math.PI*2); itCtx.fill();
+  // Dotted lines to axes
+  itCtx.strokeStyle='#fbbf2466'; itCtx.lineWidth=1; itCtx.setLineDash([4,4]);
+  itCtx.beginPath();itCtx.moveTo(px,py);itCtx.lineTo(px,cy);itCtx.stroke();
+  itCtx.beginPath();itCtx.moveTo(px,py);itCtx.lineTo(cx,py);itCtx.stroke();
+  itCtx.setLineDash([]);
+  // Labels on axes
+  itCtx.fillStyle='#fbbf24'; itCtx.font='bold 11px Inter';
+  if(fn==='sin'||fn==='cos'){
+    itCtx.fillText('cos θ='+Math.cos(angle).toFixed(2),px-15,cy+16);
+    itCtx.fillText('sin θ='+Math.sin(angle).toFixed(2),cx+5,py+4);
+  }
+  // Right panel — info
+  const rx=W*0.68, ry=H*0.15;
+  itCtx.fillStyle='#1e293b'; itCtx.strokeStyle='#334155'; itCtx.lineWidth=1.5;
+  roundRect(itCtx,rx,ry,W*0.3-10,H*0.7,10); itCtx.fill(); itCtx.stroke();
+  const deg=(angle*180/Math.PI).toFixed(1);
+  const lines=fn==='sin'?[`sin⁻¹(${clamp.toFixed(2)})`,`= ${deg}°`,`= ${angle.toFixed(3)} rad`,``,`Principal range:`,`[-90°, 90°]`,``,`sin(${deg}°) = ${clamp.toFixed(3)} ✓`]
+    :fn==='cos'?[`cos⁻¹(${clamp.toFixed(2)})`,`= ${deg}°`,`= ${angle.toFixed(3)} rad`,``,`Principal range:`,`[0°, 180°]`,``,`cos(${deg}°) = ${clamp.toFixed(3)} ✓`]
+    :[`tan⁻¹(${rawVal.toFixed(2)})`,`= ${deg}°`,`= ${angle.toFixed(3)} rad`,``,`Principal range:`,`(-90°, 90°)`,``,`tan(${deg}°) = ${rawVal.toFixed(2)} ✓`];
+  itCtx.fillStyle='#a5b4fc'; itCtx.font='bold 13px Outfit'; itCtx.textAlign='center';
+  lines.forEach((l,i)=>{
+    itCtx.fillStyle=i===0?'#fbbf24':i<3?'#e2e8f0':'#94a3b8';
+    if(i===0)itCtx.font='bold 14px Outfit';
+    else if(i===1||i===2)itCtx.font='bold 13px Inter';
+    else itCtx.font='11px Inter';
+    itCtx.fillText(l,rx+W*0.15-5,ry+30+i*22);
+  });
+  itCtx.textAlign='left';
+  document.getElementById('itEq').textContent=`${fn}⁻¹(${clamp.toFixed(3)}) = ${deg}° = ${angle.toFixed(4)} radians`;
+}
+drawIT();
+</script>
+</body>
+</html>

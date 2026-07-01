@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Vectors & 3D Lab — Class 12 | AIkiPadhai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#0d1117;color:#e2e8f0;font-family:'Inter',sans-serif;}
+    h1,h2,h3,h4{color:#f1f5f9!important;} p{color:#cbd5e1;}
+    .hero h1{color:#fff!important;} .hero p{color:#e2e8f0!important;}
+    nav a{color:#94a3b8;}
+    .lab-wrap{max-width:960px;margin:2rem auto;padding:0 1.2rem;}
+    .lab-card{background:#161b22;border:1px solid #30363d;border-radius:14px;padding:1.6rem;margin:1.4rem 0;}
+    .lab-card h3{color:#86efac!important;margin:0 0 .5rem;}
+    .lab-card p.hint{color:#64748b;font-size:.88rem;margin:.3rem 0 .8rem;}
+    canvas{border-radius:10px;display:block;margin:.6rem auto;}
+    .controls{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;margin:.6rem 0;}
+    .btn{padding:.5rem 1.1rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:.88rem;transition:all .18s;}
+    .btn-v{background:linear-gradient(135deg,#22c55e,#15803d);color:#fff;}
+    .btn-v:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(34,197,94,.4);}
+    .btn-g{background:#1e293b;color:#86efac;border:1px solid #334155;}
+    input[type=range]{accent-color:#22c55e;background:#1e293b;border:1px solid #334155;border-radius:6px;padding:.3rem .5rem;}
+    .eq-display{background:#0a0e1a;border-radius:8px;padding:.7rem 1rem;font-family:monospace;color:#86efac;font-size:.9rem;margin:.5rem 0;line-height:1.7;}
+    label{color:#94a3b8;font-size:.88rem;}
+    .slider-row{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
+    .val-badge{background:#1e293b;color:#86efac;border:1px solid #334155;border-radius:5px;padding:.2rem .55rem;font-weight:700;min-width:3rem;text-align:center;font-size:.85rem;}
+  </style>
+</head>
+<body>
+  <header><div class="container header-content">
+    <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+    <nav><a href="../index.html">Class 12 Maths</a><a href="index.html">Unit IV</a><a href="vectors-interactive.html" class="active">Lab</a></nav>
+  </div></header>
+
+  <section class="hero" style="background:linear-gradient(135deg,#052015,#14532d,#16a34a);">
+    <div class="container"><h1>Vectors & 3D Lab 🧭</h1><p>Vectors ko visually feel karo — addition, dot product, cross product, aur 3D geometry sab interactive!</p></div>
+  </section>
+
+  <div class="lab-wrap">
+
+    <!-- LAB 1: Vector Addition (drag tip) -->
+    <div class="lab-card">
+      <h3>➕ Lab 1: Vector Addition — Triangle Law</h3>
+      <p class="hint">Dono vectors ke arrows ka tip drag karo. Resultant (violet arrow) update hota rahega. Triangle Law: <strong>A + B = R</strong></p>
+      <canvas id="addCanvas" width="700" height="340" style="width:100%;background:#0a0e1a;cursor:crosshair;"></canvas>
+      <div class="eq-display" id="addEq"></div>
+    </div>
+
+    <!-- LAB 2: Dot Product = projection -->
+    <div class="lab-card">
+      <h3>● Lab 2: Dot Product — Angle aur Projection</h3>
+      <p class="hint">Angle slider se vectors rotate karo. Dekho: jab angle=90°, dot product=0! Projection aur cos θ ka relation visually samjho.</p>
+      <div class="controls slider-row">
+        <label>|A| =</label><input type="range" id="magA" min="50" max="180" value="130" oninput="drawDot()"><span id="magAval" class="val-badge">130</span>
+        <label>|B| =</label><input type="range" id="magB" min="50" max="180" value="100" oninput="drawDot()"><span id="magBval" class="val-badge">100</span>
+        <label>θ =</label><input type="range" id="angle" min="0" max="180" value="45" oninput="drawDot()"><span id="angleval" class="val-badge">45°</span>
+      </div>
+      <canvas id="dotCanvas" width="700" height="300" style="width:100%;background:#0a0e1a;"></canvas>
+      <div class="eq-display" id="dotEq"></div>
+    </div>
+
+    <!-- LAB 3: Cross Product = area -->
+    <div class="lab-card">
+      <h3>✕ Lab 3: Cross Product = Parallelogram ka Area</h3>
+      <p class="hint">Vectors adjust karo. |A × B| = |A||B|sin θ = parallelogram ka area. Jab parallel hoon toh area=0!</p>
+      <div class="controls slider-row">
+        <label>Ax=</label><input type="range" id="ax" min="-150" max="150" value="120" oninput="drawCross()"><span id="axv" class="val-badge">120</span>
+        <label>Ay=</label><input type="range" id="ay" min="-150" max="150" value="30" oninput="drawCross()"><span id="ayv" class="val-badge">30</span>
+        <label>Bx=</label><input type="range" id="bx" min="-150" max="150" value="40" oninput="drawCross()"><span id="bxv" class="val-badge">40</span>
+        <label>By=</label><input type="range" id="by" min="-150" max="150" value="120" oninput="drawCross()"><span id="byv" class="val-badge">120</span>
+      </div>
+      <canvas id="crossCanvas" width="700" height="300" style="width:100%;background:#0a0e1a;"></canvas>
+      <div class="eq-display" id="crossEq"></div>
+    </div>
+
+    <!-- LAB 4: 3D Direction Cosines -->
+    <div class="lab-card">
+      <h3>🌐 Lab 4: 3D Vector — Direction Cosines</h3>
+      <p class="hint">Sliders se 3D vector change karo. Dekho axes par projections aur direction cosines (l,m,n). l²+m²+n²=1 hamesha!</p>
+      <div class="controls slider-row">
+        <label>x=</label><input type="range" id="v3x" min="-100" max="100" value="60" oninput="draw3D()"><span id="v3xv" class="val-badge">60</span>
+        <label>y=</label><input type="range" id="v3y" min="-100" max="100" value="80" oninput="draw3D()"><span id="v3yv" class="val-badge">80</span>
+        <label>z=</label><input type="range" id="v3z" min="-100" max="100" value="60" oninput="draw3D()"><span id="v3zv" class="val-badge">60</span>
+      </div>
+      <canvas id="c3d" width="700" height="320" style="width:100%;background:#0a0e1a;"></canvas>
+      <div class="eq-display" id="eq3d"></div>
+    </div>
+
+  </div>
+
+<script>
+const PI=Math.PI;
+
+// ==================== LAB 1: Vector Addition ====================
+const addC=document.getElementById('addCanvas');
+const actx=addC.getContext('2d');
+let vA={x:150,y:-80},vB={x:90,y:80};
+let dragging=null;
+const OX=addC.width/2-80,OY=addC.height/2;
+
+function drawArrow(ctx,x1,y1,x2,y2,color,lbl,dashed){
+  ctx.save();
+  if(dashed){ctx.setLineDash([5,4]);}
+  ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=2.5;
+  ctx.shadowColor=color;ctx.shadowBlur=6;
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  // arrowhead
+  const angle=Math.atan2(y2-y1,x2-x1);
+  ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-12*Math.cos(angle-0.38),y2-12*Math.sin(angle-0.38));
+  ctx.lineTo(x2-12*Math.cos(angle+0.38),y2-12*Math.sin(angle+0.38));
+  ctx.closePath();ctx.fill();
+  ctx.shadowBlur=0;ctx.setLineDash([]);
+  if(lbl){ctx.font='bold 13px Inter';ctx.fillStyle=color;ctx.fillText(lbl,x2+6,y2+4);}
+  ctx.restore();
+}
+
+function drawAddCanvas(){
+  const W=addC.width,H=addC.height;
+  actx.clearRect(0,0,W,H);actx.fillStyle='#0a0e1a';actx.fillRect(0,0,W,H);
+  // Grid
+  actx.strokeStyle='#1e293b';actx.lineWidth=1;
+  for(let x=OX%50;x<W;x+=50){actx.beginPath();actx.moveTo(x,0);actx.lineTo(x,H);actx.stroke();}
+  for(let y=OY%50;y<H;y+=50){actx.beginPath();actx.moveTo(0,y);actx.lineTo(W,y);actx.stroke();}
+  actx.strokeStyle='#334155';actx.lineWidth=1.5;
+  actx.beginPath();actx.moveTo(0,OY);actx.lineTo(W,OY);actx.stroke();
+  actx.beginPath();actx.moveTo(OX,0);actx.lineTo(OX,H);actx.stroke();
+
+  const R={x:vA.x+vB.x,y:vA.y+vB.y};
+  // Draw A from origin
+  drawArrow(actx,OX,OY,OX+vA.x,OY+vA.y,'#3b82f6','A⃗');
+  // Draw B from tip of A (triangle law)
+  drawArrow(actx,OX+vA.x,OY+vA.y,OX+R.x,OY+R.y,'#22c55e','B⃗');
+  // Resultant from origin
+  drawArrow(actx,OX,OY,OX+R.x,OY+R.y,'#a78bfa','R⃗=A+B',false);
+  // B from origin too (dashed)
+  drawArrow(actx,OX,OY,OX+vB.x,OY+vB.y,'#22c55e33','',true);
+
+  // Labels at tips
+  actx.fillStyle='#94a3b8';actx.font='11px Inter';
+  actx.fillText('Drag arrow tips!',10,18);
+
+  // Hit circles
+  [[OX+vA.x,OY+vA.y,'#3b82f6'],[OX+R.x,OY+R.y,'#a78bfa']].forEach(([px,py,c])=>{
+    actx.fillStyle=c;actx.beginPath();actx.arc(px,py,8,0,PI*2);actx.fill();
+  });
+
+  const magA=Math.sqrt(vA.x**2+vA.y**2)/50,magB=Math.sqrt(vB.x**2+vB.y**2)/50;
+  const magR=Math.sqrt(R.x**2+R.y**2)/50;
+  document.getElementById('addEq').textContent=
+    `A⃗ = (${(vA.x/50).toFixed(2)}, ${(-vA.y/50).toFixed(2)})  |A⃗| = ${magA.toFixed(2)}
+`+
+    `B⃗ = (${(vB.x/50).toFixed(2)}, ${(-vB.y/50).toFixed(2)})  |B⃗| = ${magB.toFixed(2)}
+`+
+    `R⃗ = A⃗ + B⃗ = (${(R.x/50).toFixed(2)}, ${(-R.y/50).toFixed(2)})  |R⃗| = ${magR.toFixed(2)}
+`+
+    `Triangle Law: Pehle A, phir B lagao — wahi resultant milta hai origin se!`;
+}
+drawAddCanvas();
+
+function getTipHit(mx,my){
+  const tips=[[OX+vA.x,OY+vA.y,'A'],[OX+vA.x+vB.x,OY+vA.y+vB.y,'R']];
+  for(const [tx,ty,id] of tips) if(Math.hypot(mx-tx,my-ty)<14) return id;
+  return null;
+}
+addC.addEventListener('mousedown',e=>{
+  const r=addC.getBoundingClientRect();
+  const mx=(e.clientX-r.left)*(addC.width/r.width),my=(e.clientY-r.top)*(addC.height/r.height);
+  dragging=getTipHit(mx,my);
+});
+addC.addEventListener('mousemove',e=>{
+  if(!dragging) return;
+  const r=addC.getBoundingClientRect();
+  const mx=(e.clientX-r.left)*(addC.width/r.width),my=(e.clientY-r.top)*(addC.height/r.height);
+  if(dragging==='A'){vA={x:mx-OX,y:my-OY};}
+  else if(dragging==='R'){const R={x:mx-OX,y:my-OY};vB={x:R.x-vA.x,y:R.y-vA.y};}
+  drawAddCanvas();
+});
+addC.addEventListener('mouseup',()=>dragging=null);
+addC.addEventListener('mouseleave',()=>dragging=null);
+// Touch
+addC.addEventListener('touchstart',e=>{e.preventDefault();const t=e.touches[0];const r=addC.getBoundingClientRect();const mx=(t.clientX-r.left)*(addC.width/r.width),my=(t.clientY-r.top)*(addC.height/r.height);dragging=getTipHit(mx,my);},{passive:false});
+addC.addEventListener('touchmove',e=>{e.preventDefault();if(!dragging)return;const t=e.touches[0];const r=addC.getBoundingClientRect();const mx=(t.clientX-r.left)*(addC.width/r.width),my=(t.clientY-r.top)*(addC.height/r.height);if(dragging==='A'){vA={x:mx-OX,y:my-OY};}else if(dragging==='R'){vB={x:mx-OX-vA.x,y:my-OY-vA.y};}drawAddCanvas();},{passive:false});
+addC.addEventListener('touchend',()=>dragging=null);
+
+// ==================== LAB 2: Dot Product ====================
+function drawDot(){
+  const c=document.getElementById('dotCanvas'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,cx=W/2,cy=H/2;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const mA=+document.getElementById('magA').value;
+  const mB=+document.getElementById('magB').value;
+  const th=+document.getElementById('angle').value*PI/180;
+  document.getElementById('magAval').textContent=mA;
+  document.getElementById('magBval').textContent=mB;
+  document.getElementById('angleval').textContent=document.getElementById('angle').value+'°';
+
+  const ax=cx+mA,ay=cy;
+  const bx=cx+mB*Math.cos(th),by=cy-mB*Math.sin(th);
+  const dot=mA*mB*Math.cos(th);
+  const projLen=dot/mA;
+
+  // Grid
+  ctx.strokeStyle='#1e293b';ctx.lineWidth=1;
+  for(let x=cx%60;x<W;x+=60){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=cy%60;y<H;y+=60){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  ctx.strokeStyle='#334155';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(0,cy);ctx.lineTo(W,cy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx,0);ctx.lineTo(cx,H);ctx.stroke();
+
+  // Projection dashed
+  ctx.setLineDash([5,4]);ctx.strokeStyle='#fbbf24aa';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(cx+projLen,cy);ctx.lineTo(bx,by);ctx.stroke();
+  ctx.setLineDash([]);
+  // Projection bar
+  ctx.strokeStyle='#fbbf24';ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+projLen,cy);ctx.stroke();
+  ctx.fillStyle='#fbbf24';ctx.font='11px Inter';ctx.fillText('proj = '+projLen.toFixed(1),cx+projLen/2-20,cy+18);
+
+  // Arc for theta
+  ctx.strokeStyle='#64748b';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.arc(cx,cy,40,th>0?-th:0,th>0?0:th,th<0);ctx.stroke();
+  ctx.fillStyle='#94a3b8';ctx.font='12px Inter';
+  ctx.fillText('θ='+document.getElementById('angle').value+'°',cx+42*Math.cos(th/2)-10,cy-42*Math.sin(th/2));
+
+  drawArrow(ctx,cx,cy,ax,ay,'#3b82f6','A⃗');
+  drawArrow(ctx,cx,cy,bx,by,'#22c55e','B⃗');
+
+  const dotColor=dot>5?'#22c55e':dot<-5?'#ef4444':'#fbbf24';
+  ctx.fillStyle=dotColor;ctx.font='bold 14px Inter';
+  ctx.fillText('A⃗·B⃗ = '+dot.toFixed(1)+(Math.abs(dot)<5?' ← PERPENDICULAR!':dot>0?' (acute angle)':' (obtuse angle)'),10,22);
+  document.getElementById('dotEq').textContent=
+    `A⃗·B⃗ = |A||B|cos θ = ${mA}×${mB}×cos(${document.getElementById('angle').value}°)
+`+
+    `     = ${mA*mB}×${Math.cos(th).toFixed(4)} = ${dot.toFixed(2)}
+`+
+    `Projection of B⃗ on A⃗ = |B|cos θ = ${projLen.toFixed(2)}
+`+
+    `Note: dot product = 0 jab θ=90° (perpendicular vectors!)`;
+}
+drawDot();
+
+// ==================== LAB 3: Cross Product ====================
+function drawCross(){
+  const c=document.getElementById('crossCanvas'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,cx=W/2,cy=H/2;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const ax=+document.getElementById('ax').value,ay=-document.getElementById('ay').value;
+  const bx=+document.getElementById('bx').value,by=-document.getElementById('by').value;
+  document.getElementById('axv').textContent=ax;
+  document.getElementById('ayv').textContent=document.getElementById('ay').value;
+  document.getElementById('bxv').textContent=bx;
+  document.getElementById('byv').textContent=document.getElementById('by').value;
+  const cross=ax*(-by)-ay*bx; // z-component (ax*by_actual - ay*bx_actual)
+  const scale=0.85;
+  const Ax=ax*scale,Ay=ay*scale,Bx=bx*scale,By=by*scale;
+  // Grid
+  ctx.strokeStyle='#1e293b';ctx.lineWidth=1;
+  for(let x=cx%50;x<W;x+=50){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=cy%50;y<H;y+=50){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  ctx.strokeStyle='#334155';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(0,cy);ctx.lineTo(W,cy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx,0);ctx.lineTo(cx,H);ctx.stroke();
+
+  // Parallelogram fill
+  ctx.beginPath();
+  ctx.moveTo(cx,cy);ctx.lineTo(cx+Ax,cy+Ay);
+  ctx.lineTo(cx+Ax+Bx,cy+Ay+By);ctx.lineTo(cx+Bx,cy+By);ctx.closePath();
+  const areaTrans=Math.abs(cross*scale*scale);
+  const g=ctx.createLinearGradient(cx,cy,cx+Ax+Bx,cy+Ay+By);
+  g.addColorStop(0,'rgba(168,85,247,0.3)');g.addColorStop(1,'rgba(168,85,247,0.08)');
+  ctx.fillStyle=g;ctx.fill();
+  ctx.strokeStyle='#a855f7';ctx.lineWidth=1.5;ctx.stroke();
+
+  drawArrow(ctx,cx,cy,cx+Ax,cy+Ay,'#3b82f6','A⃗');
+  drawArrow(ctx,cx,cy,cx+Bx,cy+By,'#22c55e','B⃗');
+  // center label
+  const mx=cx+(Ax+Bx)/2,my=cy+(Ay+By)/2;
+  ctx.fillStyle='#a78bfa';ctx.font='bold 12px Inter';
+  ctx.fillText('Area=|A×B|='+Math.abs(cross).toFixed(0),mx-30,my+5);
+
+  document.getElementById('crossEq').textContent=
+    `A⃗ = (${ax}, ${document.getElementById('ay').value}),  B⃗ = (${bx}, ${document.getElementById('by').value})
+`+
+    `A⃗×B⃗ (z-component) = Ax·By − Ay·Bx = ${ax}×${document.getElementById('by').value} − ${document.getElementById('ay').value}×${bx}
+`+
+    `                    = ${ax*+document.getElementById('by').value} − ${+document.getElementById('ay').value*bx} = ${cross.toFixed(0)}
+`+
+    `|A⃗×B⃗| = ${Math.abs(cross).toFixed(2)} = Parallelogram ka area
+Jab parallel hoon toh cross product=0, area=0!`;
+}
+drawCross();
+
+// ==================== LAB 4: 3D Vector ====================
+function draw3D(){
+  const c=document.getElementById('c3d'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,cx=W/2,cy=H/2+40;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const vx=+document.getElementById('v3x').value;
+  const vy=+document.getElementById('v3y').value;
+  const vz=+document.getElementById('v3z').value;
+  document.getElementById('v3xv').textContent=vx;
+  document.getElementById('v3yv').textContent=vy;
+  document.getElementById('v3zv').textContent=vz;
+
+  // Isometric projection
+  const ISO={xx:Math.cos(PI/6),xy:-Math.sin(PI/6),yx:0,yy:1,zx:-Math.cos(PI/6),zy:-Math.sin(PI/6)};
+  function proj(x,y,z){
+    return{
+      px:cx+x*ISO.xx+z*ISO.zx,
+      py:cy-x*ISO.xy-z*ISO.zy-y*ISO.yy
+    };
+  }
+  const sc2=1.2;
+  // Axes
+  const axlen=130;
+  [['x',axlen,0,0,'#3b82f6'],['y',0,axlen,0,'#22c55e'],['z',0,0,axlen,'#f59e0b']].forEach(([l,x,y,z,col])=>{
+    const o=proj(0,0,0),t=proj(x*sc2,y*sc2,z*sc2);
+    ctx.strokeStyle=col;ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(o.px,o.py);ctx.lineTo(t.px,t.py);ctx.stroke();
+    ctx.fillStyle=col;ctx.font='bold 13px Inter';ctx.fillText(l,t.px+4,t.py+4);
+  });
+
+  // Projections dashed
+  const sc3=sc2*0.6;
+  const tip=proj(vx*sc3,vy*sc3,vz*sc3);
+  const px=proj(vx*sc3,0,0),py=proj(0,vy*sc3,0),pz=proj(0,0,vz*sc3);
+  const o=proj(0,0,0);
+  ctx.setLineDash([4,4]);ctx.lineWidth=1.5;
+  [[o,px,'#3b82f666'],[o,py,'#22c55e66'],[o,pz,'#f59e0b66'],
+   [px,proj(vx*sc3,vy*sc3,0),'#ffffff22'],[py,proj(vx*sc3,vy*sc3,0),'#ffffff22'],
+   [proj(vx*sc3,vy*sc3,0),tip,'#ffffff22']].forEach(([a,b,col])=>{
+    ctx.strokeStyle=col;ctx.beginPath();ctx.moveTo(a.px,a.py);ctx.lineTo(b.px,b.py);ctx.stroke();
+  });
+  ctx.setLineDash([]);
+
+  // Main vector
+  ctx.strokeStyle='#a78bfa';ctx.lineWidth=3;ctx.shadowColor='#a78bfa';ctx.shadowBlur=10;
+  ctx.beginPath();ctx.moveTo(o.px,o.py);ctx.lineTo(tip.px,tip.py);ctx.stroke();
+  ctx.shadowBlur=0;
+  const ang=Math.atan2(tip.py-o.py,tip.px-o.px);
+  ctx.fillStyle='#a78bfa';ctx.beginPath();
+  ctx.moveTo(tip.px,tip.py);
+  ctx.lineTo(tip.px-12*Math.cos(ang-0.38),tip.py-12*Math.sin(ang-0.38));
+  ctx.lineTo(tip.px-12*Math.cos(ang+0.38),tip.py-12*Math.sin(ang+0.38));
+  ctx.closePath();ctx.fill();
+  ctx.fillStyle='#a78bfa';ctx.font='bold 13px Inter';ctx.fillText('v⃗',tip.px+5,tip.py-5);
+
+  // Projection dots
+  [[px,'#3b82f6'],[py,'#22c55e'],[pz,'#f59e0b']].forEach(([p,c])=>{
+    ctx.fillStyle=c;ctx.beginPath();ctx.arc(p.px,p.py,5,0,PI*2);ctx.fill();
+  });
+
+  const mag=Math.sqrt(vx*vx+vy*vy+vz*vz);
+  const l=vx/mag,m=vy/mag,n=vz/mag;
+  document.getElementById('eq3d').textContent=
+    `v⃗ = ${vx}î + ${vy}ĵ + ${vz}k̂
+`+
+    `|v⃗| = √(${vx}²+${vy}²+${vz}²) = √${vx*vx+vy*vy+vz*vz} = ${mag.toFixed(2)}
+`+
+    `Direction cosines: l=${l.toFixed(3)}, m=${m.toFixed(3)}, n=${n.toFixed(3)}
+`+
+    `Verification: l²+m²+n² = ${(l*l+m*m+n*n).toFixed(4)} ≈ 1 ✓`;
+}
+draw3D();
+
+function drawArrow(ctx,x1,y1,x2,y2,color,lbl){
+  ctx.save();ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=2.5;
+  ctx.shadowColor=color;ctx.shadowBlur=5;
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  const angle=Math.atan2(y2-y1,x2-x1);
+  ctx.beginPath();ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-12*Math.cos(angle-0.38),y2-12*Math.sin(angle-0.38));
+  ctx.lineTo(x2-12*Math.cos(angle+0.38),y2-12*Math.sin(angle+0.38));
+  ctx.closePath();ctx.fill();ctx.shadowBlur=0;
+  if(lbl){ctx.font='bold 13px Inter';ctx.fillStyle=color;ctx.fillText(lbl,x2+6,y2-3);}
+  ctx.restore();
+}
+</script>
+</body>
+</html>

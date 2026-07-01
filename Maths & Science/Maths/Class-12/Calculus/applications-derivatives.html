@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Applications of Derivatives — Class 12 | AIkiPadhai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;line-height:1.75;}
+    h2{color:#450a0a;border-bottom:3px solid #dc2626;padding-bottom:8px;margin:2.2rem 0 1rem;}
+    h3{color:#991b1b;}
+    .concept-box{background:#fef2f2;border-left:5px solid #dc2626;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .concept-box p,.concept-box li{color:#7f1d1d;}
+    .formula-box{background:#450a0a;color:#fecaca;border-radius:10px;padding:1.2rem 1.6rem;font-family:monospace;font-size:1.05rem;margin:1rem 0;}
+    .example-box{background:#f0fdf4;border-left:5px solid #10b981;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .example-box h4{color:#065f46;}
+    .example-box p,.example-box li{color:#14532d;}
+    .story-box{background:#fffbeb;border-left:5px solid #f59e0b;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .story-box h3{color:#92400e;}
+    .story-box p{color:#78350f;}
+    .step-box{background:#f1f5f9;border-radius:6px;padding:.9rem 1.1rem;margin:.5rem 0;border-left:3px solid #dc2626;color:#1e293b;}
+    .type-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:1.5rem 0;}
+    .type-card{background:#fff;border:2px solid #e2e8f0;border-radius:10px;padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    .type-card h4{color:#dc2626;margin-bottom:.4rem;}
+    .type-card p{color:#475569;font-size:.9rem;}
+    .practice-q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1.2rem;margin:.8rem 0;}
+    .practice-q p{color:#1e293b;}
+    details summary{cursor:pointer;color:#dc2626;font-weight:600;padding:.4rem 0;}
+    details p{color:#475569;padding:.5rem 0 0 1rem;}
+    table{width:100%;border-collapse:collapse;margin:1.2rem 0;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    th{background:#450a0a;color:#fca5a5;padding:.9rem 1rem;text-align:left;}
+    td{padding:.75rem 1rem;border-bottom:1px solid #e2e8f0;color:#1e293b;}
+    tr:last-child td{border-bottom:none;}
+</style>
+</head>
+<body>
+  <header><div class="container header-content">
+    <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+    <nav>
+      <a href="../../../../index.html">Home</a>
+      <a href="../index.html">Class 12 Maths</a>
+      <a href="index.html">Unit III</a>
+      <a href="applications-derivatives.html" class="active">Applications of Derivatives</a>
+    </nav>
+  </div></header>
+  <section class="hero" style="background:linear-gradient(135deg,#450a0a,#dc2626);">
+    <div class="container">
+      <h1>Applications of Derivatives 📉</h1>
+      <p>Derivative sirf calculate karna nahi — use karna bhi seekho! Rate of change, maxima, minima!</p>
+    </div>
+  </section>
+  <div class="container">
+
+    <div class="story-box">
+      <h3>💰 Profit Maximize Karo!</h3>
+      <p>Ek factory owner hai jisko apna profit maximize karna hai. Uska profit function P(x) = -x² + 100x - 200 hai (x = units produced). Ab yeh function kab maximum value lega? Derivative lao: P'(x) = -2x + 100. P'(x) = 0 par x = 50. Aur P''(x) = -2 < 0, matlab yeh maximum point hai! So 50 units produce karna sabse zyada profitable hai. Yeh sab <strong>applications of derivatives</strong> hai!</p>
+    </div>
+
+    <h2>1. Rate of Change</h2>
+    <div class="concept-box">
+      <p>dy/dx = rate of change of y with respect to x. Agar x time hai (t), toh dy/dt = rate of change of y over time.</p>
+    </div>
+    <div class="example-box">
+      <h4>✅ Example: Balloon Phool Raha Hai</h4>
+      <p>Sphere ki radius 3 cm/sec ki rate se badh rahi hai. Volume ka rate of change find karo jab r = 5 cm.</p>
+      <p>V = (4/3)πr³ → dV/dt = 4πr² × dr/dt = 4π(25)(3) = 300π cm³/sec</p>
+    </div>
+
+    <h2>2. Increasing &amp; Decreasing Functions</h2>
+    <div class="concept-box">
+      <p><strong>Increasing:</strong> f'(x) > 0 on interval (a,b)<br/>
+      <strong>Decreasing:</strong> f'(x) < 0 on interval (a,b)<br/>
+      <strong>Critical points:</strong> f'(x) = 0 ya f'(x) undefined</p>
+    </div>
+    <div class="example-box">
+      <h4>✅ Find intervals where f(x) = x³ - 3x + 2 increasing/decreasing</h4>
+      <p>f'(x) = 3x² - 3 = 3(x²-1) = 3(x-1)(x+1)</p>
+      <p>Critical points: x = -1, x = 1</p>
+      <p>x < -1: f'(x) > 0 → Increasing</p>
+      <p>-1 < x < 1: f'(x) < 0 → Decreasing</p>
+      <p>x > 1: f'(x) > 0 → Increasing</p>
+    </div>
+
+    <h2>3. Tangents aur Normals</h2>
+    <div class="formula-box">Slope of tangent at (x₀,y₀) = f'(x₀) = m
+
+Equation of tangent: y - y₀ = m(x - x₀)
+
+Slope of normal = -1/m (perpendicular to tangent)
+Equation of normal: y - y₀ = (-1/m)(x - x₀)</div>
+
+    <h2>4. Maxima aur Minima</h2>
+    <!-- Maxima/Minima SVG -->
+    <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;display:block;margin:1.5rem auto;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);">
+      <text x="300" y="22" text-anchor="middle" font-family="Inter" font-size="13" font-weight="700" fill="#450a0a">Local Maxima aur Minima</text>
+      <path d="M30,170 Q80,170 100,80 Q120,10 140,80 Q160,160 200,160 Q240,155 280,80 Q300,20 320,80 Q340,155 380,155 Q440,155 570,50" fill="none" stroke="#dc2626" stroke-width="2.5"/>
+      <!-- Max point -->
+      <circle cx="100" cy="80" r="6" fill="#dc2626"/>
+      <text x="100" y="70" text-anchor="middle" font-family="Inter" font-size="11" fill="#dc2626" font-weight="700">Local Max</text>
+      <text x="100" y="58" text-anchor="middle" font-family="Inter" font-size="10" fill="#64748b">f'=0, f''&lt;0</text>
+      <!-- Min point -->
+      <circle cx="200" cy="160" r="6" fill="#2563eb"/>
+      <text x="200" y="178" text-anchor="middle" font-family="Inter" font-size="11" fill="#2563eb" font-weight="700">Local Min</text>
+      <text x="200" y="188" text-anchor="middle" font-family="Inter" font-size="10" fill="#64748b">f'=0, f''&gt;0</text>
+      <!-- Max2 -->
+      <circle cx="300" cy="80" r="6" fill="#dc2626"/>
+      <text x="300" y="70" text-anchor="middle" font-family="Inter" font-size="11" fill="#dc2626" font-weight="700">Local Max</text>
+    </svg>
+
+    <div class="formula-box">/* First Derivative Test */
+At x=c where f'(c)=0:
+- If f' changes + to - : Local Maximum
+- If f' changes - to + : Local Minimum
+- If f' doesn't change sign: Neither (saddle/inflection)
+
+/* Second Derivative Test */
+At x=c where f'(c)=0:
+- f''(c) < 0 → Local Maximum
+- f''(c) > 0 → Local Minimum
+- f''(c) = 0 → Inconclusive (use first test)</div>
+
+    <div class="example-box">
+      <h4>✅ Find maxima/minima of f(x) = x³ - 6x² + 9x + 15</h4>
+      <div class="step-box">f'(x) = 3x² - 12x + 9 = 3(x²-4x+3) = 3(x-1)(x-3)</div>
+      <div class="step-box">Critical points: x=1 and x=3</div>
+      <div class="step-box">f''(x) = 6x - 12. f''(1) = -6 < 0 → Local Max at x=1. f''(3) = 6 > 0 → Local Min at x=3</div>
+      <p style="color:#065f46;font-weight:600;">Local Max = f(1) = 1-6+9+15 = 19. Local Min = f(3) = 27-54+27+15 = 15</p>
+    </div>
+
+    <h2>5. Practice Questions</h2>
+    <div class="practice-q"><p><strong>Q1.</strong> A stone is dropped into pond. Radius of ripple increases at 5 cm/s. Rate of increase of area when r=10 cm?</p><details><summary>Solution</summary><p>A=πr². dA/dt=2πr×dr/dt=2π(10)(5)=100π cm²/s</p></details></div>
+    <div class="practice-q"><p><strong>Q2.</strong> Find the tangent line to y=x³-3x at (2,2).</p><details><summary>Solution</summary><p>y'=3x²-3. At x=2: slope=12-3=9. Tangent: y-2=9(x-2) → y=9x-16</p></details></div>
+    <div class="practice-q"><p><strong>Q3.</strong> Among all rectangles of perimeter 100m, find dimensions for maximum area.</p><details><summary>Solution</summary><p>Let l+w=50 (half perimeter). A=lw=l(50-l). dA/dl=50-2l=0 → l=25. Square with side 25m → max area=625m²</p></details></div>
+  </div>
+  <footer style="background:#0f172a;color:#94a3b8;text-align:center;padding:2rem;margin-top:3rem;">
+    <p>AIkiPadhai — Free Education for Every Student 🇮🇳</p>
+  </footer></body></html>

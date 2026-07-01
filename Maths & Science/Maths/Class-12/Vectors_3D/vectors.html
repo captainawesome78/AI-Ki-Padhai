@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Vectors — Class 12 | AIkiPadhai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;line-height:1.75;}
+    h2{color:#052e16;border-bottom:3px solid #16a34a;padding-bottom:8px;margin:2.2rem 0 1rem;}
+    h3{color:#166534;}
+    .concept-box{background:#f0fdf4;border-left:5px solid #16a34a;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .concept-box p,.concept-box li{color:#14532d;}
+    .formula-box{background:#052e16;color:#bbf7d0;border-radius:10px;padding:1.2rem 1.6rem;font-family:monospace;font-size:1.05rem;margin:1rem 0;}
+    .example-box{background:#eff6ff;border-left:5px solid #3b82f6;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .example-box h4{color:#1e3a8a;}
+    .example-box p,.example-box li{color:#1e40af;}
+    .story-box{background:#fffbeb;border-left:5px solid #f59e0b;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .story-box h3{color:#92400e;}
+    .story-box p{color:#78350f;}
+    .type-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:1.5rem 0;}
+    .type-card{background:#fff;border:2px solid #e2e8f0;border-radius:10px;padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    .type-card h4{color:#16a34a;margin-bottom:.4rem;}
+    .type-card p{color:#475569;font-size:.9rem;}
+    .practice-q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1.2rem;margin:.8rem 0;}
+    .practice-q p{color:#1e293b;}
+    details summary{cursor:pointer;color:#16a34a;font-weight:600;padding:.4rem 0;}
+    details p{color:#475569;padding:.5rem 0 0 1rem;}
+    table{width:100%;border-collapse:collapse;margin:1.2rem 0;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    th{background:#052e16;color:#86efac;padding:.9rem 1rem;text-align:left;}
+    td{padding:.75rem 1rem;border-bottom:1px solid #e2e8f0;color:#1e293b;}
+    tr:last-child td{border-bottom:none;}
+  </style>
+</head>
+<body>
+  <header><div class="container header-content">
+    <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+    <nav><a href="../../../../index.html">Home</a><a href="../index.html">Class 12 Maths</a><a href="index.html">Unit IV</a><a href="vectors.html" class="active">Vectors</a></nav>
+  </div></header>
+  <section class="hero" style="background:linear-gradient(135deg,#052e16,#16a34a);">
+    <div class="container">
+      <h1>Vectors →</h1>
+      <p>Magnitude aur direction — dono milke ek vector banate hain. Physics se computer graphics tak — sab jagah vectors!</p>
+    </div>
+  </section>
+  <div class="container">
+
+    <div class="story-box">
+      <h3>✈️ Pilot ki Kahani</h3>
+      <p>Ek pilot apna plane North mein 200 km/h se fly kar raha hai. Tabhi ek crosswind 50 km/h East ki taraf aati hai. Plane actually kahan jayega? Seedha North nahi — thoda Northeast ki taraf! Kyunki wind aur plane ki apni speed dono mil jaate hain — aur resultant direction calculate karna hota hai. Yeh exactly <strong>vector addition</strong> hai. Physics mein forces, velocity, acceleration — sab vectors hain. Math mein inhe formally study karte hain.</p>
+    </div>
+
+    <h2>1. Scalar vs Vector</h2>
+    <div class="type-grid">
+      <div class="type-card">
+        <h4>Scalar</h4>
+        <p>Sirf magnitude (size): Temperature, mass, speed, distance. Koi direction nahi.</p>
+        <p style="color:#16a34a;margin-top:.4rem;">Examples: 5 kg, 30°C, 100 km</p>
+      </div>
+      <div class="type-card">
+        <h4>Vector</h4>
+        <p>Magnitude + Direction: Velocity, Force, Displacement. Arrow se represent karte hain.</p>
+        <p style="color:#16a34a;margin-top:.4rem;">Examples: 60 km/h North, 5N downward</p>
+      </div>
+    </div>
+
+    <!-- Vector SVG -->
+    <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;display:block;margin:1.5rem auto;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);">
+      <text x="300" y="22" text-anchor="middle" font-family="Inter" font-size="13" font-weight="700" fill="#052e16">Vector Components in 3D</text>
+      <!-- 3D axes -->
+      <line x1="200" y1="140" x2="350" y2="140" stroke="#94a3b8" stroke-width="1.5"/>
+      <line x1="200" y1="140" x2="200" y2="40" stroke="#94a3b8" stroke-width="1.5"/>
+      <line x1="200" y1="140" x2="130" y2="170" stroke="#94a3b8" stroke-width="1.5"/>
+      <text x="355" y="144" font-family="Inter" font-size="11" fill="#64748b">x</text>
+      <text x="204" y="38" font-family="Inter" font-size="11" fill="#64748b">z</text>
+      <text x="122" y="174" font-family="Inter" font-size="11" fill="#64748b">y</text>
+      <!-- Vector a -->
+      <defs><marker id="v1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#16a34a"/></marker></defs>
+      <line x1="200" y1="140" x2="320" y2="70" stroke="#16a34a" stroke-width="2.5" marker-end="url(#v1)"/>
+      <text x="330" y="65" font-family="Outfit" font-size="14" font-weight="700" fill="#16a34a">⃗a</text>
+      <!-- Component projections -->
+      <line x1="200" y1="140" x2="320" y2="140" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="5,3"/>
+      <line x1="320" y1="140" x2="320" y2="70" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="5,3"/>
+      <text x="255" y="158" font-family="Inter" font-size="11" fill="#475569">aₓ (x-component)</text>
+      <text x="325" y="110" font-family="Inter" font-size="11" fill="#475569">a_z</text>
+      <!-- Labels -->
+      <text x="440" y="70" font-family="Inter" font-size="12" fill="#052e16" font-weight="600">⃗a = aₓ î + aᵧ ĵ + a_z k̂</text>
+      <text x="440" y="90" font-family="Inter" font-size="12" fill="#475569">|⃗a| = √(aₓ²+aᵧ²+a_z²)</text>
+    </svg>
+
+    <h2>2. Position Vector aur Direction Cosines</h2>
+    <div class="formula-box">Position vector of P(x,y,z): OP⃗ = xî + yĵ + zk̂
+
+Direction cosines (l, m, n):
+l = cos α = x/r, m = cos β = y/r, n = cos γ = z/r
+where r = |OP⃗| = √(x²+y²+z²)
+
+Important: l² + m² + n² = 1 (always!)</div>
+
+    <h2>3. Scalar (Dot) Product</h2>
+    <div class="concept-box">
+      <p>⃗a·⃗b = |⃗a||⃗b|cos θ = a₁b₁ + a₂b₂ + a₃b₃</p>
+      <p style="margin-top:.5rem;"><strong>Key result:</strong> ⃗a ⊥ ⃗b ⟺ ⃗a·⃗b = 0</p>
+      <p style="margin-top:.5rem;"><strong>î·î = ĵ·ĵ = k̂·k̂ = 1; î·ĵ = ĵ·k̂ = k̂·î = 0</strong></p>
+    </div>
+
+    <div class="formula-box">cos θ = (⃗a·⃗b)/(|⃗a||⃗b|)
+
+Projection of ⃗a on ⃗b = (⃗a·⃗b)/|⃗b|
+
+Work done = F⃗·d⃗ (physics application)</div>
+
+    <h2>4. Vector (Cross) Product</h2>
+    <div class="concept-box">
+      <p>⃗a × ⃗b = |⃗a||⃗b|sin θ n̂ (n̂ = unit normal using right-hand rule)</p>
+      <p style="margin-top:.5rem;"><strong>Key result:</strong> ⃗a ∥ ⃗b ⟺ ⃗a × ⃗b = ⃗0</p>
+      <p style="margin-top:.5rem;"><strong>î×ĵ=k̂, ĵ×k̂=î, k̂×î=ĵ</strong></p>
+    </div>
+
+    <div class="formula-box">⃗a × ⃗b = | î  ĵ  k̂ |
+             | a₁ a₂ a₃|
+             | b₁ b₂ b₃|
+
+= î(a₂b₃-a₃b₂) - ĵ(a₁b₃-a₃b₁) + k̂(a₁b₂-a₂b₁)
+
+|⃗a × ⃗b| = area of parallelogram formed by ⃗a and ⃗b
+Area of triangle = ½|⃗a × ⃗b|</div>
+
+    <div class="example-box">
+      <h4>✅ ⃗a = 2î+3ĵ-k̂, ⃗b = î-ĵ+2k̂. Find ⃗a×⃗b.</h4>
+      <p>= î(3×2-(-1)×(-1)) - ĵ(2×2-(-1)×1) + k̂(2×(-1)-3×1)</p>
+      <p>= î(6-1) - ĵ(4+1) + k̂(-2-3)</p>
+      <p style="color:#1e3a8a;font-weight:600;">= 5î - 5ĵ - 5k̂</p>
+    </div>
+
+    <h2>5. Practice Questions</h2>
+    <div class="practice-q"><p><strong>Q1.</strong> Find angle between ⃗a=2î-ĵ+2k̂ and ⃗b=3î+4ĵ-5k̂.</p><details><summary>Solution</summary><p>⃗a·⃗b=6-4-10=-8. |⃗a|=√(4+1+4)=3. |⃗b|=√(9+16+25)=√50. cosθ=-8/(3√50). θ=cos⁻¹(-8/3√50)</p></details></div>
+    <div class="practice-q"><p><strong>Q2.</strong> Show vectors 2î-3ĵ+4k̂ and 4î-6ĵ+8k̂ are parallel.</p><details><summary>Solution</summary><p>Second = 2 × first. Parallel vectors are scalar multiples. Cross product = 0. OR direction ratios proportional: 2/4=3/6=4/8=1/2. ✓</p></details></div>
+    <div class="practice-q"><p><strong>Q3.</strong> Find unit vector in direction of ⃗a = î+2ĵ-3k̂.</p><details><summary>Solution</summary><p>|⃗a|=√(1+4+9)=√14. â = (î+2ĵ-3k̂)/√14</p></details></div>
+  </div>
+  <footer style="background:#0f172a;color:#94a3b8;text-align:center;padding:2rem;margin-top:3rem;"><p>AIkiPadhai — Free Education for Every Student 🇮🇳</p></footer>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Matrices — Class 12 Maths | AIkiPadhai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;line-height:1.75;}
+    h2{color:#172554;border-bottom:3px solid #2563eb;padding-bottom:8px;margin:2.2rem 0 1rem;}
+    h3{color:#1e40af;}
+    .concept-box{background:#eff6ff;border-left:5px solid #2563eb;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .concept-box p,.concept-box li{color:#1e3a8a;}
+    .formula-box{background:#172554;color:#bfdbfe;border-radius:10px;padding:1.2rem 1.6rem;font-family:monospace;font-size:1.05rem;margin:1rem 0;}
+    .example-box{background:#f0fdf4;border-left:5px solid #10b981;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .example-box h4{color:#065f46;}
+    .example-box p,.example-box li{color:#14532d;}
+    .story-box{background:#fffbeb;border-left:5px solid #f59e0b;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .story-box h3{color:#92400e;}
+    .story-box p{color:#78350f;}
+    .matrix-display{display:inline-block;background:#172554;color:#bfdbfe;font-family:monospace;padding:.8rem 1.2rem;border-radius:8px;font-size:1rem;line-height:1.8;margin:.5rem;}
+    .type-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:1.5rem 0;}
+    .type-card{background:#fff;border:2px solid #e2e8f0;border-radius:10px;padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    .type-card h4{color:#2563eb;margin-bottom:.4rem;}
+    .type-card p{color:#475569;font-size:.9rem;}
+    .practice-q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1.2rem;margin:.8rem 0;}
+    .practice-q p{color:#1e293b;}
+    details summary{cursor:pointer;color:#2563eb;font-weight:600;padding:.4rem 0;}
+    details p{color:#475569;padding:.5rem 0 0 1rem;}
+    table{width:100%;border-collapse:collapse;margin:1.2rem 0;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    th{background:#172554;color:#93c5fd;padding:.9rem 1rem;text-align:left;}
+    td{padding:.75rem 1rem;border-bottom:1px solid #e2e8f0;color:#1e293b;}
+    tr:last-child td{border-bottom:none;}
+  </style>
+</head>
+<body>
+  <header><div class="container header-content">
+    <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+    <nav>
+      <a href="../../../../index.html">Home</a>
+      <a href="../index.html">Class 12 Maths</a>
+      <a href="index.html">Unit II</a>
+      <a href="matrices.html" class="active">Matrices</a>
+    </nav>
+  </div></header>
+
+  <section class="hero" style="background:linear-gradient(135deg,#172554,#2563eb);">
+    <div class="container">
+      <h1>Matrices 📊</h1>
+      <p>Numbers ko grid mein arrange karo aur powerful operations karo — real world problems ka ek amazing tool!</p>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <div class="story-box">
+      <h3>🏪 Ek Dukaan ki Inventory</h3>
+      <p>Socho ek dukaan teen items (Apple, Banana, Mango) sell karti hai aur do branches hain. Branch 1 mein 50 apples, 30 bananas, 20 mangoes hain. Branch 2 mein 40 apples, 25 bananas, 35 mangoes hain. Ab agar yeh data ek table (grid) mein likhein toh yeh ek <strong>matrix</strong> ban jaata hai! Matrix ek systematic way hai data ko organize karne ka — aur phir us data par operations karna mathematical ho jaata hai.</p>
+    </div>
+
+    <h2>1. Matrix Kya Hai?</h2>
+
+    <div class="concept-box">
+      <p>Matrix ek <strong>rectangular array of numbers</strong> hota hai jo rows aur columns mein arranged hota hai. Ek m×n matrix mein m rows aur n columns hote hain.</p>
+      <p style="margin-top:.6rem;">General notation: A = [aᵢⱼ]ₘₓₙ jahan aᵢⱼ = element at i-th row, j-th column.</p>
+    </div>
+
+    <!-- Matrix visual SVG -->
+    <svg viewBox="0 0 500 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:500px;display:block;margin:1.5rem auto;background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.08);">
+      <text x="250" y="25" text-anchor="middle" font-family="Inter" font-size="14" font-weight="700" fill="#172554">2×3 Matrix A</text>
+      <!-- Matrix brackets -->
+      <text x="40" y="130" font-family="serif" font-size="90" fill="#2563eb" opacity=".4">[</text>
+      <text x="430" y="130" font-family="serif" font-size="90" fill="#2563eb" opacity=".4">]</text>
+      <!-- Row 1 -->
+      <rect x="85" y="55" width="70" height="45" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="120" y="83" text-anchor="middle" font-family="Inter" font-size="16" font-weight="700" fill="#1e3a8a">1</text>
+      <rect x="175" y="55" width="70" height="45" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="210" y="83" text-anchor="middle" font-family="Inter" font-size="16" font-weight="700" fill="#1e3a8a">2</text>
+      <rect x="265" y="55" width="70" height="45" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+      <text x="300" y="83" text-anchor="middle" font-family="Inter" font-size="16" font-weight="700" fill="#1e3a8a">3</text>
+      <!-- Row 2 -->
+      <rect x="85" y="115" width="70" height="45" rx="6" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+      <text x="120" y="143" text-anchor="middle" font-family="Inter" font-size="16" font-weight="700" fill="#1e40af">4</text>
+      <rect x="175" y="115" width="70" height="45" rx="6" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+      <text x="210" y="143" text-anchor="middle" font-family="Inter" font-size="16" font-weight="700" fill="#1e40af">5</text>
+      <rect x="265" y="115" width="70" height="45" rx="6" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+      <text x="300" y="143" text-anchor="middle" font-family="Inter" font-size="16" font-weight="700" fill="#1e40af">6</text>
+      <!-- Labels -->
+      <text x="120" y="48" text-anchor="middle" font-family="Inter" font-size="11" fill="#64748b">Col 1</text>
+      <text x="210" y="48" text-anchor="middle" font-family="Inter" font-size="11" fill="#64748b">Col 2</text>
+      <text x="300" y="48" text-anchor="middle" font-family="Inter" font-size="11" fill="#64748b">Col 3</text>
+      <text x="370" y="83" font-family="Inter" font-size="11" fill="#64748b">Row 1</text>
+      <text x="370" y="143" font-family="Inter" font-size="11" fill="#64748b">Row 2</text>
+      <text x="250" y="195" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="#2563eb">Order = 2×3 (2 rows, 3 columns)</text>
+    </svg>
+
+    <h2>2. Types of Matrices</h2>
+
+    <div class="type-grid">
+      <div class="type-card">
+        <h4>Row Matrix</h4>
+        <p>Sirf ek row: [1, 2, 3] — order 1×n</p>
+      </div>
+      <div class="type-card">
+        <h4>Column Matrix</h4>
+        <p>Sirf ek column: order m×1</p>
+      </div>
+      <div class="type-card">
+        <h4>Square Matrix</h4>
+        <p>Rows = Columns: order n×n. Diagonal elements important hote hain!</p>
+      </div>
+      <div class="type-card">
+        <h4>Zero/Null Matrix</h4>
+        <p>Sab elements zero: O. Identity matrix ka additive inverse.</p>
+      </div>
+      <div class="type-card">
+        <h4>Identity Matrix (I)</h4>
+        <p>Square matrix jisme diagonal=1, rest=0. A×I = I×A = A.</p>
+      </div>
+      <div class="type-card">
+        <h4>Diagonal Matrix</h4>
+        <p>Non-diagonal elements sab zero. Sirf diagonal par values.</p>
+      </div>
+      <div class="type-card">
+        <h4>Symmetric Matrix</h4>
+        <p>Aᵀ = A. Elements mirror hote hain diagonal ke across.</p>
+      </div>
+      <div class="type-card">
+        <h4>Skew-Symmetric</h4>
+        <p>Aᵀ = -A. Diagonal elements always zero hote hain!</p>
+      </div>
+    </div>
+
+    <h2>3. Matrix Operations</h2>
+
+    <div class="concept-box">
+      <p><strong>Addition:</strong> Same order ki do matrices add karte hain — element by element. C = A+B means cᵢⱼ = aᵢⱼ + bᵢⱼ</p>
+      <p style="margin-top:.6rem;"><strong>Scalar Multiplication:</strong> kA means har element ko k se multiply karo.</p>
+      <p style="margin-top:.6rem;"><strong>Matrix Multiplication:</strong> A(m×n) × B(n×p) = C(m×p). Column of B dot product se row of A.</p>
+    </div>
+
+    <div class="formula-box">Matrix Multiplication Rule:
+A = [aᵢⱼ] (m×n), B = [bⱼₖ] (n×p)
+C = AB = [cᵢₖ] (m×p)
+cᵢₖ = Σⱼ aᵢⱼ × bⱼₖ
+
+Key: A's columns = B's rows (n same hona chahiye!)
+AB ≠ BA (not commutative in general)
+A(BC) = (AB)C (associative ✓)
+(AB)ᵀ = BᵀAᵀ (reverse order!)</div>
+
+    <div class="example-box">
+      <h4>✅ Matrix Multiplication Example</h4>
+      <p>A = [[1,2],[3,4]], B = [[5,6],[7,8]]</p>
+      <p>AB[0][0] = 1×5 + 2×7 = 5+14 = 19</p>
+      <p>AB[0][1] = 1×6 + 2×8 = 6+16 = 22</p>
+      <p>AB[1][0] = 3×5 + 4×7 = 15+28 = 43</p>
+      <p>AB[1][1] = 3×6 + 4×8 = 18+32 = 50</p>
+      <p style="color:#065f46;font-weight:600;">AB = [[19,22],[43,50]]</p>
+    </div>
+
+    <h2>4. Transpose aur Special Properties</h2>
+
+    <div class="concept-box">
+      <p>Transpose Aᵀ: rows ko columns bana do aur columns ko rows. (Aᵀ)ᵢⱼ = Aⱼᵢ</p>
+    </div>
+
+    <div class="formula-box">/* Important Transpose Properties */
+(Aᵀ)ᵀ = A
+(A+B)ᵀ = Aᵀ + Bᵀ
+(kA)ᵀ = k(Aᵀ)
+(AB)ᵀ = BᵀAᵀ   ← REVERSE ORDER!
+
+/* Every square matrix = Symmetric + Skew-Symmetric */
+A = ½(A + Aᵀ) + ½(A - Aᵀ)
+       [Symmetric]   [Skew-sym]</div>
+
+    <h2>5. Invertible Matrices</h2>
+
+    <div class="concept-box">
+      <p>Ek square matrix A invertible (non-singular) hai agar ∃ matrix B s.t. AB = BA = I. Tab B = A⁻¹.</p>
+      <p style="margin-top:.6rem;"><strong>Condition:</strong> |A| ≠ 0 (determinant zero nahi hona chahiye).</p>
+    </div>
+
+    <h2>6. Practice Questions</h2>
+    <div class="practice-q">
+      <p><strong>Q1.</strong> A = [[1,2],[3,4]], B = [[0,1],[1,0]]. Find AB aur BA. Kya AB=BA?</p>
+      <details><summary>Solution</summary><p>AB = [[2,1],[4,3]], BA = [[3,4],[1,2]]. AB ≠ BA — matrix multiplication commutative nahi hai!</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q2.</strong> Show that A = [[1,2],[2,1]] symmetric hai.</p>
+      <details><summary>Solution</summary><p>Aᵀ = [[1,2],[2,1]] = A. ∴ Symmetric ✓</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q3.</strong> Express [[2,3],[1,4]] as sum of symmetric and skew-symmetric matrix.</p>
+      <details><summary>Solution</summary><p>A = [[2,3],[1,4]], Aᵀ = [[2,1],[3,4]]. Sym = ½(A+Aᵀ) = [[2,2],[2,4]]. Skew = ½(A-Aᵀ) = [[0,1],[-1,0]].</p></details>
+    </div>
+  </div>
+  <footer style="background:#0f172a;color:#94a3b8;text-align:center;padding:2rem;margin-top:3rem;">
+    <p>AIkiPadhai — Free Education for Every Student 🇮🇳</p>
+  </footer>
+</body>
+</html>

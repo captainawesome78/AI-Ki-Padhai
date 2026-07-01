@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Matrices Lab — Class 12 | AIkiPadhai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#0d1117;color:#e2e8f0;font-family:'Inter',sans-serif;}
+    h1,h2,h3,h4{color:#f1f5f9!important;} p{color:#cbd5e1;}
+    .hero h1{color:#fff!important;} .hero p{color:#e2e8f0!important;}
+    nav a{color:#94a3b8;}
+    .lab-wrap{max-width:960px;margin:2rem auto;padding:0 1.2rem;}
+    .lab-card{background:#161b22;border:1px solid #30363d;border-radius:14px;padding:1.6rem;margin:1.4rem 0;}
+    .lab-card h3{color:#93c5fd!important;margin:0 0 .5rem;}
+    .lab-card p.hint{color:#64748b;font-size:.88rem;margin:.3rem 0 .8rem;}
+    canvas{border-radius:10px;display:block;margin:.6rem auto;}
+    .controls{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;margin:.6rem 0;}
+    .btn{padding:.5rem 1.1rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:.88rem;transition:all .18s;}
+    .btn-v{background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;}
+    .btn-v:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(59,130,246,.4);}
+    .btn-g{background:#1e293b;color:#93c5fd;border:1px solid #334155;}
+    .matrix-grid{display:flex;gap:1.5rem;flex-wrap:wrap;align-items:flex-start;margin:.8rem 0;}
+    .mat-wrap{display:flex;flex-direction:column;align-items:center;gap:.3rem;}
+    .mat-label{font-size:.85rem;color:#64748b;font-weight:600;}
+    .mat-rows{display:flex;flex-direction:column;gap:.3rem;border-left:3px solid #3b82f6;border-right:3px solid #3b82f6;padding:.3rem .5rem;}
+    .mat-row{display:flex;gap:.3rem;}
+    .mat-cell{width:52px;height:38px;background:#1e293b;border:1px solid #334155;border-radius:6px;color:#e2e8f0;text-align:center;font-size:1rem;font-weight:600;}
+    .mat-cell.hl-row{background:#1e3a5f;border-color:#3b82f6;}
+    .mat-cell.hl-col{background:#2d1b4e;border-color:#a855f7;}
+    .mat-cell.hl-result{background:#14532d;border-color:#22c55e;}
+    .eq-display{background:#0a0e1a;border-radius:8px;padding:.7rem 1rem;font-family:monospace;color:#93c5fd;font-size:.92rem;margin:.5rem 0;line-height:1.7;}
+    input[type=range]{accent-color:#3b82f6;width:120px;}
+    select{background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:.35rem .6rem;}
+  </style>
+</head>
+<body>
+  <header><div class="container header-content">
+    <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+    <nav><a href="../index.html">Class 12 Maths</a><a href="index.html">Unit II</a><a href="matrices-interactive.html" class="active">Lab</a></nav>
+  </div></header>
+
+  <section class="hero" style="background:linear-gradient(135deg,#172554,#1d4ed8);">
+    <div class="container"><h1>Matrices Lab 🔬</h1><p>Matrix multiplication ka step-by-step animation dekho — aur geometric transformation explore karo!</p></div>
+  </section>
+
+  <div class="lab-wrap">
+
+    <!-- LAB 1: Step-by-step multiplication -->
+    <div class="lab-card">
+      <h3>🎬 Lab 1: Matrix Multiplication — Step by Step</h3>
+      <p class="hint">Step buttons dabao aur dekho — kaunsa row aur kaunsa column multiply ho raha hai. Har step mein ek element calculate hota hai!</p>
+      <div class="matrix-grid">
+        <div class="mat-wrap">
+          <div class="mat-label">Matrix A (2×2)</div>
+          <div class="mat-rows" id="matA">
+            <div class="mat-row"><input class="mat-cell" id="a00" value="1"><input class="mat-cell" id="a01" value="2"></div>
+            <div class="mat-row"><input class="mat-cell" id="a10" value="3"><input class="mat-cell" id="a11" value="4"></div>
+          </div>
+        </div>
+        <div style="font-size:2rem;color:#3b82f6;align-self:center;">×</div>
+        <div class="mat-wrap">
+          <div class="mat-label">Matrix B (2×2)</div>
+          <div class="mat-rows" id="matB">
+            <div class="mat-row"><input class="mat-cell" id="b00" value="5"><input class="mat-cell" id="b01" value="6"></div>
+            <div class="mat-row"><input class="mat-cell" id="b10" value="7"><input class="mat-cell" id="b11" value="8"></div>
+          </div>
+        </div>
+        <div style="font-size:2rem;color:#94a3b8;align-self:center;">=</div>
+        <div class="mat-wrap">
+          <div class="mat-label">Result AB</div>
+          <div class="mat-rows" style="border-color:#22c55e;">
+            <div class="mat-row">
+              <div class="mat-cell hl-result" id="r00" style="display:flex;align-items:center;justify-content:center;">?</div>
+              <div class="mat-cell hl-result" id="r01" style="display:flex;align-items:center;justify-content:center;">?</div>
+            </div>
+            <div class="mat-row">
+              <div class="mat-cell hl-result" id="r10" style="display:flex;align-items:center;justify-content:center;">?</div>
+              <div class="mat-cell hl-result" id="r11" style="display:flex;align-items:center;justify-content:center;">?</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="btn btn-g" onclick="resetMul()">🔄 Reset</button>
+        <button class="btn btn-v" onclick="stepMul()">▶ Next Step</button>
+        <button class="btn btn-v" onclick="fullMul()">⚡ Show All</button>
+      </div>
+      <div class="eq-display" id="mulEq">Values change karo phir "Next Step" dabao!</div>
+    </div>
+
+    <!-- LAB 2: Geometric Transformation -->
+    <div class="lab-card">
+      <h3>🔷 Lab 2: Matrix = Geometric Transformation</h3>
+      <p class="hint">Har 2×2 matrix ek geometric transformation hai! Matrix values change karo aur dekho — unit square kaise transform hota hai. Yeh samjho toh matrix multiplication deeply clear ho jaayega!</p>
+      <div class="controls">
+        <select id="transformPreset" onchange="applyPreset()">
+          <option value="identity">Identity (koi change nahi)</option>
+          <option value="scale2">Scale 2x</option>
+          <option value="rotate90">Rotate 90°</option>
+          <option value="reflect">Reflect y-axis</option>
+          <option value="shear">Shear</option>
+          <option value="custom">Custom (neeche edit karo)</option>
+        </select>
+      </div>
+      <div class="controls">
+        <span style="color:#64748b;">T = [</span>
+        <input type="number" id="t00" value="1" style="width:50px;background:#1e293b;border:1px solid #334155;border-radius:5px;color:#e2e8f0;padding:.3rem;text-align:center;" oninput="drawTransform()">
+        <input type="number" id="t01" value="0" style="width:50px;background:#1e293b;border:1px solid #334155;border-radius:5px;color:#e2e8f0;padding:.3rem;text-align:center;" oninput="drawTransform()">
+        <span style="color:#64748b;">;</span>
+        <input type="number" id="t10" value="0" style="width:50px;background:#1e293b;border:1px solid #334155;border-radius:5px;color:#e2e8f0;padding:.3rem;text-align:center;" oninput="drawTransform()">
+        <input type="number" id="t11" value="1" style="width:50px;background:#1e293b;border:1px solid #334155;border-radius:5px;color:#e2e8f0;padding:.3rem;text-align:center;" oninput="drawTransform()">
+        <span style="color:#64748b;">]</span>
+      </div>
+      <canvas id="transformCanvas" width="700" height="320" style="width:100%;background:#0a0e1a;"></canvas>
+      <div class="eq-display" id="transformEq"></div>
+    </div>
+
+    <!-- LAB 3: Determinant = Area -->
+    <div class="lab-card">
+      <h3>📐 Lab 3: Determinant = Area of Parallelogram</h3>
+      <p class="hint">Columns of A are two vectors. Their parallelogram ka area = |det(A)|. Matrix change karo aur area dekhein!</p>
+      <canvas id="detCanvas" width="700" height="320" style="width:100%;background:#0a0e1a;"></canvas>
+      <div class="controls">
+        <span style="color:#64748b;">A = [</span>
+        <input type="number" id="d00" value="3" style="width:50px;background:#1e293b;border:1px solid #334155;border-radius:5px;color:#e2e8f0;padding:.3rem;text-align:center;" oninput="drawDet()">
+        <input type="number" id="d01" value="1" style="width:50px;background:#1e293b;border:1px solid #334155;border-radius:5px;color:#e2e8f0;padding:.3rem;text-align:center;" oninput="drawDet()">
+        <span style="color:#64748b;">;</span>
+        <input type="number" id="d10" value="1" style="width:50px;background:#1e293b;border:1px solid #334155;border-radius:5px;color:#e2e8f0;padding:.3rem;text-align:center;" oninput="drawDet()">
+        <input type="number" id="d11" value="2" style="width:50px;background:#1e293b;border:1px solid #334155;border-radius:5px;color:#e2e8f0;padding:.3rem;text-align:center;" oninput="drawDet()">
+        <span style="color:#64748b;">]</span>
+      </div>
+      <div class="eq-display" id="detEq"></div>
+    </div>
+
+  </div>
+
+<script>
+// ==================== LAB 1: Step Multiplication ====================
+let mulStep=-1;
+const steps=[{r:0,c:0},{r:0,c:1},{r:1,c:0},{r:1,c:1}];
+function getA(){return[[+a00.value,+a01.value],[+a10.value,+a11.value]];}
+function getB(){return[[+b00.value,+b01.value],[+b10.value,+b11.value]];}
+['a00','a01','a10','a11','b00','b01','b10','b11'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',()=>{mulStep=-1;resetMulDisplay();});
+});
+function resetMulDisplay(){
+  ['r00','r01','r10','r11'].forEach(id=>document.getElementById(id).textContent='?');
+  // reset highlights
+  document.querySelectorAll('#matA .mat-cell,#matB .mat-cell').forEach(c=>{c.style.background='';c.style.borderColor='';});
+  document.getElementById('mulEq').textContent='Values change karo phir "Next Step" dabao!';
+}
+function resetMul(){mulStep=-1;resetMulDisplay();}
+function stepMul(){
+  mulStep=(mulStep+1)%4;
+  const A=getA(),B=getB();
+  const {r,c}=steps[mulStep];
+  // Highlight row r of A
+  document.querySelectorAll('#matA .mat-cell').forEach((el,i)=>{
+    el.style.background=Math.floor(i/2)===r?'#1e3a5f':'';
+    el.style.borderColor=Math.floor(i/2)===r?'#3b82f6':'';
+  });
+  // Highlight col c of B
+  document.querySelectorAll('#matB .mat-cell').forEach((el,i)=>{
+    el.style.background=i%2===c?'#2d1b4e':'';
+    el.style.borderColor=i%2===c?'#a855f7':'';
+  });
+  // Compute
+  const val=A[r][0]*B[0][c]+A[r][1]*B[1][c];
+  document.getElementById(`r${r}${c}`).textContent=val;
+  const eq=`C[${r+1}][${c+1}] = A row${r+1} · B col${c+1}
+= ${A[r][0]}×${B[0][c]} + ${A[r][1]}×${B[1][c]}
+= ${A[r][0]*B[0][c]} + ${A[r][1]*B[1][c]} = ${val}`;
+  document.getElementById('mulEq').textContent=eq;
+}
+function fullMul(){
+  const A=getA(),B=getB();
+  for(let r=0;r<2;r++)for(let c=0;c<2;c++){
+    const v=A[r][0]*B[0][c]+A[r][1]*B[1][c];
+    document.getElementById(`r${r}${c}`).textContent=v;
+  }
+  const A00=+a00.value,A01=+a01.value,A10=+a10.value,A11=+a11.value;
+  const B00=+b00.value,B01=+b01.value,B10=+b10.value,B11=+b11.value;
+  document.getElementById('mulEq').textContent=
+    `AB = [[${A00*B00+A01*B10}, ${A00*B01+A01*B11}], [${A10*B00+A11*B10}, ${A10*B01+A11*B11}]]
+Det(AB) = Det(A)×Det(B) = ${(A00*A11-A01*A10)}×${(B00*B11-B01*B10)} = ${(A00*A11-A01*A10)*(B00*B11-B01*B10)}`;
+  mulStep=3;
+}
+
+// ==================== LAB 2: Transform ====================
+const presets={
+  identity:[1,0,0,1],scale2:[2,0,0,2],rotate90:[0,-1,1,0],
+  reflect:[-1,0,0,1],shear:[1,1,0,1]
+};
+function applyPreset(){
+  const k=document.getElementById('transformPreset').value;
+  if(k==='custom')return;
+  const [a,b,c,d]=presets[k];
+  document.getElementById('t00').value=a; document.getElementById('t01').value=b;
+  document.getElementById('t10').value=c; document.getElementById('t11').value=d;
+  drawTransform();
+}
+function drawTransform(){
+  const tc=document.getElementById('transformCanvas');
+  const ctx=tc.getContext('2d');
+  const W=tc.width,H=tc.height;
+  ctx.clearRect(0,0,W,H); ctx.fillStyle='#0a0e1a'; ctx.fillRect(0,0,W,H);
+  const t00=+document.getElementById('t00').value,t01=+document.getElementById('t01').value;
+  const t10=+document.getElementById('t10').value,t11=+document.getElementById('t11').value;
+  const sc=60, cx=W/2, cy=H/2;
+  // Grid
+  ctx.strokeStyle='#1e293b'; ctx.lineWidth=1;
+  for(let x=cx%sc;x<W;x+=sc){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=cy%sc;y<H;y+=sc){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  // Axes
+  ctx.strokeStyle='#334155'; ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(0,cy);ctx.lineTo(W,cy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx,0);ctx.lineTo(cx,H);ctx.stroke();
+  // Original unit square (blue, dashed)
+  const orig=[[0,0],[1,0],[1,1],[0,1]];
+  ctx.strokeStyle='#3b82f666'; ctx.lineWidth=1.5; ctx.setLineDash([5,4]);
+  ctx.beginPath();
+  orig.forEach(([x,y],i)=>{
+    const px=cx+x*sc,py=cy-y*sc;
+    if(i===0)ctx.moveTo(px,py);else ctx.lineTo(px,py);
+  });
+  ctx.closePath(); ctx.stroke(); ctx.setLineDash([]);
+  // Transformed square (bright)
+  const tfm=orig.map(([x,y])=>[t00*x+t01*y,t10*x+t11*y]);
+  ctx.strokeStyle='#3b82f6'; ctx.lineWidth=2.5; ctx.shadowColor='#3b82f6'; ctx.shadowBlur=6;
+  ctx.fillStyle='rgba(59,130,246,0.15)';
+  ctx.beginPath();
+  tfm.forEach(([x,y],i)=>{
+    const px=cx+x*sc,py=cy-y*sc;
+    if(i===0)ctx.moveTo(px,py);else ctx.lineTo(px,py);
+  });
+  ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.shadowBlur=0;
+  // Basis vectors
+  const bvecs=[[t00,t10,'î (1,0)'],[t01,t11,'ĵ (0,1)']];
+  const bcolors=['#22c55e','#f59e0b'];
+  bvecs.forEach(([vx,vy,lbl],i)=>{
+    ctx.strokeStyle=bcolors[i]; ctx.lineWidth=2; ctx.shadowColor=bcolors[i]; ctx.shadowBlur=4;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+vx*sc,cy-vy*sc);ctx.stroke(); ctx.shadowBlur=0;
+    ctx.fillStyle=bcolors[i]; ctx.font='bold 11px Inter';
+    ctx.fillText(lbl,cx+vx*sc+6,cy-vy*sc-5);
+  });
+  // Labels
+  ctx.fillStyle='#64748b'; ctx.font='11px Inter';
+  ctx.fillText('Original (dashed)',cx+4,H-30);
+  ctx.fillStyle='#3b82f6';
+  ctx.fillText('Transformed (solid)',cx+4,H-15);
+  const det=t00*t11-t01*t10;
+  document.getElementById('transformEq').textContent=
+    `T = [[${t00},${t01}],[${t10},${t11}]] | det(T) = ${t00}×${t11} - ${t01}×${t10} = ${det.toFixed(2)}
+Unit square ki area = 1, transformed area = |det| = ${Math.abs(det).toFixed(2)}${det<0?' (flip!)':(det===0?' (collapsed to line!)':'')}`;
+}
+applyPreset();
+
+// ==================== LAB 3: Det = Area ====================
+function drawDet(){
+  const dc=document.getElementById('detCanvas');
+  const ctx=dc.getContext('2d');
+  const W=dc.width,H=dc.height;
+  ctx.clearRect(0,0,W,H); ctx.fillStyle='#0a0e1a'; ctx.fillRect(0,0,W,H);
+  const a=+document.getElementById('d00').value,b=+document.getElementById('d01').value;
+  const c=+document.getElementById('d10').value,d=+document.getElementById('d11').value;
+  const det=a*d-b*c;
+  const cx=W/2,cy=H/2,sc=45;
+  // Grid
+  ctx.strokeStyle='#1e293b'; ctx.lineWidth=1;
+  for(let x=cx%sc;x<W;x+=sc){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=cy%sc;y<H;y+=sc){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  ctx.strokeStyle='#334155'; ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(0,cy);ctx.lineTo(W,cy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx,0);ctx.lineTo(cx,H);ctx.stroke();
+  // Vectors: col1=(a,c), col2=(b,d)
+  const v1x=cx+a*sc,v1y=cy-c*sc;
+  const v2x=cx+b*sc,v2y=cy-d*sc;
+  // Parallelogram fill
+  ctx.fillStyle='rgba(59,130,246,0.2)';
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(v1x,v1y);ctx.lineTo(v1x+b*sc,v1y-d*sc);ctx.lineTo(v2x,v2y);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='#3b82f666'; ctx.lineWidth=1.5; ctx.setLineDash([4,4]);
+  ctx.beginPath();ctx.moveTo(v1x,v1y);ctx.lineTo(v1x+b*sc,v1y-d*sc);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(v2x,v2y);ctx.lineTo(v1x+b*sc,v1y-d*sc);ctx.stroke();
+  ctx.setLineDash([]);
+  // Vectors
+  function arrow2(x1,y1,x2,y2,col){
+    ctx.strokeStyle=col;ctx.lineWidth=2.5;ctx.shadowColor=col;ctx.shadowBlur=5;
+    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.shadowBlur=0;
+    const ang=Math.atan2(y2-y1,x2-x1);
+    ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(x2,y2);
+    ctx.lineTo(x2-12*Math.cos(ang-.4),y2-12*Math.sin(ang-.4));
+    ctx.lineTo(x2-12*Math.cos(ang+.4),y2-12*Math.sin(ang+.4));
+    ctx.closePath();ctx.fill();
+  }
+  arrow2(cx,cy,v1x,v1y,'#22c55e');
+  arrow2(cx,cy,v2x,v2y,'#f59e0b');
+  ctx.fillStyle='#22c55e'; ctx.font='bold 12px Inter';
+  ctx.fillText(`v₁=(${a},${c})`,v1x+6,v1y-6);
+  ctx.fillStyle='#f59e0b';
+  ctx.fillText(`v₂=(${b},${d})`,v2x+6,v2y-6);
+  // Area label
+  const midX=cx+(a+b)*sc/2, midY=cy-(c+d)*sc/2;
+  ctx.fillStyle='#93c5fd'; ctx.font='bold 13px Outfit'; ctx.textAlign='center';
+  ctx.fillText(`Area = |det| = ${Math.abs(det).toFixed(2)}`,midX,midY);
+  ctx.textAlign='left';
+  document.getElementById('detEq').textContent=
+    `det(A) = a×d - b×c = ${a}×${d} - ${b}×${c} = ${a*d} - ${b*c} = ${det}
+|det| = ${Math.abs(det).toFixed(2)} = Area of parallelogram formed by column vectors`;
+}
+drawDet();
+</script>
+</body>
+</html>

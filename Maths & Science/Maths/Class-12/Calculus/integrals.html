@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Integrals — Class 12 | AIkiPadhai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;line-height:1.75;}
+    h2{color:#450a0a;border-bottom:3px solid #dc2626;padding-bottom:8px;margin:2.2rem 0 1rem;}
+    h3{color:#991b1b;}
+    .concept-box{background:#fef2f2;border-left:5px solid #dc2626;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .concept-box p,.concept-box li{color:#7f1d1d;}
+    .formula-box{background:#450a0a;color:#fecaca;border-radius:10px;padding:1.2rem 1.6rem;font-family:monospace;font-size:1.05rem;margin:1rem 0;}
+    .example-box{background:#f0fdf4;border-left:5px solid #10b981;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .example-box h4{color:#065f46;}
+    .example-box p,.example-box li{color:#14532d;}
+    .story-box{background:#fffbeb;border-left:5px solid #f59e0b;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .story-box h3{color:#92400e;}
+    .story-box p{color:#78350f;}
+    .step-box{background:#f1f5f9;border-radius:6px;padding:.9rem 1.1rem;margin:.5rem 0;border-left:3px solid #dc2626;color:#1e293b;}
+    .type-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:1.5rem 0;}
+    .type-card{background:#fff;border:2px solid #e2e8f0;border-radius:10px;padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    .type-card h4{color:#dc2626;margin-bottom:.4rem;}
+    .type-card p{color:#475569;font-size:.9rem;}
+    .practice-q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1.2rem;margin:.8rem 0;}
+    .practice-q p{color:#1e293b;}
+    details summary{cursor:pointer;color:#dc2626;font-weight:600;padding:.4rem 0;}
+    details p{color:#475569;padding:.5rem 0 0 1rem;}
+    table{width:100%;border-collapse:collapse;margin:1.2rem 0;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    th{background:#450a0a;color:#fca5a5;padding:.9rem 1rem;text-align:left;}
+    td{padding:.75rem 1rem;border-bottom:1px solid #e2e8f0;color:#1e293b;}
+    tr:last-child td{border-bottom:none;}
+</style>
+</head>
+<body>
+  <header><div class="container header-content">
+    <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+    <nav>
+      <a href="../../../../index.html">Home</a>
+      <a href="../index.html">Class 12 Maths</a>
+      <a href="index.html">Unit III</a>
+      <a href="integrals.html" class="active">Integrals</a>
+    </nav>
+  </div></header>
+  <section class="hero" style="background:linear-gradient(135deg,#450a0a,#dc2626);">
+    <div class="container">
+      <h1>Integrals ∫</h1>
+      <p>Differentiation ka reverse — area find karo, accumulated change calculate karo!</p>
+    </div>
+  </section>
+  <div class="container">
+
+    <div class="story-box">
+      <h3>📦 Area aur Integration</h3>
+      <p>Socho ek curved field hai jisme tum crop ugaana chahte ho. Straight lines se area calculate karna mushkil hai. Lekin agar tum field ko <strong>infinitely thin strips</strong> mein baat lo — har strip ek rectangle jaisi lagegi — aur sab rectangles ka area add karo — toh total area milega! Yahi <strong>integration</strong> ka idea hai. Formally: ∫ f(x)dx = limit of sum of infinitely many infinitely thin rectangles.</p>
+    </div>
+
+    <h2>1. Standard Integration Formulas</h2>
+    <div class="formula-box">∫xⁿ dx = xⁿ⁺¹/(n+1) + C  (n ≠ -1)
+∫1/x dx = ln|x| + C
+∫eˣ dx = eˣ + C
+∫aˣ dx = aˣ/ln(a) + C
+∫sin x dx = -cos x + C
+∫cos x dx = sin x + C
+∫sec²x dx = tan x + C
+∫cosec²x dx = -cot x + C
+∫sec x tan x dx = sec x + C
+∫1/√(1-x²) dx = sin⁻¹x + C
+∫1/(1+x²) dx = tan⁻¹x + C</div>
+
+    <h2>2. Integration by Substitution</h2>
+    <div class="concept-box">
+      <p>Jab integrand mein ek function aur uski derivative dono hain — substitution karo!</p>
+      <p>Put t = g(x), then dt = g'(x)dx → ∫f(g(x))g'(x)dx = ∫f(t)dt</p>
+    </div>
+    <div class="example-box">
+      <h4>✅ ∫2x·cos(x²) dx</h4>
+      <div class="step-box">t = x², dt = 2x dx</div>
+      <div class="step-box">∫cos(t) dt = sin(t) + C = sin(x²) + C</div>
+    </div>
+
+    <h2>3. Integration by Parts</h2>
+    <div class="formula-box">∫u·v dx = u·∫v dx - ∫(du/dx · ∫v dx) dx
+
+ILATE Rule — choose u in this order:
+I — Inverse trig
+L — Logarithmic
+A — Algebraic (polynomial)
+T — Trigonometric
+E — Exponential</div>
+
+    <div class="example-box">
+      <h4>✅ ∫x·eˣ dx (ILATE: u=x, v=eˣ)</h4>
+      <p>= x·eˣ - ∫eˣ dx = x·eˣ - eˣ + C = eˣ(x-1) + C</p>
+    </div>
+    <div class="example-box">
+      <h4>✅ ∫x·sin x dx</h4>
+      <p>u=x, v=sin x → = x(-cos x) - ∫(-cos x)dx = -x cos x + sin x + C</p>
+    </div>
+
+    <h2>4. Integration by Partial Fractions</h2>
+    <div class="concept-box">
+      <p>Jab integrand ek rational function ho (polynomial/polynomial) — partial fractions use karo.</p>
+    </div>
+    <div class="formula-box">/* Types */
+(px+q)/[(x-a)(x-b)] = A/(x-a) + B/(x-b)
+
+(px²+qx+r)/[(x-a)(x-b)(x-c)] = A/(x-a) + B/(x-b) + C/(x-c)
+
+(px+q)/[(x-a)²] = A/(x-a) + B/(x-a)²</div>
+
+    <h2>5. Definite Integrals</h2>
+    <div class="formula-box">∫[a to b] f(x) dx = [F(x)]ₐᵇ = F(b) - F(a)
+where F'(x) = f(x)
+
+Fundamental Theorem: d/dx ∫[a to x] f(t)dt = f(x)
+
+Key Properties:
+∫[a to b]f(x)dx = -∫[b to a]f(x)dx
+∫[a to a]f(x)dx = 0
+∫[0 to 2a]f(x)dx = 2∫[0 to a]f(x)dx  if f(2a-x)=f(x)
+∫[-a to a]f(x)dx = 2∫[0 to a]f(x)dx  if f is even
+                 = 0                   if f is odd</div>
+
+    <div class="example-box">
+      <h4>✅ Evaluate ∫[0 to π] sin x dx</h4>
+      <p>= [-cos x]₀^π = -cos(π) - (-cos 0) = 1 + 1 = 2</p>
+    </div>
+
+    <h2>6. Important Standard Integrals to Remember</h2>
+    <div class="formula-box">∫dx/(x²-a²) = (1/2a)ln|(x-a)/(x+a)| + C
+∫dx/(a²-x²) = (1/2a)ln|(a+x)/(a-x)| + C
+∫dx/√(x²-a²) = ln|x+√(x²-a²)| + C
+∫dx/√(a²-x²) = sin⁻¹(x/a) + C
+∫√(a²-x²)dx = (x/2)√(a²-x²) + (a²/2)sin⁻¹(x/a) + C</div>
+
+    <h2>7. Practice Questions</h2>
+    <div class="practice-q"><p><strong>Q1.</strong> ∫(x+1)/(x²+2x+3) dx</p><details><summary>Solution</summary><p>Numerator = ½ × d/dx(x²+2x+3) = ½(2x+2). So integral = (½)ln(x²+2x+3) + C</p></details></div>
+    <div class="practice-q"><p><strong>Q2.</strong> ∫x²·ln x dx</p><details><summary>Solution</summary><p>IBP: u=ln x, v=x². = (x³/3)ln x - ∫(x³/3)(1/x)dx = (x³/3)ln x - x³/9 + C</p></details></div>
+    <div class="practice-q"><p><strong>Q3.</strong> Evaluate ∫[0 to 1] x/(1+x²) dx</p><details><summary>Solution</summary><p>t=1+x², dt=2x dx. = ½∫[1 to 2] (1/t)dt = ½[ln t]₁² = ½ ln 2</p></details></div>
+  </div>
+  <footer style="background:#0f172a;color:#94a3b8;text-align:center;padding:2rem;margin-top:3rem;">
+    <p>AIkiPadhai — Free Education for Every Student 🇮🇳</p>
+  </footer></body></html>

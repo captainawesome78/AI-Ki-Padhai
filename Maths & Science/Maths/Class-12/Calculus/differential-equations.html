@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Differential Equations — Class 12 | AIkiPadhai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;line-height:1.75;}
+    h2{color:#450a0a;border-bottom:3px solid #dc2626;padding-bottom:8px;margin:2.2rem 0 1rem;}
+    h3{color:#991b1b;}
+    .concept-box{background:#fef2f2;border-left:5px solid #dc2626;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .concept-box p,.concept-box li{color:#7f1d1d;}
+    .formula-box{background:#450a0a;color:#fecaca;border-radius:10px;padding:1.2rem 1.6rem;font-family:monospace;font-size:1.05rem;margin:1rem 0;}
+    .example-box{background:#f0fdf4;border-left:5px solid #10b981;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .example-box h4{color:#065f46;}
+    .example-box p,.example-box li{color:#14532d;}
+    .story-box{background:#fffbeb;border-left:5px solid #f59e0b;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .story-box h3{color:#92400e;}
+    .story-box p{color:#78350f;}
+    .step-box{background:#f1f5f9;border-radius:6px;padding:.9rem 1.1rem;margin:.5rem 0;border-left:3px solid #dc2626;color:#1e293b;}
+    .type-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:1.5rem 0;}
+    .type-card{background:#fff;border:2px solid #e2e8f0;border-radius:10px;padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    .type-card h4{color:#dc2626;margin-bottom:.4rem;}
+    .type-card p{color:#475569;font-size:.9rem;}
+    .practice-q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1.2rem;margin:.8rem 0;}
+    .practice-q p{color:#1e293b;}
+    details summary{cursor:pointer;color:#dc2626;font-weight:600;padding:.4rem 0;}
+    details p{color:#475569;padding:.5rem 0 0 1rem;}
+    table{width:100%;border-collapse:collapse;margin:1.2rem 0;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    th{background:#450a0a;color:#fca5a5;padding:.9rem 1rem;text-align:left;}
+    td{padding:.75rem 1rem;border-bottom:1px solid #e2e8f0;color:#1e293b;}
+    tr:last-child td{border-bottom:none;}
+</style>
+</head>
+<body>
+  <header><div class="container header-content">
+    <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+    <nav>
+      <a href="../../../../index.html">Home</a>
+      <a href="../index.html">Class 12 Maths</a>
+      <a href="index.html">Unit III</a>
+      <a href="differential-equations.html" class="active">Differential Equations</a>
+    </nav>
+  </div></header>
+  <section class="hero" style="background:linear-gradient(135deg,#450a0a,#dc2626);">
+    <div class="container">
+      <h1>Differential Equations 🌊</h1>
+      <p>Functions aur unki derivatives ke beech relationships — nature ki language!</p>
+    </div>
+  </section>
+  <div class="container">
+
+    <div class="story-box">
+      <h3>🦠 Bacteria Growth</h3>
+      <p>Ek petri dish mein bacteria hain. Har minute bacteria ki count double ho jaati hai — yaani growth rate population ke proportional hai. Math mein: dP/dt = kP (jahan k ek constant hai). Yeh ek <strong>differential equation</strong> hai! Iska solution P = P₀·eᵏᵗ hai — exponential growth. Yahi reason hai ki COVID ya koi bhi epidemic agar unchecked rahe toh exponentially spread hota hai. Differential equations nature ke sabse powerful tools hain.</p>
+    </div>
+
+    <h2>1. Basic Definitions</h2>
+    <div class="type-grid">
+      <div class="type-card">
+        <h4>Order</h4>
+        <p>Highest derivative ka order. dy/dx → order 1. d²y/dx² → order 2.</p>
+      </div>
+      <div class="type-card">
+        <h4>Degree</h4>
+        <p>Highest derivative ki power (jab DE polynomial form mein ho). (dy/dx)³ → degree 3.</p>
+      </div>
+      <div class="type-card">
+        <h4>General Solution</h4>
+        <p>Arbitrary constants ke saath solution. n-th order DE → n arbitrary constants.</p>
+      </div>
+      <div class="type-card">
+        <h4>Particular Solution</h4>
+        <p>Specific initial condition se constants determine ho jaate hain.</p>
+      </div>
+    </div>
+
+    <h2>2. Variable Separable Method</h2>
+    <div class="concept-box">
+      <p>Agar DE ko f(y)dy = g(x)dx form mein likh sako — toh dono sides integrate karo!</p>
+    </div>
+    <div class="example-box">
+      <h4>✅ Solve: dy/dx = y/x</h4>
+      <div class="step-box">Separate: dy/y = dx/x</div>
+      <div class="step-box">Integrate: ln|y| = ln|x| + ln|C|</div>
+      <div class="step-box">y = Cx (General Solution)</div>
+    </div>
+    <div class="example-box">
+      <h4>✅ Solve: dy/dx = e^(x+y), y(0)=0</h4>
+      <div class="step-box">e^(-y)dy = eˣ dx</div>
+      <div class="step-box">-e^(-y) = eˣ + C → -e^(-y) = eˣ + C</div>
+      <div class="step-box">y(0)=0: -1 = 1+C → C=-2. So eˣ + e^(-y) = 2</div>
+    </div>
+
+    <h2>3. Homogeneous Differential Equations</h2>
+    <div class="concept-box">
+      <p>DE ka form: dy/dx = F(y/x) (ratio y/x par depend karta hai)</p>
+      <p>Substitution: y = vx → dy/dx = v + x(dv/dx)</p>
+      <p>Phir yeh variable separable ho jaata hai!</p>
+    </div>
+    <div class="formula-box">Put y = vx
+dy/dx = v + x(dv/dx)
+Substitute karo → separate variables in v and x
+Integrate → back substitute y = vx</div>
+
+    <h2>4. Linear Differential Equations</h2>
+    <div class="formula-box">Standard form: dy/dx + P(x)·y = Q(x)
+
+Integrating Factor (IF): μ = e^(∫P dx)
+
+Solution: y × IF = ∫(Q × IF)dx + C
+
+/* Also: dx/dy + P(y)·x = Q(y) — same method */</div>
+
+    <div class="example-box">
+      <h4>✅ Solve: dy/dx + y/x = x²</h4>
+      <div class="step-box">P = 1/x, Q = x². IF = e^(∫1/x dx) = e^(ln x) = x</div>
+      <div class="step-box">y·x = ∫x²·x dx = ∫x³dx = x⁴/4 + C</div>
+      <div class="step-box">y = x³/4 + C/x (General Solution)</div>
+    </div>
+
+    <h2>5. Practice Questions</h2>
+    <div class="practice-q"><p><strong>Q1.</strong> Solve: (1+x²)dy + 2xy dx = 0</p><details><summary>Solution</summary><p>dy/y = -2x dx/(1+x²). Integrate: ln y = -ln(1+x²) + ln C. y(1+x²) = C.</p></details></div>
+    <div class="practice-q"><p><strong>Q2.</strong> Solve: dy/dx = (x+y)/x where y(1)=1.</p><details><summary>Solution</summary><p>Homogeneous: v+x dv/dx = 1+v → x dv/dx=1 → dv=dx/x → v=ln x+C → y/x=ln x+C. y(1)=1: 1=0+C → C=1. y=x(1+ln x).</p></details></div>
+    <div class="practice-q"><p><strong>Q3.</strong> Solve: dy/dx - 3y = sin 2x</p><details><summary>Solution</summary><p>Linear DE. P=-3, IF=e^(-3x). y·e^(-3x) = ∫sin(2x)e^(-3x)dx. Use IBP twice. = e^(-3x)(-3sin2x-2cos2x)/13 + C. y = (-3sin2x-2cos2x)/13 + Ce^(3x).</p></details></div>
+  </div>
+  <footer style="background:#0f172a;color:#94a3b8;text-align:center;padding:2rem;margin-top:3rem;">
+    <p>AIkiPadhai — Free Education for Every Student 🇮🇳</p>
+  </footer></body></html>

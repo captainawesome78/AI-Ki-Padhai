@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Probability Lab — Class 12 | AIkiPadhai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#0d1117;color:#e2e8f0;font-family:'Inter',sans-serif;}
+    h1,h2,h3,h4{color:#f1f5f9!important;} p{color:#cbd5e1;}
+    .hero h1{color:#fff!important;} .hero p{color:#e2e8f0!important;}
+    nav a{color:#94a3b8;}
+    .lab-wrap{max-width:960px;margin:2rem auto;padding:0 1.2rem;}
+    .lab-card{background:#161b22;border:1px solid #30363d;border-radius:14px;padding:1.6rem;margin:1.4rem 0;}
+    .lab-card h3{color:#c4b5fd!important;margin:0 0 .5rem;}
+    .lab-card p.hint{color:#64748b;font-size:.88rem;margin:.3rem 0 .8rem;}
+    canvas{border-radius:10px;display:block;margin:.6rem auto;}
+    .controls{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;margin:.6rem 0;}
+    .btn{padding:.5rem 1.1rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:.88rem;transition:all .18s;}
+    .btn-v{background:linear-gradient(135deg,#7c3aed,#4c1d95);color:#fff;}
+    .btn-v:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(124,58,237,.4);}
+    .btn-g{background:#1e293b;color:#c4b5fd;border:1px solid #334155;}
+    input[type=range]{accent-color:#7c3aed;background:#1e293b;border:1px solid #334155;border-radius:6px;padding:.3rem .5rem;}
+    select{background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:.35rem .6rem;}
+    .eq-display{background:#0a0e1a;border-radius:8px;padding:.7rem 1rem;font-family:monospace;color:#c4b5fd;font-size:.9rem;margin:.5rem 0;line-height:1.8;}
+    label{color:#94a3b8;font-size:.88rem;}
+    .val-badge{background:#1e293b;color:#c4b5fd;border:1px solid #334155;border-radius:5px;padding:.2rem .55rem;font-weight:700;min-width:2.5rem;text-align:center;font-size:.85rem;}
+    .sim-display{display:flex;flex-wrap:wrap;gap:.3rem;max-height:80px;overflow:hidden;margin:.5rem 0;}
+    .dot{width:10px;height:10px;border-radius:50%;display:inline-block;}
+  </style>
+</head>
+<body>
+  <header><div class="container header-content">
+    <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+    <nav><a href="../index.html">Class 12 Maths</a><a href="index.html">Unit VI</a><a href="probability-interactive.html" class="active">Lab</a></nav>
+  </div></header>
+
+  <section class="hero" style="background:linear-gradient(135deg,#0f0520,#4c1d95,#7c3aed);">
+    <div class="container"><h1>Probability Lab 🎲</h1><p>Coin tosso, Bayes ka theorem samjho, binomial distribution dekho — sab visual aur interactive!</p></div>
+  </section>
+
+  <div class="lab-wrap">
+
+    <!-- LAB 1: Law of Large Numbers -->
+    <div class="lab-card">
+      <h3>🪙 Lab 1: Large Numbers ka Law — Frequency → Probability</h3>
+      <p class="hint">Coin toss karo baar baar. Dekho: jaise trials badhte hain, frequency (observed) theoretical probability (0.5) ke paas aati jaati hai! Yahi Law of Large Numbers hai.</p>
+      <div class="controls">
+        <select id="coinType">
+          <option value="0.5">Fair Coin (P=0.5)</option>
+          <option value="0.3">Biased Coin (P=0.3)</option>
+          <option value="0.7">Biased Coin (P=0.7)</option>
+          <option value="0.167">Fair Die (P(1)=1/6)</option>
+        </select>
+        <button class="btn btn-v" onclick="toss(1)">Toss ×1</button>
+        <button class="btn btn-v" onclick="toss(10)">Toss ×10</button>
+        <button class="btn btn-v" onclick="toss(100)">Toss ×100</button>
+        <button class="btn btn-g" onclick="resetCoin()">Reset</button>
+      </div>
+      <div id="dotDisplay" class="sim-display"></div>
+      <canvas id="coinCanvas" width="680" height="260" style="width:100%;background:#0a0e1a;"></canvas>
+      <div class="eq-display" id="coinEq"></div>
+    </div>
+
+    <!-- LAB 2: Bayes Theorem Visual -->
+    <div class="lab-card">
+      <h3>🔵🔴 Lab 2: Bayes Theorem — Colored Balls Visual</h3>
+      <p class="hint">Bag 1 mein R red + B1 blue balls, Bag 2 mein R2 red + B2 blue balls. Ek ball red aayi — kis bag se aayi hogi? Yahi Bayes ka sawaal hai!</p>
+      <div class="controls">
+        <label>Bag1: Red=</label><input type="range" id="r1" min="1" max="9" value="4" oninput="drawBayes()"><span id="r1v" class="val-badge">4</span>
+        <label>Blue=</label><input type="range" id="b1" min="1" max="9" value="6" oninput="drawBayes()"><span id="b1v" class="val-badge">6</span>
+        <label>Bag2: Red=</label><input type="range" id="r2" min="1" max="9" value="3" oninput="drawBayes()"><span id="r2v" class="val-badge">3</span>
+        <label>Blue=</label><input type="range" id="b2" min="1" max="9" value="2" oninput="drawBayes()"><span id="b2v" class="val-badge">2</span>
+      </div>
+      <canvas id="bayesCanvas" width="680" height="320" style="width:100%;background:#0a0e1a;"></canvas>
+      <div class="eq-display" id="bayesEq"></div>
+    </div>
+
+    <!-- LAB 3: Binomial Distribution -->
+    <div class="lab-card">
+      <h3>📊 Lab 3: Binomial Distribution — Bar Chart</h3>
+      <p class="hint">n trials, har trial mein success probability p. P(X=k) = ⁿCₖ·pᵏ·(1-p)ⁿ⁻ᵏ. n aur p change karo — distribution ka shape badle dekho!</p>
+      <div class="controls">
+        <label>n (trials)=</label><input type="range" id="bn" min="1" max="20" value="10" oninput="drawBinom()"><span id="bnv" class="val-badge">10</span>
+        <label>p (success)=</label><input type="range" id="bp" min="1" max="99" value="50" oninput="drawBinom()"><span id="bpv" class="val-badge">0.50</span>
+      </div>
+      <canvas id="binomCanvas" width="680" height="300" style="width:100%;background:#0a0e1a;"></canvas>
+      <div class="eq-display" id="binomEq"></div>
+    </div>
+
+    <!-- LAB 4: Conditional Probability Tree -->
+    <div class="lab-card">
+      <h3>🌳 Lab 4: Total Probability — Tree Diagram</h3>
+      <p class="hint">Ek machine defective part banati hai. Tree dekho — P(defective) kaise calculate hoti hai? Har path ki probability multiply karo, phir add karo!</p>
+      <div class="controls">
+        <label>P(Machine A)=</label><input type="range" id="pa" min="10" max="90" value="60" oninput="drawTree()"><span id="pav" class="val-badge">0.60</span>
+        <label>P(Defect|A)=</label><input type="range" id="pda" min="1" max="30" value="5" oninput="drawTree()"><span id="pdav" class="val-badge">0.05</span>
+        <label>P(Defect|B)=</label><input type="range" id="pdb" min="1" max="30" value="10" oninput="drawTree()"><span id="pdbv" class="val-badge">0.10</span>
+      </div>
+      <canvas id="treeCanvas" width="680" height="300" style="width:100%;background:#0a0e1a;"></canvas>
+      <div class="eq-display" id="treeEq"></div>
+    </div>
+
+  </div>
+
+<script>
+const PI=Math.PI;
+
+// ==================== LAB 1: Law of Large Numbers ====================
+let coinHistory=[],coinTotal=0,coinHeads=0;
+let freqHistory=[];
+
+function toss(n){
+  const p=+document.getElementById('coinType').value;
+  const dd=document.getElementById('dotDisplay');
+  for(let i=0;i<n;i++){
+    const isHead=Math.random()<p;
+    coinTotal++;
+    if(isHead) coinHeads++;
+    freqHistory.push(coinHeads/coinTotal);
+    // dot
+    if(dd.children.length<200){
+      const d=document.createElement('div');
+      d.className='dot';d.style.background=isHead?'#a78bfa':'#475569';
+      dd.appendChild(d);
+    }
+  }
+  drawCoin();
+}
+
+function resetCoin(){
+  coinHistory=[];coinTotal=0;coinHeads=0;freqHistory=[];
+  document.getElementById('dotDisplay').innerHTML='';
+  const c=document.getElementById('coinCanvas'),ctx=c.getContext('2d');
+  ctx.clearRect(0,0,c.width,c.height);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,c.width,c.height);
+  document.getElementById('coinEq').textContent='Ab "Toss" button dabao!';
+}
+
+function drawCoin(){
+  const c=document.getElementById('coinCanvas'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,pad=50,cw=W-pad-20,ch=H-pad-20;
+  const p=+document.getElementById('coinType').value;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  // Grid
+  ctx.strokeStyle='#1e293b';ctx.lineWidth=1;
+  for(let i=0;i<=10;i++){const y=pad+ch*(1-i/10);ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(W-20,y);ctx.stroke();}
+  ctx.strokeStyle='#475569';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(pad,pad);ctx.lineTo(pad,H-pad);ctx.lineTo(W-20,H-pad);ctx.stroke();
+  // Theoretical line
+  ctx.strokeStyle='#fbbf24';ctx.lineWidth=1.5;ctx.setLineDash([6,4]);
+  ctx.beginPath();ctx.moveTo(pad,pad+(1-p)*ch);ctx.lineTo(W-20,pad+(1-p)*ch);ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='#fbbf24';ctx.font='10px Inter';ctx.fillText('P='+p,W-20,pad+(1-p)*ch-3);
+  // Frequency curve
+  if(freqHistory.length>1){
+    ctx.strokeStyle='#a78bfa';ctx.lineWidth=2;ctx.shadowColor='#7c3aed';ctx.shadowBlur=5;
+    ctx.beginPath();
+    freqHistory.forEach((f,i)=>{
+      const x=pad+i*(cw/Math.max(freqHistory.length-1,1));
+      const y=pad+(1-f)*ch;
+      if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+    });
+    ctx.stroke();ctx.shadowBlur=0;
+  }
+  // Axis labels
+  ctx.fillStyle='#64748b';ctx.font='10px Inter';
+  for(let i=0;i<=10;i++) ctx.fillText((i/10).toFixed(1),pad-32,H-pad-(i*ch/10)+4);
+  ctx.fillStyle='#94a3b8';ctx.font='11px Inter';
+  ctx.fillText('Trials → '+coinTotal,pad,H-pad+18);
+  ctx.fillText('Frequency',10,pad-5);
+  const freq=coinTotal>0?coinHeads/coinTotal:0;
+  document.getElementById('coinEq').textContent=
+    `Total tosses: ${coinTotal}
+Heads/Success: ${coinHeads}
+Observed frequency: ${freq.toFixed(4)}
+Theoretical P: ${p}
+Difference: ${Math.abs(freq-p).toFixed(4)}
+
+↑ Jaise n → ∞, frequency → P (Law of Large Numbers!)`;
+}
+resetCoin();
+
+// ==================== LAB 2: Bayes ====================
+function drawBayes(){
+  const r1=+document.getElementById('r1').value,b1=+document.getElementById('b1').value;
+  const r2=+document.getElementById('r2').value,b2=+document.getElementById('b2').value;
+  document.getElementById('r1v').textContent=r1;document.getElementById('b1v').textContent=b1;
+  document.getElementById('r2v').textContent=r2;document.getElementById('b2v').textContent=b2;
+  const c=document.getElementById('bayesCanvas'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+
+  const t1=r1+b1,t2=r2+b2;
+  const pB1=0.5,pB2=0.5;
+  const pR_B1=r1/t1,pR_B2=r2/t2;
+  const pR=pB1*pR_B1+pB2*pR_B2;
+  const pB1_R=pB1*pR_B1/pR;
+  const pB2_R=pB2*pR_B2/pR;
+
+  // Draw Bags
+  function drawBag(x,y,ww,hh,red,blue,label){
+    // bag shape
+    ctx.fillStyle='#1e293b';ctx.strokeStyle='#334155';ctx.lineWidth=2;
+    ctx.beginPath();ctx.roundRect(x,y,ww,hh,10);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#94a3b8';ctx.font='bold 12px Inter';ctx.fillText(label,x+ww/2-20,y-8);
+    // Draw balls
+    const total=red+blue,cols=Math.ceil(Math.sqrt(total)),rows=Math.ceil(total/cols);
+    const bs=Math.min(ww/(cols+1),(hh-20)/(rows+1),18);
+    let drawn=0;
+    for(let row=0;row<rows&&drawn<total;row++){
+      for(let col=0;col<cols&&drawn<total;col++){
+        const bx=x+(col+1)*ww/(cols+1),by=y+20+(row+0.5)*(hh-30)/rows;
+        ctx.fillStyle=drawn<red?'#ef4444':'#3b82f6';
+        ctx.beginPath();ctx.arc(bx,by,bs/2,0,PI*2);ctx.fill();
+        drawn++;
+      }
+    }
+  }
+  drawBag(40,60,260,200,r1,b1,`Bag 1 (${r1}R + ${b1}B)`);
+  drawBag(370,60,260,200,r2,b2,`Bag 2 (${r2}R + ${b2}B)`);
+
+  // Result bar
+  const barY=275,barW=560,barX=60;
+  ctx.fillStyle='#1e293b';ctx.beginPath();ctx.roundRect(barX,barY,barW,28,5);ctx.fill();
+  const w1=pB1_R*barW;
+  ctx.fillStyle='#7c3aed';ctx.beginPath();ctx.roundRect(barX,barY,w1,28,5);ctx.fill();
+  ctx.fillStyle='#4c1d95';ctx.beginPath();ctx.roundRect(barX+w1,barY,barW-w1,28,0);ctx.fill();
+  ctx.fillStyle='#fff';ctx.font='bold 11px Inter';ctx.textAlign='center';
+  ctx.fillText(`P(Bag1|Red)=${(pB1_R*100).toFixed(1)}%`,barX+w1/2,barY+19);
+  ctx.fillText(`P(Bag2|Red)=${(pB2_R*100).toFixed(1)}%`,barX+w1+(barW-w1)/2,barY+19);
+  ctx.textAlign='left';
+  document.getElementById('bayesEq').textContent=
+    `P(B1)=P(B2)=0.5 (equal chance of picking each bag)
+`+
+    `P(Red|Bag1) = ${r1}/${t1} = ${pR_B1.toFixed(3)}
+`+
+    `P(Red|Bag2) = ${r2}/${t2} = ${pR_B2.toFixed(3)}
+`+
+    `P(Red) = P(B1)·P(R|B1) + P(B2)·P(R|B2) = ${pR.toFixed(4)} [Total Probability]
+
+`+
+    `Bayes: P(Bag1|Red) = P(B1)·P(R|B1)/P(Red) = ${(pB1_R).toFixed(4)} = ${(pB1_R*100).toFixed(1)}%
+`+
+    `       P(Bag2|Red) = ${(pB2_R).toFixed(4)} = ${(pB2_R*100).toFixed(1)}%`;
+}
+drawBayes();
+
+// ==================== LAB 3: Binomial ====================
+function comb(n,k){
+  if(k<0||k>n) return 0;
+  let r=1;for(let i=0;i<k;i++) r=r*(n-i)/(i+1);return r;
+}
+function drawBinom(){
+  const n=+document.getElementById('bn').value;
+  const p=+document.getElementById('bp').value/100;
+  document.getElementById('bnv').textContent=n;
+  document.getElementById('bpv').textContent=p.toFixed(2);
+  const c=document.getElementById('binomCanvas'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,pad=50,cw=W-pad-20,ch=H-pad-30;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+
+  const probs=[];let maxP=0;
+  for(let k=0;k<=n;k++){
+    const pr=comb(n,k)*Math.pow(p,k)*Math.pow(1-p,n-k);
+    probs.push(pr);if(pr>maxP)maxP=pr;
+  }
+  const barW=cw/(n+1);
+  const mean=n*p,variance=n*p*(1-p),sd=Math.sqrt(variance);
+
+  probs.forEach((pr,k)=>{
+    const x=pad+k*barW+barW*0.1;
+    const bh=ch*pr/maxP;
+    const y=pad+ch-bh;
+    const g=ctx.createLinearGradient(x,y+bh,x,y);
+    g.addColorStop(0,'#7c3aed');g.addColorStop(1,'#c4b5fd');
+    ctx.fillStyle=g;ctx.fillRect(x,y,barW*0.8,bh);
+    if(barW>20){
+      ctx.fillStyle='#94a3b8';ctx.font='9px Inter';ctx.textAlign='center';
+      ctx.fillText(k,x+barW*0.4,pad+ch+14);
+      if(pr>maxP*0.05) ctx.fillText(pr.toFixed(3),x+barW*0.4,y-3);
+    }
+  });
+  ctx.textAlign='left';
+  // Mean line
+  const mx=pad+mean*barW+barW/2;
+  ctx.strokeStyle='#fbbf24';ctx.lineWidth=1.5;ctx.setLineDash([5,4]);
+  ctx.beginPath();ctx.moveTo(mx,pad);ctx.lineTo(mx,pad+ch);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#fbbf24';ctx.font='11px Inter';ctx.fillText('μ='+mean.toFixed(2),mx+3,pad+12);
+  // Axes
+  ctx.strokeStyle='#475569';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(pad,pad);ctx.lineTo(pad,pad+ch);ctx.lineTo(W-10,pad+ch);ctx.stroke();
+  ctx.fillStyle='#94a3b8';ctx.font='11px Inter';ctx.fillText('X (successes)',W/2-30,pad+ch+28);
+
+  document.getElementById('binomEq').textContent=
+    `X ~ B(n=${n}, p=${p.toFixed(2)})
+P(X=k) = ⁿCₖ · p^k · (1-p)^(n-k)
+`+
+    `Mean μ = np = ${n}×${p.toFixed(2)} = ${mean.toFixed(2)}
+`+
+    `Variance σ² = np(1-p) = ${variance.toFixed(3)},  σ = ${sd.toFixed(3)}
+`+
+    `P(X=0)=${probs[0].toFixed(4)},  P(X=${n})=${probs[n].toFixed(4)}
+`+
+    `Har bar badhao p → distribution right shift hoti hai!`;
+}
+drawBinom();
+
+// ==================== LAB 4: Tree Diagram ====================
+function drawTree(){
+  const pA=+document.getElementById('pa').value/100;
+  const pB=1-pA;
+  const pDA=+document.getElementById('pda').value/100;
+  const pDB=+document.getElementById('pdb').value/100;
+  document.getElementById('pav').textContent=pA.toFixed(2);
+  document.getElementById('pdav').textContent=pDA.toFixed(2);
+  document.getElementById('pdbv').textContent=pDB.toFixed(2);
+  const c=document.getElementById('treeCanvas'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+
+  const root={x:80,y:H/2};
+  const machA={x:270,y:H/3};
+  const machB={x:270,y:2*H/3};
+  const dA={x:490,y:H/5};
+  const ndA={x:490,y:H*2/5};
+  const dB={x:490,y:H*3/5};
+  const ndB={x:490,y:H*4.2/5};
+
+  function line(a,b,p,color,lbl){
+    ctx.strokeStyle=color;ctx.lineWidth=2;ctx.shadowColor=color;ctx.shadowBlur=4;
+    ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.shadowBlur=0;
+    const mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
+    ctx.fillStyle='#e2e8f0';ctx.font='bold 11px Inter';
+    ctx.fillText(lbl,mx+4,my-4);
+  }
+  function node(pos,label,prob,color){
+    ctx.fillStyle=color;ctx.beginPath();ctx.arc(pos.x,pos.y,20,0,PI*2);ctx.fill();
+    ctx.fillStyle='#fff';ctx.font='bold 10px Inter';ctx.textAlign='center';
+    ctx.fillText(label,pos.x,pos.y+4);ctx.textAlign='left';
+    ctx.fillStyle='#94a3b8';ctx.font='10px Inter';
+    ctx.fillText(prob,pos.x-10,pos.y-24);
+  }
+
+  line(root,machA,pA,'#7c3aed',`P(A)=${pA.toFixed(2)}`);
+  line(root,machB,pB,'#3b82f6',`P(B)=${pB.toFixed(2)}`);
+  line(machA,dA,pDA,'#ef4444',`P(D|A)=${pDA.toFixed(2)}`);
+  line(machA,ndA,1-pDA,'#22c55e',`P(D'|A)=${(1-pDA).toFixed(2)}`);
+  line(machB,dB,pDB,'#ef4444',`P(D|B)=${pDB.toFixed(2)}`);
+  line(machB,ndB,1-pDB,'#22c55e',`P(D'|B)=${(1-pDB).toFixed(2)}`);
+
+  node(root,'Start','',  '#475569');
+  node(machA,'A',`P(A)=${pA.toFixed(2)}`,'#7c3aed');
+  node(machB,'B',`P(B)=${pB.toFixed(2)}`,'#3b82f6');
+  node(dA,'D','',  '#ef4444');node(ndA,"D'",''  ,'#22c55e');
+  node(dB,'D','',  '#ef4444');node(ndB,"D'",''  ,'#22c55e');
+
+  const pathAD=pA*pDA,pathBD=pB*pDB;
+  const pD=pathAD+pathBD;
+
+  // Path probability labels at end nodes
+  ctx.fillStyle='#fbbf24';ctx.font='bold 10px Inter';
+  [[dA,pathAD],[ndA,pA*(1-pDA)],[dB,pathBD],[ndB,pB*(1-pDB)]].forEach(([pos,val])=>{
+    ctx.fillText(val.toFixed(4),pos.x+24,pos.y+4);
+  });
+
+  // Highlight defect paths
+  ctx.strokeStyle='#ef444466';ctx.lineWidth=5;ctx.setLineDash([3,3]);
+  ctx.beginPath();ctx.moveTo(root.x,root.y);ctx.lineTo(machA.x,machA.y);ctx.lineTo(dA.x,dA.y);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(root.x,root.y);ctx.lineTo(machB.x,machB.y);ctx.lineTo(dB.x,dB.y);ctx.stroke();
+  ctx.setLineDash([]);
+
+  document.getElementById('treeEq').textContent=
+    `P(Defective) = P(A)·P(D|A) + P(B)·P(D|B)  [Total Probability Theorem]
+`+
+    `             = ${pA.toFixed(2)}×${pDA.toFixed(2)} + ${pB.toFixed(2)}×${pDB.toFixed(2)}
+`+
+    `             = ${pathAD.toFixed(4)} + ${pathBD.toFixed(4)} = ${pD.toFixed(4)}
+
+`+
+    `Bayes: P(A|D) = P(A)·P(D|A)/P(D) = ${pathAD.toFixed(4)}/${pD.toFixed(4)} = ${(pathAD/pD).toFixed(4)}
+`+
+    `       P(B|D) = ${(pathBD/pD).toFixed(4)}
+`+
+    `→ Sliders change karo — observe how posterior probability changes!`;
+}
+drawTree();
+</script>
+</body>
+</html>

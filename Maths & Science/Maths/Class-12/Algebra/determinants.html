@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Determinants — Class 12 Maths | AIkiPadhai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;line-height:1.75;}
+    h2{color:#172554;border-bottom:3px solid #2563eb;padding-bottom:8px;margin:2.2rem 0 1rem;}
+    h3{color:#1e40af;}
+    .concept-box{background:#eff6ff;border-left:5px solid #2563eb;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .concept-box p,.concept-box li{color:#1e3a8a;}
+    .formula-box{background:#172554;color:#bfdbfe;border-radius:10px;padding:1.2rem 1.6rem;font-family:monospace;font-size:1.05rem;margin:1rem 0;}
+    .example-box{background:#f0fdf4;border-left:5px solid #10b981;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .example-box h4{color:#065f46;}
+    .example-box p,.example-box li{color:#14532d;}
+    .story-box{background:#fffbeb;border-left:5px solid #f59e0b;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .story-box h3{color:#92400e;}
+    .story-box p{color:#78350f;}
+    .step-box{background:#f1f5f9;border-radius:6px;padding:.9rem 1.1rem;margin:.5rem 0;border-left:3px solid #2563eb;color:#1e293b;}
+    .practice-q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1.2rem;margin:.8rem 0;}
+    .practice-q p{color:#1e293b;}
+    details summary{cursor:pointer;color:#2563eb;font-weight:600;padding:.4rem 0;}
+    details p{color:#475569;padding:.5rem 0 0 1rem;}
+  </style>
+</head>
+<body>
+  <header><div class="container header-content">
+    <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+    <nav>
+      <a href="../../../../index.html">Home</a>
+      <a href="../index.html">Class 12 Maths</a>
+      <a href="index.html">Unit II</a>
+      <a href="determinants.html" class="active">Determinants</a>
+    </nav>
+  </div></header>
+
+  <section class="hero" style="background:linear-gradient(135deg,#172554,#1d4ed8);">
+    <div class="container">
+      <h1>Determinants 🔢</h1>
+      <p>Har square matrix ek number se associated hoti hai — determinant. Yeh number bahut kuch batata hai!</p>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <div class="story-box">
+      <h3>📐 Area aur Determinant ka Connection</h3>
+      <p>Kya tumhe pata hai ki ek triangle ki area nikalne ka formula ek determinant se aata hai? Agar teen points (x₁,y₁), (x₂,y₂), (x₃,y₃) hain, toh unka triangle ka area = ½|det| ek 3×3 matrix ka! Determinant ek ऐसा magical number hai jo matrix ki "strength" batata hai — kya system solvable hai, kya matrix invertible hai, kya points collinear hain — sab kuch!</p>
+    </div>
+
+    <h2>1. Determinant of 2×2 Matrix</h2>
+
+    <div class="concept-box">
+      <p>A = [[a,b],[c,d]] ke liye: |A| = det(A) = ad - bc</p>
+      <p style="margin-top:.5rem;">Yeh ek simple formula hai — diagonal multiply karo aur subtract karo.</p>
+    </div>
+
+    <!-- 2x2 det SVG -->
+    <svg viewBox="0 0 400 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:400px;display:block;margin:1rem auto;background:#fff;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.08);">
+      <text x="200" y="22" text-anchor="middle" font-family="Inter" font-size="13" font-weight="700" fill="#172554">|A| = ad - bc</text>
+      <text x="40" y="100" font-family="serif" font-size="70" fill="#2563eb" opacity=".4">|</text>
+      <text x="330" y="100" font-family="serif" font-size="70" fill="#2563eb" opacity=".4">|</text>
+      <!-- Elements -->
+      <text x="110" y="75" text-anchor="middle" font-family="Outfit" font-size="22" font-weight="700" fill="#172554">a</text>
+      <text x="200" y="75" text-anchor="middle" font-family="Outfit" font-size="22" font-weight="700" fill="#172554">b</text>
+      <text x="110" y="115" text-anchor="middle" font-family="Outfit" font-size="22" font-weight="700" fill="#172554">c</text>
+      <text x="200" y="115" text-anchor="middle" font-family="Outfit" font-size="22" font-weight="700" fill="#172554">d</text>
+      <!-- Arrows: a×d green, b×c red -->
+      <line x1="118" y1="78" x2="192" y2="108" stroke="#16a34a" stroke-width="2.5" stroke-dasharray="4,2"/>
+      <line x1="192" y1="78" x2="118" y2="108" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="4,2"/>
+      <text x="270" y="80" font-family="Inter" font-size="12" fill="#16a34a" font-weight="700">+ad</text>
+      <text x="270" y="115" font-family="Inter" font-size="12" fill="#dc2626" font-weight="700">-bc</text>
+    </svg>
+
+    <div class="example-box">
+      <h4>✅ Example: det([[3,1],[2,4]])</h4>
+      <p>= 3×4 - 1×2 = 12 - 2 = <strong>10</strong></p>
+    </div>
+
+    <h2>2. Determinant of 3×3 Matrix — Cofactor Expansion</h2>
+
+    <div class="concept-box">
+      <p>3×3 determinant ko hum pehli row ke saath expand karte hain (cofactor expansion):</p>
+    </div>
+
+    <div class="formula-box">|A| = a₁₁C₁₁ + a₁₂C₁₂ + a₁₃C₁₃
+
+Jahan Cᵢⱼ = (-1)^(i+j) × Mᵢⱼ
+Mᵢⱼ = minor (i-th row, j-th column remove karne ke baad 2×2 det)
+
+Sign pattern:
+| + - + |
+| - + - |
+| + - + |</div>
+
+    <div class="example-box">
+      <h4>✅ Worked Example: 3×3 Determinant</h4>
+      <p>A = [[1,2,3],[4,5,6],[7,8,9]]</p>
+      <div class="step-box">M₁₁ = |[[5,6],[8,9]]| = 45-48 = -3</div>
+      <div class="step-box">M₁₂ = |[[4,6],[7,9]]| = 36-42 = -6</div>
+      <div class="step-box">M₁₃ = |[[4,5],[7,8]]| = 32-35 = -3</div>
+      <p>|A| = 1×(-3) - 2×(-6) + 3×(-3) = -3 + 12 - 9 = 0</p>
+      <p style="color:#065f46;font-weight:600;">|A| = 0 → Matrix is singular (not invertible)!</p>
+    </div>
+
+    <h2>3. Adjoint aur Inverse Matrix</h2>
+
+    <div class="formula-box">Adjoint: adj(A) = transpose of cofactor matrix
+Inverse: A⁻¹ = adj(A) / |A|   (only when |A| ≠ 0)
+
+Steps to find A⁻¹:
+1. Calculate |A|
+2. Find all cofactors Cᵢⱼ
+3. Form cofactor matrix [Cᵢⱼ]
+4. Take transpose → adj(A)
+5. A⁻¹ = adj(A)/|A|</div>
+
+    <h2>4. System of Linear Equations — Matrix Method</h2>
+
+    <div class="concept-box">
+      <p>Equations AX = B mein: X = A⁻¹B (agar |A| ≠ 0)</p>
+      <p>Yeh method 2 ya 3 variables wale linear equations efficiently solve karta hai.</p>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ Solve: 2x+y=5, x+3y=10</h4>
+      <p>Matrix form: A = [[2,1],[1,3]], X = [x,y]ᵀ, B = [5,10]ᵀ</p>
+      <p>|A| = 6-1 = 5 ≠ 0 ✓</p>
+      <p>adj(A) = [[3,-1],[-1,2]]</p>
+      <p>A⁻¹ = (1/5)[[3,-1],[-1,2]]</p>
+      <p>X = A⁻¹B = (1/5)[[3,-1],[-1,2]][5,10]ᵀ = (1/5)[5,5]ᵀ = [1,1]ᵀ</p>
+      <p style="color:#065f46;font-weight:600;">∴ x = 1, y = 1</p>
+    </div>
+
+    <h2>5. Area of Triangle using Determinant</h2>
+
+    <div class="formula-box">Area = ½ |det| where det = |x₁ y₁ 1|
+                                              |x₂ y₂ 1|
+                                              |x₃ y₃ 1|
+
+Points collinear ⟺ det = 0 (area = 0)</div>
+
+    <h2>6. Practice Questions</h2>
+    <div class="practice-q">
+      <p><strong>Q1.</strong> Find det([[2,-1,0],[1,3,-2],[0,1,4]])</p>
+      <details><summary>Solution</summary><p>Expand along row 1: 2×(12+2) - (-1)×(4-0) + 0 = 2×14 + 4 = 28+4 = 32</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q2.</strong> Find A⁻¹ for A = [[1,2],[3,7]].</p>
+      <details><summary>Solution</summary><p>|A|=7-6=1. adj(A)=[[7,-2],[-3,1]]. A⁻¹=[[7,-2],[-3,1]]</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q3.</strong> Area of triangle with vertices (1,2), (3,4), (5,2).</p>
+      <details><summary>Solution</summary><p>det = |1 2 1; 3 4 1; 5 2 1| = 1(4-2)-2(3-5)+1(6-20) = 2+4-14 = -8. Area = ½|−8| = 4 sq units.</p></details>
+    </div>
+  </div>
+  <footer style="background:#0f172a;color:#94a3b8;text-align:center;padding:2rem;margin-top:3rem;">
+    <p>AIkiPadhai — Free Education for Every Student 🇮🇳</p>
+  </footer>
+</body>
+</html>

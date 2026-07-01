@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Calculus Lab — Class 12 | AIkiPadhai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#0d1117;color:#e2e8f0;font-family:'Inter',sans-serif;}
+    h1,h2,h3,h4{color:#f1f5f9!important;} p{color:#cbd5e1;}
+    .hero h1{color:#fff!important;} .hero p{color:#e2e8f0!important;}
+    nav a{color:#94a3b8;}
+    .lab-wrap{max-width:960px;margin:2rem auto;padding:0 1.2rem;}
+    .lab-card{background:#161b22;border:1px solid #30363d;border-radius:14px;padding:1.6rem;margin:1.4rem 0;}
+    .lab-card h3{color:#fca5a5!important;margin:0 0 .5rem;}
+    .lab-card p.hint{color:#64748b;font-size:.88rem;margin:.3rem 0 .8rem;}
+    canvas{border-radius:10px;display:block;margin:.6rem auto;}
+    .controls{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;margin:.6rem 0;}
+    .btn{padding:.5rem 1.1rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:.88rem;transition:all .18s;}
+    .btn-v{background:linear-gradient(135deg,#ef4444,#b91c1c);color:#fff;}
+    .btn-v:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(239,68,68,.4);}
+    .btn-g{background:#1e293b;color:#fca5a5;border:1px solid #334155;}
+    select,input[type=range]{background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:.35rem .6rem;}
+    input[type=range]{accent-color:#ef4444;}
+    .eq-display{background:#0a0e1a;border-radius:8px;padding:.7rem 1rem;font-family:monospace;color:#fca5a5;font-size:.92rem;margin:.5rem 0;line-height:1.7;}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    @media(max-width:600px){.two-col{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+  <header><div class="container header-content">
+    <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+    <nav><a href="../index.html">Class 12 Maths</a><a href="index.html">Unit III</a><a href="calculus-interactive.html" class="active">Lab</a></nav>
+  </div></header>
+
+  <section class="hero" style="background:linear-gradient(135deg,#1a0505,#7f1d1d,#dc2626);">
+    <div class="container"><h1>Calculus Lab 🔬</h1><p>Concepts feel karo — tangent lines, maxima, areas, aur differential equations — sab visually!</p></div>
+  </section>
+
+  <div class="lab-wrap">
+
+    <!-- LAB 1: Derivative = Slope of Tangent -->
+    <div class="lab-card">
+      <h3>📐 Lab 1: Derivative = Tangent ka Slope</h3>
+      <p class="hint">Point slider move karo. Dekho tangent line (yellow) kaise rotate hoti hai. Jahan slope=0 wahan local maxima/minima hoti hai!</p>
+      <div class="controls">
+        <select id="derFunc" onchange="drawDerivative()">
+          <option value="cubic">f(x) = x³ − 3x (maxima at x=-1, minima at x=1)</option>
+          <option value="sine">f(x) = 2·sin(x)</option>
+          <option value="parab">f(x) = -(x-1)² + 4 (parabola)</option>
+          <option value="quart">f(x) = x⁴ - 4x² + 1</option>
+        </select>
+        <label style="color:#94a3b8;">x = </label>
+        <input type="range" id="derX" min="-280" max="280" value="0" oninput="drawDerivative()">
+        <span id="derXval" style="color:#fca5a5;font-weight:700;">0.00</span>
+      </div>
+      <canvas id="derCanvas" width="700" height="320" style="width:100%;background:#0a0e1a;"></canvas>
+      <div class="eq-display" id="derEq"></div>
+    </div>
+
+    <!-- LAB 2: Increasing/Decreasing regions -->
+    <div class="lab-card">
+      <h3>📈📉 Lab 2: Increasing / Decreasing Regions</h3>
+      <p class="hint">Green = f'(x)>0 (increasing). Red = f'(x)<0 (decreasing). Yellow dots = critical points (f'=0). Kisi bhi function pe try karo!</p>
+      <div class="controls">
+        <select id="idFunc" onchange="drawIncDec()">
+          <option value="cubic">f(x) = x³ − 3x</option>
+          <option value="quart">f(x) = x⁴ - 4x²</option>
+          <option value="sine">f(x) = sin(x)</option>
+          <option value="gauss">f(x) = e^(-x²)</option>
+        </select>
+      </div>
+      <canvas id="idCanvas" width="700" height="300" style="width:100%;background:#0a0e1a;"></canvas>
+      <div class="eq-display" id="idEq"></div>
+    </div>
+
+    <!-- LAB 3: Integral = Area under curve -->
+    <div class="lab-card">
+      <h3>∫ Lab 3: Integral = Area Under Curve</h3>
+      <p class="hint">Limits drag karo aur area change hote dekho. N rectangles badhaate jaao — approximation exact value ke paas aata hai! Yahi Riemann ka idea tha.</p>
+      <div class="controls">
+        <select id="intFunc" onchange="drawIntegral()">
+          <option value="sin">f(x) = sin(x)  [exact = 2 on 0→π]</option>
+          <option value="sq">f(x) = x²  [exact = 1/3 on 0→1]</option>
+          <option value="exp">f(x) = eˣ  [exact = e-1 on 0→1]</option>
+          <option value="inv">f(x) = 1/x  [exact = ln2 on 1→2]</option>
+        </select>
+        <label style="color:#94a3b8;">N =</label>
+        <input type="range" id="nRect" min="1" max="100" value="6" oninput="drawIntegral()">
+        <span id="nRectVal" style="color:#fca5a5;font-weight:700;">6</span>
+      </div>
+      <canvas id="intCanvas" width="700" height="300" style="width:100%;background:#0a0e1a;"></canvas>
+      <div class="eq-display" id="intEq"></div>
+    </div>
+
+    <!-- LAB 4: Differential Equation Slope Field -->
+    <div class="lab-card">
+      <h3>🌊 Lab 4: Differential Equations — Slope Field</h3>
+      <p class="hint">Har jagah chhoti line slope dikhati hai — f'(x,y) ka value. Solution curve is slope field ko follow karti hai! Yahi ODE ka geometric meaning hai.</p>
+      <div class="controls">
+        <select id="deField" onchange="drawSlopeField()">
+          <option value="sep">dy/dx = x (simple linear)</option>
+          <option value="prop">dy/dx = y (exponential growth!)</option>
+          <option value="sin">dy/dx = sin(x)</option>
+          <option value="xy">dy/dx = x − y</option>
+        </select>
+        <button class="btn btn-v" onclick="addSolution()">+ Draw Solution Curve</button>
+        <button class="btn btn-g" onclick="clearSolutions()">Clear Curves</button>
+      </div>
+      <canvas id="deCanvas" width="700" height="320" style="width:100%;background:#0a0e1a;cursor:crosshair;"></canvas>
+      <div class="eq-display" id="deEq"></div>
+    </div>
+
+  </div>
+
+<script>
+const sc=50, pi=Math.PI;
+
+// ==================== LAB 1: Derivative ====================
+const derFns={
+  cubic:{f:x=>x*x*x-3*x, df:x=>3*x*x-3, s:'f(x)=x³-3x', ds:"f'(x)=3x²-3"},
+  sine:{f:x=>2*Math.sin(x), df:x=>2*Math.cos(x), s:'f(x)=2sin(x)', ds:"f'(x)=2cos(x)"},
+  parab:{f:x=>-(x-1)*(x-1)+4, df:x=>-2*(x-1), s:'f(x)=-(x-1)²+4', ds:"f'(x)=-2(x-1)"},
+  quart:{f:x=>x*x*x*x-4*x*x+1, df:x=>4*x*x*x-8*x, s:'f(x)=x⁴-4x²+1', ds:"f'(x)=4x³-8x"},
+};
+
+function drawDerivative(){
+  const c=document.getElementById('derCanvas'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,cx=W/2,cy=H/2;
+  ctx.clearRect(0,0,W,H); ctx.fillStyle='#0a0e1a'; ctx.fillRect(0,0,W,H);
+  const fn=derFns[document.getElementById('derFunc').value];
+  const xraw=+document.getElementById('derX').value/100;
+  document.getElementById('derXval').textContent=xraw.toFixed(2);
+  // Grid
+  ctx.strokeStyle='#1e293b'; ctx.lineWidth=1;
+  for(let x=cx%sc;x<W;x+=sc){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=cy%sc;y<H;y+=sc){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  ctx.strokeStyle='#334155'; ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(0,cy);ctx.lineTo(W,cy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx,0);ctx.lineTo(cx,H);ctx.stroke();
+  // Curve
+  ctx.strokeStyle='#fca5a5'; ctx.lineWidth=2.5; ctx.shadowColor='#ef4444'; ctx.shadowBlur=4;
+  ctx.beginPath(); let first=true;
+  for(let px=0;px<W;px++){
+    const x=(px-cx)/sc, y=fn.f(x), py=cy-y*sc;
+    if(py<-100||py>H+100){first=true;continue;}
+    if(first){ctx.moveTo(px,py);first=false;}else ctx.lineTo(px,py);
+  }
+  ctx.stroke(); ctx.shadowBlur=0;
+  // Tangent
+  const fx0=fn.f(xraw), dfx0=fn.df(xraw);
+  const px0=cx+xraw*sc, py0=cy-fx0*sc;
+  const slope=dfx0;
+  ctx.strokeStyle='#fbbf24'; ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(0,py0-slope*(px0));ctx.lineTo(W,py0+slope*(W-px0));ctx.stroke();
+  // Dot
+  ctx.fillStyle='#fbbf24'; ctx.beginPath(); ctx.arc(px0,py0,6,0,pi*2); ctx.fill();
+  // Slope indicator
+  const slopeColor=slope>0.05?'#22c55e':slope<-0.05?'#ef4444':'#fbbf24';
+  ctx.fillStyle=slopeColor; ctx.font='bold 13px Inter';
+  ctx.fillText(`f'(${xraw.toFixed(2)}) = ${slope.toFixed(3)}${Math.abs(slope)<0.05?' ← Critical Point!':slope>0?' (Increasing)':' (Decreasing)'}`,10,25);
+  document.getElementById('derEq').textContent=`${fn.s}
+${fn.ds}
+At x=${xraw.toFixed(3)}: f(x)=${fx0.toFixed(3)}, f'(x)=${slope.toFixed(3)}
+→ Tangent slope = ${slope.toFixed(3)}${Math.abs(slope)<0.1?' ← Near critical point (max/min?)':''}`;
+}
+drawDerivative();
+
+// ==================== LAB 2: Increasing/Decreasing ====================
+const idFns={
+  cubic:{f:x=>x*x*x-3*x,df:x=>3*x*x-3,s:'f(x)=x³-3x',ds:"f'=3x²-3=0 → x=±1"},
+  quart:{f:x=>x*x*x*x-4*x*x,df:x=>4*x*x*x-8*x,s:'f(x)=x⁴-4x²',ds:"f'=4x³-8x=0 → x=0,±√2"},
+  sine:{f:x=>Math.sin(x)*1.5,df:x=>Math.cos(x)*1.5,s:'f(x)=sin(x)',ds:"f'=cos(x)=0 → x=π/2,3π/2,..."},
+  gauss:{f:x=>Math.exp(-x*x),df:x=>-2*x*Math.exp(-x*x),s:'f(x)=e^(-x²)',ds:"f'=-2x·e^(-x²)=0 → x=0"},
+};
+function drawIncDec(){
+  const c=document.getElementById('idCanvas'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,cx=W/2,cy=H/2;
+  ctx.clearRect(0,0,W,H); ctx.fillStyle='#0a0e1a'; ctx.fillRect(0,0,W,H);
+  const fn=idFns[document.getElementById('idFunc').value];
+  // Grid
+  ctx.strokeStyle='#1e293b'; ctx.lineWidth=1;
+  for(let x=cx%sc;x<W;x+=sc){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=cy%sc;y<H;y+=sc){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  ctx.strokeStyle='#334155'; ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(0,cy);ctx.lineTo(W,cy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx,0);ctx.lineTo(cx,H);ctx.stroke();
+  // Colored segments
+  for(let px=0;px<W-1;px++){
+    const x=(px-cx)/sc, dfx=fn.df(x);
+    const color=dfx>0?'#22c55e':dfx<0?'#ef4444':'#fbbf24';
+    const y=fn.f(x),ny=fn.f((px+1-cx)/sc);
+    const py=cy-y*sc,npy=cy-ny*sc;
+    if(py<-50||py>H+50||npy<-50||npy>H+50) continue;
+    ctx.strokeStyle=color; ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(px+1,npy);ctx.stroke();
+  }
+  // Critical points
+  for(let px=1;px<W;px++){
+    const x=(px-cx)/sc,px0=(px-1-cx)/sc;
+    if(fn.df(x)*fn.df(px0)<0){
+      const y=fn.f(x),py=cy-y*sc;
+      ctx.fillStyle='#fbbf24'; ctx.beginPath(); ctx.arc(px,py,7,0,pi*2); ctx.fill();
+      ctx.fillStyle='#fbbf24'; ctx.font='bold 10px Inter';
+      ctx.fillText('x='+x.toFixed(1),px+5,py-8);
+    }
+  }
+  // Legend
+  ctx.fillStyle='#22c55e'; ctx.font='bold 12px Inter';
+  ctx.fillText("■ Increasing (f'>0)",10,22);
+  ctx.fillStyle='#ef4444';
+  ctx.fillText("■ Decreasing (f'<0)",10,40);
+  ctx.fillStyle='#fbbf24';
+  ctx.fillText("● Critical point (f'=0)",10,58);
+  document.getElementById('idEq').textContent=fn.s+'
+'+fn.ds;
+}
+drawIncDec();
+
+// ==================== LAB 3: Riemann Integral ====================
+const intFns={
+  sin:{f:x=>Math.sin(x),a:0,b:pi,exact:2,s:'∫[0→π] sin(x)dx = [-cos x]₀^π = 2'},
+  sq:{f:x=>x*x,a:0,b:1,exact:1/3,s:'∫[0→1] x²dx = [x³/3]₀¹ = 1/3 ≈ 0.333'},
+  exp:{f:x=>Math.exp(x),a:0,b:1,exact:Math.E-1,s:'∫[0→1] eˣ dx = [eˣ]₀¹ = e-1 ≈ 1.718'},
+  inv:{f:x=>1/x,a:1,b:2,exact:Math.log(2),s:'∫[1→2] (1/x)dx = [ln x]₁² = ln 2 ≈ 0.693'},
+};
+function drawIntegral(){
+  const c=document.getElementById('intCanvas'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H); ctx.fillStyle='#0a0e1a'; ctx.fillRect(0,0,W,H);
+  const fn=intFns[document.getElementById('intFunc').value];
+  const n=+document.getElementById('nRect').value;
+  document.getElementById('nRectVal').textContent=n;
+  const ox=60,oy=H-40,chartW=W-90,chartH=H-80;
+  const {a,b,f,exact}=fn;
+  const dx=(b-a)/n;
+  const scX=chartW/(b-a);
+  // Find max f value for scaling
+  let maxF=0.01;
+  for(let i=0;i<=100;i++) maxF=Math.max(maxF,f(a+i*(b-a)/100));
+  const scY=chartH/maxF*0.9;
+  // Rectangles
+  let approx=0;
+  for(let i=0;i<n;i++){
+    const xi=a+i*dx+dx/2;
+    const fxi=f(xi); approx+=fxi*dx;
+    const bx=ox+(a+i*dx)*scX, bw=dx*scX, bh=fxi*scY;
+    const g=ctx.createLinearGradient(bx,oy-bh,bx,oy);
+    g.addColorStop(0,'#ef4444'); g.addColorStop(1,'#7f1d1d');
+    ctx.fillStyle=g; ctx.fillRect(bx,oy-bh,bw,bh);
+    ctx.strokeStyle='#fca5a566'; ctx.lineWidth=0.7; ctx.strokeRect(bx,oy-bh,bw,bh);
+  }
+  // Actual curve
+  ctx.strokeStyle='#fbbf24'; ctx.lineWidth=2.5; ctx.shadowColor='#fbbf24'; ctx.shadowBlur=4;
+  ctx.beginPath();
+  for(let i=0;i<=200;i++){
+    const x=a+i*(b-a)/200, y=f(x);
+    const px=ox+x*scX, py=oy-y*scY;
+    if(i===0)ctx.moveTo(px,py);else ctx.lineTo(px,py);
+  }
+  ctx.stroke(); ctx.shadowBlur=0;
+  // Axes
+  ctx.strokeStyle='#475569'; ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(ox+chartW,oy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(ox,40);ctx.stroke();
+  // Labels
+  ctx.fillStyle='#94a3b8'; ctx.font='11px Inter';
+  ctx.fillText(a.toFixed(1),ox-8,oy+14); ctx.fillText(b.toFixed(1),ox+b*scX-8,oy+14);
+  const pct=Math.abs(approx-exact)/Math.abs(exact)*100;
+  document.getElementById('intEq').textContent=
+    `N=${n} rectangles: Approx area = ${approx.toFixed(5)}
+Exact value = ${exact.toFixed(5)}
+Error = ${pct.toFixed(2)}% — N badhao toh error karega!
+${fn.s}`;
+}
+drawIntegral();
+
+// ==================== LAB 4: Slope Field ====================
+const deFields={
+  sep:{f:(x,y)=>x,s:'dy/dx = x → y = x²/2 + C'},
+  prop:{f:(x,y)=>y,s:'dy/dx = y → y = Ce^x (exponential growth!)'},
+  sin:{f:(x,y)=>Math.sin(x),s:'dy/dx = sin(x) → y = -cos(x) + C'},
+  xy:{f:(x,y)=>x-y,s:'dy/dx = x-y → interesting decay toward y=x-1'},
+};
+let solutions=[];
+function drawSlopeField(){
+  const c=document.getElementById('deCanvas'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,cx=W/2,cy=H/2;
+  ctx.clearRect(0,0,W,H); ctx.fillStyle='#0a0e1a'; ctx.fillRect(0,0,W,H);
+  const fn=deFields[document.getElementById('deField').value];
+  const step=35;
+  // Draw slope lines
+  for(let px=step/2;px<W;px+=step){
+    for(let py=step/2;py<H;py+=step){
+      const x=(px-cx)/sc,y=-(py-cy)/sc;
+      const slope=fn.f(x,y);
+      if(!isFinite(slope)||Math.abs(slope)>10) continue;
+      const angle=Math.atan(slope);
+      const len=14;
+      const dx2=len*Math.cos(angle)/2,dy2=len*Math.sin(angle)/2;
+      const mag=Math.min(Math.abs(slope),3)/3;
+      const r=Math.round(200*mag),b=Math.round(150*(1-mag));
+      ctx.strokeStyle=`rgba(${150+r},${100},${b+100},0.8)`;
+      ctx.lineWidth=1.5;
+      ctx.beginPath();ctx.moveTo(px-dx2,py+dy2);ctx.lineTo(px+dx2,py-dy2);ctx.stroke();
+    }
+  }
+  // Axes
+  ctx.strokeStyle='#334155'; ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(0,cy);ctx.lineTo(W,cy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx,0);ctx.lineTo(cx,H);ctx.stroke();
+  ctx.fillStyle='#475569'; ctx.font='11px Inter';
+  for(let i=-4;i<=4;i++){if(i!==0){ctx.fillText(i,cx+i*sc-4,cy+14);ctx.fillText(-i,cx+4,cy-i*sc+4);}}
+  // Solution curves
+  solutions.forEach(([x0,y0])=>{
+    const fn2=deFields[document.getElementById('deField').value];
+    ctx.strokeStyle='#22c55e'; ctx.lineWidth=2; ctx.shadowColor='#22c55e'; ctx.shadowBlur=5;
+    ctx.beginPath();
+    let x=x0,y=y0;
+    ctx.moveTo(cx+x*sc,cy-y*sc);
+    for(let i=0;i<200;i++){
+      const slope=fn2.f(x,y);
+      if(!isFinite(slope)||Math.abs(slope)>15) break;
+      x+=0.05; y+=slope*0.05;
+      const px=cx+x*sc,py=cy-y*sc;
+      if(px<0||px>W||py<0||py>H) break;
+      ctx.lineTo(px,py);
+    }
+    ctx.stroke(); ctx.shadowBlur=0;
+    // Backward too
+    ctx.strokeStyle='#22c55e'; ctx.lineWidth=2;
+    ctx.beginPath();
+    x=x0; y=y0; ctx.moveTo(cx+x*sc,cy-y*sc);
+    for(let i=0;i<200;i++){
+      const slope=fn2.f(x,y);
+      if(!isFinite(slope)||Math.abs(slope)>15) break;
+      x-=0.05; y-=slope*0.05;
+      const px=cx+x*sc,py=cy-y*sc;
+      if(px<0||px>W||py<0||py>H) break;
+      ctx.lineTo(px,py);
+    }
+    ctx.stroke();
+  });
+  document.getElementById('deEq').textContent=fn.s+'
+← Canvas par click karo to add solution curve starting from that point!';
+}
+
+document.getElementById('deCanvas').addEventListener('click',e=>{
+  const c=document.getElementById('deCanvas');
+  const rect=c.getBoundingClientRect();
+  const px=(e.clientX-rect.left)*(c.width/rect.width);
+  const py=(e.clientY-rect.top)*(c.height/rect.height);
+  const x0=(px-c.width/2)/sc, y0=-(py-c.height/2)/sc;
+  solutions.push([x0,y0]);
+  drawSlopeField();
+});
+
+function addSolution(){solutions.push([0,1]);drawSlopeField();}
+function clearSolutions(){solutions=[];drawSlopeField();}
+
+drawSlopeField();
+</script>
+</body>
+</html>

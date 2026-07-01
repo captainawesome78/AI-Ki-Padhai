@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Linear Programming — Class 12 | AIkiPadhai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;line-height:1.75;}
+    h2{color:#431407;border-bottom:3px solid #ea580c;padding-bottom:8px;margin:2.2rem 0 1rem;}
+    h3{color:#c2410c;}
+    .concept-box{background:#fff7ed;border-left:5px solid #ea580c;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .concept-box p,.concept-box li{color:#7c2d12;}
+    .formula-box{background:#431407;color:#fed7aa;border-radius:10px;padding:1.2rem 1.6rem;font-family:monospace;font-size:1rem;margin:1rem 0;}
+    .example-box{background:#f0fdf4;border-left:5px solid #10b981;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .example-box h4{color:#065f46;}
+    .example-box p,.example-box li,.step-box{color:#14532d;}
+    .story-box{background:#fffbeb;border-left:5px solid #f59e0b;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .story-box h3{color:#92400e;}
+    .story-box p{color:#78350f;}
+    .step-box{background:#f1f5f9;border-radius:6px;padding:.9rem 1.1rem;margin:.5rem 0;border-left:3px solid #ea580c;color:#1e293b !important;}
+    .practice-q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1.2rem;margin:.8rem 0;}
+    .practice-q p{color:#1e293b;}
+    details summary{cursor:pointer;color:#ea580c;font-weight:600;padding:.4rem 0;}
+    details p{color:#475569;padding:.5rem 0 0 1rem;}
+  </style>
+</head>
+<body>
+  <header><div class="container header-content">
+    <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+    <nav><a href="../../../../index.html">Home</a><a href="../index.html">Class 12 Maths</a><a href="index.html">Unit V</a><a href="linear-programming.html" class="active">LP</a></nav>
+  </div></header>
+  <section class="hero" style="background:linear-gradient(135deg,#431407,#ea580c);">
+    <div class="container">
+      <h1>Linear Programming 📈</h1>
+      <p>Best decision karo — constraints ke andar maximum profit ya minimum cost!</p>
+    </div>
+  </section>
+  <div class="container">
+
+    <div class="story-box">
+      <h3>🏭 Factory ka Dilemma</h3>
+      <p>Ek factory do types ke products banati hai — Type A aur Type B. Type A ke liye 2 hours machine time aur 1 hour labor chahiye. Type B ke liye 1 hour machine aur 2 hours labor. Total 100 hours machine aur 80 hours labor available hai. Type A se ₹300 aur Type B se ₹200 profit milta hai. Factory ko kitna A aur kitna B banana chahiye ki maximum profit ho? Yahi <strong>Linear Programming Problem (LPP)</strong> hai!</p>
+    </div>
+
+    <h2>1. LP Problem ke Components</h2>
+    <div class="concept-box">
+      <p><strong>Decision Variables:</strong> Jo quantities hum choose karte hain (x, y)</p>
+      <p><strong>Objective Function:</strong> Jo maximize ya minimize karna hai (Z = ax + by)</p>
+      <p><strong>Constraints:</strong> Linear inequalities jo limitations represent karti hain</p>
+      <p><strong>Non-negativity:</strong> x ≥ 0, y ≥ 0 (real quantities negative nahi ho sakti)</p>
+    </div>
+
+    <div class="formula-box">Standard LPP Form:
+Maximize/Minimize: Z = c₁x + c₂y
+Subject to constraints:
+  a₁x + b₁y ≤ r₁ (ya ≥ ya =)
+  a₂x + b₂y ≤ r₂
+  ...
+  x ≥ 0, y ≥ 0</div>
+
+    <h2>2. Graphical Method — Step by Step</h2>
+    
+    <!-- LP feasible region SVG -->
+    <svg viewBox="0 0 500 340" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:500px;display:block;margin:1.5rem auto;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);">
+      <text x="250" y="22" text-anchor="middle" font-family="Inter" font-size="13" font-weight="700" fill="#431407">Feasible Region (shaded) aur Corner Points</text>
+      <!-- Axes -->
+      <line x1="50" y1="280" x2="450" y2="280" stroke="#475569" stroke-width="1.5"/>
+      <line x1="50" y1="30" x2="50" y2="290" stroke="#475569" stroke-width="1.5"/>
+      <text x="455" y="284" font-family="Inter" font-size="11" fill="#64748b">x</text>
+      <text x="54" y="28" font-family="Inter" font-size="11" fill="#64748b">y</text>
+      <!-- Feasible region polygon -->
+      <polygon points="50,280 250,280 200,180 50,220" fill="#fed7aa" opacity=".6" stroke="#ea580c" stroke-width="1.5"/>
+      <!-- Constraint lines -->
+      <line x1="50" y1="180" x2="300" y2="280" stroke="#c2410c" stroke-width="2" stroke-dasharray="6,3"/>
+      <line x1="50" y1="130" x2="350" y2="280" stroke="#2563eb" stroke-width="2" stroke-dasharray="6,3"/>
+      <!-- Corner points -->
+      <circle cx="50" cy="280" r="5" fill="#431407"/>
+      <text x="35" y="298" font-family="Inter" font-size="10" fill="#431407">O(0,0)</text>
+      <circle cx="250" cy="280" r="5" fill="#431407"/>
+      <text x="235" y="298" font-family="Inter" font-size="10" fill="#431407">B</text>
+      <circle cx="200" cy="180" r="5" fill="#ea580c"/>
+      <text x="205" y="178" font-family="Inter" font-size="10" fill="#ea580c" font-weight="700">C (optimal)</text>
+      <circle cx="50" cy="220" r="5" fill="#431407"/>
+      <text x="55" y="218" font-family="Inter" font-size="10" fill="#431407">A</text>
+      <!-- Legend -->
+      <line x1="310" y1="80" x2="340" y2="80" stroke="#c2410c" stroke-width="2" stroke-dasharray="5,3"/>
+      <text x="345" y="84" font-family="Inter" font-size="10" fill="#c2410c">Constraint 1</text>
+      <line x1="310" y1="100" x2="340" y2="100" stroke="#2563eb" stroke-width="2" stroke-dasharray="5,3"/>
+      <text x="345" y="104" font-family="Inter" font-size="10" fill="#2563eb">Constraint 2</text>
+      <rect x="310" y="115" width="15" height="10" fill="#fed7aa" stroke="#ea580c" stroke-width="1"/>
+      <text x="328" y="124" font-family="Inter" font-size="10" fill="#ea580c">Feasible Region</text>
+    </svg>
+
+    <div class="formula-box">Steps to Solve LPP Graphically:
+1. Constraints ko equations banao aur graph par plot karo
+2. Feasible region identify karo (constraints satisfy karne wala area)
+3. Corner points nikalo (vertices of feasible region)
+4. Har corner point par Z calculate karo
+5. Maximum/minimum Z value → optimal solution
+
+Corner Point Theorem:
+Optimal value Z sirf corner points par milti hai!</div>
+
+    <h2>3. Worked Example</h2>
+    <div class="example-box">
+      <h4>✅ Maximize Z = 3x + 5y subject to:</h4>
+      <p>x + y ≤ 4, x + 3y ≤ 6, x,y ≥ 0</p>
+      <div class="step-box">Corner points: O(0,0), A(4,0), B(3,1), C(0,2)</div>
+      <div class="step-box">Z at O = 0, Z at A = 12, Z at B = 3(3)+5(1) = 14, Z at C = 0+10 = 10</div>
+      <p style="color:#065f46;font-weight:600;">Maximum Z = 14 at point B(3,1)</p>
+    </div>
+
+    <h2>4. Types of Solutions</h2>
+    <div class="concept-box">
+      <p><strong>Unique optimal solution:</strong> Exactly ek corner point par maximum/minimum.</p>
+      <p><strong>Multiple optimal solutions:</strong> Agar objective function ki line ek constraint ke saath parallel ho — infinite solutions.</p>
+      <p><strong>Unbounded solution:</strong> Feasible region unbounded aur Z arbitrarily large ho sake.</p>
+      <p><strong>No solution:</strong> Feasible region empty (constraints contradict each other).</p>
+    </div>
+
+    <h2>5. Practice Questions</h2>
+    <div class="practice-q"><p><strong>Q1.</strong> Maximize Z=x+y, subject to x+y≤4, x≥0, y≥0. Answer?</p><details><summary>Solution</summary><p>Feasible region: triangle O(0,0), A(4,0), B(0,4). Z at A=4, Z at B=4 → Multiple optimal solutions. Max Z=4 along line segment AB.</p></details></div>
+    <div class="practice-q"><p><strong>Q2.</strong> Minimize Z=3x+2y subject to x+y≥4, 3x+y≥6, x,y≥0.</p><details><summary>Solution</summary><p>Boundary lines: x+y=4 (intercepts 4,4), 3x+y=6 (intercepts 2,6). Intersection: x=1,y=3. Corner points: (0,6),(1,3),(4,0). Z: 12, 9, 12. Min Z=9 at (1,3).</p></details></div>
+  </div>
+  <footer style="background:#0f172a;color:#94a3b8;text-align:center;padding:2rem;margin-top:3rem;"><p>AIkiPadhai 🇮🇳</p></footer>
+</body>
+</html>

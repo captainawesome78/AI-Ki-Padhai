@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Relations & Functions — Class 12 Maths | AIkiPadhai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css" />
+  <style>
+    body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;line-height:1.75;}
+    h2{color:#1e1b4b;border-bottom:3px solid #6366f1;padding-bottom:8px;margin:2.2rem 0 1rem;}
+    h3{color:#3730a3;}
+    .concept-box{background:#eef2ff;border-left:5px solid #6366f1;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;color:#1e1b4b;}
+    .concept-box p,.concept-box li{color:#312e81;}
+    .formula-box{background:#1e1b4b;color:#c7d2fe;border-radius:10px;padding:1.2rem 1.6rem;font-family:monospace;font-size:1.05rem;margin:1rem 0;}
+    .example-box{background:#f0fdf4;border-left:5px solid #10b981;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .example-box h4{color:#065f46;}
+    .example-box p,.example-box li{color:#14532d;}
+    .story-box{background:#fffbeb;border-left:5px solid #f59e0b;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .story-box h3{color:#92400e;}
+    .story-box p{color:#78350f;}
+    .type-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1.5rem 0;}
+    .type-card{background:#fff;border:2px solid #e2e8f0;border-radius:10px;padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    .type-card h4{color:#6366f1;margin-bottom:.4rem;}
+    .type-card p{color:#475569;font-size:.9rem;}
+    .practice-q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1.2rem;margin:.8rem 0;}
+    .practice-q p{color:#1e293b;}
+    details summary{cursor:pointer;color:#6366f1;font-weight:600;padding:.4rem 0;}
+    details p{color:#475569;padding:.5rem 0 0 1rem;}
+    table{width:100%;border-collapse:collapse;margin:1.2rem 0;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    th{background:#1e1b4b;color:#a5b4fc;padding:.9rem 1rem;text-align:left;}
+    td{padding:.75rem 1rem;border-bottom:1px solid #e2e8f0;color:#1e293b;}
+    tr:last-child td{border-bottom:none;}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+      <nav>
+        <a href="../../../../index.html">Home</a>
+        <a href="../index.html">Class 12 Maths</a>
+        <a href="index.html">Unit I</a>
+        <a href="relations-functions.html" class="active">Relations &amp; Functions</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" style="background:linear-gradient(135deg,#1e1b4b,#6366f1);">
+    <div class="container">
+      <h1>Relations &amp; Functions 🔗</h1>
+      <p>Class 11 se aage — ab hum functions ke deeper types samjhenge aur composition explore karenge!</p>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <div class="story-box">
+      <h3>🏫 Ek School ki Kahani</h3>
+      <p>Socho ek school mein har student ko ek roll number diya gaya hai. Yeh ek <strong>function</strong> hai — har student (domain element) ka exactly ek roll number (codomain element) hai. Ab agar do alag students ka same roll number ho — toh yeh function nahi hai! Aur agar koi roll number kisi student ko assign nahi hua — toh yeh <strong>onto</strong> nahi hai. Class 12 mein hum in relationships ko formally define karte hain.</p>
+    </div>
+
+    <h2>1. Relations ke Types</h2>
+
+    <div class="concept-box">
+      <p>Ek set A par defined relation R ek subset hota hai A × A ka. Relation R ke kuch special types hote hain:</p>
+    </div>
+
+    <div class="type-grid">
+      <div class="type-card">
+        <h4>Reflexive Relation</h4>
+        <p>Har element apne aap se related ho: <strong>(a, a) ∈ R</strong> for all a ∈ A.</p>
+        <p style="margin-top:.5rem;color:#6366f1;font-style:italic;">Example: "same age as" — Priya Priya ki same age ki hai ✓</p>
+      </div>
+      <div class="type-card">
+        <h4>Symmetric Relation</h4>
+        <p>Agar a R b, toh b R a bhi: <strong>(a,b)∈R ⟹ (b,a)∈R</strong></p>
+        <p style="margin-top:.5rem;color:#6366f1;font-style:italic;">Example: "is friend of" — Rahul Priya ka dost ⟹ Priya Rahul ki dost</p>
+      </div>
+      <div class="type-card">
+        <h4>Transitive Relation</h4>
+        <p>a R b aur b R c ⟹ a R c: <strong>(a,b)∈R, (b,c)∈R ⟹ (a,c)∈R</strong></p>
+        <p style="margin-top:.5rem;color:#6366f1;font-style:italic;">Example: "is ancestor of" — Ram ka baap Shyam, Shyam ka baap Hari ⟹ Ram ka baap (ancestor) Hari</p>
+      </div>
+      <div class="type-card" style="border-color:#6366f1;background:#eef2ff;">
+        <h4 style="color:#4338ca;">Equivalence Relation</h4>
+        <p style="color:#312e81;">Jo teen teeno ho — Reflexive + Symmetric + Transitive.</p>
+        <p style="margin-top:.5rem;color:#4338ca;font-style:italic;">Example: "same birthday as" — teeno conditions satisfy karta hai!</p>
+      </div>
+    </div>
+
+    <!-- SVG: Relation types visual -->
+    <svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:700px;display:block;margin:1.5rem auto;background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.08);padding:10px;">
+      <text x="350" y="25" text-anchor="middle" font-family="Inter" font-size="14" font-weight="700" fill="#1e1b4b">Equivalence Relation = Reflexive ∩ Symmetric ∩ Transitive</text>
+      <!-- Circles for Venn-style -->
+      <ellipse cx="200" cy="110" rx="130" ry="65" fill="#dbeafe" stroke="#2563eb" stroke-width="2" opacity=".7"/>
+      <ellipse cx="310" cy="110" rx="130" ry="65" fill="#dcfce7" stroke="#16a34a" stroke-width="2" opacity=".7"/>
+      <ellipse cx="255" cy="140" rx="90" ry="45" fill="#ede9fe" stroke="#7c3aed" stroke-width="2" opacity=".7"/>
+      <text x="150" y="95" font-family="Inter" font-size="12" fill="#1d4ed8" font-weight="600">Reflexive</text>
+      <text x="330" y="95" font-family="Inter" font-size="12" fill="#15803d" font-weight="600">Symmetric</text>
+      <text x="220" y="148" font-family="Inter" font-size="12" fill="#6d28d9" font-weight="700">Transitive</text>
+      <text x="245" y="110" font-family="Inter" font-size="11" fill="#4338ca" font-weight="700" text-anchor="middle">Equivalence</text>
+      <text x="255" y="124" font-family="Inter" font-size="10" fill="#4338ca" text-anchor="middle">= All Three</text>
+    </svg>
+
+    <div class="example-box">
+      <h4>✅ Worked Example — Equivalence Check</h4>
+      <p>A = {1, 2, 3}, R = {(1,1),(2,2),(3,3),(1,2),(2,1),(2,3),(3,2),(1,3),(3,1)}</p>
+      <p><strong>Reflexive?</strong> (1,1),(2,2),(3,3) ∈ R ✓</p>
+      <p><strong>Symmetric?</strong> (1,2)∈R ⟹ (2,1)∈R ✓; (2,3)∈R ⟹ (3,2)∈R ✓</p>
+      <p><strong>Transitive?</strong> (1,2)∈R, (2,3)∈R ⟹ (1,3)∈R ✓</p>
+      <p style="color:#065f46;font-weight:600;margin-top:.5rem;">∴ R ek equivalence relation hai!</p>
+    </div>
+
+    <h2>2. Functions ke Types</h2>
+
+    <div class="concept-box">
+      <p>Class 11 mein humne function ki basic definition seekhi thi. Ab Class 12 mein hum teen important types dekhenge jo board mein baar baar aate hain:</p>
+    </div>
+
+    <!-- Arrow diagram SVG -->
+    <svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:700px;display:block;margin:1.5rem auto;background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.08);">
+      <!-- One-One (Injective) -->
+      <rect x="10" y="10" width="200" height="200" rx="8" fill="#f0f9ff" stroke="#0ea5e9" stroke-width="1.5"/>
+      <text x="110" y="30" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#0369a1">One-One (Injective)</text>
+      <circle cx="60" cy="65" r="15" fill="#bae6fd" stroke="#0ea5e9" stroke-width="1.5"/><text x="60" y="70" text-anchor="middle" font-family="Inter" font-size="12" fill="#0c4a6e">a</text>
+      <circle cx="60" cy="115" r="15" fill="#bae6fd" stroke="#0ea5e9" stroke-width="1.5"/><text x="60" y="120" text-anchor="middle" font-family="Inter" font-size="12" fill="#0c4a6e">b</text>
+      <circle cx="60" cy="165" r="15" fill="#bae6fd" stroke="#0ea5e9" stroke-width="1.5"/><text x="60" y="170" text-anchor="middle" font-family="Inter" font-size="12" fill="#0c4a6e">c</text>
+      <circle cx="160" cy="65" r="15" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="1.5"/><text x="160" y="70" text-anchor="middle" font-family="Inter" font-size="12" fill="#0c4a6e">1</text>
+      <circle cx="160" cy="115" r="15" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="1.5"/><text x="160" y="120" text-anchor="middle" font-family="Inter" font-size="12" fill="#0c4a6e">2</text>
+      <circle cx="160" cy="165" r="15" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="1.5"/><text x="160" y="170" text-anchor="middle" font-family="Inter" font-size="12" fill="#0c4a6e">3</text>
+      <line x1="75" y1="65" x2="145" y2="65" stroke="#0369a1" stroke-width="1.5" marker-end="url(#arr)"/>
+      <line x1="75" y1="115" x2="145" y2="115" stroke="#0369a1" stroke-width="1.5" marker-end="url(#arr)"/>
+      <line x1="75" y1="165" x2="145" y2="165" stroke="#0369a1" stroke-width="1.5" marker-end="url(#arr)"/>
+      <text x="110" y="198" text-anchor="middle" font-family="Inter" font-size="10" fill="#0369a1">Alag inputs → alag outputs</text>
+      <!-- Onto (Surjective) -->
+      <rect x="250" y="10" width="200" height="200" rx="8" fill="#f0fdf4" stroke="#10b981" stroke-width="1.5"/>
+      <text x="350" y="30" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#065f46">Onto (Surjective)</text>
+      <circle cx="290" cy="80" r="15" fill="#bbf7d0" stroke="#10b981" stroke-width="1.5"/><text x="290" y="85" text-anchor="middle" font-family="Inter" font-size="12" fill="#064e3b">a</text>
+      <circle cx="290" cy="130" r="15" fill="#bbf7d0" stroke="#10b981" stroke-width="1.5"/><text x="290" y="135" text-anchor="middle" font-family="Inter" font-size="12" fill="#064e3b">b</text>
+      <circle cx="290" cy="180" r="15" fill="#bbf7d0" stroke="#10b981" stroke-width="1.5"/><text x="290" y="185" text-anchor="middle" font-family="Inter" font-size="12" fill="#064e3b">c</text>
+      <circle cx="400" cy="90" r="15" fill="#d1fae5" stroke="#10b981" stroke-width="1.5"/><text x="400" y="95" text-anchor="middle" font-family="Inter" font-size="12" fill="#064e3b">1</text>
+      <circle cx="400" cy="160" r="15" fill="#d1fae5" stroke="#10b981" stroke-width="1.5"/><text x="400" y="165" text-anchor="middle" font-family="Inter" font-size="12" fill="#064e3b">2</text>
+      <line x1="305" y1="80" x2="385" y2="93" stroke="#065f46" stroke-width="1.5" marker-end="url(#arr2)"/>
+      <line x1="305" y1="130" x2="385" y2="100" stroke="#065f46" stroke-width="1.5" marker-end="url(#arr2)"/>
+      <line x1="305" y1="180" x2="385" y2="157" stroke="#065f46" stroke-width="1.5" marker-end="url(#arr2)"/>
+      <text x="350" y="198" text-anchor="middle" font-family="Inter" font-size="10" fill="#065f46">Har codomain element covered</text>
+      <!-- Bijective -->
+      <rect x="490" y="10" width="200" height="200" rx="8" fill="#fdf4ff" stroke="#a855f7" stroke-width="1.5"/>
+      <text x="590" y="30" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#6b21a8">Bijective (One-One + Onto)</text>
+      <circle cx="530" cy="65" r="15" fill="#e9d5ff" stroke="#a855f7" stroke-width="1.5"/><text x="530" y="70" text-anchor="middle" font-family="Inter" font-size="12" fill="#581c87">a</text>
+      <circle cx="530" cy="115" r="15" fill="#e9d5ff" stroke="#a855f7" stroke-width="1.5"/><text x="530" y="120" text-anchor="middle" font-family="Inter" font-size="12" fill="#581c87">b</text>
+      <circle cx="530" cy="165" r="15" fill="#e9d5ff" stroke="#a855f7" stroke-width="1.5"/><text x="530" y="170" text-anchor="middle" font-family="Inter" font-size="12" fill="#581c87">c</text>
+      <circle cx="650" cy="65" r="15" fill="#f3e8ff" stroke="#a855f7" stroke-width="1.5"/><text x="650" y="70" text-anchor="middle" font-family="Inter" font-size="12" fill="#581c87">1</text>
+      <circle cx="650" cy="115" r="15" fill="#f3e8ff" stroke="#a855f7" stroke-width="1.5"/><text x="650" y="120" text-anchor="middle" font-family="Inter" font-size="12" fill="#581c87">2</text>
+      <circle cx="650" cy="165" r="15" fill="#f3e8ff" stroke="#a855f7" stroke-width="1.5"/><text x="650" y="170" text-anchor="middle" font-family="Inter" font-size="12" fill="#581c87">3</text>
+      <line x1="545" y1="65" x2="635" y2="65" stroke="#6b21a8" stroke-width="1.5" marker-end="url(#arr3)"/>
+      <line x1="545" y1="115" x2="635" y2="115" stroke="#6b21a8" stroke-width="1.5" marker-end="url(#arr3)"/>
+      <line x1="545" y1="165" x2="635" y2="165" stroke="#6b21a8" stroke-width="1.5" marker-end="url(#arr3)"/>
+      <text x="590" y="198" text-anchor="middle" font-family="Inter" font-size="10" fill="#6b21a8">Perfect pairing — invertible!</text>
+      <defs>
+        <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#0369a1"/></marker>
+        <marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#065f46"/></marker>
+        <marker id="arr3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#6b21a8"/></marker>
+      </defs>
+    </svg>
+
+    <table>
+      <tr><th>Type</th><th>Condition</th><th>Example</th><th>Invertible?</th></tr>
+      <tr><td>One-One (Injective)</td><td>f(a)=f(b) ⟹ a=b</td><td>f(x)=2x</td><td>No (unless onto bhi ho)</td></tr>
+      <tr><td>Onto (Surjective)</td><td>Har y∈codomain ke liye ∃x s.t. f(x)=y</td><td>f(x)=x² on ℝ⁺</td><td>No (unless one-one bhi ho)</td></tr>
+      <tr><td>Bijective</td><td>Both one-one AND onto</td><td>f(x)=x+3</td><td>✅ Yes!</td></tr>
+    </table>
+
+    <h2>3. Composition of Functions</h2>
+
+    <div class="concept-box">
+      <p>Agar f: A→B aur g: B→C hain, toh <strong>gof: A→C</strong> defined hai as: <strong>(gof)(x) = g(f(x))</strong></p>
+      <p style="margin-top:.6rem;">Socho ek chain: pehle f apply karo, phir uske result par g apply karo. Yeh ek assembly line jaisa hai — pehla machine kaam karta hai, phir doosra.</p>
+    </div>
+
+    <div class="formula-box">gof(x) = g(f(x))
+fog(x) = f(g(x))
+NOTE: gof ≠ fog (generally) — order matters!
+(hof)og = ho(fog) — Associative ✓</div>
+
+    <div class="example-box">
+      <h4>✅ Example: Composition</h4>
+      <p>f(x) = 2x + 1, g(x) = x²</p>
+      <p><strong>gof(x)</strong> = g(f(x)) = g(2x+1) = (2x+1)² = 4x²+4x+1</p>
+      <p><strong>fog(x)</strong> = f(g(x)) = f(x²) = 2x²+1</p>
+      <p style="color:#065f46;font-weight:600;">gof ≠ fog — clearly different!</p>
+    </div>
+
+    <h2>4. Invertible Functions</h2>
+
+    <div class="concept-box">
+      <p>Ek function f: A→B invertible hota hai agar <strong>bijective</strong> hai (one-one + onto). Tab uska inverse function <strong>f⁻¹: B→A</strong> exist karta hai jo satisfy karta hai:</p>
+      <p><strong>f⁻¹(f(x)) = x</strong> for all x∈A, aur <strong>f(f⁻¹(y)) = y</strong> for all y∈B</p>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ Finding Inverse</h4>
+      <p>f: ℝ→ℝ, f(x) = 3x - 5. Find f⁻¹.</p>
+      <p>Step 1: Let y = 3x - 5 ⟹ x = (y+5)/3</p>
+      <p>Step 2: f⁻¹(y) = (y+5)/3</p>
+      <p>Step 3: Verify: f⁻¹(f(x)) = f⁻¹(3x-5) = (3x-5+5)/3 = x ✓</p>
+    </div>
+
+    <h2>5. Practice Questions</h2>
+
+    <div class="practice-q">
+      <p><strong>Q1.</strong> Show that f: N→N defined by f(n) = n² is one-one but not onto.</p>
+      <details><summary>Solution dekhein</summary><p>One-one: f(a)=f(b) ⟹ a²=b² ⟹ a=b (N mein positive only) ✓. Not onto: 2∈N lekin koi n∈N nahi hai jiska n²=2 ✓</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q2.</strong> f(x) = (4x+3)/(6x-4), x≠2/3. Prove f is one-one and onto. Find f⁻¹.</p>
+      <details><summary>Solution dekhein</summary><p>f(a)=f(b) ⟹ (4a+3)/(6a-4)=(4b+3)/(6b-4) ⟹ cross multiply ⟹ a=b. For onto: y=(4x+3)/(6x-4) ⟹ x=(4y+3)/(6y-4). So f⁻¹(x)=(4x+3)/(6x-4) — interesting! f is its own inverse.</p></details>
+    </div>
+    <div class="practice-q">
+      <p><strong>Q3.</strong> Let f(x)=x² aur g(x)=√x. Find gof(3) aur fog(9).</p>
+      <details><summary>Solution dekhein</summary><p>gof(3)=g(f(3))=g(9)=√9=3. fog(9)=f(g(9))=f(3)=9. Interesting — gof(3)=3 means gof=identity on this point!</p></details>
+    </div>
+
+  </div>
+  <footer style="background:#0f172a;color:#94a3b8;text-align:center;padding:2rem;margin-top:3rem;">
+    <p>AIkiPadhai — Free Education for Every Student 🇮🇳</p>
+  </footer>
+</body>
+</html>

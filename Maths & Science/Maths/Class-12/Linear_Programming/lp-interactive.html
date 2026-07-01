@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Linear Programming Lab — Class 12 | AIkiPadhai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#0d1117;color:#e2e8f0;font-family:'Inter',sans-serif;}
+    h1,h2,h3,h4{color:#f1f5f9!important;} p{color:#cbd5e1;}
+    .hero h1{color:#fff!important;} .hero p{color:#e2e8f0!important;}
+    nav a{color:#94a3b8;}
+    .lab-wrap{max-width:960px;margin:2rem auto;padding:0 1.2rem;}
+    .lab-card{background:#161b22;border:1px solid #30363d;border-radius:14px;padding:1.6rem;margin:1.4rem 0;}
+    .lab-card h3{color:#fdba74!important;margin:0 0 .5rem;}
+    .lab-card p.hint{color:#64748b;font-size:.88rem;margin:.3rem 0 .8rem;}
+    canvas{border-radius:10px;display:block;margin:.6rem auto;}
+    .controls{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;margin:.6rem 0;}
+    .btn{padding:.5rem 1.1rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:.88rem;transition:all .18s;}
+    .btn-v{background:linear-gradient(135deg,#f97316,#c2410c);color:#fff;}
+    .btn-v:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(249,115,22,.4);}
+    .btn-g{background:#1e293b;color:#fdba74;border:1px solid #334155;}
+    input[type=range]{accent-color:#f97316;background:#1e293b;border:1px solid #334155;border-radius:6px;padding:.3rem .5rem;}
+    select{background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:.35rem .6rem;}
+    .eq-display{background:#0a0e1a;border-radius:8px;padding:.7rem 1rem;font-family:monospace;color:#fdba74;font-size:.9rem;margin:.5rem 0;line-height:1.8;}
+    label{color:#94a3b8;font-size:.88rem;}
+    .val-badge{background:#1e293b;color:#fdba74;border:1px solid #334155;border-radius:5px;padding:.2rem .55rem;font-weight:700;min-width:2.5rem;text-align:center;font-size:.85rem;}
+    .prob-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:.5rem 0;}
+    @media(max-width:580px){.prob-grid{grid-template-columns:1fr;}}
+    .constraint-input{background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:.4rem .6rem;width:70px;font-family:monospace;}
+  </style>
+</head>
+<body>
+  <header><div class="container header-content">
+    <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+    <nav><a href="../index.html">Class 12 Maths</a><a href="index.html">Unit V</a><a href="lp-interactive.html" class="active">Lab</a></nav>
+  </div></header>
+
+  <section class="hero" style="background:linear-gradient(135deg,#1c0a00,#7c2d12,#ea580c);">
+    <div class="container"><h1>Linear Programming Lab 📊</h1><p>Feasible region banate dekho, objective function sweep karo, aur corner points par optimal solution khud dhundo!</p></div>
+  </section>
+
+  <div class="lab-wrap">
+
+    <!-- LAB 1: Build Feasible Region -->
+    <div class="lab-card">
+      <h3>🔧 Lab 1: Constraints Adjust karo — Feasible Region Dekho</h3>
+      <p class="hint">Sliders move karo. Constraints ki lines move hongi aur feasible region (shaded) live update hogi. Corner points automatically mark honge!</p>
+      <div class="controls">
+        <label>C1: x + y ≤</label>
+        <input type="range" id="c1" min="2" max="12" value="8" oninput="drawLP()">
+        <span id="c1v" class="val-badge">8</span>
+        <label>C2: 2x + y ≤</label>
+        <input type="range" id="c2" min="4" max="20" value="12" oninput="drawLP()">
+        <span id="c2v" class="val-badge">12</span>
+        <label>C3: x + 3y ≤</label>
+        <input type="range" id="c3" min="4" max="20" value="12" oninput="drawLP()">
+        <span id="c3v" class="val-badge">12</span>
+      </div>
+      <canvas id="lpCanvas" width="680" height="380" style="width:100%;background:#0a0e1a;"></canvas>
+      <div class="eq-display" id="lpEq"></div>
+    </div>
+
+    <!-- LAB 2: Objective Function Sweep -->
+    <div class="lab-card">
+      <h3>🎯 Lab 2: Objective Function — Line Sweep</h3>
+      <p class="hint">Z = cx + dy. Slider se Z ki value badhao. Dekho isoprofit line kitna door ja sakti hai feasible region mein. Jahan line last touch kare — wahi optimal point!</p>
+      <div class="controls">
+        <label>c (x coefficient)=</label>
+        <input type="range" id="coefC" min="1" max="8" value="3" oninput="drawSweep()">
+        <span id="coefCv" class="val-badge">3</span>
+        <label>d (y coefficient)=</label>
+        <input type="range" id="coefD" min="1" max="8" value="5" oninput="drawSweep()">
+        <span id="coefDv" class="val-badge">5</span>
+        <label>Z =</label>
+        <input type="range" id="zSlider" min="0" max="60" value="10" oninput="drawSweep()">
+        <span id="zVal" class="val-badge">10</span>
+        <button class="btn btn-v" onclick="animateSweep()">▶ Auto Sweep</button>
+      </div>
+      <canvas id="sweepCanvas" width="680" height="380" style="width:100%;background:#0a0e1a;"></canvas>
+      <div class="eq-display" id="sweepEq"></div>
+    </div>
+
+    <!-- LAB 3: Try Your Own Problem -->
+    <div class="lab-card">
+      <h3>🏆 Lab 3: NCERT Example — Step-by-Step Solve</h3>
+      <p class="hint">Classic problem: Maximize Z = 3x + 5y subject to constraints. Har step dekho — graph, corner points, aur optimal value!</p>
+      <div class="controls">
+        <select id="ncertEx" onchange="drawNCERT()">
+          <option value="ex1">Ex: Max Z=3x+5y, x+y≤8, 2x+y≤10, x+2y≤10</option>
+          <option value="ex2">Ex: Max Z=5x+4y, 6x+4y≤24, x+2y≤6</option>
+          <option value="ex3">Ex: Min Z=3x+2y, x+y≥4, x+2y≥6</option>
+        </select>
+      </div>
+      <canvas id="ncertCanvas" width="680" height="380" style="width:100%;background:#0a0e1a;"></canvas>
+      <div class="eq-display" id="ncertEq"></div>
+    </div>
+
+  </div>
+
+<script>
+const PI=Math.PI;
+
+// Common: feasible region polygon
+function feasiblePoly(c1,c2,c3){
+  // constraints: x+y<=c1, 2x+y<=c2, x+3y<=c3, x>=0, y>=0
+  // Returns corner points as {x,y} in unit space
+  const pts=[];
+  pts.push({x:0,y:0});
+  pts.push({x:Math.min(c1,c2/2),y:0});
+  // intersections
+  function inter(a1,b1,d1,a2,b2,d2){
+    const det=a1*b2-a2*b1;if(Math.abs(det)<1e-9)return null;
+    return{x:(d1*b2-d2*b1)/det,y:(a1*d2-a2*d1)/det};
+  }
+  const p12=inter(1,1,c1,2,1,c2);
+  const p13=inter(1,1,c1,1,3,c3);
+  const p23=inter(2,1,c2,1,3,c3);
+  const p1y=inter(1,1,c1,1,0,0); // y-axis: x=0
+  const p2y=inter(2,1,c2,1,0,0);
+  const p3y=inter(1,3,c3,1,0,0);
+  [p12,p13,p23,p1y,p2y,p3y].forEach(p=>{
+    if(!p) return;
+    if(p.x<-0.01||p.y<-0.01) return;
+    if(p.x+p.y>c1+0.01) return;
+    if(2*p.x+p.y>c2+0.01) return;
+    if(p.x+3*p.y>c3+0.01) return;
+    pts.push({x:Math.max(0,p.x),y:Math.max(0,p.y)});
+  });
+  // convex hull (simple gift wrap)
+  const unique=pts.filter((p,i)=>pts.findIndex(q=>Math.abs(q.x-p.x)<0.01&&Math.abs(q.y-p.y)<0.01)===i);
+  if(unique.length<2) return unique;
+  const cx0=unique.reduce((a,p)=>a+p.x,0)/unique.length;
+  const cy0=unique.reduce((a,p)=>a+p.y,0)/unique.length;
+  return unique.sort((a,b)=>Math.atan2(a.y-cy0,a.x-cx0)-Math.atan2(b.y-cy0,b.x-cx0));
+}
+
+function setupGrid(canvas,ctx,maxX,maxY){
+  const W=canvas.width,H=canvas.height;
+  const pad=60,cw=W-pad-20,ch=H-pad-20;
+  const scX=cw/maxX,scY=ch/maxY;
+  const ox=pad,oy=H-pad;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='#1e293b';ctx.lineWidth=1;
+  for(let i=0;i<=maxX;i++){ctx.beginPath();ctx.moveTo(ox+i*scX,20);ctx.lineTo(ox+i*scX,oy);ctx.stroke();}
+  for(let j=0;j<=maxY;j++){ctx.beginPath();ctx.moveTo(ox,oy-j*scY);ctx.lineTo(W-10,oy-j*scY);ctx.stroke();}
+  ctx.strokeStyle='#475569';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(ox,20);ctx.lineTo(ox,oy);ctx.lineTo(W-10,oy);ctx.stroke();
+  ctx.fillStyle='#64748b';ctx.font='11px Inter';
+  for(let i=0;i<=maxX;i+=2){ctx.fillText(i,ox+i*scX-4,oy+16);}
+  for(let j=0;j<=maxY;j+=2){ctx.fillText(j,ox-24,oy-j*scY+4);}
+  ctx.fillStyle='#94a3b8';ctx.font='12px Inter';
+  ctx.fillText('x',W-16,oy+5);ctx.fillText('y',ox-5,28);
+  return{ox,oy,scX,scY,W,H};
+}
+
+function drawConstraintLine(ctx,a,b,d,g,color,lbl){
+  const{ox,oy,scX,scY,W,H}=g;
+  ctx.strokeStyle=color;ctx.lineWidth=1.8;ctx.setLineDash([6,4]);
+  ctx.beginPath();
+  const pts=[];
+  if(b!==0)pts.push({x:0,y:d/b});
+  if(a!==0)pts.push({x:d/a,y:0});
+  if(pts.length===2){
+    const x1=pts[0].x,y1=pts[0].y,x2=pts[1].x,y2=pts[1].y;
+    ctx.moveTo(ox+x1*scX,oy-y1*scY);ctx.lineTo(ox+x2*scX,oy-y2*scY);
+  }
+  ctx.stroke();ctx.setLineDash([]);
+  if(pts[0])ctx.fillText(lbl,ox+pts[0].x*scX+4,oy-pts[0].y*scY-4);
+  ctx.fillStyle=color;ctx.font='11px Inter';
+}
+
+function drawFeasible(ctx,poly,g,zFn){
+  const{ox,oy,scX,scY}=g;
+  if(poly.length<3) return;
+  ctx.beginPath();
+  ctx.moveTo(ox+poly[0].x*scX,oy-poly[0].y*scY);
+  poly.forEach(p=>ctx.lineTo(ox+p.x*scX,oy-p.y*scY));
+  ctx.closePath();
+  const gr=ctx.createLinearGradient(ox,oy,ox+8*scX,oy-8*scY);
+  gr.addColorStop(0,'rgba(249,115,22,0.3)');gr.addColorStop(1,'rgba(249,115,22,0.06)');
+  ctx.fillStyle=gr;ctx.fill();
+  ctx.strokeStyle='#f97316';ctx.lineWidth=2;ctx.stroke();
+  // Corner dots + values
+  let bestZ=-Infinity,bestP=null;
+  poly.forEach(p=>{
+    const z=zFn?zFn(p.x,p.y):0;
+    if(z>bestZ){bestZ=z;bestP=p;}
+    ctx.fillStyle='#fbbf24';ctx.beginPath();ctx.arc(ox+p.x*scX,oy-p.y*scY,6,0,PI*2);ctx.fill();
+    ctx.fillStyle='#fbbf24';ctx.font='bold 10px Inter';
+    ctx.fillText(`(${p.x.toFixed(1)},${p.y.toFixed(1)})`,ox+p.x*scX+8,oy-p.y*scY-5);
+    if(zFn){ctx.fillStyle='#94a3b8';ctx.fillText('Z='+z.toFixed(1),ox+p.x*scX+8,oy-p.y*scY+10);}
+  });
+  if(bestP&&zFn){
+    ctx.fillStyle='#ef4444';ctx.beginPath();ctx.arc(ox+bestP.x*scX,oy-bestP.y*scY,10,0,PI*2);ctx.fill();
+    ctx.strokeStyle='#ef4444';ctx.lineWidth=3;ctx.beginPath();ctx.arc(ox+bestP.x*scX,oy-bestP.y*scY,16,0,PI*2);ctx.stroke();
+    ctx.fillStyle='#fca5a5';ctx.font='bold 12px Inter';
+    ctx.fillText('★ OPTIMAL',ox+bestP.x*scX+14,oy-bestP.y*scY-12);
+  }
+}
+
+// ==================== LAB 1 ====================
+function drawLP(){
+  const c1=+document.getElementById('c1').value;
+  const c2=+document.getElementById('c2').value;
+  const c3=+document.getElementById('c3').value;
+  document.getElementById('c1v').textContent=c1;
+  document.getElementById('c2v').textContent=c2;
+  document.getElementById('c3v').textContent=c3;
+  const canvas=document.getElementById('lpCanvas'),ctx=canvas.getContext('2d');
+  const g=setupGrid(canvas,ctx,14,12);
+  // Constraint lines
+  [
+    [1,1,c1,'#3b82f6','C1'],
+    [2,1,c2,'#22c55e','C2'],
+    [1,3,c3,'#f59e0b','C3'],
+  ].forEach(([a,b,d,col,lbl])=>drawConstraintLine(ctx,a,b,d,g,col,lbl));
+  ctx.fillStyle='#e2e8f0';
+  const poly=feasiblePoly(c1,c2,c3);
+  drawFeasible(ctx,poly,g,null);
+  // legend
+  ctx.font='11px Inter';
+  [['#3b82f6',`x+y≤${c1}`],['#22c55e',`2x+y≤${c2}`],['#f59e0b',`x+3y≤${c3}`]].forEach(([c,t],i)=>{
+    ctx.fillStyle=c;ctx.fillRect(10,10+i*18,12,12);ctx.fillStyle='#94a3b8';ctx.fillText(t,26,20+i*18);
+  });
+  const ptStr=poly.map(p=>`(${p.x.toFixed(1)}, ${p.y.toFixed(1)})`).join(', ');
+  document.getElementById('lpEq').textContent=
+    `Constraints:
+  C1: x + y ≤ ${c1}
+  C2: 2x + y ≤ ${c2}
+  C3: x + 3y ≤ ${c3}
+  x ≥ 0, y ≥ 0
+
+Corner Points (feasible region ke vertices):
+  ${ptStr}
+
+Sliders badhao/ghataao — feasible region live change hota hai!`;
+}
+drawLP();
+
+// ==================== LAB 2 ====================
+function drawSweep(){
+  const c=+document.getElementById('coefC').value;
+  const d=+document.getElementById('coefD').value;
+  const Z=+document.getElementById('zSlider').value;
+  document.getElementById('coefCv').textContent=c;
+  document.getElementById('coefDv').textContent=d;
+  document.getElementById('zVal').textContent=Z;
+  const canvas=document.getElementById('sweepCanvas'),ctx=canvas.getContext('2d');
+  const g=setupGrid(canvas,ctx,14,12);
+  const poly=feasiblePoly(8,12,12);
+  [
+    [1,1,8,'#3b82f699',''],
+    [2,1,12,'#22c55e99',''],
+    [1,3,12,'#f59e0b99',''],
+  ].forEach(([a,b,dd,col])=>drawConstraintLine(ctx,a,b,dd,g,col,''));
+  drawFeasible(ctx,poly,g,(x,y)=>c*x+d*y);
+  // Isoprofit line: cx + dy = Z => y = (Z-cx)/d
+  if(d>0){
+    const{ox,oy,scX,scY,W}=g;
+    ctx.strokeStyle='#ef4444';ctx.lineWidth=2.5;ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.moveTo(ox,oy-(Z/d)*scY);ctx.lineTo(ox+(Z/c)*scX,oy);
+    ctx.stroke();
+    ctx.fillStyle='#fca5a5';ctx.font='bold 12px Inter';
+    ctx.fillText(`Z=${c}x+${d}y=${Z}`,ox+5,oy-(Z/d)*scY+16);
+  }
+  // Corner point Z values
+  const bestPt=poly.reduce((best,p)=>c*p.x+d*p.y>c*best.x+d*best.y?p:best,poly[0]||{x:0,y:0});
+  const maxZ=c*bestPt.x+d*bestPt.y;
+  const inRegion=Z<=maxZ+0.1;
+  document.getElementById('sweepEq').textContent=
+    `Objective: Z = ${c}x + ${d}y
+Isoprofit line: ${c}x + ${d}y = ${Z} (red line)
+`+
+    `Maximum possible Z = ${maxZ.toFixed(2)} at (${bestPt.x?.toFixed(2)||0}, ${bestPt.y?.toFixed(2)||0})
+`+
+    `Current Z=${Z}: ${inRegion?'Line feasible region mein hai ✓':'Line feasible region se bahar hai — maximum paar kar liya!'}
+`+
+    `→ Slider ko max value tak badhao — jab line feasible region ko just touch kare, wahi optimal!`;
+}
+drawSweep();
+
+let sweepAnim=null;
+function animateSweep(){
+  if(sweepAnim) cancelAnimationFrame(sweepAnim);
+  const sl=document.getElementById('zSlider');
+  sl.value=0;
+  let v=0;
+  function step(){
+    v+=0.5; if(v>60)v=0;
+    sl.value=v; drawSweep();
+    sweepAnim=requestAnimationFrame(step);
+  }
+  sweepAnim=requestAnimationFrame(step);
+}
+
+// ==================== LAB 3 ====================
+const ncertProbs={
+  ex1:{
+    title:'Max Z=3x+5y',obj:(x,y)=>3*x+5*y,oc:'3','od':'5',
+    constraints:[[1,1,8,'#3b82f6'],[2,1,10,'#22c55e'],[1,2,10,'#f59e0b']],
+    poly:null,mx:12,my:12,
+    steps:'Constraints: x+y≤8, 2x+y≤10, x+2y≤10, x,y≥0
+
+Corner Points:
+  O(0,0): Z=0
+  A(5,0): Z=15
+  B(4,2): Z=22
+  C(2,4): Z=26 ← Maximum!
+  D(0,5): Z=25
+
+∴ Z = 3x+5y ka maximum = 26 at (2,4)'
+  },
+  ex2:{
+    title:'Max Z=5x+4y',obj:(x,y)=>5*x+4*y,oc:'5',od:'4',
+    constraints:[[6,4,24,'#3b82f6'],[1,2,6,'#22c55e']],
+    poly:null,mx:8,my:6,
+    steps:'Constraints: 6x+4y≤24, x+2y≤6, x,y≥0
+
+Corner Points:
+  O(0,0): Z=0
+  A(4,0): Z=20
+  B(3,1.5): Z=21 ← Maximum!
+  C(0,3): Z=12
+
+∴ Z = 5x+4y ka maximum = 21 at (3, 1.5)'
+  },
+  ex3:{
+    title:'Min Z=3x+2y',obj:(x,y)=>3*x+2*y,oc:'3',od:'2',
+    constraints:[[1,1,4,'#3b82f6',true],[1,2,6,'#22c55e',true]],
+    poly:null,mx:8,my:8,
+    steps:'Constraints: x+y≥4, x+2y≥6, x,y≥0
+
+Corner Points of feasible region (unbounded):
+  A(6,0): Z=18
+  B(2,2): Z=10 ← Minimum!
+  C(0,4): Z=8 ← Actually minimum!
+
+∴ Z = 3x+2y ka minimum = 8 at (0,4)'
+  }
+};
+
+function drawNCERT(){
+  const ex=document.getElementById('ncertEx').value;
+  const prob=ncertProbs[ex];
+  const canvas=document.getElementById('ncertCanvas'),ctx=canvas.getContext('2d');
+  const g=setupGrid(canvas,ctx,prob.mx,prob.my);
+  prob.constraints.forEach(([a,b,d,col])=>drawConstraintLine(ctx,a,b,d,g,col,''));
+
+  // manual polygons for each problem
+  let poly;
+  if(ex==='ex1'){
+    poly=[{x:0,y:0},{x:5,y:0},{x:4,y:2},{x:2,y:4},{x:0,y:5}];
+  } else if(ex==='ex2'){
+    poly=[{x:0,y:0},{x:4,y:0},{x:3,y:1.5},{x:0,y:3}];
+  } else {
+    // minimization: feasible is unbounded above
+    poly=[{x:6,y:0},{x:2,y:2},{x:0,y:4},{x:0,y:prob.my},{x:prob.mx,y:prob.my},{x:prob.mx,y:0}];
+  }
+  drawFeasible(ctx,poly,g,prob.obj);
+  document.getElementById('ncertEq').textContent=prob.steps;
+}
+drawNCERT();
+</script>
+</body>
+</html>

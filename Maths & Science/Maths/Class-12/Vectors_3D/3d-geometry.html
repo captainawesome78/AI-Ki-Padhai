@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>3D Geometry — Class 12 | AIkiPadhai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;line-height:1.75;}
+    h2{color:#052e16;border-bottom:3px solid #16a34a;padding-bottom:8px;margin:2.2rem 0 1rem;}
+    h3{color:#166534;}
+    .concept-box{background:#f0fdf4;border-left:5px solid #16a34a;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .concept-box p,.concept-box li{color:#14532d;}
+    .formula-box{background:#052e16;color:#bbf7d0;border-radius:10px;padding:1.2rem 1.6rem;font-family:monospace;font-size:1rem;margin:1rem 0;}
+    .example-box{background:#eff6ff;border-left:5px solid #3b82f6;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .example-box h4{color:#1e3a8a;}
+    .example-box p,.example-box li{color:#1e40af;}
+    .story-box{background:#fffbeb;border-left:5px solid #f59e0b;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .story-box h3{color:#92400e;}
+    .story-box p{color:#78350f;}
+    .step-box{background:#f1f5f9;border-radius:6px;padding:.9rem 1.1rem;margin:.5rem 0;border-left:3px solid #16a34a;color:#1e293b;}
+    .practice-q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1.2rem;margin:.8rem 0;}
+    .practice-q p{color:#1e293b;}
+    details summary{cursor:pointer;color:#16a34a;font-weight:600;padding:.4rem 0;}
+    details p{color:#475569;padding:.5rem 0 0 1rem;}
+  </style>
+</head>
+<body>
+  <header><div class="container header-content">
+    <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+    <nav><a href="../../../../index.html">Home</a><a href="../index.html">Class 12 Maths</a><a href="index.html">Unit IV</a><a href="3d-geometry.html" class="active">3D Geometry</a></nav>
+  </div></header>
+  <section class="hero" style="background:linear-gradient(135deg,#052e16,#15803d);">
+    <div class="container">
+      <h1>3D Geometry 📡</h1>
+      <p>Lines aur planes teen dimensions mein — direction, distance, aur angle calculate karo!</p>
+    </div>
+  </section>
+  <div class="container">
+
+    <div class="story-box">
+      <h3>🏗️ Architect ki Problem</h3>
+      <p>Ek architect ek building design kar raha hai. Usse check karna hai ki do beams (ek floor se ek corner se doosre corner tak) ek doosre se kitni door hain aur kya woh intersect karte hain ya parallel hain ya <strong>skew</strong> hain (na parallel, na intersecting — space mein kahin aur hain). Yeh real-world 3D geometry problem hai! Class 12 mein hum exactly aisi problems solve karte hain — lines in 3D, angle between them, shortest distance.</p>
+    </div>
+
+    <h2>1. Direction Cosines aur Direction Ratios</h2>
+    <div class="formula-box">Direction Cosines (l, m, n): actual cos values
+l = cos α, m = cos β, n = cos γ
+l² + m² + n² = 1
+
+Direction Ratios (a, b, c): proportional to DCs
+l/a = m/b = n/c = 1/√(a²+b²+c²)
+
+DC from two points P(x₁,y₁,z₁) to Q(x₂,y₂,z₂):
+l = (x₂-x₁)/PQ, m = (y₂-y₁)/PQ, n = (z₂-z₁)/PQ</div>
+
+    <h2>2. Equation of a Line in 3D</h2>
+    <div class="formula-box">/* Vector Form */
+⃗r = ⃗a + λ⃗b
+(point ⃗a se guzarti hai, direction ⃗b hai)
+
+/* Cartesian/Symmetric Form */
+(x-x₁)/a = (y-y₁)/b = (z-z₁)/c = λ
+(point (x₁,y₁,z₁), direction ratios a,b,c)
+
+/* Two-point form: line through P(x₁,y₁,z₁) and Q(x₂,y₂,z₂) */
+(x-x₁)/(x₂-x₁) = (y-y₁)/(y₂-y₁) = (z-z₁)/(z₂-z₁)</div>
+
+    <h2>3. Angle Between Two Lines</h2>
+    <div class="formula-box">Lines with direction vectors ⃗b₁ and ⃗b₂:
+cos θ = |⃗b₁·⃗b₂| / (|⃗b₁||⃗b₂|)
+
+Lines with direction ratios (a₁,b₁,c₁) and (a₂,b₂,c₂):
+cos θ = |a₁a₂+b₁b₂+c₁c₂| / √(a₁²+b₁²+c₁²)·√(a₂²+b₂²+c₂²)
+
+Perpendicular: a₁a₂+b₁b₂+c₁c₂ = 0
+Parallel: a₁/a₂ = b₁/b₂ = c₁/c₂</div>
+
+    <h2>4. Skew Lines aur Shortest Distance</h2>
+    <div class="concept-box">
+      <p><strong>Skew lines:</strong> Woh lines jo na parallel hain, na intersect karti hain — 3D mein alag planes mein hain.</p>
+      <p style="margin-top:.5rem;">Shortest distance between skew lines = length of common perpendicular</p>
+    </div>
+    <div class="formula-box">Lines: ⃗r = ⃗a₁ + λ⃗b₁ and ⃗r = ⃗a₂ + μ⃗b₂
+
+Shortest Distance = |(⃗a₂-⃗a₁)·(⃗b₁×⃗b₂)| / |⃗b₁×⃗b₂|
+
+/* Cartesian form: */
+SD = | x₂-x₁  y₂-y₁  z₂-z₁ |
+     |  a₁      b₁      c₁   |
+     |  a₂      b₂      c₂   |
+    ÷ |⃗b₁×⃗b₂|</div>
+
+    <div class="example-box">
+      <h4>✅ Find SD between: ⃗r=(î+2ĵ+k̂)+λ(2î+ĵ+2k̂) and ⃗r=(2î-ĵ-k̂)+μ(3î-5ĵ-k̂)</h4>
+      <div class="step-box">⃗a₁=(1,2,1), ⃗a₂=(2,-1,-1), ⃗b₁=(2,1,2), ⃗b₂=(3,-5,-1)</div>
+      <div class="step-box">⃗a₂-⃗a₁=(1,-3,-2)</div>
+      <div class="step-box">⃗b₁×⃗b₂=î(1×(-1)-2×(-5))-ĵ(2×(-1)-2×3)+k̂(2×(-5)-1×3) = î(-1+10)-ĵ(-2-6)+k̂(-10-3) = (9,8,-13)</div>
+      <div class="step-box">|⃗b₁×⃗b₂|=√(81+64+169)=√314</div>
+      <div class="step-box">Numerator: (1,−3,−2)·(9,8,−13) = 9−24+26 = 11</div>
+      <p style="color:#1e3a8a;font-weight:600;">SD = 11/√314 units</p>
+    </div>
+
+    <h2>5. Equation of a Plane</h2>
+    <div class="formula-box">/* General form */
+ax + by + cz = d  (a,b,c = normal direction)
+
+/* Vector form: ⃗r·n̂ = d */
+⃗r·(aî+bĵ+ck̂) = d
+
+/* Three-point form: pass through A,B,C */
+Use determinant method
+
+/* Intercept form: */
+x/a + y/b + z/c = 1
+
+Distance from point (x₁,y₁,z₁) to plane ax+by+cz+d=0:
+d = |ax₁+by₁+cz₁+d| / √(a²+b²+c²)</div>
+
+    <h2>6. Practice Questions</h2>
+    <div class="practice-q"><p><strong>Q1.</strong> Find angle between lines: (x-1)/2=(y+1)/3=(z-4)/6 and (x+1)/1=(y-2)/4=(z-3)/(-7)</p><details><summary>Solution</summary><p>⃗b₁=(2,3,6), ⃗b₂=(1,4,-7). ⃗b₁·⃗b₂=2+12-42=-28. |⃗b₁|=7, |⃗b₂|=√66. cosθ=-28/(7√66)=-4/√66. θ=cos⁻¹(-4/√66)</p></details></div>
+    <div class="practice-q"><p><strong>Q2.</strong> Find distance of point (3,-2,1) from plane 2x-y+2z+3=0.</p><details><summary>Solution</summary><p>d=|2(3)+(-1)(-2)+2(1)+3|/√(4+1+4)=|6+2+2+3|/3=13/3 units</p></details></div>
+    <div class="practice-q"><p><strong>Q3.</strong> Direction cosines of line joining A(2,1,3) and B(4,3,5).</p><details><summary>Solution</summary><p>AB=(2,2,2), |AB|=2√3. DCs=(2/2√3, 2/2√3, 2/2√3)=(1/√3, 1/√3, 1/√3)</p></details></div>
+  </div>
+  <footer style="background:#0f172a;color:#94a3b8;text-align:center;padding:2rem;margin-top:3rem;"><p>AIkiPadhai — Free Education for Every Student 🇮🇳</p></footer>
+</body>
+</html>

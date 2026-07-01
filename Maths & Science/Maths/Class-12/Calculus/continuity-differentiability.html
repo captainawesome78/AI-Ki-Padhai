@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Continuity & Differentiability — Class 12 | AIkiPadhai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;line-height:1.75;}
+    h2{color:#450a0a;border-bottom:3px solid #dc2626;padding-bottom:8px;margin:2.2rem 0 1rem;}
+    h3{color:#991b1b;}
+    .concept-box{background:#fef2f2;border-left:5px solid #dc2626;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .concept-box p,.concept-box li{color:#7f1d1d;}
+    .formula-box{background:#450a0a;color:#fecaca;border-radius:10px;padding:1.2rem 1.6rem;font-family:monospace;font-size:1.05rem;margin:1rem 0;}
+    .example-box{background:#f0fdf4;border-left:5px solid #10b981;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .example-box h4{color:#065f46;}
+    .example-box p,.example-box li{color:#14532d;}
+    .story-box{background:#fffbeb;border-left:5px solid #f59e0b;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .story-box h3{color:#92400e;}
+    .story-box p{color:#78350f;}
+    .step-box{background:#f1f5f9;border-radius:6px;padding:.9rem 1.1rem;margin:.5rem 0;border-left:3px solid #dc2626;color:#1e293b;}
+    .type-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:1.5rem 0;}
+    .type-card{background:#fff;border:2px solid #e2e8f0;border-radius:10px;padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    .type-card h4{color:#dc2626;margin-bottom:.4rem;}
+    .type-card p{color:#475569;font-size:.9rem;}
+    .practice-q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1.2rem;margin:.8rem 0;}
+    .practice-q p{color:#1e293b;}
+    details summary{cursor:pointer;color:#dc2626;font-weight:600;padding:.4rem 0;}
+    details p{color:#475569;padding:.5rem 0 0 1rem;}
+    table{width:100%;border-collapse:collapse;margin:1.2rem 0;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    th{background:#450a0a;color:#fca5a5;padding:.9rem 1rem;text-align:left;}
+    td{padding:.75rem 1rem;border-bottom:1px solid #e2e8f0;color:#1e293b;}
+    tr:last-child td{border-bottom:none;}
+</style>
+</head>
+<body>
+  <header><div class="container header-content">
+    <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+    <nav>
+      <a href="../../../../index.html">Home</a>
+      <a href="../index.html">Class 12 Maths</a>
+      <a href="index.html">Unit III</a>
+      <a href="continuity-differentiability.html" class="active">Continuity</a>
+    </nav>
+  </div></header>
+  <section class="hero" style="background:linear-gradient(135deg,#450a0a,#dc2626);">
+    <div class="container">
+      <h1>Continuity &amp; Differentiability 📈</h1>
+      <p>Kab ek function "smooth" hai? Kab differentiate kar sakte hain? Yahan sab samajhte hain!</p>
+    </div>
+  </section>
+  <div class="container">
+
+    <div class="story-box">
+      <h3>🚗 Speed aur Acceleration ki Kahani</h3>
+      <p>Ek car ka speedometer jo value dikha raha hai — woh speed function ki <strong>derivative</strong> hai position function ki. Aur agar speedometer ka reading suddenly jump kare (discontinuous ho) — toh physically kya hoga? Car ek jagah se doosri jagah teleport ho jaayegi — jo impossible hai! Isliye real physical functions continuous hote hain. Calculus mein hum formally define karte hain ki "continuous" ka kya matlab hai — aur phir differentiation explore karte hain.</p>
+    </div>
+
+    <h2>1. Continuity at a Point</h2>
+    <div class="concept-box">
+      <p>f(x) is continuous at x = a iff:</p>
+      <p><strong>(i) f(a) defined ho</strong> (value exist kare)</p>
+      <p><strong>(ii) lim[x→a] f(x) exist kare</strong> (left limit = right limit)</p>
+      <p><strong>(iii) lim[x→a] f(x) = f(a)</strong> (limit = function value)</p>
+    </div>
+
+    <!-- Continuity diagram SVG -->
+    <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;display:block;margin:1.5rem auto;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);">
+      <text x="300" y="22" text-anchor="middle" font-family="Inter" font-size="13" font-weight="700" fill="#450a0a">Types of Discontinuity</text>
+      <!-- Continuous -->
+      <text x="100" y="45" text-anchor="middle" font-family="Inter" font-size="11" fill="#16a34a" font-weight="700">✅ Continuous</text>
+      <path d="M40,130 Q80,70 120,100 Q140,115 160,130" fill="none" stroke="#16a34a" stroke-width="2.5"/>
+      <!-- Removable discontinuity -->
+      <text x="300" y="45" text-anchor="middle" font-family="Inter" font-size="11" fill="#f59e0b" font-weight="700">⚠️ Removable (Hole)</text>
+      <path d="M220,130 Q250,80 270,100" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+      <circle cx="280" cy="95" r="5" fill="white" stroke="#f59e0b" stroke-width="2"/>
+      <path d="M280,85 Q300,70 340,130" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+      <!-- Jump discontinuity -->
+      <text x="490" y="45" text-anchor="middle" font-family="Inter" font-size="11" fill="#dc2626" font-weight="700">❌ Jump</text>
+      <path d="M420,150 Q450,130 470,120" fill="none" stroke="#dc2626" stroke-width="2.5"/>
+      <circle cx="470" cy="120" r="5" fill="white" stroke="#dc2626" stroke-width="2"/>
+      <circle cx="470" cy="80" r="5" fill="#dc2626" stroke="#dc2626" stroke-width="2"/>
+      <path d="M470,80 Q500,65 560,60" fill="none" stroke="#dc2626" stroke-width="2.5"/>
+    </svg>
+
+    <h2>2. Differentiability</h2>
+    <div class="concept-box">
+      <p>f(x) differentiable at x=a iff: <strong>f'(a) = lim[h→0] [f(a+h)-f(a)]/h</strong> exist kare (finite ho).</p>
+      <p style="margin-top:.6rem;"><strong>Key Rule:</strong> Differentiable ⟹ Continuous. But Continuous ⟹ Differentiable NAHI! (Example: |x| at x=0 — continuous hai lekin differentiable nahi!)</p>
+    </div>
+
+    <h2>3. Chain Rule</h2>
+    <div class="formula-box">If y = f(g(x)), then:
+dy/dx = f'(g(x)) × g'(x)
+
+Example: y = sin(x²)
+dy/dx = cos(x²) × 2x = 2x·cos(x²)
+
+Nested: y = (3x²+1)⁵
+dy/dx = 5(3x²+1)⁴ × 6x = 30x(3x²+1)⁴</div>
+
+    <h2>4. Important Differentiation Formulas</h2>
+    <div class="formula-box">d/dx(sin⁻¹x) = 1/√(1-x²)
+d/dx(cos⁻¹x) = -1/√(1-x²)
+d/dx(tan⁻¹x) = 1/(1+x²)
+d/dx(eˣ) = eˣ
+d/dx(ln x) = 1/x
+d/dx(aˣ) = aˣ ln(a)
+d/dx(xⁿ) = nxⁿ⁻¹</div>
+
+    <h2>5. Logarithmic Differentiation</h2>
+    <div class="concept-box">
+      <p>Jab function mein variable dono base aur exponent mein ho (jaise xˣ, xsin(x)) — tab log le lo pehle!</p>
+    </div>
+    <div class="example-box">
+      <h4>✅ Differentiate y = xˣ</h4>
+      <div class="step-box">Step 1: ln y = x ln x</div>
+      <div class="step-box">Step 2: Differentiate both sides: (1/y)(dy/dx) = ln x + x·(1/x) = ln x + 1</div>
+      <div class="step-box">Step 3: dy/dx = y(ln x + 1) = xˣ(ln x + 1)</div>
+    </div>
+
+    <h2>6. Implicit Differentiation</h2>
+    <div class="example-box">
+      <h4>✅ Find dy/dx if x² + y² = 25</h4>
+      <p>Differentiate both sides w.r.t. x: 2x + 2y(dy/dx) = 0</p>
+      <p>dy/dx = -x/y</p>
+    </div>
+
+    <h2>7. Second Order Derivative</h2>
+    <div class="formula-box">y = f(x)
+y' = f'(x) = dy/dx        (first derivative)
+y'' = f''(x) = d²y/dx²    (second derivative = rate of rate of change)
+
+Physical meaning: y=displacement, y'=velocity, y''=acceleration</div>
+
+    <h2>8. Practice Questions</h2>
+    <div class="practice-q"><p><strong>Q1.</strong> Differentiate y = sin(e^(x²)) w.r.t. x.</p><details><summary>Solution</summary><p>Chain rule twice: dy/dx = cos(e^(x²)) × e^(x²) × 2x = 2x·e^(x²)·cos(e^(x²))</p></details></div>
+    <div class="practice-q"><p><strong>Q2.</strong> Find dy/dx if y = tan⁻¹(x/(1-x²)).</p><details><summary>Solution</summary><p>Hint: x/(1-x²) = ... use substitution x=tan θ. Answer: 2/(1+x²)</p></details></div>
+    <div class="practice-q"><p><strong>Q3.</strong> If y = (sin x)ˢⁱⁿˣ, find dy/dx.</p><details><summary>Solution</summary><p>ln y = sin x · ln(sin x). Differentiate: (1/y)dy/dx = cos x·ln(sin x) + sin x·(cos x/sin x) = cos x(ln(sin x)+1). dy/dx = (sin x)^(sin x)·cos x·(ln sin x + 1)</p></details></div>
+  </div>
+  <footer style="background:#0f172a;color:#94a3b8;text-align:center;padding:2rem;margin-top:3rem;">
+    <p>AIkiPadhai — Free Education for Every Student 🇮🇳</p>
+  </footer></body></html>

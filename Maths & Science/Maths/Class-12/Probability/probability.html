@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Probability — Class 12 | AIkiPadhai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;line-height:1.75;}
+    h2{color:#2e1065;border-bottom:3px solid #7c3aed;padding-bottom:8px;margin:2.2rem 0 1rem;}
+    h3{color:#5b21b6;}
+    .concept-box{background:#f5f3ff;border-left:5px solid #7c3aed;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .concept-box p,.concept-box li{color:#4c1d95;}
+    .formula-box{background:#2e1065;color:#ddd6fe;border-radius:10px;padding:1.2rem 1.6rem;font-family:monospace;font-size:1rem;margin:1rem 0;}
+    .example-box{background:#f0fdf4;border-left:5px solid #10b981;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .example-box h4{color:#065f46;}
+    .example-box p,.example-box li{color:#14532d;}
+    .story-box{background:#fffbeb;border-left:5px solid #f59e0b;border-radius:0 10px 10px 0;padding:1.3rem 1.6rem;margin:1.4rem 0;}
+    .story-box h3{color:#92400e;}
+    .story-box p{color:#78350f;}
+    .step-box{background:#f1f5f9;border-radius:6px;padding:.9rem 1.1rem;margin:.5rem 0;border-left:3px solid #7c3aed;color:#1e293b;}
+    .practice-q{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:1.2rem;margin:.8rem 0;}
+    .practice-q p{color:#1e293b;}
+    details summary{cursor:pointer;color:#7c3aed;font-weight:600;padding:.4rem 0;}
+    details p{color:#475569;padding:.5rem 0 0 1rem;}
+    table{width:100%;border-collapse:collapse;margin:1.2rem 0;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    th{background:#2e1065;color:#c4b5fd;padding:.9rem 1rem;text-align:left;}
+    td{padding:.75rem 1rem;border-bottom:1px solid #e2e8f0;color:#1e293b;}
+    tr:last-child td{border-bottom:none;}
+  </style>
+</head>
+<body>
+  <header><div class="container header-content">
+    <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+    <nav><a href="../../../../index.html">Home</a><a href="../index.html">Class 12 Maths</a><a href="index.html">Unit VI</a><a href="probability.html" class="active">Probability</a></nav>
+  </div></header>
+  <section class="hero" style="background:linear-gradient(135deg,#2e1065,#7c3aed);">
+    <div class="container">
+      <h1>Probability 🎲</h1>
+      <p>Class 11 se aage — Bayes' theorem, random variables, aur distributions!</p>
+    </div>
+  </section>
+  <div class="container">
+
+    <div class="story-box">
+      <h3>🏥 Doctor ka Test</h3>
+      <p>Ek rare disease ka test 99% accurate hai (agar bimari hai toh 99% chance positive aata hai). Lekin disease sirf 0.1% population mein hai. Agar kisi ka test positive aaya — toh kya actually bimari hai? Answer shocking hai — sirf 9% chance! Kyun? Kyunki bahut kam log bimari se afflicted hain. Yeh <strong>Bayes' Theorem</strong> ka most famous example hai — conditional probability ka updated estimate bayesian reasoning se.</p>
+    </div>
+
+    <h2>1. Conditional Probability</h2>
+    <div class="concept-box">
+      <p>P(A|B) = P(A ∩ B) / P(B) — "B given, A hone ki probability"</p>
+      <p style="margin-top:.5rem;">Multiplication Theorem: P(A ∩ B) = P(A) × P(B|A) = P(B) × P(A|B)</p>
+    </div>
+    <div class="formula-box">P(A|B) = P(A ∩ B) / P(B)  [P(B) ≠ 0]
+
+/* Independent Events */
+A and B independent ⟺ P(A|B) = P(A) ⟺ P(A∩B) = P(A)×P(B)
+
+/* Multiplication Theorem for n events */
+P(A∩B∩C) = P(A) × P(B|A) × P(C|A∩B)</div>
+
+    <div class="example-box">
+      <h4>✅ Example: Two dice roll. P(sum=8 | first die=3)?</h4>
+      <p>Given first die = 3. For sum = 8: need second die = 5. P = 1/6</p>
+    </div>
+
+    <h2>2. Total Probability Theorem</h2>
+    <div class="concept-box">
+      <p>B₁, B₂, ..., Bₙ ek partition of S (mutually exclusive, exhaustive) hain. Tab:</p>
+      <p><strong>P(A) = Σᵢ P(Bᵢ) × P(A|Bᵢ)</strong></p>
+    </div>
+
+    <!-- Tree diagram SVG -->
+    <svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;display:block;margin:1.5rem auto;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);">
+      <text x="300" y="22" text-anchor="middle" font-family="Inter" font-size="13" font-weight="700" fill="#2e1065">Total Probability — Tree Diagram</text>
+      <!-- Root -->
+      <circle cx="60" cy="120" r="20" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2"/>
+      <text x="60" y="125" text-anchor="middle" font-family="Inter" font-size="11" fill="#4c1d95">S</text>
+      <!-- B1, B2 branches -->
+      <line x1="80" y1="100" x2="200" y2="70" stroke="#7c3aed" stroke-width="1.5"/>
+      <line x1="80" y1="130" x2="200" y2="155" stroke="#7c3aed" stroke-width="1.5"/>
+      <text x="135" y="80" font-family="Inter" font-size="11" fill="#7c3aed">P(B₁)</text>
+      <text x="135" y="155" font-family="Inter" font-size="11" fill="#7c3aed">P(B₂)</text>
+      <circle cx="215" cy="70" r="18" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+      <text x="215" y="75" text-anchor="middle" font-family="Inter" font-size="11" fill="#4c1d95">B₁</text>
+      <circle cx="215" cy="155" r="18" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+      <text x="215" y="160" text-anchor="middle" font-family="Inter" font-size="11" fill="#4c1d95">B₂</text>
+      <!-- A|B branches -->
+      <line x1="233" y1="70" x2="370" y2="45" stroke="#16a34a" stroke-width="1.5"/>
+      <line x1="233" y1="70" x2="370" y2="95" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,2"/>
+      <text x="295" y="42" font-family="Inter" font-size="10" fill="#16a34a">P(A|B₁)</text>
+      <line x1="233" y1="155" x2="370" y2="135" stroke="#16a34a" stroke-width="1.5"/>
+      <line x1="233" y1="155" x2="370" y2="185" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,2"/>
+      <text x="295" y="135" font-family="Inter" font-size="10" fill="#16a34a">P(A|B₂)</text>
+      <!-- End nodes -->
+      <circle cx="385" cy="45" r="15" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+      <text x="385" y="50" text-anchor="middle" font-family="Inter" font-size="10" fill="#065f46">A</text>
+      <circle cx="385" cy="95" r="15" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
+      <text x="385" y="100" text-anchor="middle" font-family="Inter" font-size="10" fill="#475569">A'</text>
+      <circle cx="385" cy="135" r="15" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+      <text x="385" y="140" text-anchor="middle" font-family="Inter" font-size="10" fill="#065f46">A</text>
+      <circle cx="385" cy="185" r="15" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
+      <text x="385" y="190" text-anchor="middle" font-family="Inter" font-size="10" fill="#475569">A'</text>
+      <!-- P(A) total -->
+      <text x="420" y="100" font-family="Inter" font-size="11" fill="#7c3aed" font-weight="700">P(A) = P(B₁)P(A|B₁)</text>
+      <text x="420" y="115" font-family="Inter" font-size="11" fill="#7c3aed">     + P(B₂)P(A|B₂)</text>
+    </svg>
+
+    <h2>3. Bayes' Theorem</h2>
+    <div class="concept-box">
+      <p>Bayes' theorem: diya hua ki A hua — B ke hua hone ki probability kya hai?</p>
+    </div>
+    <div class="formula-box">P(Bᵢ|A) = P(Bᵢ) × P(A|Bᵢ)
+              ——————————————————
+              Σⱼ P(Bⱼ) × P(A|Bⱼ)
+
+Yaad karo: "Posterior = Prior × Likelihood / Normalizer"</div>
+
+    <div class="example-box">
+      <h4>✅ Worked Example: Bayes' Theorem</h4>
+      <p>Bag I mein 3 red, 4 black balls. Bag II mein 5 red, 6 black balls. Ek bag randomly choose kiya aur ek ball nikali — red hai. Probability ki Bag I se nikali?</p>
+      <div class="step-box">P(Bag I) = P(Bag II) = 1/2</div>
+      <div class="step-box">P(Red|Bag I) = 3/7, P(Red|Bag II) = 5/11</div>
+      <div class="step-box">P(Red) = (1/2)(3/7) + (1/2)(5/11) = 3/14 + 5/22 = 33/154 + 35/154 = 68/154</div>
+      <div class="step-box">P(Bag I|Red) = (1/2 × 3/7) / (68/154) = (3/14) × (154/68) = 33/68</div>
+      <p style="color:#065f46;font-weight:600;">P(Bag I | Red ball) = 33/68 ≈ 0.485</p>
+    </div>
+
+    <h2>4. Random Variables aur Probability Distribution</h2>
+    <div class="concept-box">
+      <p>Random variable X: sample space ke har outcome ko ek real number assign karta hai.</p>
+      <p><strong>Discrete RV:</strong> Countable values (jaise number of heads)</p>
+      <p><strong>Expected Value:</strong> E(X) = Σ x·P(x)</p>
+      <p><strong>Variance:</strong> Var(X) = E(X²) - [E(X)]²</p>
+    </div>
+
+    <div class="example-box">
+      <h4>✅ Expected Value Example</h4>
+      <table>
+        <tr><th>X</th><th>0</th><th>1</th><th>2</th><th>3</th></tr>
+        <tr><td>P(X)</td><td>1/8</td><td>3/8</td><td>3/8</td><td>1/8</td></tr>
+      </table>
+      <p>E(X) = 0×(1/8)+1×(3/8)+2×(3/8)+3×(1/8) = 0+3/8+6/8+3/8 = 12/8 = 3/2</p>
+    </div>
+
+    <h2>5. Binomial Distribution</h2>
+    <div class="formula-box">X ~ B(n, p) — n trials, p = success probability each trial
+
+P(X=r) = ⁿCᵣ × pʳ × (1-p)^(n-r)
+
+Mean = np
+Variance = np(1-p) = npq  (q=1-p)
+SD = √(npq)</div>
+
+    <div class="example-box">
+      <h4>✅ Binomial Example</h4>
+      <p>Fair coin 5 baar uchhaali. P(exactly 3 heads)?</p>
+      <p>n=5, p=1/2, r=3</p>
+      <p>P(X=3) = ⁵C₃ × (1/2)³ × (1/2)² = 10 × 1/8 × 1/4 = 10/32 = 5/16</p>
+    </div>
+
+    <h2>6. Practice Questions</h2>
+    <div class="practice-q"><p><strong>Q1.</strong> Two cards are drawn successively without replacement from 52-card deck. P(both kings)?</p><details><summary>Solution</summary><p>P(first king) = 4/52. P(second king|first king) = 3/51. P(both kings) = (4/52)(3/51) = 12/2652 = 1/221</p></details></div>
+    <div class="practice-q"><p><strong>Q2.</strong> A die is thrown twice. Events A={odd on first}, B={total≥8}. Are A,B independent?</p><details><summary>Solution</summary><p>P(A)=1/2. P(B)=favorable/36. Pairs summing ≥8: (2,6),(3,5),(3,6),(4,4),(4,5),(4,6),(5,3),(5,4),(5,5),(5,6),(6,2),(6,3),(6,4),(6,5),(6,6)=15. P(B)=15/36. P(A∩B): A∩B means odd first AND sum≥8: (3,5),(3,6),(5,3),(5,4),(5,5),(5,6)=6/36. P(A)×P(B)=1/2×15/36=15/72≠6/36=1/6. So NOT independent.</p></details></div>
+    <div class="practice-q"><p><strong>Q3.</strong> In Binomial distribution with n=10, p=1/3. Find mean and variance.</p><details><summary>Solution</summary><p>Mean = np = 10×1/3 = 10/3. Variance = npq = 10×(1/3)×(2/3) = 20/9.</p></details></div>
+  </div>
+  <footer style="background:#0f172a;color:#94a3b8;text-align:center;padding:2rem;margin-top:3rem;"><p>AIkiPadhai 🇮🇳</p></footer>
+</body>
+</html>
