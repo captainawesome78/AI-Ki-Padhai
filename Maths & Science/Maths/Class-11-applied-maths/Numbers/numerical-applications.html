@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Numerical Applications | AIkiPadhai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;}
+    .hero{background:linear-gradient(135deg,#042f2e,#0f766e,#0d9488);padding:2.8rem 1rem;text-align:center;}
+    .hero h1{font-family:'Outfit',sans-serif;font-size:2rem;color:#fff;margin:0 0 .5rem;}
+    .hero p{color:#99f6e4;font-size:.98rem;max-width:620px;margin:0 auto;}
+    .container{max-width:980px;margin:0 auto;padding:0 1.2rem;}
+    .content-section{padding:2rem 1rem;}
+    .card{background:#fff;border-radius:14px;border:1.5px solid #e2e8f0;padding:1.6rem;margin:1.2rem 0;box-shadow:0 2px 8px rgba(0,0,0,0.04);}
+    .card h2{font-family:'Outfit',sans-serif;color:#0f766e;margin:0 0 .8rem;font-size:1.3rem;}
+    .card h3{color:#0d9488;margin:.9rem 0 .4rem;font-size:1.05rem;}
+    .formula-box{background:#f0fdfa;border:1.5px solid #5eead4;border-radius:10px;padding:.9rem 1.2rem;margin:.6rem 0;font-family:monospace;font-size:.92rem;color:#0f4c4c;}
+    .example-box{background:#f8fafc;border-left:4px solid #0d9488;border-radius:0 10px 10px 0;padding:1rem 1.2rem;margin:.8rem 0;}
+    .example-box .ex-title{font-weight:700;color:#0f766e;font-size:.88rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem;}
+    table{width:100%;border-collapse:collapse;margin:.6rem 0;font-size:.88rem;}
+    th{background:#0d9488;color:#fff;padding:.5rem .7rem;text-align:left;}
+    td{padding:.45rem .7rem;border-bottom:1px solid #e2e8f0;}
+    tr:hover td{background:#f0fdfa;}
+    .topic-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.8rem;margin:.8rem 0;}
+    .topic-pill{background:#f0fdfa;border:1.5px solid #5eead4;border-radius:10px;padding:.7rem 1rem;text-align:center;font-size:.85rem;font-weight:600;color:#0f766e;}
+    p{color:#334155;line-height:1.7;}
+    svg{max-width:100%;display:block;margin:.6rem auto;}</style>
+</head>
+<body>
+  <header><div class="container header-content">
+    <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+    <nav><a href="../../index.html">Applied Maths 11</a><a href="index.html">Unit I</a></nav>
+  </div></header>
+  <section class="hero"><div class="container"><h1>Numerical Applications</h1><p>Averages, clock, calendar, time-work-distance, mensuration aur seating arrangements</p></div></section>
+  <div class="content-section"><div class="container">
+
+  <div class="card">
+    <h2>📊 Averages</h2>
+    <p><strong>Simple Average (Mean)</strong> = Sum of values / Number of values</p>
+    <p><strong>Weighted Average</strong> = Σ(wᵢ × xᵢ) / Σwᵢ — jab har value ki importance alag alag ho</p>
+    <div class="example-box">
+      <div class="ex-title">Example: Weighted Average</div>
+      3 subjects mein marks: Maths 80 (weight 3), Science 70 (weight 2), English 60 (weight 1)<br>
+      Weighted Avg = (80×3 + 70×2 + 60×1) / (3+2+1) = (240+140+60)/6 = 440/6 ≈ <b>73.3</b>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🕐 Clock Problems</h2>
+    <p>Clock mein 12 hours = 360°. Minute hand 1 minute mein 6° chalti hai, hour hand 0.5° chalti hai.</p>
+    <div class="formula-box">
+Minute hand speed = 6° per minute
+Hour hand speed = 0.5° per minute
+Relative speed (min hand over hour) = 5.5° per minute
+
+Angle between hands at H hours M minutes:
+θ = |30H − 5.5M|° (agar > 180° toh 360° − θ lena)
+    </div>
+    <div class="example-box">
+      <div class="ex-title">Example: 3:20 par angle kya hoga?</div>
+      H = 3, M = 20<br>
+      θ = |30(3) − 5.5(20)| = |90 − 110| = <b>20°</b>
+    </div>
+
+    <!-- Clock SVG -->
+    <svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" width="200">
+      <circle cx="120" cy="120" r="110" fill="#f0fdfa" stroke="#0d9488" stroke-width="3"/>
+      <circle cx="120" cy="120" r="5" fill="#0d9488"/>
+      <text x="120" y="28" text-anchor="middle" font-weight="700" fill="#0f766e" font-size="14">12</text>
+      <text x="212" y="126" text-anchor="middle" font-weight="700" fill="#0f766e" font-size="14">3</text>
+      <text x="120" y="220" text-anchor="middle" font-weight="700" fill="#0f766e" font-size="14">6</text>
+      <text x="28" y="126" text-anchor="middle" font-weight="700" fill="#0f766e" font-size="14">9</text>
+      <!-- Hour hand at 3 -->
+      <line x1="120" y1="120" x2="180" y2="120" stroke="#0f766e" stroke-width="5" stroke-linecap="round"/>
+      <!-- Minute hand at 20 min = 120° from 12 -->
+      <line x1="120" y1="120" x2="120" y2="35" stroke="#0d9488" stroke-width="3" stroke-linecap="round" transform="rotate(120 120 120)"/>
+      <text x="120" y="160" text-anchor="middle" font-size="11" fill="#0f766e">3:20 → 20°</text>
+    </svg>
+
+    <h3>Hands Coincide (Milne ka time)</h3>
+    <div class="formula-box">
+12 hours mein 11 baar hands coincide karti hain
+Time between consecutive meetings = 65 5/11 minutes ≈ 65.45 min
+
+After H o'clock, hands meet after: 60H/11 minutes
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📅 Calendar Problems</h2>
+    <p>Calendar problems mein <strong>Odd Days</strong> ka concept use hota hai.</p>
+    <div class="formula-box">
+Ordinary Year = 365 days = 52 weeks + 1 odd day
+Leap Year = 366 days = 52 weeks + 2 odd days
+
+Century odd days:
+100 years = 5 odd days
+200 years = 3 odd days
+300 years = 1 odd day
+400 years = 0 odd days
+    </div>
+    <table>
+      <tr><th>Odd Days</th><th>Day</th><th>Odd Days</th><th>Day</th></tr>
+      <tr><td>0</td><td>Sunday</td><td>4</td><td>Thursday</td></tr>
+      <tr><td>1</td><td>Monday</td><td>5</td><td>Friday</td></tr>
+      <tr><td>2</td><td>Tuesday</td><td>6</td><td>Saturday</td></tr>
+      <tr><td>3</td><td>Wednesday</td><td></td><td></td></tr>
+    </table>
+    <div class="example-box">
+      <div class="ex-title">Leap Year Rule</div>
+      Divisible by 4 → leap year (except century years)<br>
+      Century year divisible by 400 → leap year<br>
+      Example: 2000 → leap (400 se), 1900 → not leap (100 se but not 400)
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>⏱️ Time, Work aur Distance</h2>
+    <h3>Time aur Work</h3>
+    <div class="formula-box">
+Agar A, n days mein kaam karta hai → A 1 din mein 1/n kaam karta hai
+
+A aur B milkar kaam karein:
+Combined rate = 1/a + 1/b
+Time together = ab/(a+b) days
+    </div>
+    <div class="example-box">
+      <div class="ex-title">Example: A 12 din mein, B 15 din mein pipe fill karta hai — saath kitne din mein?</div>
+      Combined = 1/12 + 1/15 = 5/60 + 4/60 = 9/60 = 3/20 per day<br>
+      Time = 20/3 = <b>6⅔ days</b>
+    </div>
+
+    <h3>Time, Speed aur Distance</h3>
+    <div class="formula-box">
+Distance = Speed × Time
+Speed = Distance / Time
+Time = Distance / Speed
+
+1 km/h = 5/18 m/s
+1 m/s = 18/5 km/h
+
+Average Speed = Total Distance / Total Time
+    </div>
+    <div class="example-box">
+      <div class="ex-title">Example: Train 200m long, 72 km/h speed, bridge 300m — crossing time?</div>
+      Speed = 72 × 5/18 = 20 m/s<br>
+      Total distance = 200 + 300 = 500m<br>
+      Time = 500/20 = <b>25 seconds</b>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📐 Mensuration — 2D aur 3D</h2>
+    <div class="topic-grid">
+      <div class="topic-pill">Square: Area=a², P=4a</div>
+      <div class="topic-pill">Rectangle: Area=l×b, P=2(l+b)</div>
+      <div class="topic-pill">Triangle: Area=½×b×h</div>
+      <div class="topic-pill">Circle: Area=πr², C=2πr</div>
+      <div class="topic-pill">Cylinder: V=πr²h, CSA=2πrh</div>
+      <div class="topic-pill">Cone: V=⅓πr²h, l=√(r²+h²)</div>
+      <div class="topic-pill">Sphere: V=⁴⁄₃πr³, SA=4πr²</div>
+      <div class="topic-pill">Cuboid: V=l×b×h, SA=2(lb+bh+lh)</div>
+    </div>
+    <div class="example-box">
+      <div class="ex-title">Example: Combination — Cone on Cylinder</div>
+      Cylinder: r=7cm, h=10cm. Cone: r=7cm, h=4cm (on top).<br>
+      Total Volume = πr²h + ⅓πr²h₂<br>
+      = π×49×10 + ⅓×π×49×4 = 490π + 65.33π = 555.33π ≈ <b>1744.2 cm³</b>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>💺 Seating Arrangements</h2>
+    <h3>Linear Arrangement</h3>
+    <p>n log ek line mein — n! ways. Agar kuch specific positions hain, toh pehle unhe fix karo.</p>
+    <div class="example-box">
+      <div class="ex-title">Example: 5 log mein A aur B saath baithe hain — kitne arrangements?</div>
+      AB ko ek unit maano → 4 units = 4! = 24 arrangements<br>
+      AB khud 2! = 2 tarike se arrange ho sakte hain<br>
+      Total = 24 × 2 = <b>48</b>
+    </div>
+    <h3>Circular Arrangement</h3>
+    <div class="formula-box">
+n log ko circle mein baithana = (n-1)! ways
+(Ek position fixed maante hain, baaki sab relative hain)
+
+Agar necklace/garland type (clockwise = anticlockwise):
+= (n-1)!/2
+    </div>
+    <div class="example-box">
+      <div class="ex-title">Example: 6 log ko round table pe baithana</div>
+      = (6-1)! = 5! = <b>120 ways</b>
+    </div>
+  </div>
+
+</div></div>
+  <footer style="text-align:center;padding:1.5rem;color:#94a3b8;font-size:.82rem;border-top:1px solid #e2e8f0;">
+    © 2024 AIkiPadhai — Class 11 Applied Mathematics
+  </footer>
+</body></html>

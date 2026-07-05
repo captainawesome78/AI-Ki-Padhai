@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Financial Maths Lab — Applied Maths 11 | AIkiPadhai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#0d1117;color:#e2e8f0;font-family:'Inter',sans-serif;}
+    h1,h2,h3,h4{color:#f1f5f9!important;} p{color:#cbd5e1;}
+    .hero h1{color:#fff!important;} .hero p{color:#fde68a!important;}
+    nav a{color:#94a3b8;}
+    .lab-wrap{max-width:960px;margin:2rem auto;padding:0 1.2rem;}
+    .lab-card{background:#161b22;border:1px solid #30363d;border-radius:14px;padding:1.6rem;margin:1.4rem 0;}
+    .lab-card h3{color:#fbbf24!important;margin:0 0 .4rem;}
+    .lab-card p.hint{color:#64748b;font-size:.88rem;margin:.2rem 0 .8rem;}
+    canvas{border-radius:10px;display:block;margin:.6rem auto;}
+    .controls{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;margin:.6rem 0;}
+    .ctrl-group{display:flex;align-items:center;gap:.4rem;}
+    label{color:#94a3b8;font-size:.85rem;}
+    input[type=range]{accent-color:#ca8a04;background:#1e293b;border:1px solid #334155;border-radius:6px;padding:.2rem .4rem;width:110px;}
+    input[type=number]{background:#1e293b;color:#fde68a;border:1px solid #334155;border-radius:6px;padding:.3rem .5rem;width:90px;font-size:.85rem;}
+    .val-badge{background:#1e293b;color:#fbbf24;border:1px solid #334155;border-radius:5px;padding:.15rem .5rem;font-weight:700;min-width:2.5rem;text-align:center;font-size:.83rem;}
+    .eq-display{background:#0a0e1a;border-radius:8px;padding:.7rem 1rem;font-family:monospace;color:#fbbf24;font-size:.88rem;margin:.5rem 0;line-height:1.75;}
+    .btn{padding:.5rem 1.1rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:.88rem;transition:all .18s;}
+    .btn-v{background:linear-gradient(135deg,#ca8a04,#a16207);color:#fff;}
+    .btn-v:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(202,138,4,.4);}
+    .amort-table{width:100%;border-collapse:collapse;font-size:.8rem;max-height:220px;overflow-y:auto;display:block;}
+    .amort-table th{background:#1e293b;color:#fbbf24;padding:.35rem .5rem;position:sticky;top:0;}
+    .amort-table td{padding:.3rem .5rem;border-bottom:1px solid #1e293b;color:#cbd5e1;}
+    .amort-table tr:hover td{background:#1e293b;}
+    .gst-box{background:#1e293b;border-radius:10px;padding:1rem;margin:.6rem 0;}
+    .gst-row{display:flex;justify-content:space-between;align-items:center;padding:.35rem 0;border-bottom:1px solid #30363d;font-size:.88rem;}
+    .gst-row:last-child{border-bottom:none;font-weight:700;color:#fbbf24;}
+    .gst-bar{height:28px;border-radius:5px;margin:.3rem 0;display:flex;align-items:center;padding-left:.5rem;font-size:.82rem;font-weight:700;color:#0a0e1a;transition:width .5s;}
+  </style>
+</head>
+<body>
+<header><div class="container header-content">
+  <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+  <nav><a href="../index.html">Applied Maths 11</a><a href="index.html">Unit VII</a><a href="financial-interactive.html" class="active">Lab</a></nav>
+</div></header>
+
+<section class="hero" style="background:linear-gradient(135deg,#1a0e00,#713f12,#ca8a04);">
+  <div class="container"><h1>Financial Maths Lab 💰</h1>
+  <p>CI vs SI growth, EMI amortization, annuity growth — sab visually dekho aur khud explore karo!</p></div>
+</section>
+
+<div class="lab-wrap">
+
+<!-- LAB 1: SI vs CI Growth Curve -->
+<div class="lab-card">
+  <h3>📈 Lab 1: SI vs CI — Growth Curve Dekho</h3>
+  <p class="hint">Principal, rate aur years change karo. Dekho CI (yellow) kitni tezi se SI (green) se aage nikal jaati hai! Yahi "power of compounding" hai.</p>
+  <div class="controls">
+    <div class="ctrl-group"><label>Principal ₹</label><input type="number" id="p1" value="10000" min="1000" max="1000000" step="1000" oninput="drawGrowth()"></div>
+    <div class="ctrl-group"><label>Rate %</label><input type="range" id="r1" min="1" max="24" value="10" oninput="drawGrowth()"><span id="r1v" class="val-badge">10%</span></div>
+    <div class="ctrl-group"><label>Years</label><input type="range" id="y1" min="1" max="30" value="15" oninput="drawGrowth()"><span id="y1v" class="val-badge">15</span></div>
+    <div class="ctrl-group"><label>Compounding</label>
+      <select id="comp1" onchange="drawGrowth()" style="background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:.3rem .5rem;">
+        <option value="1">Annually</option><option value="2">Semi-annually</option>
+        <option value="4">Quarterly</option><option value="12">Monthly</option>
+      </select>
+    </div>
+  </div>
+  <canvas id="growthCanvas" width="700" height="300" style="width:100%;background:#0a0e1a;"></canvas>
+  <div class="eq-display" id="growthEq"></div>
+</div>
+
+<!-- LAB 2: EMI Amortization -->
+<div class="lab-card">
+  <h3>🏠 Lab 2: EMI — Har Mahine Principal vs Interest Split Dekho</h3>
+  <p class="hint">Loan amount, rate aur tenure change karo. Chart dikhata hai har mahine kitna interest ja raha hai aur kitna principal reduce ho raha hai. Shuru mein interest zyada hota hai!</p>
+  <div class="controls">
+    <div class="ctrl-group"><label>Loan ₹</label><input type="number" id="loan" value="500000" min="10000" max="5000000" step="10000" oninput="drawEMI()"></div>
+    <div class="ctrl-group"><label>Rate %</label><input type="range" id="emiRate" min="5" max="20" value="9" step="0.5" oninput="drawEMI()"><span id="emiRateV" class="val-badge">9%</span></div>
+    <div class="ctrl-group"><label>Years</label><input type="range" id="emiYears" min="1" max="30" value="10" oninput="drawEMI()"><span id="emiYearsV" class="val-badge">10</span></div>
+  </div>
+  <canvas id="emiCanvas" width="700" height="280" style="width:100%;background:#0a0e1a;"></canvas>
+  <div class="eq-display" id="emiEq"></div>
+  <div style="overflow-x:auto;max-height:200px;overflow-y:auto;margin-top:.5rem;">
+    <table class="amort-table" id="amortTable">
+      <thead><tr><th>Month</th><th>EMI ₹</th><th>Interest ₹</th><th>Principal ₹</th><th>Balance ₹</th></tr></thead>
+      <tbody id="amortBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- LAB 3: Annuity Future Value -->
+<div class="lab-card">
+  <h3>📅 Lab 3: Annuity — Monthly Savings se Future Wealth</h3>
+  <p class="hint">Har mahine kitna save karo ge, kitne saal tak, kitna return. Bar chart dikhata hai total invested (blue) vs total interest earned (yellow). SIP ka power!</p>
+  <div class="controls">
+    <div class="ctrl-group"><label>Monthly ₹</label><input type="number" id="ann" value="5000" min="500" max="100000" step="500" oninput="drawAnnuity()"></div>
+    <div class="ctrl-group"><label>Rate %</label><input type="range" id="annRate" min="4" max="18" value="12" oninput="drawAnnuity()"><span id="annRateV" class="val-badge">12%</span></div>
+    <div class="ctrl-group"><label>Years</label><input type="range" id="annYears" min="1" max="30" value="10" oninput="drawAnnuity()"><span id="annYearsV" class="val-badge">10</span></div>
+  </div>
+  <canvas id="annCanvas" width="700" height="280" style="width:100%;background:#0a0e1a;"></canvas>
+  <div class="eq-display" id="annEq"></div>
+</div>
+
+<!-- LAB 4: GST Calculator Visual -->
+<div class="lab-card">
+  <h3>🧾 Lab 4: GST Calculator — Invoice Visual</h3>
+  <p class="hint">Amount aur GST rate choose karo, state type select karo. Dekho invoice kaise banta hai — CGST+SGST ya IGST!</p>
+  <div class="controls">
+    <div class="ctrl-group"><label>Amount ₹</label><input type="number" id="gstAmt" value="10000" min="100" step="100" oninput="calcGST()"></div>
+    <div class="ctrl-group"><label>GST Rate</label>
+      <select id="gstRate" onchange="calcGST()" style="background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:.3rem .5rem;">
+        <option value="5">5% (Basic)</option><option value="12">12% (Standard)</option>
+        <option value="18" selected>18% (Standard)</option><option value="28">28% (Luxury)</option>
+      </select>
+    </div>
+    <div class="ctrl-group"><label>Type</label>
+      <select id="gstType" onchange="calcGST()" style="background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:.3rem .5rem;">
+        <option value="intra">Intra-state (CGST+SGST)</option>
+        <option value="inter">Inter-state (IGST)</option>
+      </select>
+    </div>
+  </div>
+  <div id="gstBox" class="gst-box"></div>
+  <div class="eq-display" id="gstEq"></div>
+</div>
+
+</div>
+
+<script>
+// ============ LAB 1: SI vs CI ============
+function drawGrowth(){
+  const P=+document.getElementById('p1').value||10000;
+  const r=+document.getElementById('r1').value/100;
+  const Y=+document.getElementById('y1').value;
+  const n=+document.getElementById('comp1').value;
+  document.getElementById('r1v').textContent=document.getElementById('r1').value+'%';
+  document.getElementById('y1v').textContent=Y;
+  const c=document.getElementById('growthCanvas'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,pad=55,cw=W-pad-15,ch=H-pad-20;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  // Compute max
+  const ciEnd=P*Math.pow(1+r/n,n*Y);
+  const siEnd=P*(1+r*Y);
+  const maxV=Math.max(ciEnd,siEnd)*1.05;
+  function toY(v){return pad+ch*(1-v/maxV);}
+  function toX(t){return pad+t*cw/Y;}
+  // Grid
+  ctx.strokeStyle='#1e293b';ctx.lineWidth=1;
+  for(let i=0;i<=5;i++){
+    const y=pad+ch*i/5;
+    ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(W-15,y);ctx.stroke();
+    ctx.fillStyle='#475569';ctx.font='10px Inter';
+    ctx.fillText('₹'+(maxV*(1-i/5)/1000).toFixed(0)+'k',3,y+4);
+  }
+  for(let i=0;i<=Y;i+=Math.ceil(Y/6)){
+    const x=toX(i);
+    ctx.beginPath();ctx.moveTo(x,pad);ctx.lineTo(x,pad+ch);ctx.stroke();
+    ctx.fillStyle='#475569';ctx.font='10px Inter';ctx.fillText(i+'yr',x-8,pad+ch+14);
+  }
+  ctx.strokeStyle='#475569';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(pad,pad);ctx.lineTo(pad,pad+ch);ctx.lineTo(W-15,pad+ch);ctx.stroke();
+  // SI line
+  ctx.strokeStyle='#22c55e';ctx.lineWidth=2.5;ctx.shadowColor='#22c55e';ctx.shadowBlur=5;
+  ctx.beginPath();ctx.moveTo(toX(0),toY(P));
+  for(let t=0;t<=Y;t+=Y/200){ctx.lineTo(toX(t),toY(P*(1+r*t)));}
+  ctx.stroke();ctx.shadowBlur=0;
+  // CI curve
+  ctx.strokeStyle='#fbbf24';ctx.lineWidth=2.5;ctx.shadowColor='#fbbf24';ctx.shadowBlur=5;
+  ctx.beginPath();ctx.moveTo(toX(0),toY(P));
+  for(let t=0;t<=Y;t+=Y/200){ctx.lineTo(toX(t),toY(P*Math.pow(1+r/n,n*t)));}
+  ctx.stroke();ctx.shadowBlur=0;
+  // Labels
+  ctx.fillStyle='#22c55e';ctx.font='bold 11px Inter';ctx.fillText('SI = ₹'+Math.round(siEnd).toLocaleString('en-IN'),pad+5,toY(siEnd)-8);
+  ctx.fillStyle='#fbbf24';ctx.fillText('CI = ₹'+Math.round(ciEnd).toLocaleString('en-IN'),pad+5,toY(ciEnd)-8);
+  // Legend
+  ctx.fillStyle='#22c55e';ctx.fillRect(W-130,10,12,4);ctx.fillStyle='#94a3b8';ctx.font='10px Inter';ctx.fillText('Simple Interest',W-114,16);
+  ctx.fillStyle='#fbbf24';ctx.fillRect(W-130,22,12,4);ctx.fillText('Compound Interest',W-114,28);
+  const diff=ciEnd-siEnd;
+  document.getElementById('growthEq').textContent=
+    `Principal: ₹${P.toLocaleString('en-IN')}, Rate: ${(r*100).toFixed(0)}% p.a., Years: ${Y}
+`+
+    `SI Amount = ₹${Math.round(siEnd).toLocaleString('en-IN')}  (Interest = ₹${Math.round(siEnd-P).toLocaleString('en-IN')})
+`+
+    `CI Amount = ₹${Math.round(ciEnd).toLocaleString('en-IN')}  (Interest = ₹${Math.round(ciEnd-P).toLocaleString('en-IN')})
+`+
+    `CI se extra milega: ₹${Math.round(diff).toLocaleString('en-IN')} — Compounding ka jaadu!`;
+}
+drawGrowth();
+
+// ============ LAB 2: EMI ============
+function drawEMI(){
+  const P=+document.getElementById('loan').value||500000;
+  const annRate=+document.getElementById('emiRate').value;
+  const Y=+document.getElementById('emiYears').value;
+  document.getElementById('emiRateV').textContent=annRate+'%';
+  document.getElementById('emiYearsV').textContent=Y;
+  const i=annRate/100/12, n=Y*12;
+  const emi=P*i*Math.pow(1+i,n)/(Math.pow(1+i,n)-1);
+  const c=document.getElementById('emiCanvas'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,pad=45,cw=W-pad-15,ch=H-pad-20;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  // Stacked bar chart (sampled every 12 months)
+  const months=Math.min(n,120);// max 120 bars for clarity
+  const step=Math.max(1,Math.floor(n/60));
+  let bal=P, totalInt=0,totalPrin=0;
+  const bars=[];
+  for(let m=1;m<=n;m+=step){
+    const intPart=bal*i*step;
+    const prinPart=emi*step-intPart;
+    totalInt+=intPart;totalPrin+=prinPart;
+    bars.push({m,intPart:Math.max(0,intPart),prinPart:Math.max(0,prinPart)});
+    bal=Math.max(0,bal-prinPart);
+  }
+  const maxBar=emi*step;
+  const bw=cw/bars.length*0.85;
+  bars.forEach((b,idx)=>{
+    const x=pad+idx*(cw/bars.length);
+    const hInt=ch*b.intPart/maxBar,hPrin=ch*b.prinPart/maxBar;
+    const y0=pad+ch;
+    ctx.fillStyle='#ef4444';ctx.fillRect(x,y0-hInt,bw,hInt);
+    ctx.fillStyle='#3b82f6';ctx.fillRect(x,y0-hInt-hPrin,bw,hPrin);
+  });
+  // Axes
+  ctx.strokeStyle='#475569';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(pad,pad);ctx.lineTo(pad,pad+ch);ctx.lineTo(W-15,pad+ch);ctx.stroke();
+  ctx.fillStyle='#94a3b8';ctx.font='10px Inter';
+  ctx.fillText('Month →',W-60,pad+ch+14);ctx.fillText('EMI Split',3,pad-5);
+  // Legend
+  ctx.fillStyle='#ef4444';ctx.fillRect(W-140,10,12,12);ctx.fillStyle='#94a3b8';ctx.fillText('Interest',W-124,20);
+  ctx.fillStyle='#3b82f6';ctx.fillRect(W-140,26,12,12);ctx.fillText('Principal',W-124,36);
+  // Amortization table (first 24 months)
+  const tbody=document.getElementById('amortBody');tbody.innerHTML='';
+  let bal2=P;
+  for(let m=1;m<=Math.min(n,24);m++){
+    const iP=(bal2*i),prP=emi-iP;bal2=Math.max(0,bal2-prP);
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${m}</td><td>₹${Math.round(emi).toLocaleString('en-IN')}</td><td style="color:#ef4444">₹${Math.round(iP).toLocaleString('en-IN')}</td><td style="color:#3b82f6">₹${Math.round(prP).toLocaleString('en-IN')}</td><td>₹${Math.round(bal2).toLocaleString('en-IN')}</td>`;
+    tbody.appendChild(tr);
+  }
+  const totalPaid=emi*n;
+  document.getElementById('emiEq').textContent=
+    `Loan: ₹${P.toLocaleString('en-IN')}, Rate: ${annRate}% p.a., Tenure: ${Y} years (${n} months)
+`+
+    `EMI = P×i×(1+i)^n/[(1+i)^n−1] = ₹${Math.round(emi).toLocaleString('en-IN')}/month
+`+
+    `Total Paid = ₹${Math.round(totalPaid).toLocaleString('en-IN')}
+`+
+    `Total Interest = ₹${Math.round(totalPaid-P).toLocaleString('en-IN')} (${((totalPaid-P)/P*100).toFixed(0)}% of principal!)
+`+
+    `Note: Table mein dekho — pehle interest zyada hota hai, baad mein principal reduce hona shuru hota hai`;
+}
+drawEMI();
+
+// ============ LAB 3: Annuity ============
+function drawAnnuity(){
+  const R=+document.getElementById('ann').value||5000;
+  const annRate=+document.getElementById('annRate').value;
+  const Y=+document.getElementById('annYears').value;
+  document.getElementById('annRateV').textContent=annRate+'%';
+  document.getElementById('annYearsV').textContent=Y;
+  const i=annRate/100/12,n=Y*12;
+  const c=document.getElementById('annCanvas'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,pad=50,cw=W-pad-15,ch=H-pad-20;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const fvEnd=R*(Math.pow(1+i,n)-1)/i;
+  const investEnd=R*n;
+  // Bars per year
+  const bars=[];
+  for(let yr=1;yr<=Y;yr++){
+    const nn=yr*12;
+    const fv=R*(Math.pow(1+i,nn)-1)/i;
+    const inv=R*nn;
+    bars.push({yr,fv,inv});
+  }
+  const maxV=fvEnd*1.05;
+  const bw=cw/bars.length*0.7;
+  bars.forEach((b,idx)=>{
+    const x=pad+idx*(cw/bars.length);
+    const hInv=ch*b.inv/maxV,hInt=ch*(b.fv-b.inv)/maxV;
+    const y0=pad+ch;
+    ctx.fillStyle='#3b82f6';ctx.fillRect(x,y0-hInv,bw,hInv);
+    ctx.fillStyle='#fbbf24';ctx.fillRect(x,y0-hInv-hInt,bw,hInt);
+    if(bars.length<=15){ctx.fillStyle='#475569';ctx.font='9px Inter';ctx.fillText(b.yr,x+bw/2-4,y0+12);}
+  });
+  // Axes
+  ctx.strokeStyle='#475569';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(pad,pad);ctx.lineTo(pad,pad+ch);ctx.lineTo(W-15,pad+ch);ctx.stroke();
+  for(let i2=0;i2<=4;i2++){
+    const y=pad+ch*i2/4,v=maxV*(1-i2/4);
+    ctx.strokeStyle='#1e293b';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(W-15,y);ctx.stroke();
+    ctx.fillStyle='#475569';ctx.font='10px Inter';ctx.fillText('₹'+(v/1000).toFixed(0)+'k',3,y+4);
+  }
+  ctx.fillStyle='#94a3b8';ctx.font='10px Inter';ctx.fillText('Years →',W-60,pad+ch+14);
+  // Legend
+  ctx.fillStyle='#3b82f6';ctx.fillRect(W-140,10,12,12);ctx.fillStyle='#94a3b8';ctx.fillText('Invested',W-124,20);
+  ctx.fillStyle='#fbbf24';ctx.fillRect(W-140,26,12,12);ctx.fillText('Interest Earned',W-124,36);
+  const interest=fvEnd-investEnd;
+  document.getElementById('annEq').textContent=
+    `Monthly investment: ₹${R.toLocaleString('en-IN')}, Rate: ${annRate}% p.a., Duration: ${Y} years
+`+
+    `FV = R×[(1+i)^n−1]/i = ₹${Math.round(fvEnd).toLocaleString('en-IN')}
+`+
+    `Total Invested: ₹${investEnd.toLocaleString('en-IN')}
+`+
+    `Interest Earned: ₹${Math.round(interest).toLocaleString('en-IN')} (${(interest/investEnd*100).toFixed(0)}% return on investment!)
+`+
+    `Aur years badhao — yellow (interest) portion kitna badata hai dekho!`;
+}
+drawAnnuity();
+
+// ============ LAB 4: GST ============
+function calcGST(){
+  const amt=+document.getElementById('gstAmt').value||10000;
+  const rate=+document.getElementById('gstRate').value;
+  const type=document.getElementById('gstType').value;
+  const gst=amt*rate/100;
+  const total=amt+gst;
+  const box=document.getElementById('gstBox');
+  let rows='',eq='';
+  const barW=Math.min(100,rate*3.5);
+  if(type==='intra'){
+    const half=gst/2;
+    rows=`<div class="gst-row"><span>Taxable Value (Base Price)</span><span>₹${amt.toLocaleString('en-IN')}</span></div>
+          <div class="gst-bar" style="width:${barW}%;background:#fbbf24;">CGST @ ${rate/2}% = ₹${half.toLocaleString('en-IN')}</div>
+          <div class="gst-bar" style="width:${barW}%;background:#f97316;margin-top:.2rem;">SGST @ ${rate/2}% = ₹${half.toLocaleString('en-IN')}</div>
+          <div class="gst-row"><span>CGST (Central Govt)</span><span style="color:#fbbf24">₹${half.toLocaleString('en-IN')}</span></div>
+          <div class="gst-row"><span>SGST (State Govt)</span><span style="color:#f97316">₹${half.toLocaleString('en-IN')}</span></div>
+          <div class="gst-row"><span>Total Invoice Amount</span><span>₹${total.toLocaleString('en-IN')}</span></div>`;
+    eq=`Intra-state transaction (CGST + SGST)
+Base Price = ₹${amt.toLocaleString('en-IN')}
+CGST = ${amt.toLocaleString('en-IN')} × ${rate/2}% = ₹${half.toLocaleString('en-IN')}
+SGST = ${amt.toLocaleString('en-IN')} × ${rate/2}% = ₹${half.toLocaleString('en-IN')}
+Total = ₹${total.toLocaleString('en-IN')}
+GST jaata hai: Centre ko ₹${half.toLocaleString('en-IN')} + State ko ₹${half.toLocaleString('en-IN')}`;
+  } else {
+    rows=`<div class="gst-row"><span>Taxable Value (Base Price)</span><span>₹${amt.toLocaleString('en-IN')}</span></div>
+          <div class="gst-bar" style="width:${barW*2}%;max-width:100%;background:#7c3aed;">IGST @ ${rate}% = ₹${gst.toLocaleString('en-IN')}</div>
+          <div class="gst-row"><span>IGST (Integrated GST)</span><span style="color:#a78bfa">₹${gst.toLocaleString('en-IN')}</span></div>
+          <div class="gst-row"><span>Total Invoice Amount</span><span>₹${total.toLocaleString('en-IN')}</span></div>`;
+    eq=`Inter-state transaction (IGST only)
+Base Price = ₹${amt.toLocaleString('en-IN')}
+IGST = ${amt.toLocaleString('en-IN')} × ${rate}% = ₹${gst.toLocaleString('en-IN')}
+Total = ₹${total.toLocaleString('en-IN')}
+IGST jaata hai: Centre ko (phir destination state ko transfer hota hai)`;
+  }
+  box.innerHTML=rows;
+  document.getElementById('gstEq').textContent=eq;
+}
+calcGST();
+</script>
+</body></html>

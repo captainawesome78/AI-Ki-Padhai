@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Permutations aur Combinations | AIkiPadhai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;}
+    .hero{background:linear-gradient(135deg,#1e1b4b,#4338ca,#6366f1);padding:2.8rem 1rem;text-align:center;}
+    .hero h1{font-family:'Outfit',sans-serif;font-size:2rem;color:#fff;margin:0 0 .5rem;}
+    .hero p{color:#c7d2fe;font-size:.98rem;max-width:620px;margin:0 auto;}
+    .container{max-width:980px;margin:0 auto;padding:0 1.2rem;}
+    .content-section{padding:2rem 1rem;}
+    .card{background:#fff;border-radius:14px;border:1.5px solid #e2e8f0;padding:1.6rem;margin:1.2rem 0;box-shadow:0 2px 8px rgba(0,0,0,0.04);}
+    .card h2{font-family:'Outfit',sans-serif;color:#4338ca;margin:0 0 .8rem;font-size:1.3rem;}
+    .card h3{color:#6366f1;margin:.9rem 0 .4rem;font-size:1.05rem;}
+    .formula-box{background:#eef2ff;border:1.5px solid #a5b4fc;border-radius:10px;padding:.9rem 1.2rem;margin:.6rem 0;font-family:monospace;font-size:.92rem;color:#1e1b4b;}
+    .example-box{background:#f8fafc;border-left:4px solid #6366f1;border-radius:0 10px 10px 0;padding:1rem 1.2rem;margin:.8rem 0;}
+    .example-box .ex-title{font-weight:700;color:#4338ca;font-size:.88rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem;}
+    table{width:100%;border-collapse:collapse;margin:.6rem 0;font-size:.88rem;}
+    th{background:#6366f1;color:#fff;padding:.5rem .7rem;text-align:left;}
+    td{padding:.45rem .7rem;border-bottom:1px solid #e2e8f0;}
+    tr:hover td{background:#eef2ff;}
+    .topic-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.8rem;margin:.8rem 0;}
+    .topic-pill{background:#eef2ff;border:1.5px solid #a5b4fc;border-radius:10px;padding:.7rem 1rem;text-align:center;font-size:.85rem;font-weight:600;color:#4338ca;}
+    p{color:#334155;line-height:1.7;}
+    svg{max-width:100%;display:block;margin:.6rem auto;}</style>
+</head>
+<body>
+  <header><div class="container header-content">
+    <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+    <nav><a href="../index.html">Applied Maths 11</a><a href="index.html">Unit II</a></nav>
+  </div></header>
+  <section class="hero"><div class="container"><h1>Permutations aur Combinations</h1><p>Factorial, nPr, nCr — counting ke powerful tools</p></div></section>
+  <div class="content-section"><div class="container">
+
+  <div class="card">
+    <h2>❗ Factorial</h2>
+    <p>n! = n × (n−1) × (n−2) × ... × 2 × 1. Yeh "n items ko arrange karne ke ways" hain.</p>
+    <div class="formula-box">
+0! = 1 (by definition)
+1! = 1,  2! = 2,  3! = 6,  4! = 24,  5! = 120
+n! = n × (n−1)!
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🎯 Fundamental Counting Principle</h2>
+    <p><strong>Multiplication Principle:</strong> Agar kaam A ko m tarike se aur kaam B ko n tarike se kar sakte hain, toh dono ko milake m×n tarike se kar sakte hain.</p>
+    <p><strong>Addition Principle:</strong> Agar A ya B karna hai (not both), toh m+n tarike hain.</p>
+    <div class="example-box">
+      <div class="ex-title">Example: 3 shirts aur 4 pants — outfits?</div>
+      Multiplication: 3 × 4 = <b>12 outfits</b>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🔄 Permutations — Order Matters!</h2>
+    <p>n different objects mein se r ko arrange karna (order matter karta hai).</p>
+    <div class="formula-box">
+ⁿPᵣ = n! / (n−r)!    [selection + arrangement]
+
+Special cases:
+n objects ko n positions: n!
+Repetition allowed: nʳ ways
+Identical objects: n! / (n₁! × n₂! × ...)
+    </div>
+    <div class="example-box">
+      <div class="ex-title">Example 1: 5 books mein se 3 ki shelf arrangement?</div>
+      ⁵P₃ = 5!/(5−3)! = 120/2 = <b>60 arrangements</b>
+    </div>
+    <div class="example-box">
+      <div class="ex-title">Example 2: MISSISSIPPI mein letters arrange karna</div>
+      Letters: M(1), I(4), S(4), P(2) — total 11<br>
+      Ways = 11! / (1! × 4! × 4! × 2!) = 39916800/1152 = <b>34,650</b>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🎲 Combinations — Order Doesn't Matter!</h2>
+    <p>n different objects mein se r ko select karna (sirf selection, arrangement nahi).</p>
+    <div class="formula-box">
+ⁿCᵣ = n! / (r! × (n−r)!)
+
+Properties:
+ⁿC₀ = ⁿCₙ = 1
+ⁿCᵣ = ⁿCₙ₋ᵣ   (symmetry)
+ⁿCᵣ + ⁿCᵣ₋₁ = ⁿ⁺¹Cᵣ   (Pascal's Rule)
+
+Relation: ⁿPᵣ = r! × ⁿCᵣ
+    </div>
+    <div class="example-box">
+      <div class="ex-title">Example 1: 10 log mein se committee of 4 — kitne tarike?</div>
+      ¹⁰C₄ = 10!/(4!×6!) = 10×9×8×7/(4×3×2×1) = 5040/24 = <b>210 committees</b>
+    </div>
+    <div class="example-box">
+      <div class="ex-title">Example 2: Perm vs Comb</div>
+      5 logo mein se 2 choose karna (committee): ⁵C₂ = 10<br>
+      5 logo mein se 2 select karke rank dena (President, VP): ⁵P₂ = 20<br>
+      Difference: ⁵P₂ = 2! × ⁵C₂ (arrangement factor)
+    </div>
+    <div class="example-box">
+      <div class="ex-title">Example 3: Practical — Card Problems</div>
+      52 cards mein se 5-card hand: ⁵²C₅ = 2,598,960<br>
+      4 aces chances: ⁴C₄ × ⁴⁸C₁ = 1 × 48 = <b>48</b>
+    </div>
+  </div>
+
+</div></div>
+  <footer style="text-align:center;padding:1.5rem;color:#94a3b8;font-size:.82rem;border-top:1px solid #e2e8f0;">
+    © 2024 AIkiPadhai — Class 11 Applied Mathematics
+  </footer>
+</body></html>

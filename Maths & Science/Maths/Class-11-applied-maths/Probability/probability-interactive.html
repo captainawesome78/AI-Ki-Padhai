@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+<title>Probability Lab — Applied Maths 11 | AIkiPadhai</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../../style.css"/>
+<style>body{background:#0d1117;color:#e2e8f0;font-family:'Inter',sans-serif;}
+h1,h2,h3,h4{color:#f1f5f9!important;}p{color:#cbd5e1;}.hero h1{color:#fff!important;}nav a{color:#94a3b8;}
+.lw{max-width:960px;margin:2rem auto;padding:0 1.2rem;}
+.lc{background:#161b22;border:1px solid #30363d;border-radius:14px;padding:1.6rem;margin:1.4rem 0;}
+.lc h3{color:#c4b5fd!important;margin:0 0 .5rem;}.hint{color:#64748b;font-size:.88rem;margin:.3rem 0 .8rem;}
+canvas{border-radius:10px;display:block;margin:.6rem auto;}
+.ctrl{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;margin:.6rem 0;}
+.btn{padding:.5rem 1.1rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:.88rem;background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff;transition:all .18s;}
+.btn:hover{transform:translateY(-2px);}
+.btn-g{background:#1e293b;color:#c4b5fd;border:1px solid #334155;}
+input[type=range]{accent-color:#7c3aed;}input[type=number]{background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:.4rem .7rem;width:80px;}
+.eq{background:#0a0e1a;border-radius:8px;padding:.75rem 1rem;font-family:monospace;font-size:.88rem;margin:.5rem 0;line-height:1.8;white-space:pre-wrap;color:#c4b5fd;}
+label{color:#94a3b8;font-size:.88rem;}</style>
+</head><body>
+<header><div class="container header-content"><a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+<nav><a href="../index.html">Applied Maths 11</a><a href="index.html">Unit V</a></nav></div></header>
+<section class="hero" style="background:linear-gradient(135deg,#2e1065,#5b21b6,#7c3aed);">
+<div class="container"><h1>Probability Lab 🎲</h1><p>Tree diagrams, Bayes visual, coin/die simulator — sab interactive!</p></div></section>
+<div class="lw">
+
+<div class="lc"><h3>🪙 Lab 1: Coin/Die Simulator — Law of Large Numbers</h3>
+<p class="hint">Toss karo baar baar. Frequency theoretical probability ke paas aati jaati hai!</p>
+<div class="ctrl">
+<select id="simType"><option value="0.5">Fair Coin (P=0.5)</option><option value="0.333">Die: P(even)=1/2</option><option value="0.167">Die: P(1)=1/6</option></select>
+<button class="btn" onclick="sim(10)">×10</button><button class="btn" onclick="sim(100)">×100</button><button class="btn btn-g" onclick="resetSim()">Reset</button>
+</div>
+<canvas id="simC" width="700" height="240" style="width:100%;background:#0a0e1a;"></canvas>
+<div class="eq" id="simEq">Toss karo...</div></div>
+
+<div class="lc"><h3>🌳 Lab 2: Bayes Theorem Visual</h3>
+<p class="hint">P(M1), P(D|M1), P(D|M2) change karo. Posterior probability bar update hoti hai!</p>
+<div class="ctrl">
+<label>P(M1)=</label><input type="range" id="pm1" min="10" max="90" value="60" oninput="drawBayes()"><span id="pm1v" style="color:#c4b5fd;font-weight:700;">0.60</span>
+<label>P(D|M1)=</label><input type="range" id="pdm1" min="1" max="20" value="2" oninput="drawBayes()"><span id="pdm1v" style="color:#c4b5fd;font-weight:700;">0.02</span>
+<label>P(D|M2)=</label><input type="range" id="pdm2" min="1" max="20" value="3" oninput="drawBayes()"><span id="pdm2v" style="color:#c4b5fd;font-weight:700;">0.03</span>
+</div>
+<canvas id="bayesC" width="700" height="280" style="width:100%;background:#0a0e1a;"></canvas>
+<div class="eq" id="bayesEq"></div></div>
+
+<div class="lc"><h3>🎯 Lab 3: Conditional Probability — Cards</h3>
+<p class="hint">Standard deck se card draw hogi. Condition set karo — probability change hote dekho!</p>
+<div class="ctrl">
+<label>Given condition:</label>
+<select id="cardCond" onchange="calcCard()">
+<option value="none">No condition (any card)</option>
+<option value="red">Card is Red</option>
+<option value="face">Card is Face card (J/Q/K)</option>
+<option value="heart">Card is Heart</option>
+</select>
+<label>Find P(</label>
+<select id="cardEvent" onchange="calcCard()">
+<option value="ace">Ace</option><option value="king">King</option>
+<option value="red">Red card</option><option value="heart">Heart</option>
+</select>)
+</div>
+<canvas id="cardC" width="700" height="260" style="width:100%;background:#0a0e1a;"></canvas>
+<div class="eq" id="cardEq"></div></div>
+</div>
+
+<script>
+const PI=Math.PI;
+// Lab 1
+let total=0,success=0,hist=[];
+const pEl=document.getElementById('simType');
+function sim(n){
+  const p=parseFloat(pEl.value);
+  for(let i=0;i<n;i++){total++;if(Math.random()<p)success++;hist.push(success/total);}
+  drawSim(p);
+}
+function resetSim(){total=0;success=0;hist=[];document.getElementById('simEq').textContent='Toss karo...';
+  const c=document.getElementById('simC'),ctx=c.getContext('2d');ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,c.width,c.height);}
+function drawSim(p){
+  const c=document.getElementById('simC'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,pad=50,cw=W-pad-20,ch=H-pad-20;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='#1e293b';ctx.lineWidth=1;
+  for(let i=0;i<=5;i++){const y=pad+i*ch/5;ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(W-20,y);ctx.stroke();}
+  ctx.strokeStyle='#475569';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(pad,pad);ctx.lineTo(pad,H-pad);ctx.lineTo(W-20,H-pad);ctx.stroke();
+  ctx.strokeStyle='#fbbf24';ctx.lineWidth=1.5;ctx.setLineDash([5,4]);
+  const py=pad+(1-p)*ch;ctx.beginPath();ctx.moveTo(pad,py);ctx.lineTo(W-20,py);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#fbbf24';ctx.font='10px Inter';ctx.fillText('P='+p,W-20,py-3);
+  if(hist.length>1){
+    ctx.strokeStyle='#c4b5fd';ctx.lineWidth=2;ctx.shadowColor='#7c3aed';ctx.shadowBlur=5;
+    ctx.beginPath();hist.forEach((f,i)=>{const x=pad+i*(cw/Math.max(hist.length-1,1)),y2=pad+(1-f)*ch;i===0?ctx.moveTo(x,y2):ctx.lineTo(x,y2);});ctx.stroke();ctx.shadowBlur=0;}
+  ctx.fillStyle='#64748b';ctx.font='10px Inter';
+  for(let i=0;i<=5;i++)ctx.fillText((i/5).toFixed(1),pad-32,H-pad-i*ch/5+4);
+  const fr=total>0?success/total:0;
+  document.getElementById('simEq').textContent=`Total: ${total}  Success: ${success}  Frequency: ${fr.toFixed(4)}
+Theoretical P: ${p}  |Difference|: ${Math.abs(fr-p).toFixed(4)}
+→ N badhao — frequency P ke paas aati jaati hai (Law of Large Numbers)`;
+}
+
+// Lab 2: Bayes
+function drawBayes(){
+  const pm1=+document.getElementById('pm1').value/100,pm2=1-pm1;
+  const pdm1=+document.getElementById('pdm1').value/100,pdm2=+document.getElementById('pdm2').value/100;
+  document.getElementById('pm1v').textContent=pm1.toFixed(2);
+  document.getElementById('pdm1v').textContent=pdm1.toFixed(2);
+  document.getElementById('pdm2v').textContent=pdm2.toFixed(2);
+  const pd=pm1*pdm1+pm2*pdm2;
+  const p1d=pm1*pdm1/pd,p2d=pm2*pdm2/pd;
+  const c=document.getElementById('bayesC'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  // Tree
+  const rx=70,m1y=100,m2y=200;
+  function arr(x1,y1,x2,y2,col,lbl){
+    ctx.strokeStyle=col;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+    const mx=(x1+x2)/2,my=(y1+y2)/2;ctx.fillStyle=col;ctx.font='10px Inter';ctx.fillText(lbl,mx+4,my);
+  }
+  arr(rx,150,200,m1y,'#c4b5fd','P(M1)='+pm1.toFixed(2));
+  arr(rx,150,200,m2y,'#818cf8','P(M2)='+pm2.toFixed(2));
+  arr(200,m1y,330,m1y-40,'#ef4444','P(D|M1)='+pdm1.toFixed(2));
+  arr(200,m2y,330,m2y-40,'#ef4444','P(D|M2)='+pdm2.toFixed(2));
+  [[rx,150,'#6366f1','S'],[200,m1y,'#c4b5fd','M1'],[200,m2y,'#818cf8','M2']].forEach(([x,y,col,t])=>{
+    ctx.fillStyle=col;ctx.beginPath();ctx.arc(x,y,18,0,PI*2);ctx.fill();
+    ctx.fillStyle='#fff';ctx.font='bold 11px Inter';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(t,x,y);
+  });
+  ctx.textAlign='left';ctx.textBaseline='alphabetic';
+  // Result bar
+  const bx=360,by=120,bw=280;
+  ctx.fillStyle='#1e293b';ctx.fillRect(bx,by,bw,40);
+  ctx.fillStyle='#7c3aed';ctx.fillRect(bx,by,p1d*bw,40);
+  ctx.fillStyle='#3b82f6';ctx.fillRect(bx+p1d*bw,by,(1-p1d)*bw,40);
+  ctx.fillStyle='#fff';ctx.font='bold 11px Inter';ctx.textAlign='center';
+  ctx.fillText(`P(M1|D)=${(p1d*100).toFixed(1)}%`,bx+p1d*bw/2,by+25);
+  ctx.fillText(`P(M2|D)=${(p2d*100).toFixed(1)}%`,bx+p1d*bw+(1-p1d)*bw/2,by+25);
+  ctx.textAlign='left';
+  document.getElementById('bayesEq').textContent=
+    `P(D) = P(M1)×P(D|M1) + P(M2)×P(D|M2)
+     = ${pm1.toFixed(2)}×${pdm1.toFixed(2)} + ${pm2.toFixed(2)}×${pdm2.toFixed(2)} = ${pd.toFixed(4)}
+
+Bayes: P(M1|D) = ${(pm1*pdm1).toFixed(4)} / ${pd.toFixed(4)} = ${p1d.toFixed(4)} = ${(p1d*100).toFixed(1)}%
+       P(M2|D) = ${(pm2*pdm2).toFixed(4)} / ${pd.toFixed(4)} = ${p2d.toFixed(4)} = ${(p2d*100).toFixed(1)}%`;
+}
+drawBayes();
+
+// Lab 3: Cards
+function calcCard(){
+  const cond=document.getElementById('cardCond').value;
+  const ev=document.getElementById('cardEvent').value;
+  const c=document.getElementById('cardC'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  // Deck info
+  const total={none:52,red:26,face:12,heart:13};
+  const favMap={
+    ace:{none:4,red:2,face:0,heart:1},
+    king:{none:4,red:2,face:4,heart:1},
+    red:{none:26,red:26,face:6,heart:13},
+    heart:{none:13,red:13,face:3,heart:13}
+  };
+  const T=total[cond],F=favMap[ev][cond];
+  const prob=F/T;
+  // Visual: 52 cards grid
+  const cols=13,rows=4,cw=(W-40)/cols,ch=(H-60)/rows;
+  const suits=['♥','♦','♣','♠'],colors=['#ef4444','#ef4444','#e2e8f0','#e2e8f0'];
+  const vals=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+  let favCount=0;
+  for(let r=0;r<4;r++){for(let s=0;s<13;s++){
+    const isRed=r<2,isFace=s>=10,isHeart=r===0,isAce=s===0,isKing=s===12;
+    const inCond=(cond==='none')||(cond==='red'&&isRed)||(cond==='face'&&isFace)||(cond==='heart'&&isHeart);
+    const inEv=(ev==='ace'&&isAce)||(ev==='king'&&isKing)||(ev==='red'&&isRed)||(ev==='heart'&&isHeart);
+    const x=20+s*cw,y=30+r*ch;
+    let fill='#1e293b';
+    if(inCond&&inEv){fill='#7c3aed';favCount++;}
+    else if(inCond) fill='#334155';
+    ctx.fillStyle=fill;ctx.fillRect(x+1,y+1,cw-2,ch-2);
+    if(inCond){ctx.fillStyle=isRed?'#fca5a5':'#e2e8f0';ctx.font=`${cw>30?'10':'8'}px monospace`;ctx.textAlign='center';ctx.fillText(vals[s]+suits[r],x+cw/2,y+ch/2+4);}
+  }}
+  ctx.textAlign='left';
+  ctx.fillStyle='#c4b5fd';ctx.font='bold 13px Inter';ctx.fillText(`Condition: ${cond==='none'?'None (all 52)':cond} → ${T} cards`,20,20);
+  ctx.fillStyle='#7c3aed';ctx.fillText(`Favorable (${ev}): ${F} cards (purple)`,20,H-8);
+  document.getElementById('cardEq').textContent=
+    `P(${ev} | ${cond}) = Favorable / Total = ${F} / ${T} = ${prob.toFixed(4)} = ${(prob*100).toFixed(2)}%
+${cond==='none'?'(Unconditional probability)':'(Conditional — only '+T+' cards in sample space now)'}`;
+}
+calcCard();
+</script>
+</body></html>

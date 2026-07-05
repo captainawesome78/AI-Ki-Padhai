@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Mathematical Reasoning Lab | AIkiPadhai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#0d1117;color:#e2e8f0;font-family:'Inter',sans-serif;}
+    h1,h2,h3,h4{color:#f1f5f9!important;} p{color:#cbd5e1;}
+    .hero h1{color:#fff!important;} nav a{color:#94a3b8;}
+    .lw{max-width:960px;margin:2rem auto;padding:0 1.2rem;}
+    .lc{background:#161b22;border:1px solid #30363d;border-radius:14px;padding:1.6rem;margin:1.4rem 0;}
+    .lc h3{margin:0 0 .5rem;} .hint{color:#64748b;font-size:.88rem;margin:.3rem 0 .8rem;}
+    canvas{border-radius:10px;display:block;margin:.6rem auto;}
+    .ctrl{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;margin:.6rem 0;}
+    .btn{padding:.5rem 1.1rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:.88rem;transition:all .18s;}
+    input[type=range]{background:#1e293b;border:1px solid #334155;border-radius:6px;padding:.3rem .5rem;}
+    input[type=number],input[type=text]{background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:.4rem .8rem;width:90px;}
+    .eq{background:#0a0e1a;border-radius:8px;padding:.75rem 1rem;font-family:monospace;font-size:.88rem;margin:.5rem 0;line-height:1.8;white-space:pre-wrap;}
+    label{color:#94a3b8;font-size:.88rem;}
+    select{background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:.35rem .6rem;}
+  </style>
+</head>
+<body>
+  <header><div class="container header-content">
+    <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+    <nav><a href="../index.html">Applied Maths 11</a><a href="index.html">Unit III</a></nav>
+  </div></header>
+  <section class="hero" style="background:linear-gradient(135deg,#451a03,#92400e,#d97706);"><div class="container"><h1>Mathematical Reasoning Lab 🔬</h1><p>Logical puzzles solve karo — visual feedback ke saath!</p></div></section>
+  <div class="lw">
+  <div class="lc">
+    <h3 style="color:#fde68a!important">🔍 Lab 1: Odd One Out Challenge</h3>
+    <p class="hint">Har set mein se odd element dhundho. Apni logic explain karo!</p>
+    <div id="oddGame"></div>
+    <div class="eq" id="oddFb">Select karo...</div>
+  </div>
+  <div class="lc">
+    <h3 style="color:#fde68a!important">🔐 Lab 2: Coding-Decoding Explorer</h3>
+    <p class="hint">Word type karo aur shift select karo. Encoded form dekho aur pattern samjho!</p>
+    <div class="ctrl">
+      <input type="text" id="codeWord" value="MATHS" style="text-transform:uppercase;width:120px" oninput="encodeWord()">
+      <label>Shift:</label>
+      <input type="range" id="shift" min="-13" max="13" value="3" oninput="encodeWord()">
+      <span id="shiftV" style="color:#fde68a;font-weight:700;min-width:2rem;">+3</span>
+    </div>
+    <canvas id="codeCanvas" width="700" height="200" style="width:100%;background:#0a0e1a;border-radius:10px;"></canvas>
+    <div class="eq" id="codeEq"></div>
+  </div>
+  <div class="lc">
+    <h3 style="color:#fde68a!important">💬 Lab 3: Syllogism Venn Visualizer</h3>
+    <p class="hint">Statement type select karo. Venn diagram automatically draw hoga — conclusion visually samjho!</p>
+    <div class="ctrl">
+      <select id="syllType" onchange="drawSyll()">
+        <option value="all_all">All A are B + All B are C → All A are C</option>
+        <option value="some_all">Some A are B + All B are C → Some A are C</option>
+        <option value="no_all">No A is B + All B are C → No A is C</option>
+        <option value="all_some">All A are B + Some B are C → Some A may be C</option>
+      </select>
+    </div>
+    <canvas id="syllCanvas" width="700" height="280" style="width:100%;background:#0a0e1a;border-radius:10px;"></canvas>
+    <div class="eq" id="syllEq"></div>
+  </div>
+
+<script>
+// Lab 1: Odd One Out
+const oddSets=[
+  {items:['2','4','6','9','10'],odd:3,reason:'9 odd number hai, baaki sab even hain'},
+  {items:['Apple','Mango','Banana','Carrot','Grape'],odd:3,reason:'Carrot ek vegetable hai, baaki sab fruits hain'},
+  {items:['17','23','37','49','53'],odd:3,reason:'49 = 7² (composite), baaki sab prime numbers hain'},
+  {items:['Dog','Cat','Lion','Cow','Horse'],odd:2,reason:'Lion wild animal hai, baaki sab domestic hain'},
+  {items:['BDFH','PRTU','LNPR','ACEG'],odd:1,reason:'PRTU = +2 pattern nahi (P+2=R, R+2=T, T+2=V nahi U), pattern break'},
+];
+let oddIdx=0,oddAnswered=false;
+function renderOdd(){
+  const s=oddSets[oddIdx%oddSets.length];
+  let html=`<div style="margin:.5rem 0;color:#e2e8f0;font-size:.9rem;">Question ${(oddIdx%oddSets.length)+1}/${oddSets.length}: Odd one out kon hai?</div><div style="display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0;">`;
+  s.items.forEach((it,i)=>{
+    html+=`<button onclick="checkOdd(${i})" style="padding:.5rem 1.2rem;background:#1e293b;color:#e2e8f0;border:1.5px solid #334155;border-radius:8px;cursor:pointer;font-size:.9rem;font-weight:600;">${it}</button>`;
+  });
+  html+=`</div><button onclick="oddIdx++;oddAnswered=false;renderOdd()" style="padding:.4rem .9rem;background:#92400e;color:#fff;border:none;border-radius:7px;cursor:pointer;margin-top:.3rem;font-weight:700;">Next →</button>`;
+  document.getElementById('oddGame').innerHTML=html;
+  if(!oddAnswered) document.getElementById('oddFb').textContent='Answer select karo!';
+}
+function checkOdd(i){
+  const s=oddSets[oddIdx%oddSets.length];
+  oddAnswered=true;
+  const correct=i===s.odd;
+  document.getElementById('oddFb').textContent=(correct?'✅ Sahi!':'❌ Galat! ')+' Correct answer: '+s.items[s.odd]+'
+Reason: '+s.reason;
+  document.getElementById('oddFb').style.color=correct?'#86efac':'#fca5a5';
+}
+renderOdd();
+
+// Lab 2: Coding
+function encodeWord(){
+  const word=document.getElementById('codeWord').value.toUpperCase().replace(/[^A-Z]/g,'');
+  const shift=parseInt(document.getElementById('shift').value);
+  document.getElementById('shiftV').textContent=(shift>=0?'+':'')+shift;
+  const encoded=word.split('').map(c=>{const n=(c.charCodeAt(0)-65+shift+26)%26;return String.fromCharCode(65+n);}).join('');
+  const c=document.getElementById('codeCanvas'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const step=Math.min(W/(Math.max(word.length,1)+1),80);
+  const ox=(W-step*word.length)/2;
+  word.split('').forEach((ch,i)=>{
+    const x=ox+i*step+step/2,sy=70,ty=160;
+    const enc=encoded[i];
+    // Original
+    ctx.fillStyle='#fde68a';ctx.beginPath();ctx.arc(x,sy,28,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#451a03';ctx.font='bold 18px monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(ch,x,sy);
+    ctx.fillStyle='#94a3b8';ctx.font='10px Inter';ctx.fillText((ch.charCodeAt(0)-64),x,sy+38);
+    // Arrow
+    ctx.strokeStyle='#d97706';ctx.lineWidth=1.5;ctx.setLineDash([3,3]);
+    ctx.beginPath();ctx.moveTo(x,sy+28);ctx.lineTo(x,ty-28);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#d97706';ctx.font='10px Inter';ctx.fillText(`+${shift}`,x+4,sy+55);
+    // Encoded
+    ctx.fillStyle='#d97706';ctx.beginPath();ctx.arc(x,ty,28,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#fff';ctx.font='bold 18px monospace';ctx.fillText(enc,x,ty);
+    ctx.fillStyle='#94a3b8';ctx.font='10px Inter';ctx.fillText((enc.charCodeAt(0)-64),x,ty+38);
+  });
+  ctx.textAlign='left';ctx.textBaseline='alphabetic';
+  document.getElementById('codeEq').textContent=`Original: ${word}
+Encoded:  ${encoded}
+Shift: ${shift>=0?'+':''}${shift} (har letter ko ${Math.abs(shift)} position ${shift>=0?'aage':'peeche'} shift karo)
+Decode: ${shift>=0?'+':'-'}${Math.abs(shift)} se reverse shift karo`;
+}
+encodeWord();
+
+// Lab 3: Syllogism
+function drawSyll(){
+  const type=document.getElementById('syllType').value;
+  const c=document.getElementById('syllCanvas'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,PI=Math.PI;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const cx=W/2,cy=H/2;
+  if(type==='all_all'){
+    ctx.globalAlpha=0.4;ctx.fillStyle='#6366f1';ctx.beginPath();ctx.arc(cx,cy,110,0,PI*2);ctx.fill();
+    ctx.fillStyle='#f59e0b';ctx.beginPath();ctx.arc(cx,cy,75,0,PI*2);ctx.fill();
+    ctx.fillStyle='#22c55e';ctx.beginPath();ctx.arc(cx,cy,40,0,PI*2);ctx.fill();
+    ctx.globalAlpha=1;
+    ctx.strokeStyle='#a5b4fc';ctx.lineWidth=2;ctx.beginPath();ctx.arc(cx,cy,110,0,PI*2);ctx.stroke();
+    ctx.strokeStyle='#fbbf24';ctx.beginPath();ctx.arc(cx,cy,75,0,PI*2);ctx.stroke();
+    ctx.strokeStyle='#86efac';ctx.beginPath();ctx.arc(cx,cy,40,0,PI*2);ctx.stroke();
+    ctx.fillStyle='#e2e8f0';ctx.font='bold 13px Inter';ctx.textAlign='center';
+    ctx.fillText('C',cx,cy-120);ctx.fillText('B',cx,cy-80);ctx.fillText('A',cx,cy);
+    document.getElementById('syllEq').textContent='All A are B (A ⊂ B) + All B are C (B ⊂ C)
+→ All A are C (A ⊂ C) ✓ VALID CONCLUSION';
+  } else if(type==='some_all'){
+    ctx.globalAlpha=0.4;ctx.fillStyle='#6366f1';ctx.beginPath();ctx.arc(cx-20,cy,110,0,PI*2);ctx.fill();
+    ctx.fillStyle='#f59e0b';ctx.beginPath();ctx.arc(cx+30,cy,75,0,PI*2);ctx.fill();
+    ctx.globalAlpha=1;
+    ctx.strokeStyle='#a5b4fc';ctx.lineWidth=2;ctx.beginPath();ctx.arc(cx-20,cy,110,0,PI*2);ctx.stroke();
+    ctx.strokeStyle='#fbbf24';ctx.beginPath();ctx.arc(cx+30,cy,75,0,PI*2);ctx.stroke();
+    ctx.fillStyle='#e2e8f0';ctx.font='bold 13px Inter';ctx.textAlign='center';
+    ctx.fillText('A',cx-80,cy);ctx.fillText('B/C',cx+80,cy);
+    document.getElementById('syllEq').textContent='Some A are B + All B are C
+→ Some A are C (where A and B overlap) ✓ VALID';
+  } else if(type==='no_all'){
+    ctx.globalAlpha=0.4;ctx.fillStyle='#ef4444';ctx.beginPath();ctx.arc(cx-120,cy,80,0,PI*2);ctx.fill();
+    ctx.fillStyle='#6366f1';ctx.beginPath();ctx.arc(cx+60,cy,100,0,PI*2);ctx.fill();
+    ctx.fillStyle='#f59e0b';ctx.beginPath();ctx.arc(cx+60,cy,60,0,PI*2);ctx.fill();
+    ctx.globalAlpha=1;
+    ctx.strokeStyle='#fca5a5';ctx.lineWidth=2;ctx.beginPath();ctx.arc(cx-120,cy,80,0,PI*2);ctx.stroke();
+    ctx.strokeStyle='#a5b4fc';ctx.beginPath();ctx.arc(cx+60,cy,100,0,PI*2);ctx.stroke();
+    ctx.strokeStyle='#fbbf24';ctx.beginPath();ctx.arc(cx+60,cy,60,0,PI*2);ctx.stroke();
+    ctx.fillStyle='#e2e8f0';ctx.font='bold 13px Inter';ctx.textAlign='center';
+    ctx.fillText('A',cx-120,cy);ctx.fillText('C',cx+60,cy-105);ctx.fillText('B',cx+60,cy);
+    document.getElementById('syllEq').textContent='No A is B (A∩B=∅) + All B are C
+→ No A is C ✓ VALID (A is separate, B⊂C, so A and C cannot overlap)';
+  } else {
+    ctx.globalAlpha=0.4;ctx.fillStyle='#6366f1';ctx.beginPath();ctx.arc(cx-30,cy,90,0,PI*2);ctx.fill();
+    ctx.fillStyle='#f59e0b';ctx.beginPath();ctx.arc(cx+30,cy,90,0,PI*2);ctx.fill();
+    ctx.fillStyle='#22c55e';ctx.beginPath();ctx.arc(cx+80,cy,60,0,PI*2);ctx.fill();
+    ctx.globalAlpha=1;
+    ctx.strokeStyle='#a5b4fc';ctx.lineWidth=2;ctx.beginPath();ctx.arc(cx-30,cy,90,0,PI*2);ctx.stroke();
+    ctx.strokeStyle='#fbbf24';ctx.beginPath();ctx.arc(cx+30,cy,90,0,PI*2);ctx.stroke();
+    ctx.strokeStyle='#86efac';ctx.beginPath();ctx.arc(cx+80,cy,60,0,PI*2);ctx.stroke();
+    ctx.fillStyle='#e2e8f0';ctx.font='bold 13px Inter';ctx.textAlign='center';
+    ctx.fillText('A',cx-70,cy);ctx.fillText('B',cx+10,cy-95);ctx.fillText('C',cx+80,cy-65);
+    document.getElementById('syllEq').textContent='All A are B + Some B are C
+→ UNCERTAIN: Some A may or may not be C
+(The "some B" that are C might not include the B that overlaps with A)';
+  }
+  ctx.textAlign='left';
+}
+drawSyll();
+</script>
+</div>
+  <footer style="text-align:center;padding:1.5rem;color:#94a3b8;font-size:.82rem;">© 2024 AIkiPadhai</footer>
+</body></html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+<title>Statistics Lab — Applied Maths 11 | AIkiPadhai</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../../style.css"/>
+<style>body{background:#0d1117;color:#e2e8f0;font-family:'Inter',sans-serif;}
+h1,h2,h3,h4{color:#f1f5f9!important;}p{color:#cbd5e1;}.hero h1{color:#fff!important;}nav a{color:#94a3b8;}
+.lw{max-width:960px;margin:2rem auto;padding:0 1.2rem;}
+.lc{background:#161b22;border:1px solid #30363d;border-radius:14px;padding:1.6rem;margin:1.4rem 0;}
+.lc h3{color:#86efac!important;margin:0 0 .5rem;}.hint{color:#64748b;font-size:.88rem;margin:.3rem 0 .8rem;}
+canvas{border-radius:10px;display:block;margin:.6rem auto;}
+.ctrl{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;margin:.6rem 0;}
+.btn{padding:.5rem 1.1rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:.88rem;background:linear-gradient(135deg,#059669,#065f46);color:#fff;transition:all .18s;}
+.btn:hover{transform:translateY(-2px);}
+input[type=text]{background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:.4rem .8rem;font-family:monospace;width:300px;}
+input[type=range]{accent-color:#059669;}
+.eq{background:#0a0e1a;border-radius:8px;padding:.75rem 1rem;font-family:monospace;font-size:.88rem;margin:.5rem 0;line-height:1.8;white-space:pre-wrap;color:#86efac;}
+label{color:#94a3b8;font-size:.88rem;}</style>
+</head><body>
+<header><div class="container header-content"><a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+<nav><a href="../index.html">Applied Maths 11</a><a href="index.html">Unit VI</a></nav></div></header>
+<section class="hero" style="background:linear-gradient(135deg,#052e16,#065f46,#059669);">
+<div class="container"><h1>Descriptive Statistics Lab 📊</h1><p>SD calculator, skewness visualizer, scatter plot — sab visual!</p></div></section>
+<div class="lw">
+
+<div class="lc"><h3>📏 Lab 1: Dispersion Calculator</h3>
+<p class="hint">Numbers comma separated enter karo. Range, QD, MD, SD — sab step by step dekho!</p>
+<div class="ctrl">
+<input type="text" id="dataIn" value="4,7,2,9,3,6,8,5">
+<button class="btn" onclick="calcDisp()">Calculate</button>
+</div>
+<canvas id="dispC" width="700" height="200" style="width:100%;background:#0a0e1a;"></canvas>
+<div class="eq" id="dispEq"></div></div>
+
+<div class="lc"><h3>📊 Lab 2: Skewness Visualizer</h3>
+<p class="hint">Sliders se distribution shape change karo. Positive, negative ya symmetric skewness observe karo!</p>
+<div class="ctrl">
+<label>Skewness:</label>
+<input type="range" id="skewSlider" min="-3" max="3" value="0" step="0.1" oninput="drawSkew()">
+<span id="skewV" style="color:#86efac;font-weight:700;">0</span>
+<label>Spread:</label>
+<input type="range" id="spreadSlider" min="1" max="4" value="2" step="0.1" oninput="drawSkew()">
+</div>
+<canvas id="skewC" width="700" height="240" style="width:100%;background:#0a0e1a;"></canvas>
+<div class="eq" id="skewEq"></div></div>
+
+<div class="lc"><h3>🔗 Lab 3: Correlation — Scatter Plot</h3>
+<p class="hint">X aur Y data enter karo. Scatter plot aur Pearson's r automatically calculate hoga!</p>
+<div class="ctrl">
+<label>X values:</label><input type="text" id="xVals" value="2,4,6,8,10" style="width:180px">
+<label>Y values:</label><input type="text" id="yVals" value="5,7,8,10,12" style="width:180px">
+<button class="btn" onclick="drawCorr()">Plot</button>
+</div>
+<canvas id="corrC" width="700" height="280" style="width:100%;background:#0a0e1a;"></canvas>
+<div class="eq" id="corrEq"></div></div>
+</div>
+
+<script>
+const PI=Math.PI;
+function parseData(str){return str.split(',').map(s=>parseFloat(s.trim())).filter(v=>!isNaN(v));}
+function mean(arr){return arr.reduce((a,b)=>a+b,0)/arr.length;}
+function variance(arr){const m=mean(arr);return arr.reduce((a,b)=>a+(b-m)**2,0)/arr.length;}
+function sd(arr){return Math.sqrt(variance(arr));}
+
+function calcDisp(){
+  const data=parseData(document.getElementById('dataIn').value).sort((a,b)=>a-b);
+  if(data.length<2){document.getElementById('dispEq').textContent='Kam se kam 2 values chahiye';return;}
+  const n=data.length,mn=mean(data);
+  const q1pos=(n+1)/4,q3pos=3*(n+1)/4;
+  const q1=data[Math.floor(q1pos)-1]+(q1pos%1)*(data[Math.floor(q1pos)]-data[Math.floor(q1pos)-1]);
+  const q3=data[Math.floor(q3pos)-1]+(q3pos%1)*(data[Math.floor(q3pos)]-data[Math.floor(q3pos)-1]);
+  const range=data[n-1]-data[0],iqr=q3-q1,qd=iqr/2;
+  const sorted=[...data].sort((a,b)=>a-b),mid=n%2===0?(sorted[n/2-1]+sorted[n/2])/2:sorted[Math.floor(n/2)];
+  const md=data.reduce((a,b)=>a+Math.abs(b-mn),0)/n;
+  const sdv=sd(data),variance2=variance(data);
+  const cv=(sdv/mn)*100;
+  // Canvas: number line + box plot
+  const c=document.getElementById('dispC'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const pad=60,cw=W-pad*2,by=H/2;
+  const mn2=data[0]-range*0.1,mx2=data[n-1]+range*0.1,sc=cw/(mx2-mn2);
+  const toX=v=>pad+(v-mn2)*sc;
+  // Baseline
+  ctx.strokeStyle='#334155';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(pad,by);ctx.lineTo(W-pad,by);ctx.stroke();
+  // Data points
+  data.forEach((v,i)=>{ctx.fillStyle='#86efac';ctx.beginPath();ctx.arc(toX(v),by,5,0,PI*2);ctx.fill();
+    ctx.fillStyle='#64748b';ctx.font='9px monospace';ctx.textAlign='center';ctx.fillText(v,toX(v),by+18);});
+  // Box plot (Q1 to Q3)
+  ctx.fillStyle='rgba(5,150,105,0.25)';ctx.fillRect(toX(q1),by-20,toX(q3)-toX(q1),40);
+  ctx.strokeStyle='#059669';ctx.lineWidth=2;ctx.strokeRect(toX(q1),by-20,toX(q3)-toX(q1),40);
+  // Median line
+  ctx.strokeStyle='#fbbf24';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(toX(mid),by-20);ctx.lineTo(toX(mid),by+20);ctx.stroke();
+  // Mean line
+  ctx.strokeStyle='#ef4444';ctx.lineWidth=2;ctx.setLineDash([4,3]);ctx.beginPath();ctx.moveTo(toX(mn),by-25);ctx.lineTo(toX(mn),by+25);ctx.stroke();ctx.setLineDash([]);
+  // SD range
+  ctx.strokeStyle='#a5b4fc';ctx.lineWidth=1.5;
+  [mn-sdv,mn+sdv].forEach(v=>{ctx.beginPath();ctx.moveTo(toX(v),by-15);ctx.lineTo(toX(v),by+15);ctx.stroke();});
+  ctx.beginPath();ctx.moveTo(toX(mn-sdv),by);ctx.lineTo(toX(mn+sdv),by);ctx.stroke();
+  ctx.textAlign='left';
+  // Legend
+  [[20,20,'#fbbf24','Median'],[20,38,'#ef4444','Mean'],[20,56,'#a5b4fc','±1 SD range'],[20,74,'#059669','IQR (Q1-Q3)']].forEach(([x,y,c,t])=>{
+    ctx.fillStyle=c;ctx.fillRect(x,y-8,12,10);ctx.fillStyle='#e2e8f0';ctx.font='10px Inter';ctx.fillText(t,x+16,y);});
+  document.getElementById('dispEq').textContent=
+    `Data: [${data.join(', ')}]  n=${n}
+Mean = ${mn.toFixed(3)},  Median = ${mid.toFixed(3)}
+Range = ${range.toFixed(3)}
+Q1=${q1.toFixed(3)},  Q3=${q3.toFixed(3)},  IQR=${iqr.toFixed(3)},  QD=${qd.toFixed(3)}
+MD (about mean) = ${md.toFixed(3)}
+Variance = ${variance2.toFixed(3)},  SD = ${sdv.toFixed(3)}
+CV = ${cv.toFixed(2)}%  (relative variability)
+Skewness: 3×(Mean-Median)/SD = ${(3*(mn-mid)/sdv).toFixed(3)}`;
+}
+calcDisp();
+
+// Lab 2: Skewness
+function drawSkew(){
+  const sk=parseFloat(document.getElementById('skewSlider').value);
+  const sp=parseFloat(document.getElementById('spreadSlider').value);
+  document.getElementById('skewV').textContent=sk.toFixed(1);
+  const c=document.getElementById('skewC'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const cx=W/2,baseline=H-40;
+  // Generate skewed distribution curve using gamma-like
+  const pts=[];
+  for(let i=0;i<300;i++){
+    const x=(i-150)/50;
+    let y=Math.exp(-x*x/2/sp/sp); // gaussian base
+    if(sk>0) y*=Math.exp(-Math.max(0,-x)*sk*0.5);
+    else if(sk<0) y*=Math.exp(-Math.max(0,x)*(-sk)*0.5);
+    pts.push({x:cx+x*60,y:y});
+  }
+  const maxY=Math.max(...pts.map(p=>p.y));
+  const chartH=H-80;
+  // Fill
+  ctx.beginPath();ctx.moveTo(pts[0].x,baseline);
+  pts.forEach(p=>ctx.lineTo(p.x,baseline-p.y/maxY*chartH));
+  ctx.lineTo(pts[pts.length-1].x,baseline);ctx.closePath();
+  const g=ctx.createLinearGradient(0,baseline-chartH,0,baseline);
+  g.addColorStop(0,'rgba(5,150,105,0.7)');g.addColorStop(1,'rgba(5,150,105,0.1)');
+  ctx.fillStyle=g;ctx.fill();
+  ctx.strokeStyle='#059669';ctx.lineWidth=2.5;ctx.shadowColor='#059669';ctx.shadowBlur=8;
+  ctx.beginPath();pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,baseline-p.y/maxY*chartH):ctx.lineTo(p.x,baseline-p.y/maxY*chartH));ctx.stroke();ctx.shadowBlur=0;
+  // Peak
+  const peakIdx=pts.indexOf(pts.reduce((m,p)=>p.y>m.y?p:m,pts[0]));
+  const modeLine=pts[peakIdx].x;
+  ctx.strokeStyle='#22c55e';ctx.lineWidth=2;ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(modeLine,baseline-chartH);ctx.lineTo(modeLine,baseline);ctx.stroke();ctx.setLineDash([]);
+  const meanLine=cx+sk*20;
+  ctx.strokeStyle='#ef4444';ctx.lineWidth=2;ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(meanLine,baseline-chartH);ctx.lineTo(meanLine,baseline);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#22c55e';ctx.font='10px Inter';ctx.fillText('Mode',modeLine+3,30);
+  ctx.fillStyle='#ef4444';ctx.fillText('Mean',meanLine+3,50);
+  // Label
+  const label=sk>0.2?'Positive Skew (Right tail)':sk<-0.2?'Negative Skew (Left tail)':'Symmetric';
+  ctx.fillStyle='#86efac';ctx.font='bold 14px Inter';ctx.textAlign='center';ctx.fillText(label,cx,20);ctx.textAlign='left';
+  document.getElementById('skewEq').textContent=`Skewness = ${sk.toFixed(1)}
+${sk>0.2?'Positive skew: Tail right mein → Mean > Median > Mode
+→ Income distribution, house prices — aise hote hain':sk<-0.2?'Negative skew: Tail left mein → Mean < Median < Mode
+→ Exam scores (jab zyada log pass ho jaate hain)':'Symmetric (Normal): Mean = Median = Mode
+→ Height, weight, IQ — normally distributed hote hain'}
+Karl Pearson Coefficient ≈ ${sk.toFixed(2)}`;
+}
+drawSkew();
+
+// Lab 3: Correlation
+function drawCorr(){
+  const x=parseData(document.getElementById('xVals').value);
+  const y=parseData(document.getElementById('yVals').value);
+  if(x.length!==y.length||x.length<2){document.getElementById('corrEq').textContent='Equal length data chahiye!';return;}
+  const n=x.length,xm=mean(x),ym=mean(y);
+  const num=x.reduce((s,xi,i)=>s+(xi-xm)*(y[i]-ym),0);
+  const den=Math.sqrt(x.reduce((s,xi)=>s+(xi-xm)**2,0)*y.reduce((s,yi)=>s+(yi-ym)**2,0));
+  const r=num/den;
+  const c=document.getElementById('corrC'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,pad=55,cw=W-pad-20,ch=H-pad-20;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const xMin=Math.min(...x),xMax=Math.max(...x),yMin=Math.min(...y),yMax=Math.max(...y);
+  const xr=xMax-xMin||1,yr=yMax-yMin||1;
+  const toX=v=>pad+(v-xMin)/xr*cw,toY=v=>H-pad-(v-yMin)/yr*ch;
+  ctx.strokeStyle='#1e293b';ctx.lineWidth=1;
+  for(let i=0;i<=5;i++){ctx.beginPath();ctx.moveTo(pad,H-pad-i*ch/5);ctx.lineTo(W-20,H-pad-i*ch/5);ctx.stroke();}
+  ctx.strokeStyle='#475569';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(pad,20);ctx.lineTo(pad,H-pad);ctx.lineTo(W-20,H-pad);ctx.stroke();
+  // Trend line
+  const slope=num/x.reduce((s,xi)=>s+(xi-xm)**2,0);
+  const intercept=ym-slope*xm;
+  ctx.strokeStyle=r>0?'#22c55e':'#ef4444';ctx.lineWidth=1.5;ctx.setLineDash([5,4]);
+  ctx.beginPath();ctx.moveTo(toX(xMin),toY(xMin*slope+intercept));ctx.lineTo(toX(xMax),toY(xMax*slope+intercept));ctx.stroke();ctx.setLineDash([]);
+  // Points
+  x.forEach((xi,i)=>{
+    ctx.fillStyle='#86efac';ctx.beginPath();ctx.arc(toX(xi),toY(y[i]),7,0,PI*2);ctx.fill();
+    ctx.strokeStyle='#059669';ctx.lineWidth=1;ctx.stroke();
+    ctx.fillStyle='#a7f3d0';ctx.font='10px monospace';ctx.textAlign='center';ctx.fillText(`(${xi},${y[i]})`,toX(xi),toY(y[i])-12);
+  });
+  ctx.textAlign='left';
+  ctx.fillStyle='#86efac';ctx.font='bold 14px Inter';
+  ctx.fillText(`r = ${r.toFixed(4)}  (${Math.abs(r)>0.9?'Very Strong':Math.abs(r)>0.7?'Strong':Math.abs(r)>0.5?'Moderate':'Weak'} ${r>0?'Positive':'Negative'} Correlation)`,pad,25);
+  document.getElementById('corrEq').textContent=
+    `n=${n}, x̄=${xm.toFixed(3)}, ȳ=${ym.toFixed(3)}
+Σ(x-x̄)(y-ȳ) = ${num.toFixed(4)}
+Σ(x-x̄)² = ${x.reduce((s,xi)=>s+(xi-xm)**2,0).toFixed(4)}
+Σ(y-ȳ)² = ${y.reduce((s,yi)=>s+(yi-ym)**2,0).toFixed(4)}
+r = ${num.toFixed(4)} / ${den.toFixed(4)} = ${r.toFixed(4)}
+Trend line: y = ${slope.toFixed(4)}x + ${intercept.toFixed(4)}`;
+}
+drawCorr();
+</script>
+</body></html>

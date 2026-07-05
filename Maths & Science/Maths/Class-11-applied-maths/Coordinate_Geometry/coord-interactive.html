@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Coordinate Geometry Lab — Applied Maths 11 | AIkiPadhai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#0d1117;color:#e2e8f0;font-family:'Inter',sans-serif;}
+    h1,h2,h3,h4{color:#f1f5f9!important;} p{color:#cbd5e1;}
+    .hero h1{color:#fff!important;} .hero p{color:#bfdbfe!important;}
+    nav a{color:#94a3b8;}
+    .lab-wrap{max-width:960px;margin:2rem auto;padding:0 1.2rem;}
+    .lab-card{background:#161b22;border:1px solid #30363d;border-radius:14px;padding:1.6rem;margin:1.4rem 0;}
+    .lab-card h3{color:#93c5fd!important;margin:0 0 .4rem;}
+    .lab-card p.hint{color:#64748b;font-size:.88rem;margin:.2rem 0 .8rem;}
+    canvas{border-radius:10px;display:block;margin:.6rem auto;cursor:crosshair;}
+    .controls{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;margin:.6rem 0;}
+    label{color:#94a3b8;font-size:.85rem;}
+    input[type=range]{accent-color:#2563eb;background:#1e293b;border:1px solid #334155;border-radius:6px;padding:.2rem .4rem;width:100px;}
+    input[type=number]{background:#1e293b;color:#93c5fd;border:1px solid #334155;border-radius:6px;padding:.3rem .5rem;width:70px;font-size:.85rem;}
+    .val-badge{background:#1e293b;color:#93c5fd;border:1px solid #334155;border-radius:5px;padding:.15rem .5rem;font-weight:700;min-width:2.2rem;text-align:center;font-size:.83rem;}
+    .eq-display{background:#0a0e1a;border-radius:8px;padding:.7rem 1rem;font-family:monospace;color:#93c5fd;font-size:.88rem;margin:.5rem 0;line-height:1.75;}
+    .btn{padding:.5rem 1.1rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:.88rem;}
+    .btn-v{background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;}
+    select{background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:.3rem .5rem;}
+    .ctrl-group{display:flex;align-items:center;gap:.4rem;}
+  </style>
+</head>
+<body>
+<header><div class="container header-content">
+  <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+  <nav><a href="../index.html">Applied Maths 11</a><a href="index.html">Unit VIII</a><a href="coord-interactive.html" class="active">Lab</a></nav>
+</div></header>
+
+<section class="hero" style="background:linear-gradient(135deg,#0c1a3d,#1e3a5f,#2563eb);">
+  <div class="container"><h1>Coordinate Geometry Lab 📐</h1>
+  <p>Points drag karo, slope live update hota hai — line equations, section formula, distance sab visually!</p></div>
+</section>
+
+<div class="lab-wrap">
+
+<!-- LAB 1: Slope Explorer -->
+<div class="lab-card">
+  <h3>📏 Lab 1: Slope Explorer — Points Drag Karo</h3>
+  <p class="hint">Dono points (blue aur red) ko drag karo. Slope, line equation aur inclination angle real-time update hote hain!</p>
+  <canvas id="slopeCanvas" width="700" height="340" style="width:100%;background:#0a0e1a;"></canvas>
+  <div class="eq-display" id="slopeEq"></div>
+</div>
+
+<!-- LAB 2: Line Equation Forms -->
+<div class="lab-card">
+  <h3>📝 Lab 2: Line Equation — Sab Forms Ek Saath</h3>
+  <p class="hint">m aur c sliders move karo. Dekho line kaisi dikhti hai aur sab 4 forms live update hote hain — slope-intercept, point-slope, intercept, general!</p>
+  <div class="controls">
+    <div class="ctrl-group"><label>Slope m =</label><input type="range" id="lineM" min="-5" max="5" step="0.25" value="2" oninput="drawLineEq()"><span id="lineMv" class="val-badge">2</span></div>
+    <div class="ctrl-group"><label>y-intercept c =</label><input type="range" id="lineC" min="-6" max="6" step="0.5" value="1" oninput="drawLineEq()"><span id="lineCv" class="val-badge">1</span></div>
+  </div>
+  <canvas id="lineCanvas" width="700" height="300" style="width:100%;background:#0a0e1a;"></canvas>
+  <div class="eq-display" id="lineEq"></div>
+</div>
+
+<!-- LAB 3: Section Formula -->
+<div class="lab-card">
+  <h3>📍 Lab 3: Section Formula — Ratio se Division</h3>
+  <p class="hint">A aur B drag karo. Ratio m:n slider se change karo. Point P line ko exact ratio mein divide karta hai — dekho kahan aata hai!</p>
+  <div class="controls">
+    <div class="ctrl-group"><label>m =</label><input type="range" id="secM" min="1" max="9" value="2" oninput="drawSection()"><span id="secMv" class="val-badge">2</span></div>
+    <div class="ctrl-group"><label>n =</label><input type="range" id="secN" min="1" max="9" value="1" oninput="drawSection()"><span id="secNv" class="val-badge">1</span></div>
+    <div class="ctrl-group"><label>Type:</label>
+      <select id="secType" onchange="drawSection()">
+        <option value="internal">Internal Division</option>
+        <option value="external">External Division</option>
+      </select>
+    </div>
+  </div>
+  <canvas id="secCanvas" width="700" height="300" style="width:100%;background:#0a0e1a;cursor:crosshair;"></canvas>
+  <div class="eq-display" id="secEq"></div>
+</div>
+
+<!-- LAB 4: Distance Calculator -->
+<div class="lab-card">
+  <h3>📐 Lab 4: Distance aur Point-to-Line Distance</h3>
+  <p class="hint">Canvas par koi bhi point click karo — wo point se drawn line ki perpendicular distance dikhega! Line equation sliders se change karo.</p>
+  <div class="controls">
+    <div class="ctrl-group"><label>Line: a =</label><input type="number" id="da" value="3" style="width:55px" oninput="drawDist()"></div>
+    <div class="ctrl-group"><label>b =</label><input type="number" id="db" value="-4" style="width:55px" oninput="drawDist()"></div>
+    <div class="ctrl-group"><label>c =</label><input type="number" id="dc" value="5" style="width:55px" oninput="drawDist()"></div>
+    <span style="color:#475569;font-size:.85rem;">→ Line: ax + by + c = 0</span>
+  </div>
+  <canvas id="distCanvas" width="700" height="300" style="width:100%;background:#0a0e1a;cursor:crosshair;"></canvas>
+  <div class="eq-display" id="distEq"></div>
+</div>
+
+</div>
+
+<script>
+const PI=Math.PI,SC=50;
+
+// ====== LAB 1: Slope Explorer ======
+const sC=document.getElementById('slopeCanvas');
+const sCtx=sC.getContext('2d');
+let pts=[{x:-2,y:-2},{x:3,y:3}];
+let dragging1=null;
+const OX=sC.width/2,OY=sC.height/2;
+
+function toCanvas(x,y){return{px:OX+x*SC,py:OY-y*SC};}
+function fromCanvas(px,py){return{x:(px-OX)/SC,y:(OY-py)/SC};}
+
+function drawSlope(){
+  const W=sC.width,H=sC.height;
+  sCtx.clearRect(0,0,W,H);sCtx.fillStyle='#0a0e1a';sCtx.fillRect(0,0,W,H);
+  // Grid
+  sCtx.strokeStyle='#1e293b';sCtx.lineWidth=1;
+  for(let x=OX%SC;x<W;x+=SC){sCtx.beginPath();sCtx.moveTo(x,0);sCtx.lineTo(x,H);sCtx.stroke();}
+  for(let y=OY%SC;y<H;y+=SC){sCtx.beginPath();sCtx.moveTo(0,y);sCtx.lineTo(W,y);sCtx.stroke();}
+  sCtx.strokeStyle='#334155';sCtx.lineWidth=1.5;
+  sCtx.beginPath();sCtx.moveTo(0,OY);sCtx.lineTo(W,OY);sCtx.stroke();
+  sCtx.beginPath();sCtx.moveTo(OX,0);sCtx.lineTo(OX,H);sCtx.stroke();
+  // Axis labels
+  sCtx.fillStyle='#475569';sCtx.font='10px Inter';
+  for(let i=-5;i<=5;i++){if(i){sCtx.fillText(i,OX+i*SC-4,OY+14);sCtx.fillText(-i,OX+4,OY-i*SC+4);}}
+  // Line through both points
+  const [A,B]=pts;
+  const dx=B.x-A.x,dy=B.y-A.y;
+  const m=dx===0?Infinity:dy/dx;
+  const c=dx===0?NaN:A.y-m*A.x;
+  if(dx!==0){
+    const x0=-10,x1=10;
+    const p0=toCanvas(x0,m*x0+c),p1=toCanvas(x1,m*x1+c);
+    sCtx.strokeStyle='#93c5fd';sCtx.lineWidth=2;sCtx.shadowColor='#2563eb';sCtx.shadowBlur=6;
+    sCtx.beginPath();sCtx.moveTo(p0.px,p0.py);sCtx.lineTo(p1.px,p1.py);sCtx.stroke();sCtx.shadowBlur=0;
+  } else {
+    const px=toCanvas(A.x,0).px;
+    sCtx.strokeStyle='#93c5fd';sCtx.lineWidth=2;
+    sCtx.beginPath();sCtx.moveTo(px,0);sCtx.lineTo(px,H);sCtx.stroke();
+  }
+  // Rise/Run triangle
+  if(dx!==0&&Math.abs(dx)>0.1){
+    const pa=toCanvas(A.x,A.y),pb=toCanvas(B.x,A.y),pc=toCanvas(B.x,B.y);
+    sCtx.strokeStyle='#fbbf24';sCtx.lineWidth=1.5;sCtx.setLineDash([4,4]);
+    sCtx.beginPath();sCtx.moveTo(pa.px,pa.py);sCtx.lineTo(pb.px,pb.py);sCtx.stroke();
+    sCtx.strokeStyle='#22c55e';
+    sCtx.beginPath();sCtx.moveTo(pb.px,pb.py);sCtx.lineTo(pc.px,pc.py);sCtx.stroke();
+    sCtx.setLineDash([]);
+    sCtx.fillStyle='#b45309';sCtx.font='10px Inter';sCtx.fillText('Run='+dx.toFixed(1),(pa.px+pb.px)/2-10,pb.py+14);
+    sCtx.fillStyle='#065f46';sCtx.fillText('Rise='+dy.toFixed(1),pb.px+4,(pb.py+pc.py)/2);
+  }
+  // Points
+  [[A,'#3b82f6'],[B,'#ef4444']].forEach(([p,col])=>{
+    const pp=toCanvas(p.x,p.y);
+    sCtx.fillStyle=col;sCtx.beginPath();sCtx.arc(pp.px,pp.py,8,0,PI*2);sCtx.fill();
+    sCtx.fillStyle='#fff';sCtx.font='bold 10px Inter';sCtx.textAlign='center';
+    sCtx.fillText(`(${p.x.toFixed(1)},${p.y.toFixed(1)})`,pp.px,pp.py-12);sCtx.textAlign='left';
+  });
+  // Slope info
+  const mStr=dx===0?'undefined':m.toFixed(3);
+  const theta=dx===0?90:Math.atan(m)*180/PI;
+  const color=m>0?'#22c55e':m<0?'#ef4444':'#fbbf24';
+  sCtx.fillStyle=color;sCtx.font='bold 13px Inter';
+  sCtx.fillText(`m = ${mStr}  |  θ = ${theta.toFixed(1)}°`,10,22);
+  const cStr=c>=0?'+'+c.toFixed(2):c.toFixed(2);
+  document.getElementById('slopeEq').textContent=
+    dx===0?`Vertical line: x = ${A.x.toFixed(2)}
+Slope = undefined
+← Drag points to explore!`:
+    `Points: A(${A.x.toFixed(2)}, ${A.y.toFixed(2)}) and B(${B.x.toFixed(2)}, ${B.y.toFixed(2)})
+`+
+    `Slope m = (${B.y.toFixed(2)}−${A.y.toFixed(2)})/(${B.x.toFixed(2)}−${A.x.toFixed(2)}) = ${m.toFixed(3)}
+`+
+    `Inclination θ = ${theta.toFixed(1)}°
+`+
+    `Line Equation: y = ${m.toFixed(2)}x ${cStr}
+`+
+    `General Form: ${m.toFixed(2)}x − y ${cStr} = 0
+← Blue & Red dots drag karo!`;
+}
+drawSlope();
+
+function hitPt(mx,my,pt){const p=toCanvas(pt.x,pt.y);return Math.hypot(mx-p.px,my-p.py)<14;}
+function evtPos(e,c){
+  const r=c.getBoundingClientRect();
+  const t=e.touches?e.touches[0]:e;
+  return{px:(t.clientX-r.left)*(c.width/r.width),py:(t.clientY-r.top)*(c.height/r.height)};
+}
+sC.addEventListener('mousedown',e=>{const{px,py}=evtPos(e,sC);dragging1=hitPt(px,py,pts[0])?0:hitPt(px,py,pts[1])?1:null;});
+sC.addEventListener('mousemove',e=>{if(dragging1===null)return;const{px,py}=evtPos(e,sC);const p=fromCanvas(px,py);pts[dragging1]={x:Math.round(p.x*2)/2,y:Math.round(p.y*2)/2};drawSlope();});
+sC.addEventListener('mouseup',()=>dragging1=null);sC.addEventListener('mouseleave',()=>dragging1=null);
+sC.addEventListener('touchstart',e=>{e.preventDefault();const{px,py}=evtPos(e,sC);dragging1=hitPt(px,py,pts[0])?0:hitPt(px,py,pts[1])?1:null;},{passive:false});
+sC.addEventListener('touchmove',e=>{e.preventDefault();if(dragging1===null)return;const{px,py}=evtPos(e,sC);const p=fromCanvas(px,py);pts[dragging1]={x:Math.round(p.x*2)/2,y:Math.round(p.y*2)/2};drawSlope();},{passive:false});
+sC.addEventListener('touchend',()=>dragging1=null);
+
+// ====== LAB 2: Line Equation Forms ======
+function drawLineEq(){
+  const m=+document.getElementById('lineM').value;
+  const c2=+document.getElementById('lineC').value;
+  document.getElementById('lineMv').textContent=m;
+  document.getElementById('lineCv').textContent=c2;
+  const can=document.getElementById('lineCanvas'),ctx=can.getContext('2d');
+  const W=can.width,H=can.height,OX2=W/2,OY2=H/2;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  // Grid
+  ctx.strokeStyle='#1e293b';ctx.lineWidth=1;
+  for(let x=OX2%SC;x<W;x+=SC){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=OY2%SC;y<H;y+=SC){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  ctx.strokeStyle='#334155';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(0,OY2);ctx.lineTo(W,OY2);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(OX2,0);ctx.lineTo(OX2,H);ctx.stroke();
+  // Line
+  ctx.strokeStyle='#93c5fd';ctx.lineWidth=2.5;ctx.shadowColor='#2563eb';ctx.shadowBlur=6;
+  ctx.beginPath();
+  for(let px=0;px<W;px++){const x=(px-OX2)/SC,y=m*x+c2,py2=OY2-y*SC;if(px===0)ctx.moveTo(px,py2);else ctx.lineTo(px,py2);}
+  ctx.stroke();ctx.shadowBlur=0;
+  // y-intercept
+  const yiY=OY2-c2*SC;
+  ctx.fillStyle='#fbbf24';ctx.beginPath();ctx.arc(OX2,yiY,6,0,PI*2);ctx.fill();
+  ctx.fillStyle='#fbbf24';ctx.font='11px Inter';ctx.fillText(`y-int (0,${c2})`,OX2+8,yiY-5);
+  // x-intercept
+  if(m!==0){const xi=-c2/m;const xiX=OX2+xi*SC;if(xiX>0&&xiX<W){ctx.fillStyle='#22c55e';ctx.beginPath();ctx.arc(xiX,OY2,6,0,PI*2);ctx.fill();ctx.fillText(`x-int (${xi.toFixed(2)},0)`,xiX+6,OY2-8);}}
+  // Forms
+  const a=m,b=-1,c3=-c2;
+  const mStr=m>=0?`${m}`:m;
+  const xint=m!==0?(-c2/m).toFixed(3):'∞',yint=c2.toFixed(2);
+  document.getElementById('lineEq').textContent=
+    `1. Slope-Intercept: y = ${mStr}x + ${c2}
+`+
+    `2. Point-Slope:     y − ${c2} = ${mStr}(x − 0)  [using point (0,${c2})]
+`+
+    (m!==0?`3. Intercept Form:  x/${xint} + y/${yint} = 1
+`:`3. Intercept Form:  N/A (line parallel to x-axis)
+`)+
+    `4. General Form:    ${a}x + ${b}y + ${c3} = 0
+`+
+    `Slope = ${m}, y-intercept = ${c2}, x-intercept = ${xint}`;
+}
+drawLineEq();
+
+// ====== LAB 3: Section Formula ======
+const secC=document.getElementById('secCanvas');
+const secCtx=secC.getContext('2d');
+let secPts=[{x:-3,y:0},{x:3,y:0}];let draggingSec=null;
+
+function drawSection(){
+  const m2=+document.getElementById('secM').value;
+  const n2=+document.getElementById('secN').value;
+  const type=document.getElementById('secType').value;
+  document.getElementById('secMv').textContent=m2;
+  document.getElementById('secNv').textContent=n2;
+  const W=secC.width,H=secC.height,OX3=W/2,OY3=H/2;
+  secCtx.clearRect(0,0,W,H);secCtx.fillStyle='#0a0e1a';secCtx.fillRect(0,0,W,H);
+  // Grid
+  secCtx.strokeStyle='#1e293b';secCtx.lineWidth=1;
+  for(let x=OX3%SC;x<W;x+=SC){secCtx.beginPath();secCtx.moveTo(x,0);secCtx.lineTo(x,H);secCtx.stroke();}
+  for(let y=OY3%SC;y<H;y+=SC){secCtx.beginPath();secCtx.moveTo(0,y);secCtx.lineTo(W,y);secCtx.stroke();}
+  secCtx.strokeStyle='#334155';secCtx.lineWidth=1.5;
+  secCtx.beginPath();secCtx.moveTo(0,OY3);secCtx.lineTo(W,OY3);secCtx.stroke();
+  secCtx.beginPath();secCtx.moveTo(OX3,0);secCtx.lineTo(OX3,H);secCtx.stroke();
+  const [A,B]=secPts;
+  function tc(p){return{px:OX3+p.x*SC,py:OY3-p.y*SC};}
+  const pA=tc(A),pB=tc(B);
+  // Line A to B
+  secCtx.strokeStyle='#334155';secCtx.lineWidth=2;
+  secCtx.beginPath();secCtx.moveTo(pA.px,pA.py);secCtx.lineTo(pB.px,pB.py);secCtx.stroke();
+  // Division point
+  let px,py;
+  if(type==='internal'){
+    px=(m2*B.x+n2*A.x)/(m2+n2);py=(m2*B.y+n2*A.y)/(m2+n2);
+  } else {
+    if(m2===n2){px=Infinity;py=Infinity;}
+    else{px=(m2*B.x-n2*A.x)/(m2-n2);py=(m2*B.y-n2*A.y)/(m2-n2);}
+  }
+  // Draw points
+  [['A',A,'#3b82f6'],[' B',B,'#ef4444']].forEach(([lbl,pt,col])=>{
+    const pp=tc(pt);
+    secCtx.fillStyle=col;secCtx.beginPath();secCtx.arc(pp.px,pp.py,8,0,PI*2);secCtx.fill();
+    secCtx.fillStyle=col;secCtx.font='bold 11px Inter';secCtx.textAlign='center';
+    secCtx.fillText(`${lbl}(${pt.x.toFixed(1)},${pt.y.toFixed(1)})`,pp.px,pp.py-13);secCtx.textAlign='left';
+  });
+  if(isFinite(px)&&isFinite(py)){
+    const pP=tc({x:px,y:py});
+    // Labels on line segments
+    secCtx.fillStyle='#fbbf24';secCtx.font='bold 12px Inter';secCtx.textAlign='center';
+    secCtx.fillText(m2,(pA.px+pP.px)/2,(pA.py+pP.py)/2-10);
+    secCtx.fillText(n2,(pP.px+pB.px)/2,(pP.py+pB.py)/2-10);secCtx.textAlign='left';
+    secCtx.fillStyle='#a78bfa';secCtx.beginPath();secCtx.arc(pP.px,pP.py,8,0,PI*2);secCtx.fill();
+    secCtx.fillStyle='#a78bfa';secCtx.font='bold 11px Inter';secCtx.textAlign='center';
+    secCtx.fillText(`P(${px.toFixed(2)},${py.toFixed(2)})`,pP.px,pP.py+20);secCtx.textAlign='left';
+    document.getElementById('secEq').textContent=
+      `A = (${A.x.toFixed(2)}, ${A.y.toFixed(2)}),  B = (${B.x.toFixed(2)}, ${B.y.toFixed(2)})
+Ratio = ${m2}:${n2}  (${type} division)
+`+
+      (type==='internal'?
+       `P_x = (${m2}×${B.x.toFixed(2)} + ${n2}×${A.x.toFixed(2)})/(${m2}+${n2}) = ${px.toFixed(3)}
+P_y = (${m2}×${B.y.toFixed(2)} + ${n2}×${A.y.toFixed(2)})/(${m2}+${n2}) = ${py.toFixed(3)}`:
+       `P_x = (${m2}×${B.x.toFixed(2)} − ${n2}×${A.x.toFixed(2)})/(${m2}−${n2}) = ${px.toFixed(3)}
+P_y = (${m2}×${B.y.toFixed(2)} − ${n2}×${A.y.toFixed(2)})/(${m2}−${n2}) = ${py.toFixed(3)}`)+
+      `
+P = (${px.toFixed(3)}, ${py.toFixed(3)})
+← A aur B drag karo, ratio change karo!`;
+  }
+}
+secC.addEventListener('mousedown',e=>{const{px,py}=evtPos(e,secC);const OX3=secC.width/2,OY3=secC.height/2;
+  function fc(px2,py2){return{x:(px2-OX3)/SC,y:(OY3-py2)/SC};}
+  function hit(pt){const p={px:OX3+pt.x*SC,py:OY3-pt.y*SC};return Math.hypot(px-p.px,py-p.py)<14;}
+  draggingSec=hit(secPts[0])?0:hit(secPts[1])?1:null;});
+secC.addEventListener('mousemove',e=>{if(draggingSec===null)return;const{px,py}=evtPos(e,secC);const OX3=secC.width/2,OY3=secC.height/2;secPts[draggingSec]={x:Math.round((px-OX3)/SC*2)/2,y:Math.round((OY3-py)/SC*2)/2};drawSection();});
+secC.addEventListener('mouseup',()=>draggingSec=null);
+drawSection();
+
+// ====== LAB 4: Distance ======
+let clickPt={x:2,y:3};
+function drawDist(){
+  const a=+document.getElementById('da').value||3;
+  const b=+document.getElementById('db').value||-4;
+  const c4=+document.getElementById('dc').value||5;
+  const can=document.getElementById('distCanvas'),ctx=can.getContext('2d');
+  const W=can.width,H=can.height,OX4=W/2,OY4=H/2;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  // Grid
+  ctx.strokeStyle='#1e293b';ctx.lineWidth=1;
+  for(let x=OX4%SC;x<W;x+=SC){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=OY4%SC;y<H;y+=SC){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  ctx.strokeStyle='#334155';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(0,OY4);ctx.lineTo(W,OY4);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(OX4,0);ctx.lineTo(OX4,H);ctx.stroke();
+  // Line: ax + by + c = 0 → y = -(a*x+c)/b
+  if(b!==0){
+    ctx.strokeStyle='#93c5fd';ctx.lineWidth=2.5;ctx.shadowColor='#2563eb';ctx.shadowBlur=5;
+    ctx.beginPath();
+    for(let px=0;px<W;px++){const x=(px-OX4)/SC,y=-(a*x+c4)/b,py2=OY4-y*SC;px===0?ctx.moveTo(px,py2):ctx.lineTo(px,py2);}
+    ctx.stroke();ctx.shadowBlur=0;
+  }
+  // Point
+  const ppx=OX4+clickPt.x*SC,ppy=OY4-clickPt.y*SC;
+  ctx.fillStyle='#fbbf24';ctx.beginPath();ctx.arc(ppx,ppy,7,0,PI*2);ctx.fill();
+  ctx.fillStyle='#fbbf24';ctx.font='bold 11px Inter';ctx.fillText(`P(${clickPt.x.toFixed(1)},${clickPt.y.toFixed(1)})`,ppx+8,ppy-6);
+  // Perpendicular foot
+  if(b!==0){
+    const d2=a*a+b*b;
+    const fx=(b*(b*clickPt.x-a*clickPt.y)-a*c4)/d2;
+    const fy=(a*(-b*clickPt.x+a*clickPt.y)-b*c4)/d2;
+    const fpx=OX4+fx*SC,fpy=OY4-fy*SC;
+    ctx.strokeStyle='#a78bfa';ctx.lineWidth=1.5;ctx.setLineDash([5,4]);
+    ctx.beginPath();ctx.moveTo(ppx,ppy);ctx.lineTo(fpx,fpy);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#a78bfa';ctx.beginPath();ctx.arc(fpx,fpy,5,0,PI*2);ctx.fill();
+    // Right angle mark
+    ctx.strokeStyle='#a78bfa33';ctx.lineWidth=1;
+    const dist=Math.abs(a*clickPt.x+b*clickPt.y+c4)/Math.sqrt(d2);
+    ctx.fillStyle='#22c55e';ctx.font='bold 13px Inter';ctx.fillText(`d = ${dist.toFixed(3)} units`,10,25);
+    document.getElementById('distEq').textContent=
+      `Line: ${a}x + ${b}y + ${c4} = 0
+Point P: (${clickPt.x.toFixed(2)}, ${clickPt.y.toFixed(2)})
+`+
+      `Formula: d = |ax₀+by₀+c| / √(a²+b²)
+`+
+      `= |${a}×${clickPt.x.toFixed(2)} + ${b}×${clickPt.y.toFixed(2)} + ${c4}| / √(${a*a}+${b*b})
+`+
+      `= |${(a*clickPt.x+b*clickPt.y+c4).toFixed(3)}| / ${Math.sqrt(d2).toFixed(3)}
+`+
+      `= ${dist.toFixed(4)} units
+← Canvas click karo point move karne ke liye!`;
+  }
+}
+document.getElementById('distCanvas').addEventListener('click',e=>{
+  const can=document.getElementById('distCanvas');
+  const{px,py}=evtPos(e,can);
+  clickPt={x:(px-can.width/2)/SC,y:(can.height/2-py)/SC};
+  drawDist();
+});
+drawDist();
+['da','db','dc'].forEach(id=>document.getElementById(id).addEventListener('input',drawDist));
+</script>
+</body></html>

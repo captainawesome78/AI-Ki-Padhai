@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Numbers Lab — Class 11 Applied Maths | AIkiPadhai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#0d1117;color:#e2e8f0;font-family:'Inter',sans-serif;}
+    h1,h2,h3,h4{color:#f1f5f9!important;} p{color:#cbd5e1;}
+    .hero h1{color:#fff!important;} .hero p{color:#99f6e4!important;}
+    nav a{color:#94a3b8;}
+    .lab-wrap{max-width:960px;margin:2rem auto;padding:0 1.2rem;}
+    .lab-card{background:#161b22;border:1px solid #30363d;border-radius:14px;padding:1.6rem;margin:1.4rem 0;}
+    .lab-card h3{color:#5eead4!important;margin:0 0 .5rem;}
+    .lab-card p.hint{color:#64748b;font-size:.88rem;margin:.3rem 0 .8rem;}
+    .controls{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;margin:.6rem 0;}
+    .btn{padding:.5rem 1.2rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:.88rem;transition:all .18s;}
+    .btn-v{background:linear-gradient(135deg,#0d9488,#0f766e);color:#fff;}
+    .btn-v:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(13,148,136,.4);}
+    .btn-g{background:#1e293b;color:#5eead4;border:1px solid #334155;}
+    input[type=text],input[type=number]{background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:.4rem .8rem;font-size:.9rem;width:120px;}
+    input[type=range]{accent-color:#0d9488;}
+    .eq-display{background:#0a0e1a;border-radius:8px;padding:.8rem 1rem;font-family:monospace;color:#5eead4;font-size:.9rem;margin:.5rem 0;line-height:1.8;white-space:pre-wrap;}
+    .result-big{font-size:2rem;font-weight:800;color:#5eead4;text-align:center;padding:1rem;background:#0a0e1a;border-radius:10px;margin:.5rem 0;}
+    canvas{border-radius:10px;display:block;margin:.6rem auto;}
+    label{color:#94a3b8;font-size:.88rem;}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    @media(max-width:580px){.two-col{grid-template-columns:1fr;}}
+    .step-display{background:#0a0e1a;border-radius:8px;padding:.7rem 1rem;margin:.4rem 0;}
+    .step-row{display:flex;justify-content:space-between;padding:.2rem 0;border-bottom:1px solid #1e293b;font-family:monospace;font-size:.85rem;}
+    .step-row:last-child{border-bottom:none;color:#5eead4;font-weight:700;}
+  </style>
+</head>
+<body>
+  <header><div class="container header-content">
+    <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+    <nav><a href="../index.html">Applied Maths 11</a><a href="index.html">Unit I</a><a href="numbers-interactive.html" class="active">Lab</a></nav>
+  </div></header>
+
+  <section class="hero" style="background:linear-gradient(135deg,#042f2e,#0f766e,#0d9488);">
+    <div class="container"><h1>Numbers Lab 🔢</h1><p>Binary converter, log calculator, clock visualizer, time-work solver — sab interactive!</p></div>
+  </section>
+
+  <div class="lab-wrap">
+
+    <!-- LAB 1: Binary Converter -->
+    <div class="lab-card">
+      <h3>🔄 Lab 1: Binary ↔ Decimal Converter (Step-by-Step)</h3>
+      <p class="hint">Number type karo aur step-by-step conversion dekho. Division method visually samjho!</p>
+      <div class="two-col">
+        <div>
+          <label>Decimal → Binary:</label>
+          <div class="controls">
+            <input type="number" id="decIn" value="25" min="0" max="1023" oninput="dec2bin()">
+            <button class="btn btn-v" onclick="dec2bin()">Convert</button>
+          </div>
+          <div id="d2bSteps" class="step-display"></div>
+          <div id="d2bResult" class="result-big" style="font-size:1.3rem;"></div>
+        </div>
+        <div>
+          <label>Binary → Decimal:</label>
+          <div class="controls">
+            <input type="text" id="binIn" value="11001" oninput="bin2dec()">
+            <button class="btn btn-v" onclick="bin2dec()">Convert</button>
+          </div>
+          <div id="b2dSteps" class="step-display"></div>
+          <div id="b2dResult" class="result-big" style="font-size:1.3rem;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LAB 2: Log Calculator -->
+    <div class="lab-card">
+      <h3>📊 Lab 2: Logarithm Explorer</h3>
+      <p class="hint">Base aur number change karo. Log ki definition, value aur graph sab dekho — laws bhi verify karo!</p>
+      <div class="controls">
+        <label>log base =</label>
+        <input type="number" id="logBase" value="10" min="2" max="100" step="1" oninput="drawLogLab()">
+        <label>N =</label>
+        <input type="range" id="logN" min="1" max="1000" value="100" oninput="drawLogLab()">
+        <span id="logNval" style="color:#5eead4;font-weight:700;min-width:3rem;">100</span>
+      </div>
+      <canvas id="logCanvas" width="700" height="260" style="width:100%;background:#0a0e1a;"></canvas>
+      <div class="eq-display" id="logEq"></div>
+    </div>
+
+    <!-- LAB 3: Clock Angle Visualizer -->
+    <div class="lab-card">
+      <h3>🕐 Lab 3: Clock Angle Visualizer</h3>
+      <p class="hint">Hours aur minutes slider se set karo. Angle between hands automatically calculate hoga aur clock draw hoga!</p>
+      <div class="controls">
+        <label>Hours:</label>
+        <input type="range" id="clkH" min="0" max="11" value="3" oninput="drawClock()">
+        <span id="clkHv" style="color:#5eead4;font-weight:700;">3</span>
+        <label>Minutes:</label>
+        <input type="range" id="clkM" min="0" max="59" value="20" oninput="drawClock()">
+        <span id="clkMv" style="color:#5eead4;font-weight:700;">20</span>
+      </div>
+      <canvas id="clockCanvas" width="700" height="300" style="width:100%;background:#0a0e1a;"></canvas>
+      <div class="eq-display" id="clockEq"></div>
+    </div>
+
+    <!-- LAB 4: Time-Work Solver -->
+    <div class="lab-card">
+      <h3>⚙️ Lab 4: Time & Work — Visual Calculator</h3>
+      <p class="hint">A aur B ke individual work days enter karo. Dekho: combined work rate, time together, aur daily progress bar!</p>
+      <div class="controls">
+        <label>A completes in</label>
+        <input type="number" id="daysA" value="12" min="1" max="100"> days
+        <label>B completes in</label>
+        <input type="number" id="daysB" value="15" min="1" max="100"> days
+        <button class="btn btn-v" onclick="drawWork()">Calculate</button>
+      </div>
+      <canvas id="workCanvas" width="700" height="240" style="width:100%;background:#0a0e1a;"></canvas>
+      <div class="eq-display" id="workEq"></div>
+    </div>
+
+  </div>
+
+<script>
+// ==================== LAB 1: Binary Converter ====================
+function dec2bin(){
+  const n=parseInt(document.getElementById('decIn').value)||0;
+  if(n<0||n>1023){document.getElementById('d2bSteps').innerHTML='<span style="color:#ef4444">0–1023 range mein enter karo</span>';return;}
+  let num=n,steps=[],bits=[];
+  if(num===0){steps.push({div:0,q:0,r:0});bits=['0'];}
+  while(num>0){const q=Math.floor(num/2),r=num%2;steps.push({div:num,q,r});bits.unshift(r);num=q;}
+  const result=bits.join('');
+  let html='';
+  steps.forEach(s=>{
+    html+=`<div class="step-row"><span>${s.div} ÷ 2</span><span>= ${s.q}</span><span>remainder <b style="color:#5eead4">${s.r}</b></span></div>`;
+  });
+  html+=`<div class="step-row"><span>↑ Remainders bottom to top</span><span></span><span style="color:#5eead4">= ${result}</span></div>`;
+  document.getElementById('d2bSteps').innerHTML=html;
+  document.getElementById('d2bResult').textContent=`${n}₁₀ = ${result}₂`;
+}
+
+function bin2dec(){
+  const s=document.getElementById('binIn').value.trim();
+  if(!/^[01]+$/.test(s)){document.getElementById('b2dSteps').innerHTML='<span style="color:#ef4444">Sirf 0 aur 1 enter karo</span>';return;}
+  let html='',total=0;
+  const arr=s.split('');
+  arr.forEach((bit,i)=>{
+    const pow=arr.length-1-i,val=parseInt(bit)*Math.pow(2,pow);
+    total+=val;
+    html+=`<div class="step-row"><span>${bit} × 2<sup>${pow}</sup></span><span>= ${bit} × ${Math.pow(2,pow)}</span><span>= <b style="color:#5eead4">${val}</b></span></div>`;
+  });
+  html+=`<div class="step-row"><span>Sum</span><span></span><span>= ${total}</span></div>`;
+  document.getElementById('b2dSteps').innerHTML=html;
+  document.getElementById('b2dResult').textContent=`${s}₂ = ${total}₁₀`;
+}
+
+dec2bin(); bin2dec();
+
+// ==================== LAB 2: Log ====================
+function drawLogLab(){
+  const c=document.getElementById('logCanvas'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,pad=60,cw=W-pad-20,ch=H-pad-20;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const base=parseFloat(document.getElementById('logBase').value)||10;
+  const N=parseFloat(document.getElementById('logN').value)||100;
+  document.getElementById('logNval').textContent=N.toFixed(0);
+  if(base<=0||base===1||base===Infinity){document.getElementById('logEq').textContent='Valid base enter karo (>1)';return;}
+  const logN=Math.log(N)/Math.log(base);
+  const maxX=Math.max(N*1.1,10),maxY=Math.max(logN*1.5,5);
+  const ox=pad,oy=H-pad;
+  ctx.strokeStyle='#1e293b';ctx.lineWidth=1;
+  for(let i=0;i<=8;i++){const x=ox+i*(cw/8);ctx.beginPath();ctx.moveTo(x,20);ctx.lineTo(x,oy);ctx.stroke();}
+  for(let i=0;i<=6;i++){const y=oy-i*(ch/6);ctx.beginPath();ctx.moveTo(ox,y);ctx.lineTo(ox+cw,y);ctx.stroke();}
+  ctx.strokeStyle='#475569';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(ox,20);ctx.lineTo(ox,oy);ctx.lineTo(ox+cw,oy);ctx.stroke();
+  // Log curve
+  ctx.strokeStyle='#5eead4';ctx.lineWidth=2.5;ctx.shadowColor='#5eead4';ctx.shadowBlur=5;
+  ctx.beginPath();let first=true;
+  for(let i=1;i<=200;i++){
+    const x=i*(maxX/200);
+    const y=Math.log(x)/Math.log(base);
+    if(!isFinite(y)||y<-maxY)continue;
+    const px=ox+x*(cw/maxX),py=oy-y*(ch/maxY);
+    if(py<20||py>oy+5){first=true;continue;}
+    if(first){ctx.moveTo(px,py);first=false;}else ctx.lineTo(px,py);
+  }
+  ctx.stroke();ctx.shadowBlur=0;
+  // Point N
+  const px=ox+N*(cw/maxX),py=oy-logN*(ch/maxY);
+  ctx.fillStyle='#fbbf24';ctx.beginPath();ctx.arc(px,py,7,0,Math.PI*2);ctx.fill();
+  // Dotted lines to axes
+  ctx.setLineDash([4,4]);ctx.strokeStyle='#fbbf24aa';ctx.lineWidth=1.2;
+  ctx.beginPath();ctx.moveTo(px,oy);ctx.lineTo(px,py);ctx.moveTo(ox,py);ctx.lineTo(px,py);ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='#fbbf24';ctx.font='bold 12px Inter';ctx.fillText(`(${N.toFixed(0)}, ${logN.toFixed(3)})`,px+8,py-6);
+  // Axes labels
+  ctx.fillStyle='#64748b';ctx.font='10px Inter';
+  ctx.fillText('N →',ox+cw+4,oy+5);ctx.fillText('log(N) ↑',ox-50,25);
+  document.getElementById('logEq').textContent=
+    `log${base === 10 ? '' : '₋' + base}(${N.toFixed(0)}) = log(${N.toFixed(0)}) / log(${base}) = ${(Math.log(N)).toFixed(4)} / ${Math.log(base).toFixed(4)} = ${logN.toFixed(4)}
+`+
+    `→ ${base}^${logN.toFixed(4)} = ${N.toFixed(0)} ✓
+`+
+    `Antilog check: 10^${(Math.log10(N)).toFixed(4)} = ${N.toFixed(2)}
+`+
+    `Natural log ln(${N.toFixed(0)}) = ${Math.log(N).toFixed(4)}`;
+}
+drawLogLab();
+
+// ==================== LAB 3: Clock ====================
+function drawClock(){
+  const c=document.getElementById('clockCanvas'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const H_=+document.getElementById('clkH').value;
+  const M=+document.getElementById('clkM').value;
+  document.getElementById('clkHv').textContent=H_;
+  document.getElementById('clkMv').textContent=String(M).padStart(2,'0');
+  const cx=W/3,cy=H/2,r=110;
+  // Clock face
+  ctx.fillStyle='#161b22';ctx.beginPath();ctx.arc(cx,cy,r+5,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='#5eead4';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.stroke();
+  // Numbers
+  for(let i=1;i<=12;i++){
+    const ang=i*30*Math.PI/180-Math.PI/2;
+    ctx.fillStyle='#e2e8f0';ctx.font='bold 12px Inter';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(i,cx+Math.cos(ang)*(r-18),cy+Math.sin(ang)*(r-18));
+  }
+  // Tick marks
+  for(let i=0;i<60;i++){
+    const ang=i*6*Math.PI/180-Math.PI/2;
+    const len=i%5===0?10:5;
+    ctx.strokeStyle=i%5===0?'#5eead4':'#334155';ctx.lineWidth=i%5===0?2:1;
+    ctx.beginPath();ctx.moveTo(cx+Math.cos(ang)*(r-len),cy+Math.sin(ang)*(r-len));
+    ctx.lineTo(cx+Math.cos(ang)*r,cy+Math.sin(ang)*r);ctx.stroke();
+  }
+  // Hour hand
+  const hAng=(H_*30+M*0.5)*Math.PI/180-Math.PI/2;
+  ctx.strokeStyle='#fbbf24';ctx.lineWidth=5;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(hAng)*70,cy+Math.sin(hAng)*70);ctx.stroke();
+  // Minute hand
+  const mAng=M*6*Math.PI/180-Math.PI/2;
+  ctx.strokeStyle='#5eead4';ctx.lineWidth=3;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(mAng)*95,cy+Math.sin(mAng)*95);ctx.stroke();
+  ctx.fillStyle='#5eead4';ctx.beginPath();ctx.arc(cx,cy,5,0,Math.PI*2);ctx.fill();
+  // Angle arc
+  let theta=Math.abs(30*H_-5.5*M);if(theta>180)theta=360-theta;
+  ctx.textAlign='left';
+  // Info panel
+  const ix=W/2+20,iy=50;
+  ctx.fillStyle='#1e293b';ctx.fillRect(ix,iy,260,180);ctx.strokeStyle='#334155';ctx.lineWidth=1;ctx.strokeRect(ix,iy,260,180);
+  ctx.fillStyle='#5eead4';ctx.font='bold 14px Inter';ctx.fillText(`Time: ${H_}:${String(M).padStart(2,'0')}`,ix+15,iy+30);
+  ctx.fillStyle='#e2e8f0';ctx.font='13px Inter';
+  ctx.fillText(`Hour hand: ${(H_*30+M*0.5).toFixed(1)}° from 12`,ix+15,iy+60);
+  ctx.fillText(`Minute hand: ${(M*6).toFixed(0)}° from 12`,ix+15,iy+85);
+  ctx.fillStyle='#fbbf24';ctx.font='bold 15px Inter';
+  ctx.fillText(`Angle = |30×${H_} − 5.5×${M}|`,ix+15,iy+115);
+  ctx.fillText(`      = |${30*H_} − ${(5.5*M).toFixed(1)}|`,ix+15,iy+135);
+  ctx.fillText(`      = ${theta.toFixed(1)}°`,ix+15,iy+160);
+  document.getElementById('clockEq').textContent=
+    `Formula: θ = |30H − 5.5M|
+At ${H_}:${String(M).padStart(2,'0')}: θ = |30×${H_} − 5.5×${M}| = |${30*H_} − ${(5.5*M).toFixed(1)}| = ${theta.toFixed(1)}°
+${theta<0.5?'→ Hands almost coincide!':theta===90?'→ Hands perpendicular!':theta>170?'→ Hands almost opposite!':''}`;
+}
+drawClock();
+
+// ==================== LAB 4: Time & Work ====================
+function drawWork(){
+  const a=parseFloat(document.getElementById('daysA').value)||12;
+  const b=parseFloat(document.getElementById('daysB').value)||15;
+  const c=document.getElementById('workCanvas'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const together=a*b/(a+b);
+  const totalDays=Math.ceil(together)+1;
+  const barW=(W-80)/(totalDays);
+  // Animate work accumulation
+  let cumA=0,cumB=0,cumT=0;
+  for(let d=0;d<=totalDays;d++){
+    const xa=40+d*barW;
+    const ha=(cumA/1)*160,hb=(cumB/1)*160,ht=(cumT/1)*160;
+    if(d>0){
+      ctx.fillStyle='#3b82f6aa';ctx.fillRect(xa-barW,H-40-ha,barW*0.3,ha);
+      ctx.fillStyle='#22c55eaa';ctx.fillRect(xa-barW+barW*0.35,H-40-hb,barW*0.3,hb);
+      ctx.fillStyle='#fbbf24';ctx.fillRect(xa-barW+barW*0.7,H-40-ht,barW*0.25,ht);
+    }
+    cumA=Math.min(1,cumA+1/a);cumB=Math.min(1,cumB+1/b);cumT=Math.min(1,cumT+1/a+1/b);
+  }
+  // Legend
+  [[W-220,20,'#3b82f6',`A (${a} days)`],[W-220,40,'#22c55e',`B (${b} days)`],[W-220,60,'#fbbf24',`Together (${together.toFixed(1)} days)`]].forEach(([x,y,c,t])=>{
+    ctx.fillStyle=c;ctx.fillRect(x,y,14,12);ctx.fillStyle='#e2e8f0';ctx.font='11px Inter';ctx.fillText(t,x+18,y+10);
+  });
+  // Axis
+  ctx.strokeStyle='#475569';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(40,20);ctx.lineTo(40,H-40);ctx.lineTo(W-20,H-40);ctx.stroke();
+  ctx.fillStyle='#94a3b8';ctx.font='10px Inter';
+  ctx.fillText('Days →',W-60,H-25);ctx.fillText('Work Done ↑',45,15);
+  // Day numbers
+  for(let d=0;d<=Math.min(totalDays,15);d+=2){ctx.fillStyle='#64748b';ctx.font='9px Inter';ctx.fillText(d,40+d*barW-4,H-25);}
+  document.getElementById('workEq').textContent=
+    `A ki rate = 1/${a} per day
+B ki rate = 1/${b} per day
+Combined rate = 1/${a} + 1/${b} = ${b}/${a*b} + ${a}/${a*b} = ${a+b}/${a*b} per day
+Time together = ${a*b}/${a+b} = ${together.toFixed(2)} days ≈ ${Math.ceil(together)} days complete karenge`;
+}
+drawWork();
+</script>
+</body>
+</html>

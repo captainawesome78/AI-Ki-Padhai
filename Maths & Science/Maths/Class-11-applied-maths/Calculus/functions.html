@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Functions — Types aur Graphs | AIkiPadhai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;}
+    .hero{background:linear-gradient(135deg,#450a0a,#991b1b,#dc2626);padding:2.8rem 1rem;text-align:center;}
+    .hero h1{font-family:'Outfit',sans-serif;font-size:1.9rem;color:#fff;margin:0 0 .5rem;}
+    .hero p{color:rgba(255,255,255,.8);font-size:.95rem;max-width:620px;margin:0 auto;}
+    .container{max-width:980px;margin:0 auto;padding:0 1.2rem;}
+    .cs{padding:2rem 1rem;}
+    .card{background:#fff;border-radius:14px;border:1.5px solid #e2e8f0;padding:1.6rem;margin:1.2rem 0;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+    .card h2{font-family:'Outfit',sans-serif;margin:0 0 .8rem;font-size:1.25rem;}
+    .card h3{margin:.9rem 0 .4rem;font-size:1rem;}
+    .fb{border-radius:10px;padding:.85rem 1.1rem;margin:.6rem 0;font-family:monospace;font-size:.9rem;}
+    .eb{border-radius:0 10px 10px 0;padding:.9rem 1.1rem;margin:.7rem 0;border-left-width:4px;border-left-style:solid;}
+    .eb .et{font-weight:700;font-size:.82rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.35rem;}
+    table{width:100%;border-collapse:collapse;margin:.6rem 0;font-size:.87rem;}
+    th{padding:.45rem .7rem;text-align:left;} td{padding:.4rem .7rem;border-bottom:1px solid #e2e8f0;}
+    .tg{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.7rem;margin:.7rem 0;}
+    .tp{border-radius:9px;padding:.6rem .9rem;text-align:center;font-size:.83rem;font-weight:600;}
+    p{color:#334155;line-height:1.7;}
+    footer{text-align:center;padding:1.5rem;color:#94a3b8;font-size:.82rem;border-top:1px solid #e2e8f0;}
+  </style>
+</head>
+<body>
+  <header><div class="container header-content">
+    <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+    <nav><a href="../index.html">Applied Maths 11</a><a href="index.html">Unit IV</a></nav>
+  </div></header>
+  <section class="hero"><div class="container"><h1>Functions — Types aur Graphs</h1><p>Constant, polynomial, logarithm, exponential, modulus — sab function types aur unke graphs</p></div></section>
+  <div class="cs"><div class="container">
+  <div class="card">
+    <h2 style="color:#991b1b">📊 Function — Definition</h2>
+    <p>Function ek rule hai jo har independent variable x ki ek unique dependent variable y deta hai. f: X → Y means f X se Y mein map karta hai.</p>
+    <div class="fb" style="background:#fef2f2;border:1.5px solid #fca5a5;color:#450a0a">
+Domain = x ki valid values ka set (input)
+Co-domain = y ki saari possible values (declared range)
+Range = f(x) ki actual values ka set (always ⊆ Co-domain)
+    </div>
+  </div>
+  <div class="card">
+    <h2 style="color:#991b1b">📋 Types of Functions</h2>
+    <table>
+      <tr><th>Function</th><th>Form</th><th>Graph Shape</th><th>Example</th></tr>
+      <tr><td>Constant</td><td>f(x) = c</td><td>Horizontal line</td><td>f(x) = 5</td></tr>
+      <tr><td>Identity</td><td>f(x) = x</td><td>45° line through origin</td><td>f(x) = x</td></tr>
+      <tr><td>Linear</td><td>f(x) = mx+c</td><td>Straight line</td><td>f(x) = 2x+3</td></tr>
+      <tr><td>Polynomial</td><td>f(x) = aₙxⁿ+...+a₀</td><td>Smooth curve</td><td>f(x) = x²−3x+2</td></tr>
+      <tr><td>Rational</td><td>f(x) = p(x)/q(x)</td><td>Curve with asymptotes</td><td>f(x) = 1/x</td></tr>
+      <tr><td>Modulus</td><td>f(x) = |x|</td><td>V-shape</td><td>|x| = x if x≥0, -x if x<0</td></tr>
+      <tr><td>Exponential</td><td>f(x) = aˣ</td><td>Exponential growth/decay</td><td>f(x) = 2ˣ, eˣ</td></tr>
+      <tr><td>Logarithm</td><td>f(x) = log(x)</td><td>Slow growth curve</td><td>f(x) = log₁₀(x)</td></tr>
+      <tr><td>Signum</td><td>sgn(x)</td><td>-1, 0, or 1</td><td>+1 if x>0, 0 if x=0, -1 if x<0</td></tr>
+      <tr><td>Greatest Integer</td><td>⌊x⌋</td><td>Step function</td><td>⌊3.7⌋=3, ⌊-1.2⌋=-2</td></tr>
+    </table>
+    <div class="eb" style="background:#fef2f2;border-color:#dc2626">
+      <div class="et" style="color:#991b1b">Composite Function</div>
+      (f∘g)(x) = f(g(x)) — pehle g apply karo, phir f ka result pe<br>
+      Example: f(x)=x², g(x)=x+1 → (f∘g)(x) = f(g(x)) = (x+1)²
+    </div>
+  </div>
+  <div class="card">
+    <h2 style="color:#991b1b">📈 Graphical Representation</h2>
+    <div class="eb" style="background:#fef2f2;border-color:#dc2626">
+      <div class="et" style="color:#991b1b">Key Graph Properties</div>
+      Domain = x-axis pe jahan graph defined hai<br>
+      Range = y-axis pe jo values aati hain<br>
+      Vertical Line Test: Agar koi vertical line sirf 1 point pe cut kare → function hai<br>
+      Horizontal Line Test: Agar sirf 1 point pe cut kare → one-one function hai
+    </div>
+    <div class="tg">
+      <div class="tp" style="background:#fef2f2;border:1.5px solid #fca5a5;color:#991b1b">Modulus |x|: V-shape, vertex at (0,0), domain=ℝ, range=[0,∞)</div>
+      <div class="tp" style="background:#fef2f2;border:1.5px solid #fca5a5;color:#991b1b">Exponential eˣ: Domain=ℝ, Range=(0,∞), always increasing</div>
+      <div class="tp" style="background:#fef2f2;border:1.5px solid #fca5a5;color:#991b1b">ln(x): Domain=(0,∞), Range=ℝ, passes through (1,0)</div>
+      <div class="tp" style="background:#fef2f2;border:1.5px solid #fca5a5;color:#991b1b">1/x: Domain=ℝ\{0}, Range=ℝ\{0}, 2 branches</div>
+    </div>
+  </div>
+</div></div>
+  <footer>© 2024 AIkiPadhai — Class 11 Applied Mathematics</footer>
+</body></html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Sets aur Relations | AIkiPadhai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;}
+    .hero{background:linear-gradient(135deg,#1e1b4b,#4338ca,#6366f1);padding:2.8rem 1rem;text-align:center;}
+    .hero h1{font-family:'Outfit',sans-serif;font-size:2rem;color:#fff;margin:0 0 .5rem;}
+    .hero p{color:#c7d2fe;font-size:.98rem;max-width:620px;margin:0 auto;}
+    .container{max-width:980px;margin:0 auto;padding:0 1.2rem;}
+    .content-section{padding:2rem 1rem;}
+    .card{background:#fff;border-radius:14px;border:1.5px solid #e2e8f0;padding:1.6rem;margin:1.2rem 0;box-shadow:0 2px 8px rgba(0,0,0,0.04);}
+    .card h2{font-family:'Outfit',sans-serif;color:#4338ca;margin:0 0 .8rem;font-size:1.3rem;}
+    .card h3{color:#6366f1;margin:.9rem 0 .4rem;font-size:1.05rem;}
+    .formula-box{background:#eef2ff;border:1.5px solid #a5b4fc;border-radius:10px;padding:.9rem 1.2rem;margin:.6rem 0;font-family:monospace;font-size:.92rem;color:#1e1b4b;}
+    .example-box{background:#f8fafc;border-left:4px solid #6366f1;border-radius:0 10px 10px 0;padding:1rem 1.2rem;margin:.8rem 0;}
+    .example-box .ex-title{font-weight:700;color:#4338ca;font-size:.88rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem;}
+    table{width:100%;border-collapse:collapse;margin:.6rem 0;font-size:.88rem;}
+    th{background:#6366f1;color:#fff;padding:.5rem .7rem;text-align:left;}
+    td{padding:.45rem .7rem;border-bottom:1px solid #e2e8f0;}
+    tr:hover td{background:#eef2ff;}
+    .topic-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.8rem;margin:.8rem 0;}
+    .topic-pill{background:#eef2ff;border:1.5px solid #a5b4fc;border-radius:10px;padding:.7rem 1rem;text-align:center;font-size:.85rem;font-weight:600;color:#4338ca;}
+    p{color:#334155;line-height:1.7;}
+    svg{max-width:100%;display:block;margin:.6rem auto;}</style>
+</head>
+<body>
+  <header><div class="container header-content">
+    <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+    <nav><a href="../index.html">Applied Maths 11</a><a href="index.html">Unit II</a></nav>
+  </div></header>
+  <section class="hero"><div class="container"><h1>Sets aur Relations</h1><p>Set theory, Venn diagrams, operations aur cartesian product — Applied Maths Class 11</p></div></section>
+  <div class="content-section"><div class="container">
+
+  <div class="card">
+    <h2>🔵 Sets — Definition aur Representation</h2>
+    <p>Set ek <strong>well-defined collection of objects</strong> hai. "Well-defined" matlab: clearly pata ho koi cheez set mein hai ya nahi.</p>
+    <div class="formula-box">
+Roster Form: Elements list karte hain — A = {1, 2, 3, 4, 5}
+Set Builder Form: Rule define karte hain — A = {x : x ∈ N, x ≤ 5}
+    </div>
+
+    <h3>Types of Sets</h3>
+    <table>
+      <tr><th>Type</th><th>Definition</th><th>Example</th></tr>
+      <tr><td>Empty Set (∅)</td><td>Koi bhi element nahi</td><td>{} ya ∅</td></tr>
+      <tr><td>Singleton Set</td><td>Exactly 1 element</td><td>{5}</td></tr>
+      <tr><td>Finite Set</td><td>Count ho sakta hai</td><td>{1,2,3,4,5}</td></tr>
+      <tr><td>Infinite Set</td><td>Count nahi hota</td><td>N = {1,2,3,...}</td></tr>
+      <tr><td>Universal Set (U)</td><td>Sabka superset</td><td>Problem ke hisab se</td></tr>
+      <tr><td>Power Set P(A)</td><td>All subsets</td><td>If A={1,2}, P(A)={∅,{1},{2},{1,2}}</td></tr>
+    </table>
+    <p>Agar A mein n elements hain → <strong>Subsets = 2ⁿ, Power set mein 2ⁿ elements</strong></p>
+
+    <h3>Subsets aur Intervals</h3>
+    <div class="formula-box">
+A ⊆ B: Har element of A, B mein bhi hai
+Proper subset A ⊂ B: A ⊆ B but A ≠ B
+
+Intervals (Real Numbers):
+[a,b] = {x : a ≤ x ≤ b}   (closed)
+(a,b) = {x : a < x < b}   (open)
+[a,b) = {x : a ≤ x < b}   (half-open)
+    </div>
+
+    <h3>Set Operations</h3>
+    <!-- Venn Diagram SVG -->
+    <svg viewBox="0 0 580 200" xmlns="http://www.w3.org/2000/svg">
+      <rect width="580" height="200" fill="#eef2ff" rx="8"/>
+      <!-- Union -->
+      <text x="75" y="20" text-anchor="middle" font-size="12" font-weight="700" fill="#4338ca">A ∪ B</text>
+      <circle cx="55" cy="105" r="55" fill="#818cf8" opacity="0.6"/>
+      <circle cx="95" cy="105" r="55" fill="#818cf8" opacity="0.6"/>
+      <text x="75" y="175" text-anchor="middle" font-size="10" fill="#4338ca">All of A and B</text>
+      <!-- Intersection -->
+      <text x="210" y="20" text-anchor="middle" font-size="12" font-weight="700" fill="#4338ca">A ∩ B</text>
+      <circle cx="190" cy="105" r="55" fill="#c7d2fe" opacity="0.6" stroke="#6366f1"/>
+      <circle cx="230" cy="105" r="55" fill="#c7d2fe" opacity="0.6" stroke="#6366f1"/>
+      <path d="M210 55 A55 55 0 0 1 210 155 A55 55 0 0 1 210 55Z" fill="#6366f1" opacity="0.7"/>
+      <text x="210" y="175" text-anchor="middle" font-size="10" fill="#4338ca">Common part</text>
+      <!-- A-B -->
+      <text x="355" y="20" text-anchor="middle" font-size="12" font-weight="700" fill="#4338ca">A − B</text>
+      <circle cx="330" cy="105" r="55" fill="#818cf8" opacity="0.7"/>
+      <circle cx="370" cy="105" r="55" fill="#eef2ff" opacity="0.9"/>
+      <text x="355" y="175" text-anchor="middle" font-size="10" fill="#4338ca">Only in A</text>
+      <!-- Complement -->
+      <text x="510" y="20" text-anchor="middle" font-size="12" font-weight="700" fill="#4338ca">A'</text>
+      <rect x="455" y="50" width="110" height="110" fill="#818cf8" opacity="0.5" rx="5"/>
+      <circle cx="510" cy="105" r="40" fill="#eef2ff"/>
+      <text x="510" y="108" text-anchor="middle" font-size="10" fill="#4338ca">A</text>
+      <text x="510" y="175" text-anchor="middle" font-size="10" fill="#4338ca">Outside A in U</text>
+    </svg>
+
+    <div class="formula-box">
+A ∪ B = Elements in A ya B ya dono mein
+A ∩ B = Elements jo A aur B dono mein hain
+A − B = Elements jo A mein hain but B mein nahi
+A' = Elements jo U mein hain but A mein nahi
+
+De Morgan's Laws:
+(A ∪ B)' = A' ∩ B'
+(A ∩ B)' = A' ∪ B'
+    </div>
+
+    <h3>Practical Problem — Venn Diagram</h3>
+    <div class="example-box">
+      <div class="ex-title">Example: 100 students — 60 maths padhte hain, 50 science padhte hain, 30 dono padhte hain. Sirf ek padhne wale kitne?</div>
+      n(M) = 60, n(S) = 50, n(M∩S) = 30<br>
+      n(M∪S) = 60 + 50 − 30 = <b>80</b> (at least one padhte hain)<br>
+      Sirf Maths: 60 − 30 = <b>30</b><br>
+      Sirf Science: 50 − 30 = <b>20</b><br>
+      Dono: <b>30</b><br>
+      Koi nahi: 100 − 80 = <b>20</b>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>↔️ Relations</h2>
+    <p>Relation ek set ke do elements ke beech ek mapping hai — actually Cartesian product ka subset hai.</p>
+    <div class="formula-box">
+Cartesian Product: A × B = {(a,b) : a ∈ A, b ∈ B}
+If |A| = m, |B| = n → |A × B| = mn
+
+Relation R: A → B means R ⊆ A × B
+Domain of R = set of first elements
+Range of R = set of second elements
+    </div>
+    <div class="example-box">
+      <div class="ex-title">Example: A = {1,2}, B = {a,b,c}</div>
+      A × B = {(1,a),(1,b),(1,c),(2,a),(2,b),(2,c)} — 6 elements<br>
+      R = "first element + 1 = 2" → R = {(1,a)} ← ek possible relation<br>
+      R = {(1,a),(2,b)} → Domain = {1,2}, Range = {a,b}
+    </div>
+  </div>
+
+</div></div>
+  <footer style="text-align:center;padding:1.5rem;color:#94a3b8;font-size:.82rem;border-top:1px solid #e2e8f0;">
+    © 2024 AIkiPadhai — Class 11 Applied Mathematics
+  </footer>
+</body></html>

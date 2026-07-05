@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Algebra Lab — Applied Maths 11 | AIkiPadhai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#0d1117;color:#e2e8f0;font-family:'Inter',sans-serif;}
+    h1,h2,h3,h4{color:#f1f5f9!important;} p{color:#cbd5e1;}
+    .hero h1{color:#fff!important;} .hero p{color:#c7d2fe!important;}
+    nav a{color:#94a3b8;}
+    .lab-wrap{max-width:960px;margin:2rem auto;padding:0 1.2rem;}
+    .lab-card{background:#161b22;border:1px solid #30363d;border-radius:14px;padding:1.6rem;margin:1.4rem 0;}
+    .lab-card h3{color:#a5b4fc!important;margin:0 0 .5rem;}
+    .hint{color:#64748b;font-size:.88rem;margin:.3rem 0 .8rem;}
+    canvas{border-radius:10px;display:block;margin:.6rem auto;}
+    .controls{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;margin:.6rem 0;}
+    .btn{padding:.5rem 1.2rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:.88rem;transition:all .18s;background:linear-gradient(135deg,#6366f1,#4338ca);color:#fff;}
+    .btn:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(99,102,241,.4);}
+    .btn-g{background:#1e293b;color:#a5b4fc;border:1px solid #334155;}
+    input[type=number],input[type=text]{background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:.4rem .8rem;font-size:.9rem;width:90px;}
+    input[type=range]{accent-color:#6366f1;}
+    .eq-display{background:#0a0e1a;border-radius:8px;padding:.8rem 1rem;font-family:monospace;color:#a5b4fc;font-size:.9rem;margin:.5rem 0;line-height:1.8;white-space:pre-wrap;}
+    label{color:#94a3b8;font-size:.88rem;}
+    .venn-wrap{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    @media(max-width:580px){.venn-wrap{grid-template-columns:1fr;}}
+    .set-input{background:#0a0e1a;border:1px solid #334155;border-radius:8px;padding:.8rem;}
+    .set-input label{display:block;margin-bottom:.4rem;font-weight:600;color:#a5b4fc;}
+    .set-input input{width:100%;box-sizing:border-box;font-family:monospace;}
+  </style>
+</head>
+<body>
+  <header><div class="container header-content">
+    <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+    <nav><a href="../index.html">Applied Maths 11</a><a href="index.html">Unit II</a><a href="algebra-interactive.html" class="active">Lab</a></nav>
+  </div></header>
+
+  <section class="hero" style="background:linear-gradient(135deg,#1e1b4b,#4338ca,#6366f1);">
+    <div class="container"><h1>Algebra Lab 🧮</h1><p>Venn diagrams, AP/GP visualizer, P&C calculator — sab visual aur interactive!</p></div>
+  </section>
+
+  <div class="lab-wrap">
+
+    <!-- LAB 1: Venn Diagram Builder -->
+    <div class="lab-card">
+      <h3>🔵 Lab 1: Venn Diagram Builder — Set Operations</h3>
+      <p class="hint">Apne sets enter karo (comma separated numbers). Dekho: A∪B, A∩B, A−B sab visually!</p>
+      <div class="venn-wrap">
+        <div class="set-input"><label>Set A:</label><input type="text" id="setA" value="1,2,3,4,5,6" oninput="drawVenn()"></div>
+        <div class="set-input"><label>Set B:</label><input type="text" id="setB" value="4,5,6,7,8,9" oninput="drawVenn()"></div>
+      </div>
+      <canvas id="vennCanvas" width="700" height="300" style="width:100%;background:#0a0e1a;"></canvas>
+      <div class="eq-display" id="vennEq"></div>
+    </div>
+
+    <!-- LAB 2: AP/GP Visualizer -->
+    <div class="lab-card">
+      <h3>📈 Lab 2: AP vs GP — Visual Comparison</h3>
+      <p class="hint">a aur common difference/ratio change karo. AP (straight line) vs GP (exponential curve) dekho! Real-world growth kaise alag hota hai.</p>
+      <div class="controls">
+        <label>First term a =</label>
+        <input type="number" id="seqA" value="2" min="1" max="20" oninput="drawSeq()">
+        <label>AP: d =</label>
+        <input type="number" id="apD" value="3" min="-5" max="15" oninput="drawSeq()">
+        <label>GP: r =</label>
+        <input type="number" id="gpR" value="1.5" step="0.1" min="0.1" max="3" oninput="drawSeq()">
+        <label>n =</label>
+        <input type="range" id="seqN" min="3" max="15" value="8" oninput="drawSeq()">
+        <span id="seqNv" style="color:#a5b4fc;font-weight:700;">8</span>
+      </div>
+      <canvas id="seqCanvas" width="700" height="300" style="width:100%;background:#0a0e1a;"></canvas>
+      <div class="eq-display" id="seqEq"></div>
+    </div>
+
+    <!-- LAB 3: P&C Calculator -->
+    <div class="lab-card">
+      <h3>🎲 Lab 3: Permutation & Combination Calculator</h3>
+      <p class="hint">n aur r enter karo. nPr aur nCr ki values aur unka ratio dekho. Difference samjho: P means order matters!</p>
+      <div class="controls">
+        <label>n =</label>
+        <input type="number" id="pcN" value="10" min="1" max="20" oninput="drawPC()">
+        <label>r =</label>
+        <input type="range" id="pcR" min="0" max="10" value="3" oninput="drawPC()">
+        <span id="pcRv" style="color:#a5b4fc;font-weight:700;">3</span>
+      </div>
+      <canvas id="pcCanvas" width="700" height="280" style="width:100%;background:#0a0e1a;"></canvas>
+      <div class="eq-display" id="pcEq"></div>
+    </div>
+
+    <!-- LAB 4: Pascal's Triangle -->
+    <div class="lab-card">
+      <h3>🔺 Lab 4: Pascal's Triangle — nCr Visually</h3>
+      <p class="hint">Pascal's Triangle mein ⁿCᵣ values hoti hain. Row n mein values = ⁿC₀, ⁿC₁, ⁿC₂, .... Hover karo kisi value par!</p>
+      <canvas id="pascalCanvas" width="700" height="320" style="width:100%;background:#0a0e1a;cursor:pointer;"></canvas>
+      <div class="eq-display" id="pascalEq"></div>
+    </div>
+
+  </div>
+
+<script>
+const PI=Math.PI;
+
+// ==================== LAB 1: Venn ====================
+function parseSet(str){return new Set(str.split(',').map(s=>s.trim()).filter(s=>s!==''));}
+function drawVenn(){
+  const A=parseSet(document.getElementById('setA').value);
+  const B=parseSet(document.getElementById('setB').value);
+  const union=new Set([...A,...B]);
+  const inter=new Set([...A].filter(x=>B.has(x)));
+  const aOnly=new Set([...A].filter(x=>!B.has(x)));
+  const bOnly=new Set([...B].filter(x=>!A.has(x)));
+  const c=document.getElementById('vennCanvas'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,cx=W/2,cy=H/2,r=110;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const cxA=cx-70,cxB=cx+70;
+  // Circles
+  ctx.globalAlpha=0.35;
+  ctx.fillStyle='#6366f1';ctx.beginPath();ctx.arc(cxA,cy,r,0,PI*2);ctx.fill();
+  ctx.fillStyle='#22c55e';ctx.beginPath();ctx.arc(cxB,cy,r,0,PI*2);ctx.fill();
+  ctx.globalAlpha=1;
+  ctx.strokeStyle='#a5b4fc';ctx.lineWidth=2;ctx.beginPath();ctx.arc(cxA,cy,r,0,PI*2);ctx.stroke();
+  ctx.strokeStyle='#86efac';ctx.beginPath();ctx.arc(cxB,cy,r,0,PI*2);ctx.stroke();
+  // Labels
+  ctx.fillStyle='#a5b4fc';ctx.font='bold 15px Inter';ctx.textAlign='center';
+  ctx.fillText('A',cxA-60,cy-90);
+  ctx.fillStyle='#86efac';ctx.fillText('B',cxB+60,cy-90);
+  // Element texts
+  ctx.font='11px monospace';ctx.textAlign='center';
+  const aArr=[...aOnly],bArr=[...bOnly],iArr=[...inter];
+  aArr.slice(0,8).forEach((v,i)=>{ctx.fillStyle='#c7d2fe';ctx.fillText(v,cxA-55+((i%2)*30),cy-30+(Math.floor(i/2)*22));});
+  bArr.slice(0,8).forEach((v,i)=>{ctx.fillStyle='#bbf7d0';ctx.fillText(v,cxB+30+((i%2)*30),cy-30+(Math.floor(i/2)*22));});
+  iArr.slice(0,6).forEach((v,i)=>{ctx.fillStyle='#fbbf24';ctx.fillText(v,cx-15+((i%2)*30),cy-20+(Math.floor(i/2)*22));});
+  ctx.textAlign='left';
+  document.getElementById('vennEq').textContent=
+    `A = {${[...A].join(', ')}}
+B = {${[...B].join(', ')}}
+
+A ∪ B = {${[...union].join(', ')}}  |A∪B| = ${union.size}
+A ∩ B = {${[...inter].join(', ')}}  |A∩B| = ${inter.size}
+A − B = {${[...aOnly].join(', ')}}
+B − A = {${[...bOnly].join(', ')}}
+
+|A∪B| = |A| + |B| − |A∩B| = ${A.size} + ${B.size} − ${inter.size} = ${union.size} ✓`;
+}
+drawVenn();
+
+// ==================== LAB 2: Sequences ====================
+function drawSeq(){
+  const a=parseFloat(document.getElementById('seqA').value)||2;
+  const d=parseFloat(document.getElementById('apD').value)||3;
+  const r=parseFloat(document.getElementById('gpR').value)||1.5;
+  const n=parseInt(document.getElementById('seqN').value)||8;
+  document.getElementById('seqNv').textContent=n;
+  const c=document.getElementById('seqCanvas'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,pad=50,cw=W-pad-20,ch=H-pad-20;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  // Calculate sequences
+  const ap=[],gp=[];
+  let sumAP=0,sumGP=0;
+  for(let i=1;i<=n;i++){ap.push(a+(i-1)*d);gp.push(a*Math.pow(r,i-1));}
+  sumAP=ap.reduce((s,x)=>s+x,0);sumGP=gp.reduce((s,x)=>s+x,0);
+  const maxV=Math.max(...ap,...gp,1);
+  const ox=pad,oy=H-pad,bw=cw/n;
+  // Grid
+  ctx.strokeStyle='#1e293b';ctx.lineWidth=1;
+  for(let i=0;i<=5;i++){const y=oy-i*(ch/5);ctx.beginPath();ctx.moveTo(ox,y);ctx.lineTo(ox+cw,y);ctx.stroke();}
+  ctx.strokeStyle='#475569';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(ox,20);ctx.lineTo(ox,oy);ctx.lineTo(ox+cw,oy);ctx.stroke();
+  // AP bars
+  ap.forEach((v,i)=>{
+    const bx=ox+i*bw,bh=v/maxV*ch;
+    ctx.fillStyle='#6366f180';ctx.fillRect(bx+3,oy-bh,bw/2-4,bh);
+    ctx.fillStyle='#a5b4fc';ctx.font='9px Inter';ctx.textAlign='center';
+    if(bh>15)ctx.fillText(v.toFixed(1),bx+bw/4,oy-bh+12);
+    ctx.fillText(i+1,bx+bw/4,oy+12);
+  });
+  // GP bars
+  gp.forEach((v,i)=>{
+    const bx=ox+i*bw+bw/2,bh=Math.min(v/maxV*ch,ch);
+    ctx.fillStyle='#22c55e80';ctx.fillRect(bx,oy-bh,bw/2-4,bh);
+    ctx.fillStyle='#86efac';ctx.font='9px Inter';ctx.textAlign='center';
+    if(bh>15)ctx.fillText(v.toFixed(1),bx+bw/4-2,oy-bh+12);
+  });
+  // AP line
+  ctx.strokeStyle='#a5b4fc';ctx.lineWidth=2;ctx.shadowColor='#6366f1';ctx.shadowBlur=5;
+  ctx.beginPath();ap.forEach((v,i)=>{const x=ox+i*bw+bw/4,y=oy-v/maxV*ch;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});ctx.stroke();ctx.shadowBlur=0;
+  // GP line
+  ctx.strokeStyle='#22c55e';ctx.lineWidth=2;ctx.shadowColor='#22c55e';ctx.shadowBlur=5;
+  ctx.beginPath();gp.forEach((v,i)=>{const x=ox+i*bw+bw*3/4,y=oy-Math.min(v,maxV)/maxV*ch;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});ctx.stroke();ctx.shadowBlur=0;
+  // Legend
+  ctx.textAlign='left';
+  [[W-200,25,'#a5b4fc',`AP (a=${a}, d=${d})`],[W-200,45,'#22c55e',`GP (a=${a}, r=${r})`]].forEach(([x,y,c,t])=>{
+    ctx.fillStyle=c;ctx.fillRect(x,y,12,12);ctx.fillStyle='#e2e8f0';ctx.font='11px Inter';ctx.fillText(t,x+16,y+10);
+  });
+  const apLast=ap[n-1],gpLast=gp[n-1];
+  document.getElementById('seqEq').textContent=
+    `AP: a=${a}, d=${d} → t${n}=${apLast.toFixed(2)}, Sn=${sumAP.toFixed(2)}
+GP: a=${a}, r=${r} → t${n}=${gpLast.toFixed(2)}, Sn=${sumGP.toFixed(2)}
+AM = (a+last_AP)/2 = ${((a+apLast)/2).toFixed(2)}
+GM = √(a×last_GP) = ${Math.sqrt(a*gpLast).toFixed(2)}`;
+}
+drawSeq();
+
+// ==================== LAB 3: P&C ====================
+function fact(n){let r=1;for(let i=2;i<=n;i++)r*=i;return r;}
+function nPr(n,r){if(r>n)return 0;return fact(n)/fact(n-r);}
+function nCr(n,r){if(r>n)return 0;return fact(n)/(fact(r)*fact(n-r));}
+
+function drawPC(){
+  const n=parseInt(document.getElementById('pcN').value)||10;
+  const r=parseInt(document.getElementById('pcR').value)||3;
+  document.getElementById('pcRv').textContent=r;
+  const maxR=Math.min(n,10);
+  document.getElementById('pcR').max=maxR;
+  const c=document.getElementById('pcCanvas'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,pad=60,cw=W-pad-30,ch=H-pad-20;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const pVals=[],cVals=[];
+  for(let k=0;k<=Math.min(n,12);k++){pVals.push(nPr(n,k));cVals.push(nCr(n,k));}
+  const maxP=Math.max(...pVals,1),len=pVals.length;
+  const bw=cw/len,ox=pad,oy=H-pad;
+  ctx.strokeStyle='#334155';ctx.lineWidth=1;
+  for(let i=0;i<=6;i++){const y=oy-i*(ch/6);ctx.beginPath();ctx.moveTo(ox,y);ctx.lineTo(ox+cw,y);ctx.stroke();}
+  ctx.strokeStyle='#475569';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(ox,20);ctx.lineTo(ox,oy);ctx.lineTo(ox+cw,oy);ctx.stroke();
+  pVals.forEach((pv,k)=>{
+    const cv=cVals[k];
+    const px=ox+k*bw,phh=Math.log(pv+1)/Math.log(maxP+1)*ch,chh=Math.log(cv+1)/Math.log(maxP+1)*ch;
+    ctx.fillStyle=k===r?'#fbbf24':'#6366f155';ctx.fillRect(px+3,oy-phh,bw/2-4,phh);
+    ctx.fillStyle=k===r?'#86efac':'#22c55e55';ctx.fillRect(px+bw/2,oy-chh,bw/2-4,chh);
+    ctx.fillStyle='#64748b';ctx.font='10px Inter';ctx.textAlign='center';ctx.fillText(k,px+bw/2,oy+14);
+    if(k===r){
+      ctx.fillStyle='#fbbf24';ctx.font='bold 10px Inter';ctx.fillText('P:'+pv,px+bw/4,oy-phh-4);
+      ctx.fillStyle='#86efac';ctx.fillText('C:'+cv,px+3*bw/4,oy-chh-4);
+    }
+  });
+  ctx.textAlign='left';
+  [[W-190,30,'#fbbf24','ⁿPᵣ (Permutation)'],[W-190,50,'#86efac','ⁿCᵣ (Combination)']].forEach(([x,y,c,t])=>{
+    ctx.fillStyle=c;ctx.fillRect(x,y,12,12);ctx.fillStyle='#e2e8f0';ctx.font='11px Inter';ctx.fillText(t,x+16,y+10);
+  });
+  const Pv=nPr(n,r),Cv=nCr(n,r);
+  document.getElementById('pcEq').textContent=
+    `n=${n}, r=${r}
+${n}P${r} = ${n}! / (${n}-${r})! = ${fact(n)} / ${fact(n-r)} = ${Pv}
+${n}C${r} = ${n}! / (${r}! × (${n}-${r})!) = ${fact(n)} / (${fact(r)} × ${fact(n-r)}) = ${Cv}
+Ratio: ${n}P${r} / ${n}C${r} = ${r}! = ${fact(r)}
+Meaning: ${Cv} ways select kar sakte ho, har ek ko ${fact(r)} tarike se arrange kar sakte ho → ${Cv}×${fact(r)}=${Pv}`;
+}
+drawPC();
+
+// ==================== LAB 4: Pascal's Triangle ====================
+let hovRow=-1,hovCol=-1;
+const pascTriangle=[];
+for(let i=0;i<=9;i++){
+  pascTriangle[i]=[];
+  for(let j=0;j<=i;j++){
+    if(j===0||j===i) pascTriangle[i][j]=1;
+    else pascTriangle[i][j]=pascTriangle[i-1][j-1]+pascTriangle[i-1][j];
+  }
+}
+function drawPascal(){
+  const c=document.getElementById('pascalCanvas'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const rows=9,cellH=H/(rows+1);
+  pascTriangle.forEach((row,i)=>{
+    const cellW=W/(i+2);
+    row.forEach((val,j)=>{
+      const x=cellW*(j+1),y=cellH*(i+1);
+      const isHov=i===hovRow&&j===hovCol;
+      const intensity=Math.min(val/100,1);
+      ctx.fillStyle=isHov?'#fbbf24':`rgba(99,102,241,${0.15+intensity*0.7})`;
+      ctx.beginPath();ctx.arc(x,y,Math.min(cellH*0.38,cellW*0.38),0,PI*2);ctx.fill();
+      ctx.fillStyle=isHov?'#0a0e1a':'#e2e8f0';
+      ctx.font=`${val>9?'10':'12'}px monospace`;ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(val,x,y);
+    });
+  });
+  ctx.textAlign='left';ctx.textBaseline='alphabetic';
+  if(hovRow>=0){
+    const r=hovRow,k=hovCol,v=pascTriangle[r][k];
+    document.getElementById('pascalEq').textContent=`Row ${r}, Position ${k}: ⁿCᵣ = ${r}C${k} = ${v}
+Pascal's Rule: ${r-1}C${k-1} + ${r-1}C${k} = ${r}C${k}
+${k===0||k===r?'Edge element — always 1':'Pascal sum: '+((k>0?pascTriangle[r-1][k-1]:0)+pascTriangle[r-1][Math.min(k,r-1)])+' = '+v}`;
+  } else {
+    document.getElementById('pascalEq').textContent='Row n mein elements = n+1, sum = 2ⁿ
+Hover karo kisi value par! Click to highlight.
+(n=row, k=column position se) ⁿCₖ value = wo cell';
+  }
+}
+document.getElementById('pascalCanvas').addEventListener('mousemove',e=>{
+  const c=document.getElementById('pascalCanvas');
+  const rect=c.getBoundingClientRect();
+  const mx=(e.clientX-rect.left)*(c.width/rect.width);
+  const my=(e.clientY-rect.top)*(c.height/rect.height);
+  const cellH=c.height/(10);
+  const i=Math.round(my/cellH-1);
+  if(i<0||i>=pascTriangle.length){hovRow=-1;drawPascal();return;}
+  const cellW=c.width/(i+2);
+  const j=Math.round(mx/cellW-1);
+  if(j>=0&&j<=i){hovRow=i;hovCol=j;} else {hovRow=-1;}
+  drawPascal();
+});
+drawPascal();
+</script>
+</body>
+</html>
