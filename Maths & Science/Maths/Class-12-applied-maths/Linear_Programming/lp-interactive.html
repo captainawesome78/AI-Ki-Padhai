@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+<title>LP Lab — Applied Maths 12 | AIkiPadhai</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../../style.css"/>
+<style>
+body{background:#0d1117;color:#e2e8f0;font-family:'Inter',sans-serif;}
+h1,h2,h3,h4{color:#f1f5f9!important;}p{color:#cbd5e1;}
+.hero h1{color:#fff!important;}.hero p{color:#bfdbfe!important;}
+nav a{color:#94a3b8;}
+.lab-wrap{max-width:960px;margin:2rem auto;padding:0 1.2rem;}
+.lab-card{background:#161b22;border:1px solid #30363d;border-radius:14px;padding:1.6rem;margin:1.4rem 0;}
+.lab-card h3{color:#60a5fa!important;margin:0 0 .4rem;}
+.lab-card p.hint{color:#64748b;font-size:.88rem;margin:.2rem 0 .8rem;}
+canvas{border-radius:10px;display:block;margin:.6rem auto;}
+.controls{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;margin:.6rem 0;}
+label{color:#94a3b8;font-size:.85rem;}
+input[type=range]{accent-color:#2563eb;width:120px;}
+input[type=number]{background:#1e293b;color:#60a5fa;border:1px solid #334155;border-radius:6px;padding:.3rem .5rem;width:80px;font-size:.85rem;}
+.val-badge{background:#1e293b;color:#60a5fa;border:1px solid #334155;border-radius:5px;padding:.15rem .5rem;font-weight:700;min-width:2.8rem;text-align:center;font-size:.83rem;}
+.eq-display{background:#0a0e1a;border-radius:8px;padding:.7rem 1rem;font-family:monospace;color:#93c5fd;font-size:.85rem;margin:.5rem 0;white-space:pre-wrap;line-height:1.7;}
+.btn{padding:.5rem 1.1rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:.85rem;margin:.2rem;}
+.btn-v{background:linear-gradient(135deg,#2563eb,#3b82f6);color:#fff;}
+</style></head><body>
+<header><div class="container header-content">
+<a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+<nav><a href="../index.html">Applied Maths 12</a><a href="index.html">Unit VIII</a><a href="lp-interactive.html" class="active">Lab</a></nav>
+</div></header>
+<section class="hero" style="background:linear-gradient(135deg,#172554,#1d4ed8,#2563eb);">
+<div class="container"><h1>Linear Programming Lab 📊</h1>
+<p>Feasible region, corner points, objective function — graphically samjho!</p></div>
+</section>
+<div class="lab-wrap">
+
+<!-- LAB 1: Constraint Explorer -->
+<div class="lab-card">
+<h3>📐 Lab 1: Feasible Region Explorer</h3>
+<p class="hint">Constraints ke coefficients aur RHS change karo. Feasible region live update hoga. Corner points automatically calculate honge!</p>
+<div class="controls">
+  <label>Constraint 1:</label>
+  <input type="number" id="c1a" value="2" style="width:55px"> x +
+  <input type="number" id="c1b" value="5" style="width:55px"> y ≤
+  <input type="number" id="c1r" value="180" style="width:65px">
+</div>
+<div class="controls">
+  <label>Constraint 2:</label>
+  <input type="number" id="c2a" value="4" style="width:55px"> x +
+  <input type="number" id="c2b" value="2" style="width:55px"> y ≤
+  <input type="number" id="c2r" value="160" style="width:65px">
+</div>
+<div class="controls">
+  <label>Objective Z =</label>
+  <input type="number" id="oc" value="5" style="width:55px"> x +
+  <input type="number" id="od" value="4" style="width:55px"> y
+  <select id="objType" style="background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:.3rem .5rem;font-size:.85rem;">
+    <option value="max">Maximize</option>
+    <option value="min">Minimize</option>
+  </select>
+  <button class="btn btn-v" onclick="drawLP()">Solve →</button>
+</div>
+<canvas id="lpCanvas" width="700" height="340" style="width:100%;background:#0a0e1a;"></canvas>
+<div class="eq-display" id="lpEq"></div>
+</div>
+
+<!-- LAB 2: Objective Function Sweep -->
+<div class="lab-card">
+<h3>🎯 Lab 2: Objective Function — Iso-Profit Lines</h3>
+<p class="hint">Iso-profit lines dekho kaise feasible region ko touch/cross karti hain. Optimal point clearly dikhega!</p>
+<div class="controls">
+  <label>Z Level:</label>
+  <input type="range" id="zLevel" min="0" max="250" step="5" value="100" oninput="drawIsoProfit()">
+  <span id="zLevelv" class="val-badge">100</span>
+</div>
+<canvas id="isoCanvas" width="700" height="300" style="width:100%;background:#0a0e1a;"></canvas>
+<div class="eq-display" id="isoEq"></div>
+</div>
+
+<!-- LAB 3: Diet Problem - Real LP -->
+<div class="lab-card">
+<h3>🥗 Lab 3: Diet Problem — Real-World LP</h3>
+<p class="hint">Do foods ka nutrition aur cost set karo. Minimum cost diet visually solve hoga!</p>
+<div class="controls" style="flex-direction:column;align-items:flex-start;gap:.5rem;">
+  <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+    <div><label style="display:block;">Food A:</label>
+    Protein: <input type="number" id="aP" value="3" style="width:55px"> g
+    Carbs: <input type="number" id="aC" value="5" style="width:55px"> g
+    Cost: ₹<input type="number" id="aX" value="2" style="width:55px"></div>
+    <div><label style="display:block;">Food B:</label>
+    Protein: <input type="number" id="bP" value="4" style="width:55px"> g
+    Carbs: <input type="number" id="bC" value="2" style="width:55px"> g
+    Cost: ₹<input type="number" id="bX" value="3" style="width:55px"></div>
+    <div><label style="display:block;">Requirements:</label>
+    Min Protein: <input type="number" id="rP" value="24" style="width:55px"> g
+    Min Carbs: <input type="number" id="rC" value="20" style="width:55px"> g</div>
+  </div>
+  <button class="btn btn-v" onclick="drawDiet()">Solve Diet Problem →</button>
+</div>
+<canvas id="dietCanvas" width="700" height="280" style="width:100%;background:#0a0e1a;"></canvas>
+<div class="eq-display" id="dietEq"></div>
+</div>
+
+<!-- LAB 4: Transportation Visualizer -->
+<div class="lab-card">
+<h3>🚛 Lab 4: Transportation — NW Corner Method</h3>
+<p class="hint">2×3 transportation problem. Supply aur demand change karo, NW Corner solution visually dekho!</p>
+<div class="controls" style="flex-direction:column;align-items:flex-start;gap:.4rem;">
+  <div style="color:#94a3b8;font-size:.85rem;">Cost Matrix (rows=sources, cols=destinations):</div>
+  <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;">
+    <input type="number" id="t11" value="2" style="width:55px"> <input type="number" id="t12" value="3" style="width:55px"> <input type="number" id="t13" value="5" style="width:55px"> | Supply: <input type="number" id="s1" value="20" style="width:65px">
+  </div>
+  <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;">
+    <input type="number" id="t21" value="4" style="width:55px"> <input type="number" id="t22" value="1" style="width:55px"> <input type="number" id="t23" value="6" style="width:55px"> | Supply: <input type="number" id="s2" value="30" style="width:65px">
+  </div>
+  <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;">
+    Demand: <input type="number" id="d1" value="15" style="width:65px"> <input type="number" id="d2" value="25" style="width:65px"> <input type="number" id="d3" value="10" style="width:65px">
+  </div>
+  <button class="btn btn-v" onclick="solveTransport()">NW Corner →</button>
+</div>
+<div class="eq-display" id="transportEq"></div>
+</div>
+
+</div>
+<script>
+// ─── Utility: line intersect ───
+function lineIntersect(a1x,a1y,a2x,a2y,b1x,b1y,b2x,b2y){
+  const d=(a1x-a2x)*(b1y-b2y)-(a1y-a2y)*(b1x-b2x);
+  if(Math.abs(d)<1e-10)return null;
+  const t=((a1x-b1x)*(b1y-b2y)-(a1y-b1y)*(b1x-b2x))/d;
+  return[a1x+t*(a2x-a1x),a1y+t*(a2y-a1y)];
+}
+function feasible(x,y,c1a,c1b,c1r,c2a,c2b,c2r){
+  return x>=0&&y>=0&&c1a*x+c1b*y<=c1r+1e-9&&c2a*x+c2b*y<=c2r+1e-9;
+}
+
+// ─── LAB 1 ───
+function drawLP(){
+  const c1a=+document.getElementById('c1a').value||2;
+  const c1b=+document.getElementById('c1b').value||5;
+  const c1r=+document.getElementById('c1r').value||180;
+  const c2a=+document.getElementById('c2a').value||4;
+  const c2b=+document.getElementById('c2b').value||2;
+  const c2r=+document.getElementById('c2r').value||160;
+  const oc=+document.getElementById('oc').value||5;
+  const od=+document.getElementById('od').value||4;
+  const objMax=document.getElementById('objType').value==='max';
+  // Corner points
+  const corners=[[0,0]];
+  if(c1b!==0)corners.push([0,c1r/c1b]);
+  if(c1a!==0)corners.push([c1r/c1a,0]);
+  if(c2b!==0)corners.push([0,c2r/c2b]);
+  if(c2a!==0)corners.push([c2r/c2a,0]);
+  const inter=lineIntersect(0,c1r/c1b,c1r/c1a,0,0,c2r/c2b,c2r/c2a,0);
+  if(inter)corners.push(inter);
+  const feasCorners=corners.filter(([x,y])=>feasible(x,y,c1a,c1b,c1r,c2a,c2b,c2r)&&x>=0&&y>=0).map(([x,y])=>[Math.round(x*1000)/1000,Math.round(y*1000)/1000]);
+  const zVals=feasCorners.map(([x,y])=>oc*x+od*y);
+  const optZ=objMax?Math.max(...zVals):Math.min(...zVals);
+  const optIdx=zVals.indexOf(optZ);
+  const can=document.getElementById('lpCanvas'),ctx=can.getContext('2d');
+  const W=can.width,H=can.height,pad=55;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const xMax=Math.max(c1r/c1a,c2r/c2a,1)*1.15;
+  const yMax=Math.max(c1r/c1b,c2r/c2b,1)*1.15;
+  const toX=x=>pad+x/xMax*(W-2*pad);const toY=y=>H-pad-y/yMax*(H-2*pad);
+  // Feasible region fill
+  const fc=feasCorners.sort((a,b)=>{const ax=Math.atan2(a[1]-optZ/oc,a[0]-optZ/oc),bx=Math.atan2(b[1]-optZ/oc,b[0]-optZ/oc);return ax-bx;});
+  if(fc.length>=3){ctx.fillStyle='rgba(37,99,235,0.2)';ctx.beginPath();ctx.moveTo(toX(fc[0][0]),toY(fc[0][1]));fc.forEach(([x,y])=>ctx.lineTo(toX(x),toY(y)));ctx.closePath();ctx.fill();}
+  // Constraint lines
+  [[c1a,c1b,c1r,'#60a5fa','C1'],[c2a,c2b,c2r,'#34d399','C2']].forEach(([a,b,r,col,lbl])=>{
+    ctx.strokeStyle=col;ctx.lineWidth=2;
+    ctx.beginPath();
+    if(b!==0)ctx.moveTo(toX(0),toY(r/b));
+    if(a!==0)ctx.lineTo(toX(r/a),toY(0));
+    ctx.stroke();
+    ctx.fillStyle=col;ctx.font='bold 11px Inter';
+    if(b!==0)ctx.fillText(`${lbl}: ${a}x+${b}y=${r}`,toX(0)+3,toY(r/b)-4);
+  });
+  // Corner points
+  feasCorners.forEach(([x,y],i)=>{
+    const isOpt=i===optIdx;
+    ctx.fillStyle=isOpt?'#fbbf24':'#94a3b8';
+    ctx.shadowColor=isOpt?'#fbbf24':'transparent';ctx.shadowBlur=isOpt?10:0;
+    ctx.beginPath();ctx.arc(toX(x),toY(y),isOpt?9:6,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+    ctx.fillStyle='#e2e8f0';ctx.font='bold 10px Inter';ctx.textAlign='left';
+    ctx.fillText(`(${x.toFixed(1)},${y.toFixed(1)}) Z=${(oc*x+od*y).toFixed(1)}`,toX(x)+8,toY(y)+4);
+  });
+  // Axes
+  ctx.strokeStyle='#334155';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(pad,pad);ctx.lineTo(pad,H-pad);ctx.lineTo(W-pad,H-pad);ctx.stroke();
+  ctx.fillStyle='#475569';ctx.font='10px Inter';ctx.textAlign='center';
+  ctx.fillText('x →',W-pad,H-pad+14);ctx.fillText('y ↑',pad-15,pad);
+  const optPt=feasCorners[optIdx]||[0,0];
+  document.getElementById('lpEq').textContent=
+    `LP Problem:
+${objMax?'Maximize':'Minimize'}: Z = ${oc}x + ${od}y
+Subject to:
+  ${c1a}x + ${c1b}y ≤ ${c1r}
+  ${c2a}x + ${c2b}y ≤ ${c2r}
+  x, y ≥ 0
+
+Corner Points:
+${feasCorners.map(([x,y],i)=>`  (${x.toFixed(2)}, ${y.toFixed(2)}): Z = ${(oc*x+od*y).toFixed(2)}${i===optIdx?' ← OPTIMAL':''}`).join('
+')}
+
+Optimal: x=${optPt[0].toFixed(2)}, y=${optPt[1].toFixed(2)}, Z=${optZ.toFixed(2)}`;
+  // Update iso chart
+  drawIsoProfit(optZ,oc,od,xMax,yMax,feasCorners,optIdx);
+}
+
+// ─── LAB 2: Iso-Profit ───
+function drawIsoProfit(optZ,oc_,od_,xMax_,yMax_,fc_,optIdx_){
+  const z=+document.getElementById('zLevel').value;
+  document.getElementById('zLevelv').textContent=z;
+  const oc=oc_||+document.getElementById('oc').value||5;
+  const od=od_||+document.getElementById('od').value||4;
+  const c1a=+document.getElementById('c1a').value||2;const c1b=+document.getElementById('c1b').value||5;const c1r=+document.getElementById('c1r').value||180;
+  const c2a=+document.getElementById('c2a').value||4;const c2b=+document.getElementById('c2b').value||2;const c2r=+document.getElementById('c2r').value||160;
+  const xMax=xMax_||(Math.max(c1r/c1a,c2r/c2a)*1.15);
+  const yMax=yMax_||(Math.max(c1r/c1b,c2r/c2b)*1.15);
+  const can=document.getElementById('isoCanvas'),ctx=can.getContext('2d');
+  const W=can.width,H=can.height,pad=55;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const toX=x=>pad+x/xMax*(W-2*pad);const toY=y=>H-pad-y/yMax*(H-2*pad);
+  // Feasible region
+  const corners=[[0,0]];
+  if(c1b!==0)corners.push([0,c1r/c1b]);if(c1a!==0)corners.push([c1r/c1a,0]);
+  if(c2b!==0)corners.push([0,c2r/c2b]);if(c2a!==0)corners.push([c2r/c2a,0]);
+  const inter=lineIntersect(0,c1r/c1b,c1r/c1a,0,0,c2r/c2b,c2r/c2a,0);
+  if(inter)corners.push(inter);
+  const fc=corners.filter(([x,y])=>feasible(x,y,c1a,c1b,c1r,c2a,c2b,c2r)&&x>=0&&y>=0);
+  if(fc.length>=3){ctx.fillStyle='rgba(37,99,235,0.15)';ctx.beginPath();ctx.moveTo(toX(fc[0][0]),toY(fc[0][1]));fc.forEach(([x,y])=>ctx.lineTo(toX(x),toY(y)));ctx.closePath();ctx.fill();}
+  // Constraint lines  
+  [[c1a,c1b,c1r,'#60a5fa'],[c2a,c2b,c2r,'#34d399']].forEach(([a,b,r,col])=>{
+    ctx.strokeStyle=col+'88';ctx.lineWidth=1.5;ctx.beginPath();if(b!==0)ctx.moveTo(toX(0),toY(r/b));if(a!==0)ctx.lineTo(toX(r/a),toY(0));ctx.stroke();
+  });
+  // Current iso-profit line
+  const inside=fc.some(([x,y])=>oc*x+od*y>=z-1);
+  ctx.strokeStyle=inside?'#fbbf24':'#f87171';ctx.lineWidth=2;ctx.shadowColor=ctx.strokeStyle;ctx.shadowBlur=6;
+  if(od!==0){ctx.beginPath();ctx.moveTo(toX(0),toY(z/od));ctx.lineTo(toX(z/oc>0?Math.min(z/oc,xMax):xMax),toY(od!==0?Math.max(0,(z-oc*(z/oc>0?Math.min(z/oc,xMax):xMax))/od):0));ctx.stroke();}
+  ctx.shadowBlur=0;
+  ctx.fillStyle='#fbbf24';ctx.font='bold 11px Inter';ctx.textAlign='left';
+  ctx.fillText(`Z=${z}: ${oc}x+${od}y=${z}`,pad+5,30);
+  ctx.fillStyle=inside?'#4ade80':'#f87171';ctx.fillText(inside?'Line is within feasible region':'Beyond feasible region!',pad+5,48);
+  // Axes
+  ctx.strokeStyle='#334155';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(pad,pad);ctx.lineTo(pad,H-pad);ctx.lineTo(W-pad,H-pad);ctx.stroke();
+  document.getElementById('isoEq').textContent=`Iso-profit line: ${oc}x + ${od}y = ${z}
+y = (${z} − ${oc}x) / ${od}
+
+As Z increases, line moves away from origin.
+Optimal solution jahan iso-profit line last touches feasible region corner!`;
+}
+drawIsoProfit();
+
+// ─── LAB 3: Diet Problem ───
+function drawDiet(){
+  const aP=+document.getElementById('aP').value,aC=+document.getElementById('aC').value,aX=+document.getElementById('aX').value;
+  const bP=+document.getElementById('bP').value,bC=+document.getElementById('bC').value,bX=+document.getElementById('bX').value;
+  const rP=+document.getElementById('rP').value,rC=+document.getElementById('rC').value;
+  // Minimize: Z = aX*x + bX*y  st: aP*x+bP*y>=rP, aC*x+bC*y>=rC, x,y>=0
+  const corners=[];
+  if(aP!==0)corners.push([rP/aP,0]);
+  if(bP!==0)corners.push([0,rP/bP]);
+  if(aC!==0)corners.push([rC/aC,0]);
+  if(bC!==0)corners.push([0,rC/bC]);
+  const inter=lineIntersect(0,rP/bP,rP/aP,0,0,rC/bC,rC/aC,0);
+  if(inter&&inter[0]>=0&&inter[1]>=0)corners.push(inter);
+  const feasible2=([x,y])=>x>=0&&y>=0&&aP*x+bP*y>=rP-1e-9&&aC*x+bC*y>=rC-1e-9;
+  const fc=corners.filter(feasible2);
+  const zVals=fc.map(([x,y])=>aX*x+bX*y);
+  const minZ=Math.min(...zVals);const optIdx=zVals.indexOf(minZ);
+  const can=document.getElementById('dietCanvas'),ctx=can.getContext('2d');
+  const W=can.width,H=can.height,pad=55;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const xMax=Math.max(...corners.map(c=>c[0]))*1.2;const yMax=Math.max(...corners.map(c=>c[1]))*1.2;
+  const toX=x=>pad+x/xMax*(W-2*pad);const toY=y=>H-pad-y/yMax*(H-2*pad);
+  // Constraint lines (>=)
+  [[aP,bP,rP,'#60a5fa','Protein'],[aC,bC,rC,'#34d399','Carbs']].forEach(([a,b,r,col,lbl])=>{
+    ctx.strokeStyle=col;ctx.lineWidth=2;ctx.beginPath();if(b!==0)ctx.moveTo(toX(0),toY(r/b));if(a!==0)ctx.lineTo(toX(r/a),toY(0));ctx.stroke();
+    ctx.fillStyle=col;ctx.font='11px Inter';if(b!==0)ctx.fillText(lbl,toX(0)+4,toY(r/b)-5);
+  });
+  fc.forEach(([x,y],i)=>{
+    const isOpt=i===optIdx;ctx.fillStyle=isOpt?'#fbbf24':'#94a3b8';
+    ctx.beginPath();ctx.arc(toX(x),toY(y),isOpt?9:5,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#e2e8f0';ctx.font='9px Inter';ctx.fillText(`(${x.toFixed(1)},${y.toFixed(1)}) Z=${(aX*x+bX*y).toFixed(2)}`,toX(x)+8,toY(y)+4);
+  });
+  ctx.strokeStyle='#334155';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(pad,pad);ctx.lineTo(pad,H-pad);ctx.lineTo(W-pad,H-pad);ctx.stroke();
+  const optPt=fc[optIdx]||[0,0];
+  document.getElementById('dietEq').textContent=
+    `Diet LP (Minimization):
+Minimize: Z = ${aX}x + ${bX}y (cost)
+Subject to:
+  ${aP}x + ${bP}y ≥ ${rP} (protein)
+  ${aC}x + ${bC}y ≥ ${rC} (carbs)
+  x, y ≥ 0
+
+Optimal: x=${optPt[0].toFixed(2)} units Food A, y=${optPt[1].toFixed(2)} units Food B
+Minimum Cost = ₹${minZ.toFixed(2)}`;
+}
+drawDiet();
+
+// ─── LAB 4: Transport ───
+function solveTransport(){
+  const cost=[[+document.getElementById('t11').value,+document.getElementById('t12').value,+document.getElementById('t13').value],[+document.getElementById('t21').value,+document.getElementById('t22').value,+document.getElementById('t23').value]];
+  const supply=[+document.getElementById('s1').value,+document.getElementById('s2').value];
+  const demand=[+document.getElementById('d1').value,+document.getElementById('d2').value,+document.getElementById('d3').value];
+  const sup=[...supply],dem=[...demand];
+  const alloc=[[0,0,0],[0,0,0]];
+  let i=0,j=0,totalCost=0;
+  const steps=[];
+  while(i<2&&j<3){
+    const amt=Math.min(sup[i],dem[j]);
+    alloc[i][j]=amt;sup[i]-=amt;dem[j]-=amt;
+    steps.push(`Allocate x[${i+1}][${j+1}] = ${amt} (S${i+1}→D${j+1}, cost=${cost[i][j]})`);
+    if(sup[i]===0&&i<2-1)i++;else if(dem[j]===0&&j<3-1)j++;else if(sup[i]===0)i++;else j++;
+  }
+  for(let r=0;r<2;r++)for(let c=0;c<3;c++)totalCost+=alloc[r][c]*cost[r][c];
+  let out=`North-West Corner Method:
+
+Allocations:
+${steps.join('
+')}
+
+Allocation Matrix:
+`;
+  for(let r=0;r<2;r++)out+=`  S${r+1}: [${alloc[r].join(', ')}]
+`;
+  out+=`
+Cost Calculation:
+`;
+  for(let r=0;r<2;r++)for(let c=0;c<3;c++)if(alloc[r][c]>0)out+=`  x[${r+1}][${c+1}] = ${alloc[r][c]} × c[${r+1}][${c+1}] = ${alloc[r][c]} × ${cost[r][c]} = ${alloc[r][c]*cost[r][c]}
+`;
+  out+=`
+Total Transportation Cost = ₹${totalCost}
+
+(Note: NW Corner gives initial BFS, not always optimal. Use MODI method to optimize.)`;
+  document.getElementById('transportEq').textContent=out;
+}
+solveTransport();
+drawLP();
+</script>
+</body></html>

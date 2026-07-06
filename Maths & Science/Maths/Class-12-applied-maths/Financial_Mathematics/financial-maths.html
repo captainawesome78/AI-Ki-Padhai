@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+<title>Financial Maths — Applied Maths 12 | AIkiPadhai</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../../style.css"/>
+<style>
+body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;}
+.pg-hero{background:linear-gradient(135deg,#1a0f00,#ca8a04);padding:2.8rem 0;text-align:center;}
+.pg-hero h1{color:#fff!important;}.pg-hero p{color:#fef08a!important;}
+h2{color:#ca8a04;border-left:4px solid #ca8a04;padding-left:.75rem;margin:2rem 0 .8rem;}
+h3{color:#92400e;margin:1.5rem 0 .5rem;}
+.fb{background:#fefce8;border-left:4px solid #ca8a04;border-radius:0 10px 10px 0;padding:.8rem 1.1rem;margin:.7rem 0;font-family:monospace;font-size:.91rem;}
+.eb{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:1rem 1.2rem;margin:.8rem 0;}
+.eb h4{color:#16a34a;margin:0 0 .5rem;}
+table{width:100%;border-collapse:collapse;margin:.7rem 0;}
+th{background:#ca8a04;color:#fff;padding:.5rem .8rem;font-size:.85rem;}
+td{border:1px solid #e2e8f0;padding:.45rem .7rem;font-size:.88rem;text-align:center;}
+tr:nth-child(even) td{background:#fefce8;}
+.tip{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:.7rem 1rem;margin:.6rem 0;font-size:.88rem;}
+</style></head><body>
+<header><div class="container header-content">
+<a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+<nav><a href="../index.html">Applied Maths 12</a><a href="index.html">Unit VII</a><a href="financial-maths.html" class="active">Financial Maths</a></nav>
+</div></header>
+<section class="pg-hero"><div class="container">
+<h1>Financial Mathematics 💰</h1><p>Perpetuity, bonds, NPV, IRR, stocks — smart financial decisions</p>
+</div></section>
+<div class="container">
+
+<h2>1. Perpetuity</h2>
+<p>Perpetuity ek aise annuity hai jo forever payments karta hai — no end date!</p>
+<div class="fb">PV of Perpetuity = C / r
+C = periodic cash flow
+r = interest rate per period (decimal)
+
+Growing Perpetuity: PV = C / (r − g)  where g = growth rate</div>
+<div class="eb"><h4>Udaharan: Perpetuity</h4>
+<p>Ek endowment fund mein ₹10,000/year milne chahiye. Interest rate 8%. Fund size?<br>
+PV = 10000/0.08 = ₹1,25,000</p></div>
+
+<h2>2. Bonds — Valuation</h2>
+<p>Bond ek debt instrument hai. Issuer periodic coupon payments karta hai aur maturity par face value return karta hai.</p>
+<div class="fb">Bond Price = C×[1−(1+r)⁻ⁿ]/r + F/(1+r)ⁿ
+C = Annual coupon payment = Face Value × Coupon Rate
+F = Face value (par value)
+r = Required yield (discount rate)
+n = Years to maturity</div>
+<div class="tip">💡 Rule: Coupon Rate > Required Yield → Bond trades at PREMIUM (Price > F)<br>
+Coupon Rate < Required Yield → Bond trades at DISCOUNT (Price < F)</div>
+<div class="eb"><h4>Udaharan: Bond Pricing</h4>
+<p>Face Value = ₹1000, Coupon = 8%, Maturity = 5 years, Required yield = 10%<br>
+C = 1000×0.08 = ₹80 per year<br>
+PV of coupons = 80×[1−(1.10)⁻⁵]/0.10 = 80×3.7908 = ₹303.26<br>
+PV of face value = 1000/(1.10)⁵ = 1000/1.6105 = ₹620.92<br>
+Bond Price = 303.26 + 620.92 = ₹924.18 (discount par, kyunki yield > coupon)</p></div>
+
+<h2 id="npv">3. Net Present Value (NPV) & IRR</h2>
+<div class="fb">NPV = Σ[CFₜ/(1+r)ᵗ] − Initial Investment
+CFₜ = Cash flow at time t, r = discount rate
+
+Decision Rule:
+  NPV > 0 → Accept project (profitable)
+  NPV < 0 → Reject project
+  NPV = 0 → Indifferent
+
+IRR: Rate at which NPV = 0
+  If IRR > Required Rate → Accept
+  If IRR < Required Rate → Reject</div>
+<div class="eb"><h4>Udaharan: NPV Calculation</h4>
+<p>Initial investment = ₹1,00,000. Cash flows: Y1=₹30k, Y2=₹40k, Y3=₹50k. r=12%<br>
+NPV = 30000/1.12 + 40000/1.12² + 50000/1.12³ − 100000<br>
+= 26786 + 31888 + 35589 − 100000<br>
+= 94263 − 100000 = −₹5,737<br>
+NPV < 0 → Reject this project!</p></div>
+<div class="eb"><h4>Udaharan: IRR Approximation</h4>
+<p>Try r=10%: NPV = 30000/1.1 + 40000/1.21 + 50000/1.331 − 100000<br>
+= 27273 + 33058 + 37566 − 100000 = −2103<br>
+Try r=9%: NPV = 27523 + 33663 + 38609 − 100000 = −205 ≈ 0<br>
+IRR ≈ 9% → If required rate is 12% → Reject</p></div>
+
+<h2 id="stocks">4. Stock Valuation</h2>
+<h3>4.1 Dividend Discount Model (DDM)</h3>
+<div class="fb">Constant Dividend:  P₀ = D/r  (Gordon Growth — no growth)
+Gordon Growth:      P₀ = D₁/(r − g)
+D₁ = next dividend, r = required return, g = growth rate</div>
+<div class="eb"><h4>Udaharan: DDM</h4>
+<p>Stock expected dividend next year = ₹5. Growth rate = 4%. Required return = 12%.<br>
+P₀ = 5/(0.12 − 0.04) = 5/0.08 = ₹62.5</p></div>
+<h3>4.2 P/E Ratio aur EPS</h3>
+<div class="fb">EPS = (Net Profit − Preferred Dividends) / Shares Outstanding
+P/E Ratio = Market Price per Share / EPS
+Intrinsic Value = EPS × Industry P/E</div>
+
+<h2 id="leasing">5. Leasing</h2>
+<div class="fb">Financial Lease: Long-term, asset ownership effectively transfers
+Operating Lease: Short-term, lessor owns the asset
+
+Lease vs Buy Decision:
+NPV of Leasing = Σ[Lease Payment × (1−t)]/(1+r)ᵗ + Salvage Value benefit
+Compare with: Cost of buying − tax depreciation benefits</div>
+<div class="eb"><h4>Udaharan: Lease vs Buy</h4>
+<p>Machine cost ₹5,00,000. Lease: ₹1,20,000/year for 5 years. r=10%, tax=30%<br>
+After-tax lease payment = 1,20,000 × (1−0.3) = ₹84,000<br>
+PV of lease = 84,000 × PVIFA(10%,5) = 84,000 × 3.7908 = ₹3,18,427<br>
+PV of buying net of tax = 5,00,000 − PV(tax shield on depreciation)<br>
+Compare totals → whichever is lower, choose that!</p></div>
+
+<div style="text-align:center;margin:1.5rem 0;">
+<a href="financial-interactive.html" style="background:linear-gradient(135deg,#ca8a04,#eab308);color:#fff;padding:.8rem 2rem;border-radius:10px;font-weight:700;font-size:1rem;">🎮 Interactive Lab Kholein →</a>
+</div>
+</div>
+<footer><p>© 2025 AIkiPadhai</p><div><a href="../../../../about.html">About</a></div></footer>
+<script src="../../../../script.js"></script>
+</body></html>

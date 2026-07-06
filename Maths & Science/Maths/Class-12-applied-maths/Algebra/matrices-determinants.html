@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+<title>Matrices & Determinants — Applied Maths 12 | AIkiPadhai</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../../style.css"/>
+<style>
+body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;}
+.pg-hero{background:linear-gradient(135deg,#1e1b4b,#4f46e5);padding:2.8rem 0;text-align:center;}
+.pg-hero h1{color:#fff!important;font-size:2rem;margin:0 0 .4rem;}
+.pg-hero p{color:#c7d2fe!important;}
+h2{color:#4f46e5;border-left:4px solid #4f46e5;padding-left:.75rem;margin:2rem 0 .8rem;}
+h3{color:#3730a3;margin:1.5rem 0 .5rem;}
+.fb{background:#eef2ff;border-left:4px solid #4f46e5;border-radius:0 10px 10px 0;padding:.8rem 1.1rem;margin:.7rem 0;font-family:monospace;font-size:.92rem;color:#1e293b;}
+.eb{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:1rem 1.2rem;margin:.8rem 0;}
+.eb h4{color:#16a34a;margin:0 0 .5rem;}
+.matrix-grid{display:grid;gap:.8rem;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));}
+.m-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:.9rem;text-align:center;}
+.m-card h4{color:#4f46e5;margin:0 0 .4rem;font-size:.9rem;}
+.m-card .mat{font-family:monospace;font-size:.82rem;color:#374151;line-height:1.8;}
+table{width:100%;border-collapse:collapse;margin:.7rem 0;}
+th{background:#4f46e5;color:#fff;padding:.5rem .8rem;font-size:.85rem;}
+td{border:1px solid #e2e8f0;padding:.45rem .7rem;font-size:.88rem;}
+tr:nth-child(even) td{background:#f8faff;}
+.truth-table td{font-family:monospace;text-align:center;}
+.truth-table .t{color:#16a34a;font-weight:700;}
+.truth-table .f{color:#dc2626;}
+.tip{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:.7rem 1rem;margin:.6rem 0;font-size:.88rem;}
+</style></head><body>
+<header><div class="container header-content">
+<a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+<nav><a href="../index.html">Applied Maths 12</a><a href="index.html">Unit II</a><a href="matrices-determinants.html" class="active">Matrices</a></nav>
+</div></header>
+<section class="pg-hero"><div class="container">
+<h1>Matrices & Determinants 📐</h1><p>Boolean algebra aur linear equations bhi — Class 12 Applied Maths</p>
+</div></section>
+<div class="container">
+
+<h2>1. Matrices — Parichay</h2>
+<p>Matrix ek rectangular arrangement hai numbers ya elements ka, rows aur columns mein. Isko bold capital letter se denote karte hain jaise A, B, C.</p>
+<div class="fb">A = [aᵢⱼ] jahan i = row number, j = column number<br>Order: m × n matlab m rows aur n columns</div>
+
+<h3>Matrix ke Types</h3>
+<div class="matrix-grid">
+<div class="m-card"><h4>Row Matrix (1×n)</h4><div class="mat">[2  5  -1  3]</div><p style="font-size:.78rem;color:#64748b;margin:.3rem 0 0">Sirf ek row hoti hai</p></div>
+<div class="m-card"><h4>Column Matrix (m×1)</h4><div class="mat">⎡4⎤<br>⎢7⎥<br>⎣2⎦</div><p style="font-size:.78rem;color:#64748b;margin:.3rem 0 0">Sirf ek column hota hai</p></div>
+<div class="m-card"><h4>Square Matrix (n×n)</h4><div class="mat">⎡1 2⎤<br>⎣3 4⎦</div><p style="font-size:.78rem;color:#64748b;margin:.3rem 0 0">Rows = Columns</p></div>
+<div class="m-card"><h4>Identity Matrix (I)</h4><div class="mat">⎡1 0⎤<br>⎣0 1⎦</div><p style="font-size:.78rem;color:#64748b;margin:.3rem 0 0">Diagonal = 1, baki = 0</p></div>
+<div class="m-card"><h4>Zero/Null Matrix (O)</h4><div class="mat">⎡0 0⎤<br>⎣0 0⎦</div><p style="font-size:.78rem;color:#64748b;margin:.3rem 0 0">Sare elements 0</p></div>
+<div class="m-card"><h4>Diagonal Matrix</h4><div class="mat">⎡3 0 0⎤<br>⎢0 5 0⎥<br>⎣0 0 7⎦</div><p style="font-size:.78rem;color:#64748b;margin:.3rem 0 0">Off-diagonal = 0</p></div>
+</div>
+
+<h2>2. Matrix Operations</h2>
+<h3>2.1 Addition aur Subtraction</h3>
+<div class="fb">A + B = [aᵢⱼ + bᵢⱼ]  (same order honi chahiye dono ki)<br>A − B = [aᵢⱼ − bᵢⱼ]</div>
+<div class="eb"><h4>Udaharan: Addition</h4>
+<p>A = [[1,2],[3,4]]  aur  B = [[5,6],[7,8]]<br>
+A + B = [[1+5, 2+6],[3+7, 4+8]] = [[6,8],[10,12]]</p></div>
+
+<h3>2.2 Scalar Multiplication</h3>
+<div class="fb">kA = [k·aᵢⱼ]  — har element ko k se multiply karo</div>
+<div class="eb"><h4>Udaharan: Scalar Multiplication</h4>
+<p>3 × [[1,-2],[0,4]] = [[3,-6],[0,12]]</p></div>
+
+<h3>2.3 Matrix Multiplication</h3>
+<p>A (m×n) aur B (n×p) ko multiply kar sakte hain. Result (m×p) hoga. Ye tabhi possible hai jab A ki columns = B ki rows.</p>
+<div class="fb">Cᵢⱼ = Σₖ aᵢₖ · bₖⱼ  (i-th row × j-th column, element-wise multiply karke add karo)</div>
+<div class="eb"><h4>Udaharan: 2×2 Multiplication</h4>
+<p>A = [[1,2],[3,4]]  ×  B = [[5,6],[7,8]]<br>
+C₁₁ = 1×5 + 2×7 = 5+14 = 19<br>
+C₁₂ = 1×6 + 2×8 = 6+16 = 22<br>
+C₂₁ = 3×5 + 4×7 = 15+28 = 43<br>
+C₂₂ = 3×6 + 4×8 = 18+32 = 50<br>
+A×B = [[19,22],[43,50]]</p></div>
+<div class="tip">⚠️ Important: Matrix multiplication commutative NAHI hota! AB ≠ BA generally</div>
+
+<h3>2.4 Transpose of a Matrix</h3>
+<div class="fb">Aᵀ = [aⱼᵢ]  — rows ko columns aur columns ko rows banao<br>
+If A = [[1,2,3],[4,5,6]] then Aᵀ = [[1,4],[2,5],[3,6]]</div>
+
+<h2>3. Determinants</h2>
+<p>Sirf square matrices ka determinant hota hai. Isko |A| ya det(A) likhte hain.</p>
+<h3>3.1 2×2 Determinant</h3>
+<div class="fb">|A| = |a b| = ad − bc<br>      |c d|</div>
+<div class="eb"><h4>Udaharan</h4>
+<p>A = [[3,1],[5,2]]<br>|A| = 3×2 − 1×5 = 6 − 5 = 1</p></div>
+
+<h3>3.2 3×3 Determinant (Expansion along row 1)</h3>
+<div class="fb">|A| = a₁₁(a₂₂a₃₃ − a₂₃a₃₂) − a₁₂(a₂₁a₃₃ − a₂₃a₃₁) + a₁₃(a₂₁a₃₂ − a₂₂a₃₁)</div>
+<div class="eb"><h4>Udaharan: 3×3 Determinant</h4>
+<p>A = [[1,2,3],[0,1,4],[5,6,0]]<br>
+|A| = 1(1·0 − 4·6) − 2(0·0 − 4·5) + 3(0·6 − 1·5)<br>
+= 1(0−24) − 2(0−20) + 3(0−5)<br>
+= −24 + 40 − 15 = 1</p></div>
+
+<h3>3.3 Properties of Determinants</h3>
+<table>
+<tr><th>Property</th><th>Statement</th></tr>
+<tr><td>Transpose</td><td>|Aᵀ| = |A|</td></tr>
+<tr><td>Row swap</td><td>Do rows swap karo → sign change hoga</td></tr>
+<tr><td>Proportional rows</td><td>Koi 2 rows proportional hain → |A| = 0</td></tr>
+<tr><td>Scalar</td><td>|kA| = kⁿ|A| for n×n matrix</td></tr>
+<tr><td>Product</td><td>|AB| = |A|·|B|</td></tr>
+<tr><td>Singular</td><td>|A| = 0 → matrix singular (non-invertible)</td></tr>
+</table>
+
+<h3>3.4 Inverse of a Matrix</h3>
+<div class="fb">A⁻¹ = adj(A) / |A|   (tabhi exist karta hai jab |A| ≠ 0)
+<br><br>2×2 case: If A = [[a,b],[c,d]] then A⁻¹ = (1/|A|)[[d,-b],[-c,a]]</div>
+<div class="eb"><h4>Udaharan: Inverse</h4>
+<p>A = [[4,7],[2,6]]<br>
+|A| = 4×6 − 7×2 = 24 − 14 = 10<br>
+A⁻¹ = (1/10)[[6,−7],[−2,4]] = [[0.6,−0.7],[−0.2,0.4]]<br>
+Check: A · A⁻¹ = I ✓</p></div>
+
+<h2 id="equations">4. System of Linear Equations</h2>
+<p>n equations aur n unknowns wala system. Matrix form: <strong>AX = B</strong></p>
+<div class="fb">If |A| ≠ 0:  X = A⁻¹B  (unique solution — consistent)
+If |A| = 0:  ya infinite solutions ya no solution (check augmented matrix)</div>
+
+<h3>4.1 Cramer's Rule</h3>
+<p>2 ya 3 equations ke liye determinant method se direct solution:</p>
+<div class="fb">For AX = B:<br>
+x = Dx/D,  y = Dy/D,  z = Dz/D<br><br>
+D = |A|<br>
+Dx = D with column 1 replaced by B<br>
+Dy = D with column 2 replaced by B<br>
+Dz = D with column 3 replaced by B</div>
+<div class="eb"><h4>Udaharan: Cramer's Rule (2 variables)</h4>
+<p>2x + 3y = 8 <br>x − y = 1<br><br>
+D = |2,3; 1,−1| = 2(−1)−3(1) = −2−3 = −5<br>
+Dx = |8,3; 1,−1| = 8(−1)−3(1) = −8−3 = −11<br>
+Dy = |2,8; 1,1| = 2(1)−8(1) = 2−8 = −6<br>
+x = Dx/D = −11/−5 = 2.2<br>
+y = Dy/D = −6/−5 = 1.2<br>
+Check: 2(2.2)+3(1.2) = 4.4+3.6 = 8 ✓</p></div>
+
+<h2 id="boolean">5. Boolean Algebra</h2>
+<p>George Boole ne develop ki — digital circuits aur logical reasoning ke liye. Sirf 2 values: 0 (False) aur 1 (True).</p>
+
+<h3>5.1 Basic Operations</h3>
+<table>
+<tr><th>Operation</th><th>Symbol</th><th>Name</th><th>Meaning</th></tr>
+<tr><td>AND</td><td>A · B ya A ∧ B</td><td>Conjunction</td><td>Dono true tabhi result true</td></tr>
+<tr><td>OR</td><td>A + B ya A ∨ B</td><td>Disjunction</td><td>Koi ek true tabhi result true</td></tr>
+<tr><td>NOT</td><td>A' ya Ā ya ¬A</td><td>Complement/Negation</td><td>True ↔ False</td></tr>
+</table>
+
+<h3>5.2 Truth Tables</h3>
+<table class="truth-table">
+<tr><th>A</th><th>B</th><th>A AND B</th><th>A OR B</th><th>A'</th><th>A XOR B</th></tr>
+<tr><td>0</td><td>0</td><td class="f">0</td><td class="f">0</td><td class="t">1</td><td class="f">0</td></tr>
+<tr><td>0</td><td>1</td><td class="f">0</td><td class="t">1</td><td class="t">1</td><td class="t">1</td></tr>
+<tr><td>1</td><td>0</td><td class="f">0</td><td class="t">1</td><td class="f">0</td><td class="t">1</td></tr>
+<tr><td>1</td><td>1</td><td class="t">1</td><td class="t">1</td><td class="f">0</td><td class="f">0</td></tr>
+</table>
+
+<h3>5.3 Boolean Laws</h3>
+<table>
+<tr><th>Law</th><th>AND form</th><th>OR form</th></tr>
+<tr><td>Identity</td><td>A · 1 = A</td><td>A + 0 = A</td></tr>
+<tr><td>Null/Domination</td><td>A · 0 = 0</td><td>A + 1 = 1</td></tr>
+<tr><td>Idempotent</td><td>A · A = A</td><td>A + A = A</td></tr>
+<tr><td>Complement</td><td>A · A' = 0</td><td>A + A' = 1</td></tr>
+<tr><td>Double negation</td><td colspan="2">(A')' = A</td></tr>
+<tr><td>Commutative</td><td>AB = BA</td><td>A+B = B+A</td></tr>
+<tr><td>Associative</td><td>(AB)C = A(BC)</td><td>(A+B)+C = A+(B+C)</td></tr>
+<tr><td>Distributive</td><td>A(B+C) = AB+AC</td><td>A+BC = (A+B)(A+C)</td></tr>
+<tr><td>Absorption</td><td>A(A+B) = A</td><td>A+AB = A</td></tr>
+</table>
+
+<h3>5.4 De Morgan's Theorems</h3>
+<div class="fb">(A + B)' = A' · B'  → OR ka complement = AND of complements
+(A · B)' = A' + B'  → AND ka complement = OR of complements</div>
+<div class="eb"><h4>Verification</h4>
+<p>A=1, B=0:<br>
+(A+B)' = (1+0)' = 1' = 0<br>
+A'·B' = 0·1 = 0 ✓<br><br>
+(A·B)' = (1·0)' = 0' = 1<br>
+A'+B' = 0+1 = 1 ✓</p></div>
+
+<h3>5.5 Simplification — Udaharan</h3>
+<div class="eb"><h4>Simplify: F = A'B + AB' + AB</h4>
+<p>F = A'B + AB' + AB<br>
+= A'B + A(B' + B)  [AB'+AB = A(B'+B)]<br>
+= A'B + A·1  [B'+B=1]<br>
+= A'B + A<br>
+= (A'+A)(A+B)  [Distributive]<br>
+= 1·(A+B)<br>
+= <strong>A + B</strong></p></div>
+
+<div style="margin:2rem 0;background:#eef2ff;border-radius:12px;padding:1.2rem;">
+<h3 style="color:#4f46e5;margin:0 0 .8rem;">📝 Important Formulas Summary</h3>
+<ul style="color:#374151;line-height:2;">
+<li>|2×2 Matrix| = ad − bc</li>
+<li>A⁻¹ = adj(A)/|A| (only if |A|≠0)</li>
+<li>AX = B → X = A⁻¹B (matrix method)</li>
+<li>Cramer's: x=Dx/D, y=Dy/D</li>
+<li>De Morgan: (A+B)' = A'B', (AB)' = A'+B'</li>
+</ul>
+</div>
+<div style="text-align:center;margin:1.5rem 0;">
+<a href="algebra-interactive.html" style="background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;padding:.8rem 2rem;border-radius:10px;font-weight:700;font-size:1rem;">🎮 Interactive Lab Kholein →</a>
+</div>
+</div>
+<footer><p>© 2025 AIkiPadhai</p><div><a href="../../../../about.html">About</a> | <a href="../../../../privacy-policy.html">Privacy</a></div></footer>
+<script src="../../../../script.js"></script>
+</body></html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+<title>Linear Programming — Applied Maths 12 | AIkiPadhai</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../../style.css"/>
+<style>
+body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;}
+.pg-hero{background:linear-gradient(135deg,#172554,#2563eb);padding:2.8rem 0;text-align:center;}
+.pg-hero h1{color:#fff!important;}.pg-hero p{color:#bfdbfe!important;}
+h2{color:#2563eb;border-left:4px solid #2563eb;padding-left:.75rem;margin:2rem 0 .8rem;}
+h3{color:#1e40af;margin:1.5rem 0 .5rem;}
+.fb{background:#eff6ff;border-left:4px solid #2563eb;border-radius:0 10px 10px 0;padding:.8rem 1.1rem;margin:.7rem 0;font-family:monospace;font-size:.91rem;}
+.eb{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:1rem 1.2rem;margin:.8rem 0;}
+.eb h4{color:#16a34a;margin:0 0 .5rem;}
+table{width:100%;border-collapse:collapse;margin:.7rem 0;}
+th{background:#2563eb;color:#fff;padding:.5rem .8rem;font-size:.85rem;}
+td{border:1px solid #e2e8f0;padding:.45rem .7rem;font-size:.88rem;text-align:center;}
+tr:nth-child(even) td{background:#eff6ff;}
+.tip{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:.7rem 1rem;margin:.6rem 0;font-size:.88rem;}
+.steps{background:#f8faff;border-radius:10px;padding:1rem 1.2rem;margin:.8rem 0;counter-reset:steps;}
+.steps .step{counter-increment:steps;padding:.4rem 0 .4rem 2rem;position:relative;border-bottom:1px solid #e2e8f0;}
+.steps .step:last-child{border-bottom:none;}
+.steps .step::before{content:counter(steps);position:absolute;left:0;top:.4rem;background:#2563eb;color:#fff;width:20px;height:20px;border-radius:50%;font-size:.75rem;font-weight:700;text-align:center;line-height:20px;}
+</style></head><body>
+<header><div class="container header-content">
+<a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+<nav><a href="../index.html">Applied Maths 12</a><a href="index.html">Unit VIII</a><a href="linear-programming.html" class="active">LP</a></nav>
+</div></header>
+<section class="pg-hero"><div class="container">
+<h1>Linear Programming 📊</h1><p>Formulation se solution tak — step-by-step samjho</p>
+</div></section>
+<div class="container">
+
+<h2>1. Linear Programming — Parichay</h2>
+<p>LP ek mathematical technique hai resources ko optimally allocate karne ke liye — maximize profit ya minimize cost, subject to constraints.</p>
+<div class="fb">General LP Problem:
+Maximize/Minimize:  Z = c₁x₁ + c₂x₂ + ... + cₙxₙ  (Objective Function)
+Subject to:         a₁₁x₁ + a₁₂x₂ ≤ b₁
+                    a₂₁x₁ + a₂₂x₂ ≤ b₂  (Constraints)
+                    x₁, x₂ ≥ 0  (Non-negativity)</div>
+
+<h2>2. LP Formulation — Ek Manufacturing Problem</h2>
+<div class="eb"><h4>Problem Statement</h4>
+<p>Ek factory do products A aur B banati hai.<br>
+Product A: Profit ₹5/unit, Machine time 2 hrs, Labour 4 hrs<br>
+Product B: Profit ₹4/unit, Machine time 5 hrs, Labour 2 hrs<br>
+Available: Machine 180 hrs, Labour 160 hrs<br><br>
+Formulate LP to maximize profit.</p>
+<p>Let x = units of A, y = units of B<br>
+<strong>Maximize:</strong> Z = 5x + 4y<br>
+<strong>Subject to:</strong><br>
+2x + 5y ≤ 180 (Machine hours)<br>
+4x + 2y ≤ 160 (Labour hours)<br>
+x, y ≥ 0</p></div>
+
+<h2 id="graphical">3. Graphical Method</h2>
+<div class="steps">
+<div class="step">Constraints ko graph par plot karo (boundary lines)</div>
+<div class="step">Non-negativity constraints: x≥0 (Y-axis) aur y≥0 (X-axis)</div>
+<div class="step">Feasible region identify karo (saari constraints satisfy hoti hain)</div>
+<div class="step">Corner points (vertices) nikalo — feasible region ke corners</div>
+<div class="step">Har corner point par Z evaluate karo</div>
+<div class="step">Maximum/Minimum Z wala corner point = Optimal Solution</div>
+</div>
+<div class="eb"><h4>Graphical Solution: Above Problem</h4>
+<table>
+<tr><th>Corner Point (x,y)</th><th>Z = 5x + 4y</th></tr>
+<tr><td>O (0, 0)</td><td>0</td></tr>
+<tr><td>A (40, 0)</td><td>200</td></tr>
+<tr><td>B (25, 26)</td><td>229 ← Maximum!</td></tr>
+<tr><td>C (0, 36)</td><td>144</td></tr>
+</table>
+<p>B(25, 26) par Z = 5(25) + 4(26) = 125 + 104 = 229 → Maximum Profit</p></div>
+<div class="tip">💡 Fundamental Theorem: Optimal solution (if exists) corner point par hoga. Infinite solutions possible hain jab 2 corners same Z value dete hain (edge is optimal).</div>
+
+<h3>3.1 Special Cases</h3>
+<table>
+<tr><th>Case</th><th>Description</th></tr>
+<tr><td>Unbounded Solution</td><td>Maximization mein feasible region bounded nahi — Z can go to ∞</td></tr>
+<tr><td>Infeasible</td><td>Constraints contradict each other → no feasible region</td></tr>
+<tr><td>Multiple Optimal</td><td>2 corner points dono optimal → infinite solutions on that edge</td></tr>
+<tr><td>Degenerate</td><td>Corner point mein ek constraint active nahi (slack=0 for more constraints than variables)</td></tr>
+</table>
+
+<h2 id="transport">4. Transportation Problem</h2>
+<p>Kisi commodity ko multiple sources se multiple destinations tak minimum cost mein transport karna.</p>
+<div class="fb">Find xᵢⱼ (units from source i to destination j)
+Minimize: Σᵢ Σⱼ cᵢⱼ xᵢⱼ
+Subject to: Σⱼ xᵢⱼ = aᵢ (supply), Σᵢ xᵢⱼ = bⱼ (demand), xᵢⱼ ≥ 0</div>
+
+<h3>4.1 North-West Corner Method (Initial Solution)</h3>
+<div class="eb"><h4>Udaharan: Transportation Table</h4>
+<table>
+<tr><th></th><th>D1</th><th>D2</th><th>D3</th><th>Supply</th></tr>
+<tr><td><b>S1</b></td><td>2</td><td>3</td><td>5</td><td>20</td></tr>
+<tr><td><b>S2</b></td><td>4</td><td>1</td><td>6</td><td>30</td></tr>
+<tr><td><b>S3</b></td><td>3</td><td>5</td><td>2</td><td>10</td></tr>
+<tr><td><b>Demand</b></td><td>15</td><td>25</td><td>20</td><td>60</td></tr>
+</table>
+<p>NW Corner: x₁₁=15 (min(20,15)), x₁₂=5, x₂₂=20, x₂₃=10, x₃₃=10<br>
+Total cost = 15×2 + 5×3 + 20×1 + 10×6 + 10×2 = 30+15+20+60+20 = ₹145</p></div>
+
+<h3>4.2 Vogel's Approximation Method (Better Initial Solution)</h3>
+<div class="fb">Step 1: Row aur column penalties nikalo (2nd lowest − lowest cost in that row/col)
+Step 2: Highest penalty wali row/col mein minimum cost cell ko allocate karo
+Step 3: Supply/demand adjust karo aur repeat
+Step 4: Jab tk sab allocations done nahi hote</div>
+
+<div style="text-align:center;margin:1.5rem 0;">
+<a href="lp-interactive.html" style="background:linear-gradient(135deg,#2563eb,#3b82f6);color:#fff;padding:.8rem 2rem;border-radius:10px;font-weight:700;font-size:1rem;">🎮 Interactive Lab Kholein →</a>
+</div>
+</div>
+<footer><p>© 2025 AIkiPadhai</p><div><a href="../../../../about.html">About</a></div></footer>
+<script src="../../../../script.js"></script>
+</body></html>

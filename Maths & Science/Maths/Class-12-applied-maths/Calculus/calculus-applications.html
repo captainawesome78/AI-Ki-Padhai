@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+<title>Calculus Applications — Applied Maths 12 | AIkiPadhai</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../../style.css"/>
+<style>
+body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;}
+.pg-hero{background:linear-gradient(135deg,#450a0a,#dc2626);padding:2.8rem 0;text-align:center;}
+.pg-hero h1{color:#fff!important;font-size:2rem;margin:0 0 .4rem;}.pg-hero p{color:#fecaca!important;}
+h2{color:#dc2626;border-left:4px solid #dc2626;padding-left:.75rem;margin:2rem 0 .8rem;}
+h3{color:#991b1b;margin:1.5rem 0 .5rem;}
+.fb{background:#fff1f2;border-left:4px solid #dc2626;border-radius:0 10px 10px 0;padding:.8rem 1.1rem;margin:.7rem 0;font-family:monospace;font-size:.92rem;}
+.eb{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:1rem 1.2rem;margin:.8rem 0;}
+.eb h4{color:#16a34a;margin:0 0 .5rem;}
+table{width:100%;border-collapse:collapse;margin:.7rem 0;}
+th{background:#dc2626;color:#fff;padding:.5rem .8rem;font-size:.85rem;}
+td{border:1px solid #e2e8f0;padding:.45rem .7rem;font-size:.88rem;}
+tr:nth-child(even) td{background:#fff8f8;}
+.tip{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:.7rem 1rem;margin:.6rem 0;font-size:.88rem;}
+.summary-box{background:#fff1f2;border-radius:12px;padding:1.2rem;margin:2rem 0;}
+</style></head><body>
+<header><div class="container header-content">
+<a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+<nav><a href="../index.html">Applied Maths 12</a><a href="index.html">Unit III</a><a href="calculus-applications.html" class="active">Calculus</a></nav>
+</div></header>
+<section class="pg-hero"><div class="container">
+<h1>Calculus Applications 📈</h1><p>Derivatives, integration aur differential equations — practical applications</p>
+</div></section>
+<div class="container">
+
+<h2>1. Applications of Derivatives</h2>
+<h3>1.1 Rate of Change</h3>
+<p>Derivative dy/dx = rate of change of y with respect to x. Business mein cost, revenue, profit ke changes calculate karte hain.</p>
+<div class="fb">Marginal Cost (MC) = dC/dq  (cost ka derivative w.r.t. quantity)
+Marginal Revenue (MR) = dR/dq
+Marginal Profit (MP) = dP/dq = MR − MC</div>
+<div class="eb"><h4>Udaharan: Marginal Cost</h4>
+<p>Total Cost C(q) = q³ − 6q² + 15q + 10<br>
+MC = dC/dq = 3q² − 12q + 15<br>
+At q=3: MC = 3(9) − 12(3) + 15 = 27 − 36 + 15 = 6<br>
+Matlab: 3rd unit produce karne ka marginal cost ₹6 hai.</p></div>
+
+<h3>1.2 Increasing & Decreasing Functions</h3>
+<div class="fb">f'(x) > 0 for x ∈ (a,b)  →  f increasing on (a,b)
+f'(x) < 0 for x ∈ (a,b)  →  f decreasing on (a,b)
+f'(x) = 0 at x = c  →  c is a critical point</div>
+<div class="eb"><h4>Udaharan</h4>
+<p>f(x) = x² − 4x + 3<br>
+f'(x) = 2x − 4<br>
+f'(x) = 0 → x = 2<br>
+x &lt; 2: f'(x) &lt; 0 → decreasing<br>
+x &gt; 2: f'(x) &gt; 0 → increasing</p></div>
+
+<h3>1.3 Maxima & Minima</h3>
+<div class="fb">First Derivative Test:
+  f'(c) = 0 aur f'(x) +ve se -ve ho → Local Maximum at x=c
+  f'(c) = 0 aur f'(x) -ve se +ve ho → Local Minimum at x=c
+
+Second Derivative Test:
+  f'(c) = 0 aur f''(c) < 0 → Local Maximum
+  f'(c) = 0 aur f''(c) > 0 → Local Minimum
+  f'(c) = 0 aur f''(c) = 0 → Inconclusive</div>
+<div class="eb"><h4>Udaharan: Profit Maximization</h4>
+<p>Profit P(q) = −q² + 10q − 16<br>
+P'(q) = −2q + 10 = 0  →  q = 5<br>
+P''(q) = −2 &lt; 0  →  Maximum at q=5<br>
+Max Profit = −25 + 50 − 16 = ₹9<br>
+Isliye 5 units produce karne se maximum profit hoga!</p></div>
+
+<h3>1.4 Elasticity of Demand</h3>
+<div class="fb">Price Elasticity of Demand (PED) = (dq/dp) × (p/q)
+  |PED| > 1 → Elastic demand (price change → bada quantity change)
+  |PED| < 1 → Inelastic demand
+  |PED| = 1 → Unit elastic</div>
+<div class="eb"><h4>Udaharan: Elasticity</h4>
+<p>Demand: q = 100 − 5p<br>
+dq/dp = −5<br>
+At p=10: q = 100−50 = 50<br>
+PED = −5 × (10/50) = −1<br>
+|PED| = 1 → Unit elastic demand</p></div>
+
+<h2 id="integration">2. Integration</h2>
+<h3>2.1 Basic Integration Formulas</h3>
+<table>
+<tr><th>Function f(x)</th><th>∫f(x)dx</th><th>Condition</th></tr>
+<tr><td>xⁿ</td><td>xⁿ⁺¹/(n+1) + C</td><td>n ≠ −1</td></tr>
+<tr><td>1/x</td><td>ln|x| + C</td><td>x ≠ 0</td></tr>
+<tr><td>eˣ</td><td>eˣ + C</td><td>—</td></tr>
+<tr><td>aˣ</td><td>aˣ/ln(a) + C</td><td>a>0, a≠1</td></tr>
+<tr><td>sin x</td><td>−cos x + C</td><td>—</td></tr>
+<tr><td>cos x</td><td>sin x + C</td><td>—</td></tr>
+<tr><td>1/(1+x²)</td><td>tan⁻¹x + C</td><td>—</td></tr>
+</table>
+
+<h3>2.2 Definite Integral — Area Under Curve</h3>
+<div class="fb">∫[a to b] f(x) dx = F(b) − F(a)   where F'(x) = f(x)
+Area = |∫[a to b] f(x) dx|  (negative area bhi positive count hoti hai)</div>
+<div class="eb"><h4>Udaharan: Area Calculation</h4>
+<p>Area under f(x) = x² from x=0 to x=3:<br>
+∫₀³ x² dx = [x³/3]₀³ = 27/3 − 0 = 9 sq units</p></div>
+
+<h3>2.3 Consumer & Producer Surplus</h3>
+<div class="fb">Consumer Surplus = ∫[0 to q₀] D(q) dq − p₀×q₀
+Producer Surplus = p₀×q₀ − ∫[0 to q₀] S(q) dq
+Where D(q) = demand function, S(q) = supply function
+p₀,q₀ = equilibrium price & quantity</div>
+<div class="eb"><h4>Udaharan: Consumer Surplus</h4>
+<p>Demand: p = 12 − 2q, Equilibrium: q₀=4, p₀=4<br>
+CS = ∫₀⁴(12−2q)dq − 4×4<br>
+= [12q − q²]₀⁴ − 16<br>
+= (48−16) − 16 = 32 − 16 = 16</p></div>
+
+<h2 id="diffeq">3. Differential Equations</h2>
+<h3>3.1 Basic Concepts</h3>
+<div class="fb">Order: Highest derivative ki power (dy/dx = order 1, d²y/dx² = order 2)
+Degree: Highest derivative ka power (after clearing fractions/radicals)
+General solution: Arbitrary constants ke saath
+Particular solution: Initial conditions use karke constants find karo</div>
+
+<h3>3.2 Variable Separable Method</h3>
+<div class="fb">dy/dx = f(x)·g(y) type equations:
+Step 1: Separate: dy/g(y) = f(x)dx
+Step 2: Integrate both sides: ∫dy/g(y) = ∫f(x)dx + C</div>
+<div class="eb"><h4>Udaharan: Growth Model</h4>
+<p>dN/dt = kN (population growth model)<br>
+dN/N = k dt<br>
+∫dN/N = ∫k dt<br>
+ln N = kt + C<br>
+N = N₀eᵏᵗ  (exponential growth!)<br>
+If N₀=1000, k=0.05: N at t=10 = 1000×e^0.5 ≈ 1649</p></div>
+
+<h3>3.3 Homogeneous Differential Equations</h3>
+<div class="fb">dy/dx = f(y/x) type → Substitution: y = vx  →  dy/dx = v + x(dv/dx)
+Converts to variable separable form!</div>
+
+<h3>3.4 Applications</h3>
+<table>
+<tr><th>Model</th><th>Equation</th><th>Solution</th></tr>
+<tr><td>Exponential Growth</td><td>dy/dt = ky</td><td>y = y₀eᵏᵗ</td></tr>
+<tr><td>Exponential Decay</td><td>dy/dt = −ky</td><td>y = y₀e⁻ᵏᵗ</td></tr>
+<tr><td>Newton's Cooling</td><td>dT/dt = −k(T−Tₐ)</td><td>T = Tₐ+(T₀−Tₐ)e⁻ᵏᵗ</td></tr>
+<tr><td>Logistic Growth</td><td>dy/dt = ky(1−y/K)</td><td>S-curve (sigmoid)</td></tr>
+</table>
+
+<div class="summary-box">
+<h3 style="color:#dc2626;margin:0 0 .8rem;">📝 Formula Summary</h3>
+<ul style="line-height:2;color:#374151;">
+<li>MC = dC/dq, MR = dR/dq, MP = MR − MC</li>
+<li>Local max: f'=0, f''&lt;0; Local min: f'=0, f''&gt;0</li>
+<li>PED = (dq/dp)·(p/q)</li>
+<li>∫xⁿdx = xⁿ⁺¹/(n+1)+C, ∫(1/x)dx = ln|x|+C</li>
+<li>Exponential: dy/dt = ky → y = y₀eᵏᵗ</li>
+</ul>
+</div>
+<div style="text-align:center;margin:1.5rem 0;">
+<a href="calculus-interactive.html" style="background:linear-gradient(135deg,#dc2626,#ef4444);color:#fff;padding:.8rem 2rem;border-radius:10px;font-weight:700;font-size:1rem;">🎮 Interactive Lab Kholein →</a>
+</div>
+</div>
+<footer><p>© 2025 AIkiPadhai</p><div><a href="../../../../about.html">About</a></div></footer>
+<script src="../../../../script.js"></script>
+</body></html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+<title>Probability Lab — Applied Maths 12 | AIkiPadhai</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../../style.css"/>
+<style>
+body{background:#0d1117;color:#e2e8f0;font-family:'Inter',sans-serif;}
+h1,h2,h3,h4{color:#f1f5f9!important;}p{color:#cbd5e1;}
+.hero h1{color:#fff!important;}.hero p{color:#ddd6fe!important;}
+nav a{color:#94a3b8;}
+.lab-wrap{max-width:960px;margin:2rem auto;padding:0 1.2rem;}
+.lab-card{background:#161b22;border:1px solid #30363d;border-radius:14px;padding:1.6rem;margin:1.4rem 0;}
+.lab-card h3{color:#a78bfa!important;margin:0 0 .4rem;}
+.lab-card p.hint{color:#64748b;font-size:.88rem;margin:.2rem 0 .8rem;}
+canvas{border-radius:10px;display:block;margin:.6rem auto;}
+.controls{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;margin:.6rem 0;}
+label{color:#94a3b8;font-size:.85rem;}
+input[type=range]{accent-color:#7c3aed;width:120px;}
+.val-badge{background:#1e293b;color:#a78bfa;border:1px solid #334155;border-radius:5px;padding:.15rem .5rem;font-weight:700;min-width:2.8rem;text-align:center;font-size:.83rem;}
+.eq-display{background:#0a0e1a;border-radius:8px;padding:.7rem 1rem;font-family:monospace;color:#c4b5fd;font-size:.85rem;margin:.5rem 0;white-space:pre-wrap;line-height:1.7;}
+</style></head><body>
+<header><div class="container header-content">
+<a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+<nav><a href="../index.html">Applied Maths 12</a><a href="index.html">Unit IV</a><a href="prob-interactive.html" class="active">Lab</a></nav>
+</div></header>
+<section class="hero" style="background:linear-gradient(135deg,#2e1065,#4c1d95,#7c3aed);">
+<div class="container"><h1>Probability Distributions Lab 🎲</h1>
+<p>Binomial, Poisson, Normal — sabhi distributions visually samjho!</p></div>
+</section>
+<div class="lab-wrap">
+
+<!-- LAB 1: Binomial Distribution Bar Chart -->
+<div class="lab-card">
+<h3>🪙 Lab 1: Binomial Distribution — Bar Chart Explorer</h3>
+<p class="hint">n (trials) aur p (success probability) change karo. Har r ke liye P(X=r) bar chart mein dikhega. Mean aur variance bhi!</p>
+<div class="controls">
+  <label>n (trials) =</label><input type="range" id="bn" min="1" max="20" value="10" oninput="drawBinom()"><span id="bnv" class="val-badge">10</span>
+  <label>p =</label><input type="range" id="bp" min="0.05" max="0.95" step="0.05" value="0.5" oninput="drawBinom()"><span id="bpv" class="val-badge">0.50</span>
+</div>
+<canvas id="binCanvas" width="700" height="280" style="width:100%;background:#0a0e1a;"></canvas>
+<div class="eq-display" id="binEq"></div>
+</div>
+
+<!-- LAB 2: Poisson Distribution -->
+<div class="lab-card">
+<h3>⚡ Lab 2: Poisson Distribution — λ Explorer</h3>
+<p class="hint">λ (average rate) change karo. Poisson distribution ka shape dekho — kaise yeh binomial se alag hai!</p>
+<div class="controls">
+  <label>λ (lambda) =</label><input type="range" id="lam" min="0.5" max="10" step="0.5" value="3" oninput="drawPoisson()"><span id="lamv" class="val-badge">3.0</span>
+</div>
+<canvas id="poisCanvas" width="700" height="280" style="width:100%;background:#0a0e1a;"></canvas>
+<div class="eq-display" id="poisEq"></div>
+</div>
+
+<!-- LAB 3: Normal Distribution Curve -->
+<div class="lab-card">
+<h3>🔔 Lab 3: Normal Distribution — Bell Curve & Z-Score</h3>
+<p class="hint">μ aur σ change karo. Shaded area = selected range ki probability. Z-score automatically dikhega!</p>
+<div class="controls">
+  <label>μ =</label><input type="range" id="mu" min="-3" max="3" step="0.5" value="0" oninput="drawNormal()"><span id="muv" class="val-badge">0</span>
+  <label>σ =</label><input type="range" id="sig" min="0.5" max="3" step="0.25" value="1" oninput="drawNormal()"><span id="sigv" class="val-badge">1.0</span>
+  <label>Range: Z = ±</label><input type="range" id="zr" min="0.5" max="3" step="0.1" value="1" oninput="drawNormal()"><span id="zrv" class="val-badge">1.0</span>
+</div>
+<canvas id="normCanvas" width="700" height="280" style="width:100%;background:#0a0e1a;"></canvas>
+<div class="eq-display" id="normEq"></div>
+</div>
+
+<!-- LAB 4: Distribution Comparison -->
+<div class="lab-card">
+<h3>📊 Lab 4: Binomial vs Poisson Comparison</h3>
+<p class="hint">Dekho kaise n→∞ aur p→0 (np=λ constant) hone par Binomial → Poisson ban jaata hai!</p>
+<div class="controls">
+  <label>λ = np =</label><input type="range" id="cmpLam" min="1" max="8" step="0.5" value="3" oninput="drawComparison()"><span id="cmpLamv" class="val-badge">3</span>
+  <label>n =</label><input type="range" id="cmpN" min="5" max="50" step="5" value="20" oninput="drawComparison()"><span id="cmpNv" class="val-badge">20</span>
+</div>
+<canvas id="cmpCanvas" width="700" height="280" style="width:100%;background:#0a0e1a;"></canvas>
+<div class="eq-display" id="cmpEq"></div>
+</div>
+
+</div>
+<script>
+function nCr(n,r){if(r>n||r<0)return 0;let num=1,den=1;for(let i=0;i<r;i++){num*=(n-i);den*=(i+1);}return num/den;}
+function binomP(n,p,r){return nCr(n,r)*Math.pow(p,r)*Math.pow(1-p,n-r);}
+function poissonP(lam,x){let e=Math.exp(-lam),num=Math.pow(lam,x);let den=1;for(let i=1;i<=x;i++)den*=i;return e*num/den;}
+function normPDF(x,mu,sig){return Math.exp(-0.5*((x-mu)/sig)**2)/(sig*Math.sqrt(2*Math.PI));}
+function erfApprox(x){const t=1/(1+0.3275911*Math.abs(x));const poly=t*(0.254829592+t*(-0.284496736+t*(1.421413741+t*(-1.453152027+t*1.061405429))));const erf=1-poly*Math.exp(-x*x);return x>=0?erf:-erf;}
+function normCDF(z){return 0.5*(1+erfApprox(z/Math.sqrt(2)));}
+
+// ─── LAB 1: Binomial ───
+function drawBinom(){
+  const n=+document.getElementById('bn').value;
+  const p=+document.getElementById('bp').value;
+  document.getElementById('bnv').textContent=n;
+  document.getElementById('bpv').textContent=p.toFixed(2);
+  const probs=Array.from({length:n+1},(_,r)=>binomP(n,p,r));
+  const maxP=Math.max(...probs);
+  const can=document.getElementById('binCanvas'),ctx=can.getContext('2d');
+  const W=can.width,H=can.height,padL=50,padB=40,padT=30,padR=20;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const bw=(W-padL-padR)/(n+1)-3;
+  const scY=(H-padT-padB)/maxP;
+  const meanR=Math.round(n*p);
+  probs.forEach((pr,r)=>{
+    const x=padL+r*(W-padL-padR)/(n+1)+1.5;
+    const bh=pr*scY;
+    const g=ctx.createLinearGradient(x,H-padB-bh,x,H-padB);
+    const isMean=r===meanR;
+    g.addColorStop(0,isMean?'#fbbf24':'#8b5cf6');g.addColorStop(1,isMean?'#f59e0b':'#6d28d9');
+    ctx.fillStyle=g;ctx.fillRect(x,H-padB-bh,bw,bh);
+    if(bw>14){ctx.fillStyle='#94a3b8';ctx.font='9px Inter';ctx.textAlign='center';ctx.fillText(r,x+bw/2,H-padB+12);}
+    if(pr>0.03){ctx.fillStyle='#e2e8f0';ctx.font='9px Inter';ctx.fillText(pr.toFixed(2),x+bw/2,H-padB-bh-3);}
+  });
+  const mu=n*p,vari=n*p*(1-p);
+  document.getElementById('binEq').textContent=
+    `Binomial B(n=${n}, p=${p.toFixed(2)})
+P(X=r) = ⁿCᵣ × p^r × q^(n-r)
+
+Mean μ = np = ${n}×${p.toFixed(2)} = ${mu.toFixed(2)}
+Variance σ² = npq = ${mu.toFixed(2)}×${(1-p).toFixed(2)} = ${vari.toFixed(2)}
+SD σ = ${Math.sqrt(vari).toFixed(2)}
+
+P(X=${meanR}) = ${probs[meanR].toFixed(4)} (mode ke paas highest bar)`;
+}
+drawBinom();
+
+// ─── LAB 2: Poisson ───
+function drawPoisson(){
+  const lam=+document.getElementById('lam').value;
+  document.getElementById('lamv').textContent=lam.toFixed(1);
+  const maxX=Math.ceil(lam+4*Math.sqrt(lam));
+  const probs=Array.from({length:maxX+1},(_,x)=>poissonP(lam,x));
+  const maxP=Math.max(...probs);
+  const can=document.getElementById('poisCanvas'),ctx=can.getContext('2d');
+  const W=can.width,H=can.height,padL=50,padB=40,padT=30,padR=20;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const bw=(W-padL-padR)/(maxX+1)-3;
+  probs.forEach((pr,x)=>{
+    const px=padL+x*(W-padL-padR)/(maxX+1)+1.5;
+    const bh=pr*(H-padT-padB)/maxP;
+    const isMean=x===Math.floor(lam);
+    const g=ctx.createLinearGradient(px,H-padB-bh,px,H-padB);
+    g.addColorStop(0,isMean?'#fbbf24':'#22d3ee');g.addColorStop(1,isMean?'#f59e0b':'#0891b2');
+    ctx.fillStyle=g;ctx.fillRect(px,H-padB-bh,bw,bh);
+    if(bw>14){ctx.fillStyle='#94a3b8';ctx.font='9px Inter';ctx.textAlign='center';ctx.fillText(x,px+bw/2,H-padB+12);}
+    if(pr>0.02){ctx.fillStyle='#e2e8f0';ctx.font='9px Inter';ctx.fillText(pr.toFixed(2),px+bw/2,H-padB-bh-3);}
+  });
+  document.getElementById('poisEq').textContent=
+    `Poisson distribution with λ=${lam}
+P(X=x) = e^(−λ) × λˣ / x!
+
+Mean = Variance = λ = ${lam}
+SD = √λ = ${Math.sqrt(lam).toFixed(3)}
+P(X=0) = e^(-${lam}) = ${Math.exp(-lam).toFixed(4)}
+P(X=${Math.floor(lam)}) = ${poissonP(lam,Math.floor(lam)).toFixed(4)}
+
+Note: Poisson tabhi use karo jab n→∞, p→0, np=λ constant`;
+}
+drawPoisson();
+
+// ─── LAB 3: Normal Distribution ───
+function drawNormal(){
+  const mu=+document.getElementById('mu').value;
+  const sig=+document.getElementById('sig').value;
+  const zr=+document.getElementById('zr').value;
+  document.getElementById('muv').textContent=mu;
+  document.getElementById('sigv').textContent=sig.toFixed(2);
+  document.getElementById('zrv').textContent=zr.toFixed(1);
+  const can=document.getElementById('normCanvas'),ctx=can.getContext('2d');
+  const W=can.width,H=can.height,pad=50;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const xMin=mu-4*sig,xMax=mu+4*sig;
+  const toX=x=>pad+(x-xMin)/(xMax-xMin)*(W-2*pad);
+  const maxY=normPDF(mu,mu,sig);const toY=y=>H-pad-(y/maxY)*(H-2*pad);
+  const lo=mu-zr*sig,hi=mu+zr*sig;
+  // Shaded area
+  ctx.fillStyle='rgba(139,92,246,0.35)';ctx.beginPath();
+  let first=true;
+  for(let px=toX(lo);px<=toX(hi);px++){const x=xMin+(px-pad)/(W-2*pad)*(xMax-xMin);const y=normPDF(x,mu,sig);px===toX(lo)?ctx.moveTo(px,toY(y)):ctx.lineTo(px,toY(y));}
+  ctx.lineTo(toX(hi),toY(0));ctx.lineTo(toX(lo),toY(0));ctx.closePath();ctx.fill();
+  // Bell curve
+  ctx.strokeStyle='#a78bfa';ctx.lineWidth=2.5;ctx.shadowColor='#a78bfa';ctx.shadowBlur=6;
+  ctx.beginPath();first=true;
+  for(let px=pad;px<W-pad;px++){const x=xMin+(px-pad)/(W-2*pad)*(xMax-xMin);const y=normPDF(x,mu,sig);const py=toY(y);first?ctx.moveTo(px,py):ctx.lineTo(px,py);first=false;}
+  ctx.stroke();ctx.shadowBlur=0;
+  // Axis
+  ctx.strokeStyle='#334155';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(pad,H-pad);ctx.lineTo(W-pad,H-pad);ctx.stroke();
+  // Labels
+  [mu-3*sig,mu-2*sig,mu-sig,mu,mu+sig,mu+2*sig,mu+3*sig].forEach(x=>{
+    ctx.fillStyle='#475569';ctx.font='10px Inter';ctx.textAlign='center';ctx.fillText(x.toFixed(1),toX(x),H-pad+15);
+  });
+  ctx.fillStyle='#fbbf24';ctx.font='bold 11px Inter';ctx.textAlign='center';
+  const prob=normCDF((hi-mu)/sig)-normCDF((lo-mu)/sig);
+  ctx.fillText(`P(μ±${zr.toFixed(1)}σ) = ${(prob*100).toFixed(2)}%`,W/2,pad-8);
+  document.getElementById('normEq').textContent=
+    `Normal Distribution N(μ=${mu}, σ=${sig})
+f(x) = (1/σ√2π) × e^[−(x−μ)²/2σ²]
+
+Selected Range: [${lo.toFixed(2)}, ${hi.toFixed(2)}]
+Z-scores: [−${zr.toFixed(1)}, +${zr.toFixed(1)}]
+P(μ±${zr.toFixed(1)}σ) = ${(prob*100).toFixed(3)}%
+
+68-95-99.7 Rule:
+P(μ±1σ)=68.27%, P(μ±2σ)=95.45%, P(μ±3σ)=99.73%`;
+}
+drawNormal();
+
+// ─── LAB 4: Comparison ───
+function drawComparison(){
+  const lam=+document.getElementById('cmpLam').value;
+  const n=+document.getElementById('cmpN').value;
+  const p=lam/n;
+  document.getElementById('cmpLamv').textContent=lam;
+  document.getElementById('cmpNv').textContent=n;
+  const maxX=Math.ceil(lam+4*Math.sqrt(lam));
+  const binProbs=Array.from({length:maxX+1},(_,r)=>r<=n?binomP(n,p,r):0);
+  const poisProbs=Array.from({length:maxX+1},(_,x)=>poissonP(lam,x));
+  const maxP=Math.max(...binProbs,...poisProbs);
+  const can=document.getElementById('cmpCanvas'),ctx=can.getContext('2d');
+  const W=can.width,H=can.height,padL=50,padB=40,padT=30,padR=20;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const bw=(W-padL-padR)/(maxX+1)-4;const scY=(H-padT-padB)/maxP;
+  // Binomial (behind)
+  binProbs.forEach((pr,x)=>{
+    const px=padL+x*(W-padL-padR)/(maxX+1)+1;const bh=pr*scY;
+    ctx.fillStyle='rgba(96,165,250,0.5)';ctx.fillRect(px,H-padB-bh,bw,bh);
+  });
+  // Poisson (front)
+  poisProbs.forEach((pr,x)=>{
+    const px=padL+x*(W-padL-padR)/(maxX+1)+bw/4;const bh=pr*scY;
+    ctx.fillStyle='rgba(251,191,36,0.7)';ctx.fillRect(px,H-padB-bh,bw/2,bh);
+  });
+  // x axis labels
+  ctx.fillStyle='#94a3b8';ctx.font='9px Inter';ctx.textAlign='center';
+  for(let x=0;x<=maxX;x++) ctx.fillText(x,padL+x*(W-padL-padR)/(maxX+1)+bw/2,H-padB+12);
+  // Legend
+  ctx.fillStyle='#60a5fa';ctx.fillRect(W-160,padT,12,10);
+  ctx.fillStyle='#fbbf24';ctx.fillRect(W-160,padT+18,12,10);
+  ctx.fillStyle='#e2e8f0';ctx.font='11px Inter';ctx.textAlign='left';
+  ctx.fillText(`Binomial B(${n}, ${p.toFixed(3)})`,W-144,padT+9);
+  ctx.fillText(`Poisson P(λ=${lam})`,W-144,padT+27);
+  const maxDiff=Math.max(...Array.from({length:maxX+1},(_,x)=>Math.abs(binProbs[x]-poisProbs[x])));
+  document.getElementById('cmpEq').textContent=
+    `Binomial: n=${n}, p=${p.toFixed(4)}, np = ${n}×${p.toFixed(4)} = ${lam}
+Poisson: λ=${lam}
+
+Max difference: ${maxDiff.toFixed(4)}
+${maxDiff<0.01?'✅ n bada hai — Binomial ≈ Poisson (very close!)':`n aur badhao (slider) to see Binomial → Poisson converge!`}
+
+Rule of thumb: n>50 aur p<0.1 hone par approximation acchi hoti hai`;
+}
+drawComparison();
+</script>
+</body></html>

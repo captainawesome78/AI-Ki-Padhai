@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+<title>Algebra Lab — Applied Maths 12 | AIkiPadhai</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../../style.css"/>
+<style>
+body{background:#0d1117;color:#e2e8f0;font-family:'Inter',sans-serif;}
+h1,h2,h3,h4{color:#f1f5f9!important;}p{color:#cbd5e1;}
+.hero h1{color:#fff!important;}.hero p{color:#c7d2fe!important;}
+nav a{color:#94a3b8;}
+.lab-wrap{max-width:960px;margin:2rem auto;padding:0 1.2rem;}
+.lab-card{background:#161b22;border:1px solid #30363d;border-radius:14px;padding:1.6rem;margin:1.4rem 0;}
+.lab-card h3{color:#818cf8!important;margin:0 0 .4rem;}
+.lab-card p.hint{color:#64748b;font-size:.88rem;margin:.2rem 0 .8rem;}
+.mat-input{display:inline-grid;gap:4px;background:#0a0e1a;padding:.5rem;border-radius:8px;margin:.3rem;}
+.mat-cell{width:52px;height:38px;background:#1e293b;border:1px solid #334155;border-radius:5px;color:#5eead4;font-family:monospace;font-size:.9rem;text-align:center;}
+.mat-cell:focus{outline:none;border-color:#818cf8;background:#1a1f35;}
+.op-row{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin:.5rem 0;}
+.result-mat{background:#0a0e1a;border:1px solid #818cf8;border-radius:8px;padding:.7rem;font-family:monospace;font-size:.88rem;color:#a5b4fc;min-height:60px;white-space:pre;margin:.5rem 0;}
+.btn{padding:.5rem 1.1rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:.85rem;margin:.2rem;}
+.btn-v{background:linear-gradient(135deg,#4f46e5,#818cf8);color:#fff;}
+.btn-g{background:linear-gradient(135deg,#0d9488,#0f766e);color:#fff;}
+.eq-box{background:#0a1a1a;border:1px solid #334155;border-radius:8px;padding:.8rem 1rem;font-family:monospace;color:#5eead4;font-size:.85rem;margin:.5rem 0;white-space:pre-wrap;}
+.truth-out{background:#0a0e1a;border:1px solid #334155;border-radius:8px;overflow:auto;margin:.5rem 0;}
+.truth-out table{width:100%;border-collapse:collapse;}
+.truth-out th{background:#1e1b4b;color:#a5b4fc;padding:.4rem .7rem;font-size:.82rem;}
+.truth-out td{border-top:1px solid #1e293b;padding:.35rem .7rem;font-family:monospace;font-size:.82rem;text-align:center;}
+.truth-out .t{color:#4ade80;font-weight:700;}
+.truth-out .f{color:#f87171;}
+.controls{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin:.5rem 0;}
+label{color:#94a3b8;font-size:.85rem;}
+input[type=number],input[type=text]{background:#1e293b;color:#5eead4;border:1px solid #334155;border-radius:6px;padding:.3rem .5rem;font-size:.85rem;}
+input[type=number]{width:72px;}
+input[type=text]{width:220px;}
+select{background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:.3rem .5rem;font-size:.85rem;}
+</style></head><body>
+<header><div class="container header-content">
+<a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+<nav><a href="../index.html">Applied Maths 12</a><a href="index.html">Unit II</a><a href="algebra-interactive.html" class="active">Lab</a></nav>
+</div></header>
+<section class="hero" style="background:linear-gradient(135deg,#1e1b4b,#312e81,#4f46e5);">
+<div class="container"><h1>Algebra Lab 📐</h1>
+<p>Matrix operations, determinant, truth tables, equations — sab kuch visually try karo!</p></div>
+</section>
+<div class="lab-wrap">
+
+<!-- LAB 1: Matrix Calculator -->
+<div class="lab-card">
+<h3>🔢 Lab 1: 2×2 Matrix Calculator</h3>
+<p class="hint">Dono matrices ke values change karo aur operation select karo — result live dikhega!</p>
+<div class="op-row">
+<div>
+  <div style="color:#94a3b8;font-size:.8rem;margin-bottom:3px;">Matrix A</div>
+  <div class="mat-input" id="matA">
+    <input class="mat-cell" id="a11" type="number" value="1" oninput="calcMatrix()">
+    <input class="mat-cell" id="a12" type="number" value="2" oninput="calcMatrix()">
+    <input class="mat-cell" id="a21" type="number" value="3" oninput="calcMatrix()">
+    <input class="mat-cell" id="a22" type="number" value="4" oninput="calcMatrix()">
+  </div>
+</div>
+<div style="font-size:1.8rem;color:#818cf8;" id="opSymbol">+</div>
+<div>
+  <div style="color:#94a3b8;font-size:.8rem;margin-bottom:3px;">Matrix B</div>
+  <div class="mat-input">
+    <input class="mat-cell" id="b11" type="number" value="5" oninput="calcMatrix()">
+    <input class="mat-cell" id="b12" type="number" value="6" oninput="calcMatrix()">
+    <input class="mat-cell" id="b21" type="number" value="7" oninput="calcMatrix()">
+    <input class="mat-cell" id="b22" type="number" value="8" oninput="calcMatrix()">
+  </div>
+</div>
+<div style="font-size:1.8rem;color:#818cf8;">=</div>
+<div>
+  <div style="color:#94a3b8;font-size:.8rem;margin-bottom:3px;">Result</div>
+  <div class="result-mat" id="matResult">...</div>
+</div>
+</div>
+<div class="controls">
+  <label>Operation:</label>
+  <select id="matOp" onchange="calcMatrix()">
+    <option value="add">A + B</option>
+    <option value="sub">A − B</option>
+    <option value="mul">A × B</option>
+    <option value="detA">det(A)</option>
+    <option value="invA">A⁻¹</option>
+    <option value="transA">Aᵀ</option>
+  </select>
+</div>
+<div class="eq-box" id="matSteps"></div>
+</div>
+
+<!-- LAB 2: Cramer's Rule Solver -->
+<div class="lab-card">
+<h3>🧮 Lab 2: 2-Variable Equation Solver (Cramer's Rule)</h3>
+<p class="hint">Do simultaneous equations ke coefficients enter karo — Cramer's rule se step-by-step solution!</p>
+<div class="controls" style="flex-direction:column;align-items:flex-start;gap:.4rem;">
+  <div>
+    <input type="number" id="c1a" value="2" style="width:55px"> x +
+    <input type="number" id="c1b" value="3" style="width:55px"> y =
+    <input type="number" id="c1r" value="8" style="width:55px">
+  </div>
+  <div>
+    <input type="number" id="c2a" value="1" style="width:55px"> x +
+    <input type="number" id="c2b" value="-1" style="width:55px"> y =
+    <input type="number" id="c2r" value="1" style="width:55px">
+  </div>
+  <button class="btn btn-v" onclick="solveCramer()">Solve →</button>
+</div>
+<div class="eq-box" id="cramerOut"></div>
+</div>
+
+<!-- LAB 3: Boolean Truth Table Generator -->
+<div class="lab-card">
+<h3>⚡ Lab 3: Boolean Truth Table Generator</h3>
+<p class="hint">Expression likhein using A, B, C, AND, OR, NOT, XOR, NAND, NOR. Operators: &, |, !, ^</p>
+<div class="controls">
+  <label>Expression:</label>
+  <input type="text" id="boolExpr" value="(A & B) | !C" placeholder="e.g. A & B | !C">
+  <select id="boolVars"><option value="2">2 variables (A,B)</option><option value="3" selected>3 variables (A,B,C)</option></select>
+  <button class="btn btn-v" onclick="genTruth()">Generate Table →</button>
+</div>
+<div class="truth-out" id="truthTable"></div>
+</div>
+
+<!-- LAB 4: Visual Determinant Explorer -->
+<div class="lab-card">
+<h3>📊 Lab 4: Determinant — Area Interpretation</h3>
+<p class="hint">2×2 matrix rows as vectors → determinant = parallelogram area. Canvas par visually dekho!</p>
+<div class="controls">
+  <div class="ctrl-g"><label>Row 1 (a,b):</label>
+    <input type="number" id="va" value="3" style="width:55px"> 
+    <input type="number" id="vb" value="1" style="width:55px">
+  </div>
+  <div class="ctrl-g"><label>Row 2 (c,d):</label>
+    <input type="number" id="vc" value="1" style="width:55px">
+    <input type="number" id="vd" value="2" style="width:55px">
+  </div>
+  <button class="btn btn-v" onclick="drawDet()">Visualize →</button>
+</div>
+<canvas id="detCanvas" width="700" height="280" style="width:100%;background:#0a0e1a;border-radius:10px;display:block;margin:.5rem 0;"></canvas>
+<div class="eq-box" id="detEq"></div>
+</div>
+
+</div>
+<script>
+// ── Matrix Calculator ──
+function getM(prefix){
+  return [[+document.getElementById(prefix+'11').value||0,+document.getElementById(prefix+'12').value||0],
+          [+document.getElementById(prefix+'21').value||0,+document.getElementById(prefix+'22').value||0]];
+}
+function fmtM(m){return `⎡${m[0][0]}  ${m[0][1]}⎤\n⎣${m[1][0]}  ${m[1][1]}⎦`;}
+function det2(m){return m[0][0]*m[1][1]-m[0][1]*m[1][0];}
+function calcMatrix(){
+  const A=getM('a'),B=getM('b'),op=document.getElementById('matOp').value;
+  const sym={'add':'+','sub':'−','mul':'×','detA':'det','invA':'inv','transA':'T'};
+  document.getElementById('opSymbol').textContent=sym[op]||op;
+  let res='',steps='';
+  if(op==='add'){
+    const R=[[A[0][0]+B[0][0],A[0][1]+B[0][1]],[A[1][0]+B[1][0],A[1][1]+B[1][1]]];
+    res=fmtM(R);steps=`Addition: add corresponding elements
+${fmtM(A)}
++
+${fmtM(B)}
+=
+${res}`;
+  } else if(op==='sub'){
+    const R=[[A[0][0]-B[0][0],A[0][1]-B[0][1]],[A[1][0]-B[1][0],A[1][1]-B[1][1]]];
+    res=fmtM(R);steps=`Subtraction: subtract corresponding elements
+=
+${res}`;
+  } else if(op==='mul'){
+    const R=[[A[0][0]*B[0][0]+A[0][1]*B[1][0],A[0][0]*B[0][1]+A[0][1]*B[1][1]],
+             [A[1][0]*B[0][0]+A[1][1]*B[1][0],A[1][0]*B[0][1]+A[1][1]*B[1][1]]];
+    res=fmtM(R);
+    steps=`Multiplication A×B:
+C₁₁ = ${A[0][0]}×${B[0][0]}+${A[0][1]}×${B[1][0]} = ${R[0][0]}
+C₁₂ = ${A[0][0]}×${B[0][1]}+${A[0][1]}×${B[1][1]} = ${R[0][1]}
+C₂₁ = ${A[1][0]}×${B[0][0]}+${A[1][1]}×${B[1][0]} = ${R[1][0]}
+C₂₂ = ${A[1][0]}×${B[0][1]}+${A[1][1]}×${B[1][1]} = ${R[1][1]}
+Result:
+${res}`;
+  } else if(op==='detA'){
+    const d=det2(A);
+    res=`det(A) = ${d}`;
+    steps=`|A| = a₁₁×a₂₂ − a₁₂×a₂₁
+= ${A[0][0]}×${A[1][1]} − ${A[0][1]}×${A[1][0]}
+= ${A[0][0]*A[1][1]} − ${A[0][1]*A[1][0]}
+= ${d}
+
+${d===0?'Singular matrix! (no inverse)':'Non-singular matrix ✓'}`;
+  } else if(op==='invA'){
+    const d=det2(A);
+    if(d===0){res='No inverse (|A|=0)';steps='Singular matrix — inverse exist nahi karta.';}
+    else{
+      const f=1/d;
+      const R=[[+(A[1][1]*f).toFixed(4),+(−A[0][1]*f).toFixed(4)],[+(−A[1][0]*f).toFixed(4),+(A[0][0]*f).toFixed(4)]];
+      res=fmtM(R);
+      steps=`A⁻¹ = (1/|A|) × adj(A)
+|A| = ${d}
+adj(A) = swap diagonal, negate off-diagonal:
+⎡${A[1][1]}  ${-A[0][1]}⎤
+⎣${-A[1][0]}  ${A[0][0]}⎦
+A⁻¹ = (1/${d}) × above =
+${res}`;
+    }
+  } else if(op==='transA'){
+    const R=[[A[0][0],A[1][0]],[A[0][1],A[1][1]]];
+    res=fmtM(R);steps=`Transpose: rows ↔ columns
+Original:
+${fmtM(A)}
+Transpose:
+${res}`;
+  }
+  document.getElementById('matResult').textContent=res;
+  document.getElementById('matSteps').textContent=steps;
+}
+calcMatrix();
+
+// ── Cramer's Rule ──
+function solveCramer(){
+  const a=+document.getElementById('c1a').value,b=+document.getElementById('c1b').value,r1=+document.getElementById('c1r').value;
+  const c=+document.getElementById('c2a').value,d=+document.getElementById('c2b').value,r2=+document.getElementById('c2r').value;
+  const D=a*d-b*c, Dx=r1*d-b*r2, Dy=a*r2-r1*c;
+  let out=`System: ${a}x + ${b}y = ${r1}
+        ${c}x + ${d}y = ${r2}
+
+D  = |${a}  ${b}| = ${a}×${d} − ${b}×${c} = ${D}
+     |${c}  ${d}|
+
+Dx = |${r1}  ${b}| = ${r1}×${d} − ${b}×${r2} = ${Dx}
+     |${r2}  ${d}|
+
+Dy = |${a}  ${r1}| = ${a}×${r2} − ${r1}×${c} = ${Dy}
+     |${c}  ${r2}|
+
+`;
+  if(D===0){out+=Dx===0&&Dy===0?'D=0 aur Dx=Dy=0 → Infinite solutions (dependent equations)':'D=0 aur Dx≠0 ya Dy≠0 → No solution (inconsistent)';}
+  else{const x=Dx/D,y=Dy/D;out+=`x = Dx/D = ${Dx}/${D} = ${x.toFixed(4)}
+y = Dy/D = ${Dy}/${D} = ${y.toFixed(4)}
+
+Verification:
+${a}×${x.toFixed(2)} + ${b}×${y.toFixed(2)} = ${(a*x+b*y).toFixed(2)} (should be ${r1})
+${c}×${x.toFixed(2)} + ${d}×${y.toFixed(2)} = ${(c*x+d*y).toFixed(2)} (should be ${r2})`;}
+  document.getElementById('cramerOut').textContent=out;
+}
+solveCramer();
+
+// ── Boolean Truth Table ──
+function genTruth(){
+  const expr=document.getElementById('boolExpr').value;
+  const nvars=+document.getElementById('boolVars').value;
+  const vars=nvars===2?['A','B']:['A','B','C'];
+  const rows=1<<nvars;
+  let html='<table><tr>'+vars.map(v=>`<th>${v}</th>`).join('')+`<th>${expr}</th></tr>`;
+  for(let i=0;i<rows;i++){
+    const vals={};
+    vars.forEach((v,k)=>{vals[v]=(i>>(nvars-1-k))&1;});
+    let e=expr.replace(/AND/gi,'&').replace(/OR/gi,'|').replace(/NOT /gi,'!').replace(/XOR/gi,'^').replace(/NAND/gi,'~nand~').replace(/NOR/gi,'~nor~');
+    e=e.replace(/\b([ABC])\b/g,(_,v)=>vals[v]);
+    let result=0;
+    try{result=eval(e.replace(/\^/g,'!=='))?1:0;}catch(err){result='Err';}
+    const row=vars.map(v=>`<td class="${vals[v]?'t':'f'}">${vals[v]}</td>`).join('');
+    html+=`<tr>${row}<td class="${result===1?'t':'f'}">${result===1?'1':result===0?'0':'?'}</td></tr>`;
+  }
+  html+='</table>';
+  document.getElementById('truthTable').innerHTML=html;
+}
+genTruth();
+
+// ── Determinant Area Visualizer ──
+function drawDet(){
+  const a=+document.getElementById('va').value,b=+document.getElementById('vb').value;
+  const c=+document.getElementById('vc').value,d=+document.getElementById('vd').value;
+  const det=a*d-b*c;
+  const can=document.getElementById('detCanvas'),ctx=can.getContext('2d');
+  const W=can.width,H=can.height;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const ox=W/2,oy=H/2;const scale=40;
+  // Grid
+  ctx.strokeStyle='#1e293b';ctx.lineWidth=1;
+  for(let x=0;x<W;x+=scale){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=scale){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  // Axes
+  ctx.strokeStyle='#334155';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(0,oy);ctx.lineTo(W,oy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(ox,0);ctx.lineTo(ox,H);ctx.stroke();
+  // Parallelogram
+  const x1=ox+a*scale,y1=oy-b*scale;
+  const x2=ox+c*scale,y2=oy-d*scale;
+  const x3=ox+(a+c)*scale,y3=oy-(b+d)*scale;
+  ctx.fillStyle=`rgba(99,102,241,0.3)`;
+  ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(x1,y1);ctx.lineTo(x3,y3);ctx.lineTo(x2,y2);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='#818cf8';ctx.lineWidth=1.5;ctx.stroke();
+  // Vectors
+  [[ox,oy,x1,y1,'#ef4444','v1 ('+a+','+b+')'],[ox,oy,x2,y2,'#22c55e','v2 ('+c+','+d+')']].forEach(([sx,sy,ex,ey,col,lbl])=>{
+    ctx.strokeStyle=col;ctx.lineWidth=2.5;ctx.shadowColor=col;ctx.shadowBlur=6;
+    ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(ex,ey);ctx.stroke();
+    ctx.shadowBlur=0;const dx=ex-sx,dy=ey-sy;const len=Math.sqrt(dx*dx+dy*dy);
+    const ux=dx/len,uy=dy/len;const hw=8;
+    ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(ex,ey);
+    ctx.lineTo(ex-ux*hw-uy*hw/2,ey-uy*hw+ux*hw/2);
+    ctx.lineTo(ex-ux*hw+uy*hw/2,ey-uy*hw-ux*hw/2);ctx.closePath();ctx.fill();
+    ctx.fillStyle=col;ctx.font='bold 11px Inter';ctx.fillText(lbl,ex+6,ey-4);
+  });
+  ctx.fillStyle='#818cf8';ctx.font='bold 12px Inter';ctx.textAlign='center';
+  ctx.fillText(`Area = |det| = |${a}×${d}−${b}×${c}| = ${Math.abs(det)}`,ox,H-12);
+  document.getElementById('detEq').textContent=`Matrix = [[${a},${b}],[${c},${d}]]
+det = ${a}×${d} − ${b}×${c} = ${a*d} − ${b*c} = ${det}
+|det| = ${Math.abs(det)} = Parallelogram ki area
+
+det>0 → vectors anticlockwise
+det<0 → vectors clockwise
+det=0 → vectors parallel → area=0!`;
+}
+drawDet();
+</script>
+</body></html>

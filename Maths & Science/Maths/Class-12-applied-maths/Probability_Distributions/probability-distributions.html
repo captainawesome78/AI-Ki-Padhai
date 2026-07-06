@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+<title>Probability Distributions — Applied Maths 12 | AIkiPadhai</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../../style.css"/>
+<style>
+body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;}
+.pg-hero{background:linear-gradient(135deg,#2e1065,#7c3aed);padding:2.8rem 0;text-align:center;}
+.pg-hero h1{color:#fff!important;font-size:2rem;}.pg-hero p{color:#ddd6fe!important;}
+h2{color:#7c3aed;border-left:4px solid #7c3aed;padding-left:.75rem;margin:2rem 0 .8rem;}
+h3{color:#5b21b6;margin:1.5rem 0 .5rem;}
+.fb{background:#faf5ff;border-left:4px solid #7c3aed;border-radius:0 10px 10px 0;padding:.8rem 1.1rem;margin:.7rem 0;font-family:monospace;font-size:.92rem;}
+.eb{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:1rem 1.2rem;margin:.8rem 0;}
+.eb h4{color:#16a34a;margin:0 0 .5rem;}
+table{width:100%;border-collapse:collapse;margin:.7rem 0;}
+th{background:#7c3aed;color:#fff;padding:.5rem .8rem;font-size:.85rem;}
+td{border:1px solid #e2e8f0;padding:.45rem .7rem;font-size:.88rem;text-align:center;}
+tr:nth-child(even) td{background:#faf5ff;}
+.rule-box{background:#f5f3ff;border:1px solid #c4b5fd;border-radius:10px;padding:1rem 1.2rem;margin:.8rem 0;}
+</style></head><body>
+<header><div class="container header-content">
+<a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+<nav><a href="../index.html">Applied Maths 12</a><a href="index.html">Unit IV</a><a href="probability-distributions.html" class="active">Distributions</a></nav>
+</div></header>
+<section class="pg-hero"><div class="container">
+<h1>Probability Distributions 🎲</h1><p>Random variables se Normal distribution tak — sab kuch samjho</p>
+</div></section>
+<div class="container">
+
+<h2>1. Random Variables aur Probability Distribution</h2>
+<p>Random variable X ek function hota hai jo sample space ke har outcome ko ek real number assign karta hai.</p>
+<div class="fb">Discrete RV: finite ya countable values (jaise dice roll = 1,2,3,4,5,6)
+Continuous RV: uncountable values (jaise height, weight, time)</div>
+<p>Probability Distribution Table dikhata hai har value ka probability:</p>
+<table>
+<tr><th>X</th><th>0</th><th>1</th><th>2</th><th>3</th><th>Total</th></tr>
+<tr><td>P(X)</td><td>1/8</td><td>3/8</td><td>3/8</td><td>1/8</td><td>1</td></tr>
+</table>
+<div class="fb">Mean (Expected Value): E[X] = Σ xᵢP(xᵢ)
+Variance: Var(X) = E[X²] − (E[X])²  =  Σ xᵢ²P(xᵢ) − μ²
+Standard Deviation: σ = √Var(X)</div>
+<div class="eb"><h4>Udaharan: Mean aur Variance</h4>
+<p>X = {0,1,2,3} with P = {1/8, 3/8, 3/8, 1/8}<br>
+E[X] = 0(1/8)+1(3/8)+2(3/8)+3(1/8) = 0+0.375+0.75+0.375 = 1.5<br>
+E[X²] = 0+0.375+1.5+1.125 = 3<br>
+Var(X) = 3 − (1.5)² = 3 − 2.25 = 0.75<br>
+σ = √0.75 ≈ 0.866</p></div>
+
+<h2 id="binomial">2. Binomial Distribution</h2>
+<p>Jab n independent trials hote hain, har trial mein sirf 2 outcomes (success/failure) aur success ki probability p constant ho.</p>
+<div class="fb">P(X = r) = ⁿCᵣ · pʳ · qⁿ⁻ʳ    where q = 1−p, r = 0,1,2,...,n
+
+Mean:     μ = E[X] = np
+Variance: σ² = npq
+SD:       σ = √(npq)</div>
+<div class="eb"><h4>Udaharan: Binomial</h4>
+<p>Ek fair coin 6 baar throw ki. Exactly 4 heads aane ki probability?<br>
+n=6, p=1/2, q=1/2, r=4<br>
+P(X=4) = ⁶C₄ × (1/2)⁴ × (1/2)²<br>
+= 15 × 1/16 × 1/4 = 15/64 ≈ 0.234</p></div>
+<div class="eb"><h4>Udaharan: Quality Control</h4>
+<p>Factory mein 10% defective items hain. 5 items mein exactly 2 defective?<br>
+n=5, p=0.1, q=0.9, r=2<br>
+P(X=2) = ⁵C₂ × (0.1)² × (0.9)³<br>
+= 10 × 0.01 × 0.729 = 0.0729</p></div>
+
+<h2 id="poisson">3. Poisson Distribution</h2>
+<p>Rare events count karne ke liye use hota hai — ek fixed interval mein average λ events hote hain.</p>
+<div class="fb">P(X = x) = (e⁻λ × λˣ) / x!    x = 0,1,2,...
+
+Mean:     E[X] = λ
+Variance: Var(X) = λ  (mean = variance!)
+SD:       σ = √λ</div>
+<div class="rule-box"><strong>Binomial to Poisson Approximation:</strong> Jab n bahut bada ho aur p bahut chhota ho (n→∞, p→0), toh Binomial ≈ Poisson with λ=np</div>
+<div class="eb"><h4>Udaharan: Traffic Accidents</h4>
+<p>Ek highway par average 2 accidents/day hote hain. P(exactly 3 accidents)?<br>
+λ=2, x=3<br>
+P(X=3) = e⁻² × 2³ / 3! = 0.1353 × 8 / 6 = 0.1804</p></div>
+<div class="eb"><h4>Udaharan: Call Center</h4>
+<p>Average 5 calls/minute aate hain. P(0 calls in a minute)?<br>
+λ=5, x=0<br>
+P(X=0) = e⁻⁵ × 5⁰ / 0! = e⁻⁵ ≈ 0.0067</p></div>
+
+<h2 id="normal">4. Normal Distribution</h2>
+<p>Sabse important continuous distribution. Bell-shaped, symmetric about mean. Heights, weights, IQ — sab normal follow karte hain.</p>
+<div class="fb">f(x) = (1/σ√2π) × e^[−(x−μ)²/2σ²]
+
+Parameters: μ (mean), σ (standard deviation)
+Standard Normal: Z = (X − μ)/σ  →  N(0,1)</div>
+<div class="rule-box">
+<strong>Empirical Rule (68-95-99.7):</strong><br>
+P(μ−σ &lt; X &lt; μ+σ) = 68.27%<br>
+P(μ−2σ &lt; X &lt; μ+2σ) = 95.45%<br>
+P(μ−3σ &lt; X &lt; μ+3σ) = 99.73%
+</div>
+<div class="eb"><h4>Udaharan: Exam Scores</h4>
+<p>Exam scores: μ=70, σ=10. P(score > 80)?<br>
+Z = (80−70)/10 = 1<br>
+P(X>80) = P(Z>1) = 1−Φ(1) = 1−0.8413 = 0.1587 ≈ 15.87%</p></div>
+<div class="eb"><h4>Udaharan: Height</h4>
+<p>Men ki height: μ=170cm, σ=6cm. P(165 &lt; X &lt; 175)?<br>
+Z₁=(165−170)/6=−0.83, Z₂=(175−170)/6=0.83<br>
+P = Φ(0.83)−Φ(−0.83) = 0.7967−0.2033 = 0.5934 ≈ 59.3%</p></div>
+<h3>4.1 Standard Normal Table Values</h3>
+<table>
+<tr><th>Z</th><th>Φ(Z) = P(X≤Z)</th><th>Z</th><th>Φ(Z)</th></tr>
+<tr><td>0.0</td><td>0.5000</td><td>1.5</td><td>0.9332</td></tr>
+<tr><td>0.5</td><td>0.6915</td><td>1.96</td><td>0.9750</td></tr>
+<tr><td>1.0</td><td>0.8413</td><td>2.0</td><td>0.9772</td></tr>
+<tr><td>1.28</td><td>0.8997</td><td>2.5</td><td>0.9938</td></tr>
+<tr><td>1.645</td><td>0.9500</td><td>3.0</td><td>0.9987</td></tr>
+</table>
+<div style="text-align:center;margin:1.5rem 0;">
+<a href="prob-interactive.html" style="background:linear-gradient(135deg,#7c3aed,#8b5cf6);color:#fff;padding:.8rem 2rem;border-radius:10px;font-weight:700;font-size:1rem;">🎮 Interactive Lab Kholein →</a>
+</div>
+</div>
+<footer><p>© 2025 AIkiPadhai</p><div><a href="../../../../about.html">About</a></div></footer>
+<script src="../../../../script.js"></script>
+</body></html>

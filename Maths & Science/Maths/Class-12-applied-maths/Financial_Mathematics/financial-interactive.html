@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+<title>Financial Maths Lab — Applied Maths 12 | AIkiPadhai</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../../style.css"/>
+<style>
+body{background:#0d1117;color:#e2e8f0;font-family:'Inter',sans-serif;}
+h1,h2,h3,h4{color:#f1f5f9!important;}p{color:#cbd5e1;}
+.hero h1{color:#fff!important;}.hero p{color:#fef08a!important;}
+nav a{color:#94a3b8;}
+.lab-wrap{max-width:960px;margin:2rem auto;padding:0 1.2rem;}
+.lab-card{background:#161b22;border:1px solid #30363d;border-radius:14px;padding:1.6rem;margin:1.4rem 0;}
+.lab-card h3{color:#fbbf24!important;margin:0 0 .4rem;}
+.lab-card p.hint{color:#64748b;font-size:.88rem;margin:.2rem 0 .8rem;}
+canvas{border-radius:10px;display:block;margin:.6rem auto;}
+.controls{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;margin:.6rem 0;}
+label{color:#94a3b8;font-size:.85rem;}
+input[type=range]{accent-color:#ca8a04;width:120px;}
+input[type=number]{background:#1e293b;color:#fbbf24;border:1px solid #334155;border-radius:6px;padding:.3rem .5rem;width:90px;font-size:.85rem;}
+.val-badge{background:#1e293b;color:#fbbf24;border:1px solid #334155;border-radius:5px;padding:.15rem .5rem;font-weight:700;min-width:2.8rem;text-align:center;font-size:.83rem;}
+.eq-display{background:#0a0e1a;border-radius:8px;padding:.7rem 1rem;font-family:monospace;color:#fde68a;font-size:.85rem;margin:.5rem 0;white-space:pre-wrap;line-height:1.7;}
+.btn{padding:.5rem 1.1rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:.85rem;margin:.2rem;}
+.btn-v{background:linear-gradient(135deg,#ca8a04,#eab308);color:#fff;}
+.inp-row{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;}
+.result-big{background:#0a1a00;border:2px solid #ca8a04;border-radius:12px;padding:1.2rem;margin:.8rem 0;font-size:1.1rem;font-weight:700;color:#fbbf24;text-align:center;}
+</style></head><body>
+<header><div class="container header-content">
+<a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+<nav><a href="../index.html">Applied Maths 12</a><a href="index.html">Unit VII</a><a href="financial-interactive.html" class="active">Lab</a></nav>
+</div></header>
+<section class="hero" style="background:linear-gradient(135deg,#1a0f00,#713f12,#ca8a04);">
+<div class="container"><h1>Financial Maths Lab 💰</h1>
+<p>Bond pricer, NPV calculator, DDM, loan amortization — sab explore karo!</p></div>
+</section>
+<div class="lab-wrap">
+
+<!-- LAB 1: Bond Price vs Yield -->
+<div class="lab-card">
+<h3>📈 Lab 1: Bond Price — Yield Relationship</h3>
+<p class="hint">Required yield change karo — bond price kaise inversely related hai visually dekho! Premium vs discount samjho.</p>
+<div class="controls">
+  <label>Face Value ₹</label><input type="number" id="bFV" value="1000">
+  <label>Coupon Rate %</label><input type="range" id="bCR" min="2" max="15" step="0.5" value="8" oninput="drawBond()"><span id="bCRv" class="val-badge">8%</span>
+  <label>Maturity (yrs)</label><input type="range" id="bMat" min="1" max="20" value="10" oninput="drawBond()"><span id="bMatv" class="val-badge">10</span>
+  <label>Req. Yield %</label><input type="range" id="bYield" min="1" max="20" step="0.5" value="10" oninput="drawBond()"><span id="bYieldv" class="val-badge">10%</span>
+</div>
+<canvas id="bondCanvas" width="700" height="260" style="width:100%;background:#0a0e1a;"></canvas>
+<div class="eq-display" id="bondEq"></div>
+</div>
+
+<!-- LAB 2: NPV Calculator -->
+<div class="lab-card">
+<h3>💹 Lab 2: NPV Calculator — Investment Decision</h3>
+<p class="hint">Initial investment aur annual cash flows enter karo. NPV bar chart dikhega — positive hone par invest karo!</p>
+<div class="controls">
+  <div class="inp-row"><label>Initial Investment ₹</label><input type="number" id="npvInit" value="100000" step="5000"></div>
+  <div class="inp-row"><label>Discount Rate %</label><input type="range" id="npvRate" min="1" max="25" step="0.5" value="12" oninput="drawNPV()"><span id="npvRatev" class="val-badge">12%</span></div>
+</div>
+<div style="color:#94a3b8;font-size:.85rem;margin:.3rem 0;">Cash flows per year (₹):</div>
+<div style="display:flex;gap:.5rem;flex-wrap:wrap;margin:.4rem 0;">
+  <input type="number" class="cf-input" placeholder="Year 1" value="30000" style="background:#1e293b;color:#fbbf24;border:1px solid #334155;border-radius:6px;padding:.3rem .5rem;width:90px;">
+  <input type="number" class="cf-input" placeholder="Year 2" value="40000" style="background:#1e293b;color:#fbbf24;border:1px solid #334155;border-radius:6px;padding:.3rem .5rem;width:90px;">
+  <input type="number" class="cf-input" placeholder="Year 3" value="50000" style="background:#1e293b;color:#fbbf24;border:1px solid #334155;border-radius:6px;padding:.3rem .5rem;width:90px;">
+  <input type="number" class="cf-input" placeholder="Year 4" value="40000" style="background:#1e293b;color:#fbbf24;border:1px solid #334155;border-radius:6px;padding:.3rem .5rem;width:90px;">
+  <input type="number" class="cf-input" placeholder="Year 5" value="35000" style="background:#1e293b;color:#fbbf24;border:1px solid #334155;border-radius:6px;padding:.3rem .5rem;width:90px;">
+</div>
+<button class="btn btn-v" onclick="drawNPV()">Calculate NPV →</button>
+<canvas id="npvCanvas" width="700" height="240" style="width:100%;background:#0a0e1a;"></canvas>
+<div class="eq-display" id="npvEq"></div>
+</div>
+
+<!-- LAB 3: Stock DDM Valuation -->
+<div class="lab-card">
+<h3>📊 Lab 3: Stock Valuation — Gordon Growth Model</h3>
+<p class="hint">Dividend, growth rate aur required return change karo. Intrinsic value vs market price compare karo!</p>
+<div class="controls">
+  <label>Dividend D₁ ₹</label><input type="range" id="div" min="1" max="20" step="0.5" value="5" oninput="drawDDM()"><span id="divv" class="val-badge">5</span>
+  <label>Growth g %</label><input type="range" id="gRate" min="0" max="12" step="0.5" value="4" oninput="drawDDM()"><span id="gRatev" class="val-badge">4%</span>
+  <label>Required r %</label><input type="range" id="rRate" min="5" max="20" step="0.5" value="12" oninput="drawDDM()"><span id="rRatev" class="val-badge">12%</span>
+  <label>Market Price ₹</label><input type="number" id="mktPrice" value="55" oninput="drawDDM()">
+</div>
+<canvas id="ddmCanvas" width="700" height="240" style="width:100%;background:#0a0e1a;"></canvas>
+<div class="eq-display" id="ddmEq"></div>
+</div>
+
+<!-- LAB 4: Loan Amortization -->
+<div class="lab-card">
+<h3>🏦 Lab 4: Loan Amortization Schedule</h3>
+<p class="hint">Loan amount aur interest rate set karo. Principal vs Interest breakdown dekho — starting mein interest zyada, baad mein principal!</p>
+<div class="controls">
+  <label>Loan ₹</label><input type="number" id="loanAmt" value="500000" step="50000">
+  <label>Rate %/yr</label><input type="range" id="loanRate" min="6" max="18" step="0.5" value="10" oninput="drawAmort()"><span id="loanRatev" class="val-badge">10%</span>
+  <label>Years</label><input type="range" id="loanYrs" min="1" max="20" value="5" oninput="drawAmort()"><span id="loanYrsv" class="val-badge">5</span>
+  <button class="btn btn-v" onclick="drawAmort()">Calculate EMI →</button>
+</div>
+<canvas id="amortCanvas" width="700" height="260" style="width:100%;background:#0a0e1a;"></canvas>
+<div class="eq-display" id="amortEq"></div>
+</div>
+
+</div>
+<script>
+function fmt(n){return new Intl.NumberFormat('en-IN',{maximumFractionDigits:2}).format(n);}
+
+// ─── LAB 1: Bond ───
+function drawBond(){
+  const FV=+document.getElementById('bFV').value||1000;
+  const cr=+document.getElementById('bCR').value;
+  const mat=+document.getElementById('bMat').value;
+  const yld=+document.getElementById('bYield').value;
+  document.getElementById('bCRv').textContent=cr+'%';
+  document.getElementById('bMatv').textContent=mat;
+  document.getElementById('bYieldv').textContent=yld+'%';
+  const C=FV*cr/100;
+  function bondPrice(r){
+    const pvC=C*(1-Math.pow(1+r/100,-mat))/(r/100);
+    const pvF=FV/Math.pow(1+r/100,mat);
+    return pvC+pvF;
+  }
+  const currentPrice=bondPrice(yld);
+  const can=document.getElementById('bondCanvas'),ctx=can.getContext('2d');
+  const W=can.width,H=can.height,pad=60;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  // Yield-price curve
+  const yields=Array.from({length:100},(_,i)=>1+i*0.2);
+  const prices=yields.map(y=>bondPrice(y));
+  const pMin=Math.min(...prices)*0.95,pMax=Math.max(...prices)*1.05;
+  const yMin=1,yMax=21;
+  const toX=y=>pad+(y-yMin)/(yMax-yMin)*(W-2*pad);
+  const toY=p=>H-pad-(p-pMin)/(pMax-pMin)*(H-2*pad);
+  // FV par line
+  ctx.strokeStyle='#334155';ctx.lineWidth=1;ctx.setLineDash([6,4]);
+  ctx.beginPath();ctx.moveTo(pad,toY(FV));ctx.lineTo(W-pad,toY(FV));ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#475569';ctx.font='10px Inter';ctx.textAlign='left';ctx.fillText('Par (Face Value)',pad+3,toY(FV)-4);
+  // Curve
+  ctx.strokeStyle='#fbbf24';ctx.lineWidth=2.5;ctx.shadowColor='#fbbf24';ctx.shadowBlur=5;
+  ctx.beginPath();let f=true;
+  yields.forEach((y,i)=>{const py=toY(prices[i]);f?ctx.moveTo(toX(y),py):ctx.lineTo(toX(y),py);f=false;});
+  ctx.stroke();ctx.shadowBlur=0;
+  // Current yield point
+  ctx.fillStyle=currentPrice>FV?'#4ade80':'#f87171';ctx.shadowColor=ctx.fillStyle;ctx.shadowBlur=8;
+  ctx.beginPath();ctx.arc(toX(yld),toY(currentPrice),8,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+  // Coupon rate line
+  ctx.strokeStyle='#818cf8';ctx.lineWidth=1.5;ctx.setLineDash([4,3]);
+  ctx.beginPath();ctx.moveTo(toX(cr),pad);ctx.lineTo(toX(cr),H-pad);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#818cf8';ctx.font='10px Inter';ctx.textAlign='center';ctx.fillText(`Coupon=${cr}%`,toX(cr),H-pad+14);
+  // Axes
+  ctx.strokeStyle='#334155';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(pad,pad);ctx.lineTo(pad,H-pad);ctx.lineTo(W-pad,H-pad);ctx.stroke();
+  ctx.fillStyle='#64748b';ctx.font='10px Inter';
+  [5,10,15,20].forEach(y=>{ctx.textAlign='center';ctx.fillText(y+'%',toX(y),H-pad+14);});
+  const type=currentPrice>FV?'PREMIUM ↑':'DISCOUNT ↓';
+  document.getElementById('bondEq').textContent=
+    `Bond: FV=₹${FV}, Coupon=${cr}%, Maturity=${mat}yrs, Required Yield=${yld}%
+Coupon Payment C = ${FV}×${cr}% = ₹${C}
+
+Bond Price = C×PVIFA(${yld}%,${mat}) + FV×PVF(${yld}%,${mat})
+= ${C}×${((1-Math.pow(1+yld/100,-mat))/(yld/100)).toFixed(4)} + ${(FV/Math.pow(1+yld/100,mat)).toFixed(2)}
+= ₹${currentPrice.toFixed(2)} → ${type}
+
+${cr>yld?'Coupon > Yield → Premium':cr<yld?'Coupon < Yield → Discount':'Coupon = Yield → Par'}`;
+}
+drawBond();
+
+// ─── LAB 2: NPV ───
+function drawNPV(){
+  const init=+document.getElementById('npvInit').value;
+  const r=+document.getElementById('npvRate').value/100;
+  document.getElementById('npvRatev').textContent=(r*100)+'%';
+  const cfs=[...document.querySelectorAll('.cf-input')].map(i=>+i.value||0);
+  const pvs=cfs.map((cf,t)=>cf/Math.pow(1+r,t+1));
+  const npv=pvs.reduce((a,b)=>a+b,0)-init;
+  const can=document.getElementById('npvCanvas'),ctx=can.getContext('2d');
+  const W=can.width,H=can.height,padL=60,padB=40,padT=20;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  // Cumulative NPV bars
+  const cumNPV=[];let running=-init;
+  pvs.forEach(pv=>{running+=pv;cumNPV.push(running);});
+  const allVals=[...cumNPV,-init];
+  const yMin=Math.min(...allVals)*1.1,yMax=Math.max(...allVals)*1.1;
+  const toX=i=>padL+(i+1)/(cfs.length+1)*(W-padL-20);
+  const toY=v=>H-padB-(v-yMin)/(yMax-yMin)*(H-padT-padB);
+  const zero=toY(0);
+  // Zero line
+  ctx.strokeStyle='#334155';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(padL,zero);ctx.lineTo(W-20,zero);ctx.stroke();
+  ctx.fillStyle='#475569';ctx.font='10px Inter';ctx.textAlign='right';ctx.fillText('₹0',padL-3,zero+4);
+  // Initial investment bar
+  const bw=40;
+  ctx.fillStyle='#f87171';ctx.fillRect(toX(-1)-bw/2,zero,-bw,toY(-init)-zero);
+  ctx.fillStyle='#f87171';ctx.font='9px Inter';ctx.textAlign='center';ctx.fillText('−₹'+Math.round(init/1000)+'k',toX(-1),toY(-init)-5);
+  ctx.fillText('t=0',toX(-1),H-padB+14);
+  // CF bars + running NPV
+  cumNPV.forEach((v,i)=>{
+    const col=v>=0?'#4ade80':'#f87171';
+    ctx.fillStyle=col;ctx.globalAlpha=0.7;ctx.fillRect(toX(i)-bw/2,Math.min(zero,toY(v)),bw,Math.abs(toY(v)-zero));ctx.globalAlpha=1;
+    ctx.fillStyle=col;ctx.font='bold 9px Inter';ctx.textAlign='center';ctx.fillText((v>=0?'+':'')+'₹'+Math.round(v/1000)+'k',toX(i),toY(v)-(v>=0?8:-15));
+    ctx.fillStyle='#64748b';ctx.font='9px Inter';ctx.fillText('t='+(i+1),toX(i),H-padB+14);
+  });
+  document.getElementById('npvEq').textContent=
+    `Discount Rate: ${(r*100).toFixed(1)}%
+Initial Investment: ₹${fmt(init)}
+
+PV of Cash Flows:
+${pvs.map((pv,i)=>`  t=${i+1}: ₹${fmt(cfs[i])}/(1+${(r*100).toFixed(1)}%)^${i+1} = ₹${fmt(pv)}`).join('
+')}
+
+Total PV = ₹${fmt(pvs.reduce((a,b)=>a+b,0))}
+NPV = ₹${fmt(pvs.reduce((a,b)=>a+b,0))} − ₹${fmt(init)} = ₹${fmt(npv)}
+
+${npv>0?'✅ NPV > 0 → ACCEPT the project!':'❌ NPV < 0 → REJECT the project!'}`;
+}
+drawNPV();
+
+// ─── LAB 3: DDM ───
+function drawDDM(){
+  const D=+document.getElementById('div').value;
+  const g=+document.getElementById('gRate').value;
+  const r=+document.getElementById('rRate').value;
+  const mkt=+document.getElementById('mktPrice').value;
+  document.getElementById('divv').textContent=D;
+  document.getElementById('gRatev').textContent=g+'%';
+  document.getElementById('rRatev').textContent=r+'%';
+  const intrinsic=r>g?D/(r-g)*100:Infinity;
+  const can=document.getElementById('ddmCanvas'),ctx=can.getContext('2d');
+  const W=can.width,H=can.height,pad=50;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  // Sensitivity: show intrinsic value for different r values
+  const rVals=Array.from({length:40},(_,i)=>g+0.5+(i*0.5));
+  const prices=rVals.map(rv=>D/(rv/100-g/100));
+  const pMax=Math.min(Math.max(...prices.filter(isFinite))*1.1,500);
+  const toX=rv=>pad+(rv-(g+0.5))/(rVals[rVals.length-1]-(g+0.5))*(W-2*pad);
+  const toY=p=>H-pad-Math.min(p,pMax)/pMax*(H-2*pad);
+  ctx.strokeStyle='#fbbf24';ctx.lineWidth=2.5;ctx.shadowColor='#fbbf24';ctx.shadowBlur=5;
+  ctx.beginPath();let f=true;
+  rVals.forEach((rv,i)=>{if(prices[i]<pMax){const py=toY(prices[i]);f?ctx.moveTo(toX(rv),py):ctx.lineTo(toX(rv),py);f=false;}});
+  ctx.stroke();ctx.shadowBlur=0;
+  // Market price line
+  if(mkt<pMax){ctx.strokeStyle='#60a5fa';ctx.lineWidth=1.5;ctx.setLineDash([6,3]);ctx.beginPath();ctx.moveTo(pad,toY(mkt));ctx.lineTo(W-pad,toY(mkt));ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#60a5fa';ctx.font='10px Inter';ctx.textAlign='left';ctx.fillText('Market ₹'+mkt,pad+3,toY(mkt)-4);}
+  // Current r point
+  if(r>g&&intrinsic<pMax){ctx.fillStyle=intrinsic>mkt?'#4ade80':'#f87171';ctx.beginPath();ctx.arc(toX(r),toY(intrinsic),7,0,Math.PI*2);ctx.fill();}
+  ctx.fillStyle='#64748b';ctx.font='10px Inter';ctx.textAlign='center';
+  rVals.filter((_,i)=>i%4===0).forEach(rv=>ctx.fillText(rv.toFixed(1)+'%',toX(rv),H-pad+14));
+  ctx.fillStyle='#94a3b8';ctx.font='11px Inter';ctx.fillText('Required Return (r) →',W/2,H-pad+28);
+  const val=isFinite(intrinsic)?`₹${intrinsic.toFixed(2)}`:'∞ (r≤g!)';
+  const rec=isFinite(intrinsic)?(intrinsic>mkt?'UNDERVALUED → BUY 📈':'OVERVALUED → SELL 📉'):'r must be > g';
+  document.getElementById('ddmEq').textContent=
+    `Gordon Growth Model: P₀ = D₁/(r − g)
+D₁ = ₹${D}, g = ${g}%, r = ${r}%
+
+Intrinsic Value = ${D}/( ${r}% − ${g}%) = ${D}/(${r-g}%) = ${val}
+Market Price = ₹${mkt}
+
+${rec}`;
+}
+drawDDM();
+
+// ─── LAB 4: Amortization ───
+function drawAmort(){
+  const L=+document.getElementById('loanAmt').value||500000;
+  const rate=+document.getElementById('loanRate').value;
+  const yrs=+document.getElementById('loanYrs').value;
+  document.getElementById('loanRatev').textContent=rate+'%';
+  document.getElementById('loanYrsv').textContent=yrs;
+  const r=rate/100;
+  const emi=L*r*Math.pow(1+r,yrs)/(Math.pow(1+r,yrs)-1);
+  let bal=L;const schedule=[];
+  for(let yr=1;yr<=yrs;yr++){const int=bal*r;const prin=emi-int;bal-=prin;schedule.push({yr,int,prin,bal:Math.max(0,bal)});}
+  const can=document.getElementById('amortCanvas'),ctx=can.getContext('2d');
+  const W=can.width,H=can.height,padL=60,padB=40,padT=20;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const bw=(W-padL-20)/yrs-6;
+  const maxBar=emi;const scY=(H-padT-padB)/maxBar;
+  schedule.forEach((row,i)=>{
+    const x=padL+i*(W-padL-20)/yrs+3;
+    const intH=row.int*scY,prinH=row.prin*scY;
+    // Interest (bottom)
+    ctx.fillStyle='#f87171';ctx.fillRect(x,H-padB-intH,bw,intH);
+    // Principal (top)
+    ctx.fillStyle='#4ade80';ctx.fillRect(x,H-padB-intH-prinH,bw,prinH);
+    ctx.fillStyle='#64748b';ctx.font='9px Inter';ctx.textAlign='center';ctx.fillText('Y'+row.yr,x+bw/2,H-padB+14);
+  });
+  // Legend
+  ctx.fillStyle='#f87171';ctx.fillRect(W-160,padT,12,10);ctx.fillStyle='#4ade80';ctx.fillRect(W-160,padT+18,12,10);
+  ctx.fillStyle='#e2e8f0';ctx.font='11px Inter';ctx.textAlign='left';
+  ctx.fillText('Interest',W-144,padT+9);ctx.fillText('Principal',W-144,padT+27);
+  const totalInt=schedule.reduce((a,r)=>a+r.int,0);
+  document.getElementById('amortEq').textContent=
+    `Loan = ₹${fmt(L)}, Rate = ${rate}%/yr, Tenure = ${yrs} yrs
+
+EMI = L × r(1+r)^n / [(1+r)^n − 1]
+    = ${fmt(L)} × ${(r).toFixed(4)} × (1+${r})^${yrs} / [(1+${r})^${yrs}−1]
+    = ₹${emi.toFixed(2)} per year  (₹${(emi/12).toFixed(2)}/month)
+
+Total Payment = ₹${fmt(emi*yrs)}
+Total Interest = ₹${fmt(totalInt)}
+
+Green bars = Principal repaid, Red bars = Interest paid
+Note: Early years mein interest component zyada hota hai!`;
+}
+drawAmort();
+</script>
+</body></html>

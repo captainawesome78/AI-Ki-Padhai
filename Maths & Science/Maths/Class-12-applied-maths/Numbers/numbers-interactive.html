@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+  <title>Numbers Lab — Applied Maths 12 | AIkiPadhai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../style.css"/>
+  <style>
+    body{background:#0d1117;color:#e2e8f0;font-family:'Inter',sans-serif;}
+    h1,h2,h3,h4{color:#f1f5f9!important;} p{color:#cbd5e1;}
+    .hero h1{color:#fff!important;} .hero p{color:#99f6e4!important;}
+    nav a{color:#94a3b8;}
+    .lab-wrap{max-width:960px;margin:2rem auto;padding:0 1.2rem;}
+    .lab-card{background:#161b22;border:1px solid #30363d;border-radius:14px;padding:1.6rem;margin:1.4rem 0;}
+    .lab-card h3{color:#5eead4!important;margin:0 0 .4rem;}
+    .lab-card p.hint{color:#64748b;font-size:.88rem;margin:.2rem 0 .8rem;}
+    canvas{border-radius:10px;display:block;margin:.6rem auto;}
+    .controls{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;margin:.6rem 0;}
+    label{color:#94a3b8;font-size:.85rem;}
+    input[type=range]{accent-color:#0d9488;background:#1e293b;border:1px solid #334155;border-radius:6px;padding:.2rem .4rem;width:110px;}
+    input[type=number]{background:#1e293b;color:#5eead4;border:1px solid #334155;border-radius:6px;padding:.3rem .5rem;width:80px;font-size:.85rem;}
+    .val-badge{background:#1e293b;color:#5eead4;border:1px solid #334155;border-radius:5px;padding:.15rem .5rem;font-weight:700;min-width:2.5rem;text-align:center;font-size:.83rem;}
+    .eq-display{background:#0a0e1a;border-radius:8px;padding:.7rem 1rem;font-family:monospace;color:#5eead4;font-size:.88rem;margin:.5rem 0;line-height:1.75;}
+    .btn{padding:.5rem 1.1rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:.88rem;}
+    .btn-v{background:linear-gradient(135deg,#0d9488,#0f766e);color:#fff;}
+    .ctrl-group{display:flex;align-items:center;gap:.4rem;}
+    .result-box{background:#0a1a1a;border:1px solid #0d9488;border-radius:10px;padding:1rem;margin:.5rem 0;font-size:.9rem;}
+    .result-row{display:flex;justify-content:space-between;padding:.3rem 0;border-bottom:1px solid #1e293b;color:#cbd5e1;}
+    .result-row:last-child{border-bottom:none;font-weight:700;color:#5eead4;}
+  </style>
+</head>
+<body>
+<header><div class="container header-content">
+  <a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+  <nav><a href="../index.html">Applied Maths 12</a><a href="index.html">Unit I</a><a href="numbers-interactive.html" class="active">Lab</a></nav>
+</div></header>
+
+<section class="hero" style="background:linear-gradient(135deg,#021a18,#042f2e,#0d9488);">
+  <div class="container"><h1>Numbers Lab 🔢</h1>
+  <p>Modular clock, alligation mixer, pipes solver — concepts visually samjho!</p></div>
+</section>
+
+<div class="lab-wrap">
+
+<!-- LAB 1: Modular Clock -->
+<div class="lab-card">
+  <h3>🕐 Lab 1: Modular Arithmetic — Clock Explorer</h3>
+  <p class="hint">Koi bhi number enter karo aur modulus choose karo. Clock par remainder visually dekho. Day-of-week problems bhi try karo!</p>
+  <div class="controls">
+    <div class="ctrl-group"><label>Number a =</label><input type="number" id="modA" value="17" oninput="drawModClock()"></div>
+    <div class="ctrl-group"><label>Modulus n =</label><input type="range" id="modN" min="2" max="12" value="7" oninput="drawModClock()"><span id="modNv" class="val-badge">7</span></div>
+  </div>
+  <canvas id="clockCanvas" width="700" height="300" style="width:100%;background:#0a0e1a;"></canvas>
+  <div class="eq-display" id="clockEq"></div>
+</div>
+
+<!-- LAB 2: Alligation Visual -->
+<div class="lab-card">
+  <h3>⚗️ Lab 2: Alligation — Visual Mixer</h3>
+  <p class="hint">Do concentrations ya prices set karo aur mean target set karo. Alligation ka cross diagram automatically banta hai, ratio dikhta hai!</p>
+  <div class="controls">
+    <div class="ctrl-group"><label>Cheaper (c) =</label><input type="range" id="alC" min="0" max="90" value="30" oninput="drawAlligation()"><span id="alCv" class="val-badge">30</span></div>
+    <div class="ctrl-group"><label>Dearer (d) =</label><input type="range" id="alD" min="10" max="100" value="80" oninput="drawAlligation()"><span id="alDv" class="val-badge">80</span></div>
+    <div class="ctrl-group"><label>Mean (m) =</label><input type="range" id="alM" min="5" max="95" value="50" oninput="drawAlligation()"><span id="alMv" class="val-badge">50</span></div>
+  </div>
+  <canvas id="alCanvas" width="700" height="260" style="width:100%;background:#0a0e1a;"></canvas>
+  <div class="eq-display" id="alEq"></div>
+</div>
+
+<!-- LAB 3: Pipes & Cisterns Solver -->
+<div class="lab-card">
+  <h3>🚿 Lab 3: Pipes & Cisterns — Visual Solver</h3>
+  <p class="hint">Filling aur draining pipes set karo. Tank fill hote visually dekho — rate bars aur time-to-fill calculate hoga!</p>
+  <div class="controls">
+    <div class="ctrl-group"><label>Pipe A fills in (hrs)</label><input type="number" id="pA" value="6" min="1" max="100" oninput="drawPipes()"></div>
+    <div class="ctrl-group"><label>Pipe B fills in (hrs)</label><input type="number" id="pB" value="8" min="1" max="100" oninput="drawPipes()"></div>
+    <div class="ctrl-group"><label>Pipe C drains in (hrs)</label><input type="number" id="pC" value="12" min="0" max="100" oninput="drawPipes()" placeholder="0=none"></div>
+  </div>
+  <canvas id="pipeCanvas" width="700" height="260" style="width:100%;background:#0a0e1a;"></canvas>
+  <div class="eq-display" id="pipeEq"></div>
+</div>
+
+<!-- LAB 4: Partnership Calculator -->
+<div class="lab-card">
+  <h3>🤝 Lab 4: Partnership — Profit Distribution</h3>
+  <p class="hint">3 partners ka investment aur time set karo. Proportional profit share automatically calculate aur bar chart mein dikhega!</p>
+  <div class="controls">
+    <div class="ctrl-group"><label>A: ₹</label><input type="number" id="invA" value="50000" min="1000" step="1000" oninput="drawPartner()"><label>months</label><input type="number" id="tA" value="12" min="1" max="12" oninput="drawPartner()"></div>
+    <div class="ctrl-group"><label>B: ₹</label><input type="number" id="invB" value="60000" min="1000" step="1000" oninput="drawPartner()"><label>months</label><input type="number" id="tB" value="8" min="1" max="12" oninput="drawPartner()"></div>
+    <div class="ctrl-group"><label>C: ₹</label><input type="number" id="invC" value="40000" min="1000" step="1000" oninput="drawPartner()"><label>months</label><input type="number" id="tC" value="6" min="1" max="12" oninput="drawPartner()"></div>
+    <div class="ctrl-group"><label>Total Profit ₹</label><input type="number" id="profit" value="100000" min="1000" step="1000" oninput="drawPartner()"></div>
+  </div>
+  <canvas id="partnerCanvas" width="700" height="240" style="width:100%;background:#0a0e1a;"></canvas>
+  <div class="eq-display" id="partnerEq"></div>
+</div>
+
+</div>
+
+<script>
+// ====== LAB 1: Modular Clock ======
+function drawModClock(){
+  const a=+document.getElementById('modA').value||17;
+  const n=+document.getElementById('modN').value;
+  document.getElementById('modNv').textContent=n;
+  const r=((a%n)+n)%n; // handle negative
+  const c=document.getElementById('clockCanvas'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  // Clock face
+  const cx=180,cy=H/2,R=110;
+  ctx.strokeStyle='#1e293b';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.stroke();
+  ctx.strokeStyle='#0d9488';ctx.lineWidth=2;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.stroke();
+  // Numbers on clock (0 to n-1)
+  for(let i=0;i<n;i++){
+    const angle=-Math.PI/2+i*2*Math.PI/n;
+    const px=cx+R*0.82*Math.cos(angle),py=cy+R*0.82*Math.sin(angle);
+    ctx.fillStyle=i===r?'#fbbf24':'#64748b';
+    ctx.font=i===r?'bold 14px Inter':'12px Inter';ctx.textAlign='center';
+    ctx.fillText(i,px,py+4);
+    // tick
+    ctx.strokeStyle=i===r?'#fbbf24':'#334155';ctx.lineWidth=i===r?2.5:1.5;
+    ctx.beginPath();ctx.moveTo(cx+R*0.9*Math.cos(angle),cy+R*0.9*Math.sin(angle));
+    ctx.lineTo(cx+R*Math.cos(angle),cy+R*Math.sin(angle));ctx.stroke();
+  }
+  // Arrow to r
+  const angle=-Math.PI/2+r*2*Math.PI/n;
+  ctx.strokeStyle='#ef4444';ctx.lineWidth=3;ctx.shadowColor='#ef4444';ctx.shadowBlur=8;
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+R*0.7*Math.cos(angle),cy+R*0.7*Math.sin(angle));ctx.stroke();
+  ctx.shadowBlur=0;
+  ctx.fillStyle='#0d9488';ctx.beginPath();ctx.arc(cx,cy,5,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#fff';ctx.font='bold 13px Inter';ctx.textAlign='center';
+  ctx.fillText(`n = ${n}`,cx,cy-R-15);
+  // Explanation panel
+  ctx.textAlign='left';
+  const px2=330,py2=40,lh=28;
+  const steps=[
+    `a = ${a}`,
+    `n = ${n}`,
+    `q (quotient) = ${Math.floor(Math.abs(a)/n)*(a<0?-1:1)}`,
+    `r (remainder) = ${r}`,
+    `${a} = ${Math.floor(a/n+=(a<0&&a%n!==0?1:0))}×${n} + ${r}`,
+    `→  ${a} mod ${n} = ${r}`
+  ];
+  steps.forEach((s,i)=>{
+    ctx.fillStyle=i===steps.length-1?'#fbbf24':'#94a3b8';
+    ctx.font=i===steps.length-1?'bold 15px Inter':'13px Inter';
+    ctx.fillText(s,px2,py2+i*lh);
+  });
+  // Congruent numbers
+  ctx.fillStyle='#5eead4';ctx.font='12px Inter';
+  ctx.fillText('Congruent numbers (same remainder):',px2,py2+steps.length*lh+10);
+  const congs=[];for(let i=-2*n;i<=3*n;i++) if(((i%n)+n)%n===r) congs.push(i);
+  ctx.fillText(congs.slice(0,8).join(', ')+'...',px2,py2+steps.length*lh+28);
+  document.getElementById('clockEq').textContent=
+    `${a} mod ${n} = ${r}
+${a} = ${Math.floor((a-r)/n)}×${n} + ${r}
+
+Congruent numbers: ...${congs.slice(0,6).join(', ')}...
+Sabhi numbers jo ${n} se divide karne par ${r} remainder dete hain!`;
+}
+drawModClock();
+
+// ====== LAB 2: Alligation ======
+function drawAlligation(){
+  const c2=+document.getElementById('alC').value;
+  const d=+document.getElementById('alD').value;
+  let m=+document.getElementById('alM').value;
+  document.getElementById('alCv').textContent=c2;
+  document.getElementById('alDv').textContent=d;
+  document.getElementById('alMv').textContent=m;
+  // Clamp m
+  m=Math.max(c2+1,Math.min(d-1,m));
+  const can=document.getElementById('alCanvas'),ctx=can.getContext('2d');
+  const W=can.width,H=can.height;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const cx1=160,cx2=540,cy1=80,cy2=200,cxm=350,cym=140;
+  // Circles
+  [[cx1,cy1,'#3b82f6',`Cheaper
+${c2}`],[cx2,cy1,'#22c55e',`Dearer
+${d}`],[cxm,cym,'#fbbf24',`Mean
+${m}`]].forEach(([x,y,col,lbl])=>{
+    ctx.fillStyle=col;ctx.globalAlpha=0.9;ctx.beginPath();ctx.arc(x,y,40,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
+    ctx.fillStyle='#fff';ctx.font='bold 13px Inter';ctx.textAlign='center';
+    lbl.split('\n').forEach((l,i)=>ctx.fillText(l,x,y+i*16-3));
+  });
+  // Cross lines
+  ctx.strokeStyle='#ef4444';ctx.lineWidth=2.5;ctx.shadowColor='#ef4444';ctx.shadowBlur=4;
+  ctx.beginPath();ctx.moveTo(cx1+35,cy1+20);ctx.lineTo(cxm-35,cym-20);ctx.stroke();
+  ctx.strokeStyle='#22c55e';
+  ctx.beginPath();ctx.moveTo(cx2-35,cy1+20);ctx.lineTo(cxm+35,cym-20);ctx.stroke();
+  ctx.shadowBlur=0;
+  // Ratio labels
+  const rC=d-m, rD=m-c2;
+  const g=gcd(rC,rD);
+  ctx.fillStyle='#ef4444';ctx.font='bold 12px Inter';ctx.textAlign='center';
+  ctx.fillText(`d−m = ${rC} parts`,(cx1+cxm)/2,cym+40);
+  ctx.fillStyle='#22c55e';
+  ctx.fillText(`m−c = ${rD} parts`,(cx2+cxm)/2,cym+40);
+  // Ratio bar
+  const barX=60,barY=230,barW=580;
+  const fracC=rC/(rC+rD);
+  ctx.fillStyle='#3b82f6';ctx.fillRect(barX,barY,barW*fracC,28);
+  ctx.fillStyle='#22c55e';ctx.fillRect(barX+barW*fracC,barY,barW*(1-fracC),28);
+  ctx.fillStyle='#fff';ctx.font='bold 12px Inter';ctx.textAlign='center';
+  if(fracC>0.1)ctx.fillText(`Cheaper: ${rC/g} parts`,(barX+barX+barW*fracC)/2,barY+19);
+  if(1-fracC>0.1)ctx.fillText(`Dearer: ${rD/g} parts`,barX+barW*fracC+(barW*(1-fracC))/2,barY+19);
+  document.getElementById('alEq').textContent=
+    `Cheaper (c) = ${c2}, Dearer (d) = ${d}, Mean (m) = ${m}
+Ratio = (d−m):(m−c) = (${d}−${m}):(${m}−${c2}) = ${rC}:${rD} = ${rC/g}:${rD/g}
+Mixture mein ${rC/g} parts cheaper + ${rD/g} parts dearer = ${rC/g+rD/g} parts total`;
+}
+function gcd(a,b){return b===0?a:gcd(b,a%b);}
+drawAlligation();
+
+// ====== LAB 3: Pipes ======
+function drawPipes(){
+  const pA=+document.getElementById('pA').value||6;
+  const pB=+document.getElementById('pB').value||8;
+  const pC=+document.getElementById('pC').value||0;
+  const rateA=1/pA, rateB=1/pB, rateC=pC>0?1/pC:0;
+  const netRate=rateA+rateB-rateC;
+  const can=document.getElementById('pipeCanvas'),ctx=can.getContext('2d');
+  const W=can.width,H=can.height;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  // Rate bars
+  const items=[
+    {lbl:'Pipe A (fill)',rate:rateA,col:'#3b82f6',time:pA},
+    {lbl:'Pipe B (fill)',rate:rateB,col:'#22c55e',time:pB},
+    ...(pC>0?[{lbl:'Pipe C (drain)',rate:-rateC,col:'#ef4444',time:pC}]:[]),
+    {lbl:'Net Rate',rate:netRate,col:netRate>0?'#fbbf24':'#f97316',time:netRate>0?1/netRate:Infinity},
+  ];
+  const maxR=Math.max(...items.map(i=>Math.abs(i.rate)))*1.1;
+  const barH=30,gap=14,startY=25;
+  const cx=W/2;
+  items.forEach((item,i)=>{
+    const y=startY+i*(barH+gap);
+    const barW=Math.abs(item.rate)/maxR*(W/2-80);
+    const isNeg=item.rate<0;
+    ctx.fillStyle='#1e293b';ctx.fillRect(80,y,W-160,barH);
+    ctx.fillStyle=item.col;
+    if(!isNeg) ctx.fillRect(cx,y,barW,barH);
+    else ctx.fillRect(cx-barW,y,barW,barH);
+    ctx.fillStyle='#94a3b8';ctx.font='11px Inter';ctx.textAlign='right';
+    ctx.fillText(item.lbl,75,y+barH/2+4);
+    ctx.fillStyle=item.col;ctx.font='bold 11px Inter';ctx.textAlign='left';
+    ctx.fillText(isNeg?`−${(Math.abs(item.rate)*100).toFixed(2)}%/hr`:`+${(item.rate*100).toFixed(2)}%/hr`,cx+(isNeg?-barW-60:barW+5),y+barH/2+4);
+    // Center line
+    ctx.strokeStyle='#334155';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(cx,y);ctx.lineTo(cx,y+barH);ctx.stroke();
+  });
+  const timeStr=netRate>0?`${(1/netRate).toFixed(2)} hours`:'Never fills (drain > fill)';
+  document.getElementById('pipeEq').textContent=
+    `Pipe A rate = 1/${pA} = ${(rateA*100).toFixed(2)}% per hour
+Pipe B rate = 1/${pB} = ${(rateB*100).toFixed(2)}% per hour${pC>0?`
+Pipe C drain rate = 1/${pC} = ${(rateC*100).toFixed(2)}% per hour`:''}
+
+Net rate = ${rateA.toFixed(4)} + ${rateB.toFixed(4)}${pC>0?` − ${rateC.toFixed(4)}`:''} = ${netRate.toFixed(4)} per hour
+Time to fill = ${timeStr}`;
+}
+drawPipes();
+
+// ====== LAB 4: Partnership ======
+function drawPartner(){
+  const invA=+document.getElementById('invA').value||50000;
+  const invB=+document.getElementById('invB').value||60000;
+  const invC=+document.getElementById('invC').value||40000;
+  const tA=+document.getElementById('tA').value||12;
+  const tB=+document.getElementById('tB').value||8;
+  const tC=+document.getElementById('tC').value||6;
+  const total=+document.getElementById('profit').value||100000;
+  const wA=invA*tA,wB=invB*tB,wC=invC*tC;
+  const wTotal=wA+wB+wC;
+  const sA=Math.round(total*wA/wTotal);
+  const sB=Math.round(total*wB/wTotal);
+  const sC=total-sA-sB;
+  const can=document.getElementById('partnerCanvas'),ctx=can.getContext('2d');
+  const W=can.width,H=can.height,pad=60;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const cols=['#3b82f6','#22c55e','#f59e0b'];
+  const shares=[sA,sB,sC];
+  const names=['Partner A','Partner B','Partner C'];
+  const bw=(W-2*pad)/3-20;
+  shares.forEach((s,i)=>{
+    const x=pad+i*(bw+20);
+    const bh=(H-80)*s/total;
+    const y=H-40-bh;
+    const g=ctx.createLinearGradient(x,y+bh,x,y);
+    g.addColorStop(0,cols[i]);g.addColorStop(1,cols[i]+'88');
+    ctx.fillStyle=g;ctx.fillRect(x,y,bw,bh);
+    ctx.fillStyle=cols[i];ctx.font='bold 12px Inter';ctx.textAlign='center';
+    ctx.fillText(names[i],x+bw/2,H-22);
+    ctx.fillText('₹'+s.toLocaleString('en-IN'),x+bw/2,y-8);
+    ctx.fillText(`(${(s/total*100).toFixed(1)}%)`,x+bw/2,y-22);
+  });
+  document.getElementById('partnerEq').textContent=
+    `A: ₹${invA.toLocaleString('en-IN')} × ${tA} months = ${wA.toLocaleString('en-IN')}
+B: ₹${invB.toLocaleString('en-IN')} × ${tB} months = ${wB.toLocaleString('en-IN')}
+C: ₹${invC.toLocaleString('en-IN')} × ${tC} months = ${wC.toLocaleString('en-IN')}
+
+Ratio = ${wA}:${wB}:${wC} = simplified
+A's share = ₹${sA.toLocaleString('en-IN')}, B's = ₹${sB.toLocaleString('en-IN')}, C's = ₹${sC.toLocaleString('en-IN')}`;
+}
+drawPartner();
+</script>
+</body></html>

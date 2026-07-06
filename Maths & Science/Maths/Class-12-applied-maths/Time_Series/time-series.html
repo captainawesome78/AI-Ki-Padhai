@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+<title>Time Series — Applied Maths 12 | AIkiPadhai</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../../style.css"/>
+<style>
+body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;}
+.pg-hero{background:linear-gradient(135deg,#451a03,#d97706);padding:2.8rem 0;text-align:center;}
+.pg-hero h1{color:#fff!important;}.pg-hero p{color:#fde68a!important;}
+h2{color:#d97706;border-left:4px solid #d97706;padding-left:.75rem;margin:2rem 0 .8rem;}
+h3{color:#92400e;margin:1.5rem 0 .5rem;}
+.fb{background:#fffbeb;border-left:4px solid #d97706;border-radius:0 10px 10px 0;padding:.8rem 1.1rem;margin:.7rem 0;font-family:monospace;font-size:.92rem;}
+.eb{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:1rem 1.2rem;margin:.8rem 0;}
+.eb h4{color:#16a34a;margin:0 0 .5rem;}
+table{width:100%;border-collapse:collapse;margin:.7rem 0;}
+th{background:#d97706;color:#fff;padding:.5rem .8rem;font-size:.85rem;}
+td{border:1px solid #e2e8f0;padding:.45rem .7rem;font-size:.87rem;text-align:center;}
+tr:nth-child(even) td{background:#fffbeb;}
+</style></head><body>
+<header><div class="container header-content">
+<a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+<nav><a href="../index.html">Applied Maths 12</a><a href="index.html">Unit VI</a><a href="time-series.html" class="active">Time Series</a></nav>
+</div></header>
+<section class="pg-hero"><div class="container">
+<h1>Time Series Analysis 📈</h1><p>Trend, seasonality aur forecasting — data mein patterns dhundho</p>
+</div></section>
+<div class="container">
+
+<h2>1. Time Series ka Parichay</h2>
+<p>Time series ek sequence hai observations ki, jo time ke saath record ki gayi hoti hai. Sales data, temperature readings, stock prices — sab time series hain.</p>
+<div class="fb">Y = f(T, S, C, I)
+T = Trend Component (long-term movement)
+S = Seasonal Component (recurring patterns)
+C = Cyclical Component (business cycles, >1 year)
+I = Irregular Component (random fluctuations)</div>
+
+<h3>1.1 Additive Model vs Multiplicative Model</h3>
+<div class="fb">Additive:     Y = T + S + C + I  (constant variation)
+Multiplicative: Y = T × S × C × I  (percentage variation, more common)</div>
+
+<h2>2. Trend Analysis</h2>
+<h3>2.1 Moving Average Method</h3>
+<p>Raw data ko smooth karta hai seasonal fluctuations remove karke.</p>
+<div class="fb">3-year MA at time t = (Yₜ₋₁ + Yₜ + Yₜ₊₁) / 3
+4-year Centered MA needs two steps (even period ke liye)</div>
+<div class="eb"><h4>Udaharan: 3-Year Moving Average</h4>
+<table>
+<tr><th>Year</th><th>Sales (Y)</th><th>3-yr MA</th></tr>
+<tr><td>2018</td><td>120</td><td>—</td></tr>
+<tr><td>2019</td><td>130</td><td>(120+130+150)/3 = 133.3</td></tr>
+<tr><td>2020</td><td>150</td><td>(130+150+140)/3 = 140.0</td></tr>
+<tr><td>2021</td><td>140</td><td>(150+140+180)/3 = 156.7</td></tr>
+<tr><td>2022</td><td>180</td><td>—</td></tr>
+</table></div>
+
+<h3>2.2 Least Squares Trend Line</h3>
+<div class="fb">Y = a + bt  (linear trend)
+b = [nΣtY − ΣtΣY] / [nΣt² − (Σt)²]
+a = Ȳ − b·t̄
+(Same as regression — time t is X variable)</div>
+<div class="eb"><h4>Udaharan: Trend Fitting</h4>
+<p>Sales data (t=1 to 5): 10, 14, 17, 21, 26<br>
+Σt=15, ΣY=88, Σt²=55, ΣtY=293, n=5<br>
+b = (5×293 − 15×88)/(5×55 − 225) = (1465−1320)/50 = 2.9<br>
+a = 88/5 − 2.9×15/5 = 17.6 − 8.7 = 8.9<br>
+Trend: Ŷ = 8.9 + 2.9t<br>
+Forecast t=6: Ŷ = 8.9 + 17.4 = 26.3</p></div>
+
+<h2>3. Seasonal Indices</h2>
+<div class="fb">Seasonal Index (SI) = Average of Season / Grand Average × 100
+SI > 100 → above average season
+SI < 100 → below average season
+Σ(quarterly SI) = 400, Σ(monthly SI) = 1200</div>
+<div class="eb"><h4>Udaharan: Quarterly Seasonal Index</h4>
+<p>Quarterly averages: Q1=80, Q2=120, Q3=100, Q4=100<br>
+Grand Average = (80+120+100+100)/4 = 100<br>
+SI Q1 = 80/100×100 = 80<br>
+SI Q2 = 120/100×100 = 120<br>
+Sum = 80+120+100+100 = 400 ✓</p></div>
+
+<div style="text-align:center;margin:1.5rem 0;">
+<a href="index-numbers.html" style="background:linear-gradient(135deg,#d97706,#f59e0b);color:#fff;padding:.7rem 1.5rem;border-radius:10px;font-weight:700;">Index Numbers →</a>
+&nbsp;
+<a href="timeseries-interactive.html" style="background:linear-gradient(135deg,#7c3aed,#d97706);color:#fff;padding:.7rem 1.5rem;border-radius:10px;font-weight:700;">🎮 Lab Kholein →</a>
+</div>
+</div>
+<footer><p>© 2025 AIkiPadhai</p><div><a href="../../../../about.html">About</a></div></footer>
+<script src="../../../../script.js"></script>
+</body></html>

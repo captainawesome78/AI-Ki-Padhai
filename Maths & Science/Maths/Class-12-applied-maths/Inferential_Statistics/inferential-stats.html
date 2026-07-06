@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+<title>Inferential Statistics — Applied Maths 12 | AIkiPadhai</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../../style.css"/>
+<style>
+body{background:#fafafa;color:#1e293b;font-family:'Inter',sans-serif;}
+.pg-hero{background:linear-gradient(135deg,#052e16,#059669);padding:2.8rem 0;text-align:center;}
+.pg-hero h1{color:#fff!important;}.pg-hero p{color:#a7f3d0!important;}
+h2{color:#059669;border-left:4px solid #059669;padding-left:.75rem;margin:2rem 0 .8rem;}
+h3{color:#047857;margin:1.5rem 0 .5rem;}
+.fb{background:#f0fdf4;border-left:4px solid #059669;border-radius:0 10px 10px 0;padding:.8rem 1.1rem;margin:.7rem 0;font-family:monospace;font-size:.92rem;}
+.eb{background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:1rem 1.2rem;margin:.8rem 0;}
+.eb h4{color:#1d4ed8;margin:0 0 .5rem;}
+table{width:100%;border-collapse:collapse;margin:.7rem 0;}
+th{background:#059669;color:#fff;padding:.5rem .8rem;font-size:.85rem;}
+td{border:1px solid #e2e8f0;padding:.45rem .7rem;font-size:.88rem;}
+tr:nth-child(even) td{background:#f0fdf4;}
+.tip{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:.7rem 1rem;margin:.6rem 0;font-size:.88rem;}
+</style></head><body>
+<header><div class="container header-content">
+<a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+<nav><a href="../index.html">Applied Maths 12</a><a href="index.html">Unit V</a><a href="inferential-stats.html" class="active">Stats</a></nav>
+</div></header>
+<section class="pg-hero"><div class="container">
+<h1>Inferential Statistics 📊</h1><p>Sample data se population ke baare mein conclusions nikaalein</p>
+</div></section>
+<div class="container">
+
+<h2>1. Population aur Sampling</h2>
+<p>Population = sare elements ka set. Sample = population ka ek subset. Inferential statistics mein sample se population ke baare mein conclusions nikalte hain.</p>
+<div class="fb">Parameter: Population ka measure (μ, σ, p)
+Statistic: Sample ka measure (x̄, s, p̂)
+Sampling Error: x̄ − μ (sample aur population ka difference)</div>
+<h3>1.1 Sampling Methods</h3>
+<table>
+<tr><th>Method</th><th>Description</th><th>Use Case</th></tr>
+<tr><td>Simple Random</td><td>Har element equal chance</td><td>Homogeneous population</td></tr>
+<tr><td>Stratified</td><td>Groups/strata se proportional</td><td>Non-homogeneous population</td></tr>
+<tr><td>Systematic</td><td>Har kth element choose karo</td><td>Sequential data</td></tr>
+<tr><td>Cluster</td><td>Random groups choose karo</td><td>Geographically spread data</td></tr>
+</table>
+
+<h2>2. Confidence Intervals</h2>
+<p>Population parameter (like μ) ka interval estimate jo confidence level ke saath diya jaata hai.</p>
+<div class="fb">CI for Mean (known σ): x̄ ± z_(α/2) × (σ/√n)
+CI for Mean (unknown σ): x̄ ± t_(α/2,n-1) × (s/√n)
+CI for Proportion: p̂ ± z_(α/2) × √(p̂q̂/n)
+
+Common z values:
+90% CI → z = 1.645
+95% CI → z = 1.96
+99% CI → z = 2.576</div>
+<div class="eb"><h4>Udaharan: 95% Confidence Interval</h4>
+<p>Sample: n=100, x̄=75, σ=10. 95% CI for μ?<br>
+Margin of error = z × σ/√n = 1.96 × 10/√100 = 1.96 × 1 = 1.96<br>
+CI = (75−1.96, 75+1.96) = (73.04, 76.96)<br>
+Matlab: 95% confident hai ki population mean 73.04 aur 76.96 ke beech hai</p></div>
+
+<h2 id="hypothesis">3. Hypothesis Testing</h2>
+<p>Statistical claims test karna with evidence from sample data.</p>
+<div class="fb">H₀ (Null Hypothesis): Koi effect nahi / status quo
+H₁ (Alternative Hypothesis): Kuch change hai / claim
+α (Significance Level): Usually 0.05 ya 0.01
+p-value: Probability of observed result IF H₀ is true
+Decision: If p-value < α → Reject H₀</div>
+<h3>3.1 Types of Errors</h3>
+<table>
+<tr><th></th><th>H₀ True</th><th>H₀ False</th></tr>
+<tr><td>Reject H₀</td><td>Type I Error (α) ❌</td><td>Correct ✅</td></tr>
+<tr><td>Accept H₀</td><td>Correct ✅</td><td>Type II Error (β) ❌</td></tr>
+</table>
+<h3>3.2 One-Sample z-Test</h3>
+<div class="fb">Test Statistic: z = (x̄ − μ₀) / (σ/√n)
+Two-tailed: Reject H₀ if |z| > z_(α/2) = 1.96 (at α=0.05)
+One-tailed: Reject H₀ if z > 1.645 (right) or z < −1.645 (left)</div>
+<div class="eb"><h4>Udaharan: z-Test</h4>
+<p>Claim: μ = 500g. Sample: n=36, x̄=492g, σ=24g. Test at α=0.05 (two-tailed).<br>
+H₀: μ=500, H₁: μ≠500<br>
+z = (492−500)/(24/√36) = −8/4 = −2<br>
+|z|=2 > 1.96 → Reject H₀<br>
+Conclusion: Significant evidence hai ki μ ≠ 500g</p></div>
+
+<h2 id="regression">4. Correlation aur Regression</h2>
+<h3>4.1 Pearson Correlation Coefficient</h3>
+<div class="fb">r = Σ[(xᵢ−x̄)(yᵢ−ȳ)] / √[Σ(xᵢ−x̄)² × Σ(yᵢ−ȳ)²]
+−1 ≤ r ≤ 1
+r = +1: Perfect positive correlation
+r = −1: Perfect negative correlation
+r = 0: No linear correlation</div>
+<h3>4.2 Linear Regression — Least Squares</h3>
+<div class="fb">Regression line: ŷ = a + bx
+Slope:     b = Σ[(xᵢ−x̄)(yᵢ−ȳ)] / Σ(xᵢ−x̄)² = [nΣxy − ΣxΣy] / [nΣx² − (Σx)²]
+Intercept: a = ȳ − b·x̄</div>
+<div class="eb"><h4>Udaharan: Regression</h4>
+<p>Data: (1,3), (2,5), (3,4), (4,7), (5,9)<br>
+n=5, Σx=15, Σy=28, Σx²=55, Σxy=96<br>
+b = (5×96 − 15×28)/(5×55 − 15²) = (480−420)/(275−225) = 60/50 = 1.2<br>
+a = 28/5 − 1.2×15/5 = 5.6 − 3.6 = 2<br>
+Regression line: ŷ = 2 + 1.2x<br>
+Predict y at x=6: ŷ = 2 + 1.2×6 = 9.2</p></div>
+<div style="text-align:center;margin:1.5rem 0;">
+<a href="stats-interactive.html" style="background:linear-gradient(135deg,#059669,#10b981);color:#fff;padding:.8rem 2rem;border-radius:10px;font-weight:700;font-size:1rem;">🎮 Interactive Lab Kholein →</a>
+</div>
+</div>
+<footer><p>© 2025 AIkiPadhai</p><div><a href="../../../../about.html">About</a></div></footer>
+<script src="../../../../script.js"></script>
+</body></html>

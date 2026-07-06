@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+<title>Calculus Lab — Applied Maths 12 | AIkiPadhai</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../../style.css"/>
+<style>
+body{background:#0d1117;color:#e2e8f0;font-family:'Inter',sans-serif;}
+h1,h2,h3,h4{color:#f1f5f9!important;}p{color:#cbd5e1;}
+.hero h1{color:#fff!important;}.hero p{color:#fca5a5!important;}
+nav a{color:#94a3b8;}
+.lab-wrap{max-width:960px;margin:2rem auto;padding:0 1.2rem;}
+.lab-card{background:#161b22;border:1px solid #30363d;border-radius:14px;padding:1.6rem;margin:1.4rem 0;}
+.lab-card h3{color:#f87171!important;margin:0 0 .4rem;}
+.lab-card p.hint{color:#64748b;font-size:.88rem;margin:.2rem 0 .8rem;}
+canvas{border-radius:10px;display:block;margin:.6rem auto;}
+.controls{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;margin:.6rem 0;}
+label{color:#94a3b8;font-size:.85rem;}
+input[type=range]{accent-color:#dc2626;width:130px;}
+input[type=number]{background:#1e293b;color:#f87171;border:1px solid #334155;border-radius:6px;padding:.3rem .5rem;width:80px;font-size:.85rem;}
+.val-badge{background:#1e293b;color:#f87171;border:1px solid #334155;border-radius:5px;padding:.15rem .5rem;font-weight:700;min-width:3rem;text-align:center;font-size:.83rem;}
+.eq-display{background:#0a0e1a;border-radius:8px;padding:.7rem 1rem;font-family:monospace;color:#fca5a5;font-size:.85rem;margin:.5rem 0;white-space:pre-wrap;line-height:1.7;}
+.btn{padding:.5rem 1.1rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:.85rem;}
+.btn-v{background:linear-gradient(135deg,#dc2626,#ef4444);color:#fff;}
+select{background:#1e293b;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:.3rem .5rem;font-size:.85rem;}
+</style></head><body>
+<header><div class="container header-content">
+<a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+<nav><a href="../index.html">Applied Maths 12</a><a href="index.html">Unit III</a><a href="calculus-interactive.html" class="active">Lab</a></nav>
+</div></header>
+<section class="hero" style="background:linear-gradient(135deg,#450a0a,#7f1d1d,#dc2626);">
+<div class="container"><h1>Calculus Lab 📈</h1>
+<p>Tangents, cost-revenue, integration area, slope field — visually explore karo!</p></div>
+</section>
+<div class="lab-wrap">
+
+<!-- LAB 1: Derivative Tangent Explorer -->
+<div class="lab-card">
+<h3>📐 Lab 1: Derivative — Tangent Line Visualizer</h3>
+<p class="hint">Function choose karo aur point x drag karo. Tangent line live update hogi — slope = f'(x) dikhega!</p>
+<div class="controls">
+  <label>Function:</label>
+  <select id="fnType" onchange="drawTangent()">
+    <option value="x2">f(x) = x²</option>
+    <option value="x3">f(x) = x³ − 3x</option>
+    <option value="sin">f(x) = sin(x)</option>
+    <option value="ex">f(x) = eˣ/3</option>
+  </select>
+  <label>x₀ =</label>
+  <input type="range" id="tanX" min="-3" max="3" step="0.1" value="1" oninput="drawTangent()">
+  <span id="tanXv" class="val-badge">1.0</span>
+</div>
+<canvas id="tanCanvas" width="700" height="300" style="width:100%;background:#0a0e1a;"></canvas>
+<div class="eq-display" id="tanEq"></div>
+</div>
+
+<!-- LAB 2: Cost-Revenue-Profit Graph -->
+<div class="lab-card">
+<h3>💰 Lab 2: Cost, Revenue & Profit — Business Calculus</h3>
+<p class="hint">Fixed cost aur marginal cost change karo. C(q), R(q), P(q) graphs dekho aur maximum profit point identify karo!</p>
+<div class="controls">
+  <label>Fixed Cost (FC):</label>
+  <input type="range" id="fc" min="10" max="200" value="50" oninput="drawCRP()">
+  <span id="fcv" class="val-badge">50</span>
+  <label>MC slope:</label>
+  <input type="range" id="mc" min="1" max="10" value="3" step="0.5" oninput="drawCRP()">
+  <span id="mcv" class="val-badge">3</span>
+  <label>Price (p):</label>
+  <input type="range" id="pr" min="5" max="30" value="15" oninput="drawCRP()">
+  <span id="prv" class="val-badge">15</span>
+</div>
+<canvas id="crpCanvas" width="700" height="300" style="width:100%;background:#0a0e1a;"></canvas>
+<div class="eq-display" id="crpEq"></div>
+</div>
+
+<!-- LAB 3: Integration Area Under Curve -->
+<div class="lab-card">
+<h3>∫ Lab 3: Definite Integral — Area Under Curve</h3>
+<p class="hint">Limits a aur b drag karo. Riemann rectangles se area approx dikhega aur exact integral bhi!</p>
+<div class="controls">
+  <label>Function:</label>
+  <select id="intFn" onchange="drawIntegral()">
+    <option value="x2">f(x) = x²</option>
+    <option value="x3m3x">f(x) = x³ − 3x + 2</option>
+    <option value="sin">f(x) = 3sin(x)</option>
+  </select>
+  <label>a =</label>
+  <input type="range" id="intA" min="-2" max="2" step="0.1" value="0" oninput="drawIntegral()">
+  <span id="intAv" class="val-badge">0</span>
+  <label>b =</label>
+  <input type="range" id="intB" min="-1" max="4" step="0.1" value="3" oninput="drawIntegral()">
+  <span id="intBv" class="val-badge">3</span>
+  <label>N rects:</label>
+  <input type="range" id="intN" min="4" max="50" step="2" value="20" oninput="drawIntegral()">
+  <span id="intNv" class="val-badge">20</span>
+</div>
+<canvas id="intCanvas" width="700" height="300" style="width:100%;background:#0a0e1a;"></canvas>
+<div class="eq-display" id="intEq"></div>
+</div>
+
+<!-- LAB 4: Slope Field for Differential Equations -->
+<div class="lab-card">
+<h3>🌊 Lab 4: Slope Field — Differential Equations</h3>
+<p class="hint">dy/dx = f(x,y) ka slope field dekho. Canvas par click karo aur solution curve draw hogi — exponential growth visually!</p>
+<div class="controls">
+  <label>dy/dx =</label>
+  <select id="deType" onchange="drawSlopeField()">
+    <option value="y">y  (exponential growth)</option>
+    <option value="x">x  (parabola solutions)</option>
+    <option value="xy">xy (bell curve)</option>
+    <option value="miny">−y (exponential decay)</option>
+  </select>
+  <label>k factor:</label>
+  <input type="range" id="kFac" min="1" max="5" step="0.5" value="1" oninput="drawSlopeField()">
+  <span id="kFacv" class="val-badge">1.0</span>
+  <button class="btn btn-v" onclick="clearCurves()">Clear Curves</button>
+</div>
+<canvas id="sfCanvas" width="700" height="300" style="width:100%;background:#0a0e1a;cursor:crosshair;"></canvas>
+<div class="eq-display" id="sfEq">Canvas par click karo to draw solution curve!</div>
+</div>
+
+</div>
+<script>
+// ─── LAB 1: Tangent ───
+const fns={
+  x2:{f:x=>x*x,df:x=>2*x,label:'f(x)=x²',dlabel:"f'(x)=2x"},
+  x3:{f:x=>x*x*x-3*x,df:x=>3*x*x-3,label:'f(x)=x³−3x',dlabel:"f'(x)=3x²−3"},
+  sin:{f:x=>Math.sin(x)*2,df:x=>Math.cos(x)*2,label:'f(x)=2sin(x)',dlabel:"f'(x)=2cos(x)"},
+  ex:{f:x=>Math.exp(x)/3,df:x=>Math.exp(x)/3,label:'f(x)=eˣ/3',dlabel:"f'(x)=eˣ/3"}
+};
+function drawTangent(){
+  const tp=fns[document.getElementById('fnType').value];
+  const x0=+document.getElementById('tanX').value;
+  document.getElementById('tanXv').textContent=x0.toFixed(1);
+  const can=document.getElementById('tanCanvas'),ctx=can.getContext('2d');
+  const W=can.width,H=can.height,ox=W/2,oy=H/2,sc=55;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  // Grid
+  for(let gx=-6;gx<=6;gx++){ctx.strokeStyle='#1a2030';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(ox+gx*sc,0);ctx.lineTo(ox+gx*sc,H);ctx.stroke();}
+  for(let gy=-3;gy<=3;gy++){ctx.beginPath();ctx.moveTo(0,oy+gy*sc);ctx.lineTo(W,oy+gy*sc);ctx.stroke();}
+  // Axes
+  ctx.strokeStyle='#334155';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(0,oy);ctx.lineTo(W,oy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(ox,0);ctx.lineTo(ox,H);ctx.stroke();
+  ctx.fillStyle='#475569';ctx.font='10px Inter';ctx.textAlign='center';
+  for(let gx=-5;gx<=5;gx++){if(gx!==0)ctx.fillText(gx,ox+gx*sc,oy+12);}
+  // Function curve
+  ctx.strokeStyle='#60a5fa';ctx.lineWidth=2.5;ctx.shadowColor='#60a5fa';ctx.shadowBlur=4;
+  ctx.beginPath();
+  for(let px=0;px<W;px++){const x=(px-ox)/sc;const y=tp.f(x);if(isFinite(y)&&Math.abs(y)<5){px===0?ctx.moveTo(px,oy-y*sc):ctx.lineTo(px,oy-y*sc);}}
+  ctx.stroke();ctx.shadowBlur=0;
+  // Tangent
+  const y0=tp.f(x0),slope=tp.df(x0);
+  ctx.strokeStyle='#f87171';ctx.lineWidth=2;ctx.shadowColor='#f87171';ctx.shadowBlur=6;
+  ctx.beginPath();ctx.moveTo(0,oy-(y0+slope*(0-ox/sc-x0))*sc);ctx.lineTo(W,oy-(y0+slope*(W/sc-ox/sc-x0))*sc);ctx.stroke();
+  ctx.shadowBlur=0;
+  // Point
+  ctx.fillStyle='#fbbf24';ctx.beginPath();ctx.arc(ox+x0*sc,oy-y0*sc,6,0,Math.PI*2);ctx.fill();
+  // Label
+  ctx.fillStyle='#f1f5f9';ctx.font='bold 12px Inter';ctx.textAlign='left';
+  ctx.fillText(`x₀=${x0.toFixed(1)}  f(x₀)=${y0.toFixed(2)}  slope=${slope.toFixed(2)}`,12,20);
+  const inc=slope>0?'Increasing ↗':'Decreasing ↘';
+  ctx.fillStyle=slope>0?'#4ade80':'#f87171';ctx.fillText(inc,12,38);
+  document.getElementById('tanEq').textContent=
+    `${tp.label}   ${tp.dlabel}
+At x₀=${x0.toFixed(2)}: f(x₀)=${y0.toFixed(4)}
+Slope = f'(x₀) = ${slope.toFixed(4)}
+Tangent: y − ${y0.toFixed(2)} = ${slope.toFixed(2)}(x − ${x0.toFixed(2)})
+→ y = ${slope.toFixed(2)}x + ${(y0-slope*x0).toFixed(2)}`;
+}
+drawTangent();
+
+// ─── LAB 2: Cost-Revenue-Profit ───
+function drawCRP(){
+  const FC=+document.getElementById('fc').value;
+  const mc=+document.getElementById('mc').value;
+  const p=+document.getElementById('pr').value;
+  document.getElementById('fcv').textContent=FC;
+  document.getElementById('mcv').textContent=mc;
+  document.getElementById('prv').textContent=p;
+  const can=document.getElementById('crpCanvas'),ctx=can.getContext('2d');
+  const W=can.width,H=can.height,pad=50,bH=H-pad-30;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const maxQ=30;const scX=(W-pad*2)/maxQ;
+  const C=q=>FC+mc*q;const R=q=>p*q;const Pr=q=>R(q)-C(q);
+  const maxVal=Math.max(C(maxQ),R(maxQ))*1.1;
+  const scY=bH/maxVal;
+  const toX=q=>pad+q*scX,toY=v=>H-30-v*scY;
+  // Grid lines
+  ctx.strokeStyle='#1e293b';ctx.lineWidth=1;
+  for(let q=0;q<=maxQ;q+=5){ctx.beginPath();ctx.moveTo(toX(q),pad);ctx.lineTo(toX(q),H-30);ctx.stroke();}
+  // Profit-max q
+  const qStar=p>mc?(p-mc)*0?0:(FC)/(p-mc):null;
+  const pmaxQ=(p-mc)>0?(p-mc)*30/(2*(mc)):null; // simplified
+  // Draw curves
+  [{fn:C,col:'#f87171',lbl:'C(q)'},{fn:R,col:'#4ade80',lbl:'R(q)'},{fn:Pr,col:'#fbbf24',lbl:'P(q)'}].forEach(({fn,col,lbl})=>{
+    ctx.strokeStyle=col;ctx.lineWidth=2.5;ctx.shadowColor=col;ctx.shadowBlur=3;
+    ctx.beginPath();
+    for(let q=0;q<=maxQ;q+=0.2){const v=fn(q);if(toY(v)>=pad&&toY(v)<=H-30){q<0.3?ctx.moveTo(toX(q),toY(Math.max(0,v))):ctx.lineTo(toX(q),toY(Math.max(0,v)));}}
+    ctx.stroke();ctx.shadowBlur=0;
+    ctx.fillStyle=col;ctx.font='bold 11px Inter';ctx.fillText(lbl,toX(maxQ)+3,toY(fn(maxQ))+4);
+  });
+  // Break-even
+  if(p>mc){const be=FC/(p-mc);if(be<=maxQ){ctx.strokeStyle='#94a3b8';ctx.lineWidth=1;ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(toX(be),pad);ctx.lineTo(toX(be),H-30);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#94a3b8';ctx.font='10px Inter';ctx.fillText(`BE q=${be.toFixed(1)}`,toX(be)+3,pad+12);}}
+  // Axes
+  ctx.strokeStyle='#334155';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(pad,pad);ctx.lineTo(pad,H-30);ctx.lineTo(W-20,H-30);ctx.stroke();
+  ctx.fillStyle='#64748b';ctx.font='10px Inter';ctx.textAlign='center';
+  for(let q=0;q<=maxQ;q+=5) ctx.fillText(q,toX(q),H-15);
+  ctx.fillStyle='#94a3b8';ctx.font='11px Inter';ctx.fillText('Quantity (q)',W/2,H-2);
+  document.getElementById('crpEq').textContent=
+    `C(q) = ${FC} + ${mc}q  (Fixed=${FC}, MC=${mc})
+R(q) = ${p}q  (Price=${p} per unit)
+P(q) = R − C = (${p}-${mc})q − ${FC} = ${p-mc}q − ${FC}
+${p>mc?`Break-even: q* = ${FC}/(${p}-${mc}) = ${(FC/(p-mc)).toFixed(1)} units
+Max Profit: MR=MC → ${p}=${mc} (if linear, max at capacity)`:'P(q) < 0 always — Price < Marginal Cost!'}`;
+}
+drawCRP();
+
+// ─── LAB 3: Integration ───
+function evalIntFn(type,x){
+  if(type==='x2') return x*x;
+  if(type==='x3m3x') return x*x*x-3*x+2;
+  if(type==='sin') return 3*Math.sin(x);
+  return 0;
+}
+function exactIntegral(type,a,b){
+  if(type==='x2') return b*b*b/3-a*a*a/3;
+  if(type==='x3m3x') return (b**4/4-3*b*b/2+2*b)-(a**4/4-3*a*a/2+2*a);
+  if(type==='sin') return -3*Math.cos(b)+3*Math.cos(a);
+  return 0;
+}
+function drawIntegral(){
+  const type=document.getElementById('intFn').value;
+  const a=+document.getElementById('intA').value;
+  let b=+document.getElementById('intB').value;
+  if(b<=a) b=a+0.1;
+  const N=+document.getElementById('intN').value;
+  document.getElementById('intAv').textContent=a.toFixed(1);
+  document.getElementById('intBv').textContent=b.toFixed(1);
+  document.getElementById('intNv').textContent=N;
+  const can=document.getElementById('intCanvas'),ctx=can.getContext('2d');
+  const W=can.width,H=can.height,pad=50;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const xMin=-2,xMax=5,yMin=-3,yMax=12;
+  const toX=x=>pad+(x-xMin)/(xMax-xMin)*(W-2*pad);
+  const toY=y=>H-pad-(y-yMin)/(yMax-yMin)*(H-2*pad);
+  // Riemann rects
+  const dx=(b-a)/N;
+  ctx.globalAlpha=0.4;
+  for(let i=0;i<N;i++){
+    const xi=a+i*dx;const yi=evalIntFn(type,xi);
+    const px=toX(xi),py=toY(Math.max(yi,0));const rw=toX(xi+dx)-toX(xi);const rh=Math.abs(toY(yi)-toY(0));
+    ctx.fillStyle=yi>=0?'#818cf8':'#f87171';
+    ctx.fillRect(px,py,rw,rh);
+  }
+  ctx.globalAlpha=1;
+  // Axes
+  ctx.strokeStyle='#334155';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(toX(xMin),toY(0));ctx.lineTo(toX(xMax),toY(0));ctx.stroke();
+  ctx.beginPath();ctx.moveTo(toX(0),toY(yMin));ctx.lineTo(toX(0),toY(yMax));ctx.stroke();
+  // Curve
+  ctx.strokeStyle='#60a5fa';ctx.lineWidth=2.5;ctx.shadowColor='#60a5fa';ctx.shadowBlur=5;
+  ctx.beginPath();let first=true;
+  for(let px2=0;px2<W;px2++){const x=(px2-pad)/(W-2*pad)*(xMax-xMin)+xMin;const y=evalIntFn(type,x);if(isFinite(y)&&y>=yMin&&y<=yMax){const py2=toY(y);first?ctx.moveTo(px2,py2):ctx.lineTo(px2,py2);first=false;}}
+  ctx.stroke();ctx.shadowBlur=0;
+  // Area bounds lines
+  [a,b].forEach((xv,i)=>{ctx.strokeStyle=i===0?'#fbbf24':'#4ade80';ctx.lineWidth=2;ctx.setLineDash([6,3]);ctx.beginPath();ctx.moveTo(toX(xv),toY(yMin));ctx.lineTo(toX(xv),toY(yMax));ctx.stroke();ctx.setLineDash([]);ctx.fillStyle=i===0?'#fbbf24':'#4ade80';ctx.font='bold 11px Inter';ctx.fillText(i===0?'a='+a.toFixed(1):'b='+b.toFixed(1),toX(xv)+3,toY(yMax)+12);});
+  const riemann=Array.from({length:N},(_,i)=>evalIntFn(type,a+i*dx)*dx).reduce((s,v)=>s+v,0);
+  const exact=exactIntegral(type,a,b);
+  document.getElementById('intEq').textContent=
+    `∫[${a.toFixed(1)} to ${b.toFixed(1)}] f(x) dx
+Riemann sum (N=${N}): ${riemann.toFixed(4)}
+Exact integral: ${exact.toFixed(4)}
+Error: ${Math.abs(riemann-exact).toFixed(4)} (N badhane se error kam hoga!)`;
+}
+drawIntegral();
+
+// ─── LAB 4: Slope Field ───
+let solutionCurves=[];
+const deTypes={y:{fn:(x,y)=>y,lbl:'dy/dx = ky'},x:{fn:(x,y)=>x,lbl:'dy/dx = kx'},xy:{fn:(x,y)=>x*y,lbl:'dy/dx = kxy'},miny:{fn:(x,y)=>-y,lbl:'dy/dx = −ky'}};
+function drawSlopeField(){
+  const type=document.getElementById('deType').value;
+  const k=+document.getElementById('kFac').value;
+  document.getElementById('kFacv').textContent=k.toFixed(1);
+  const fn=deTypes[type].fn;
+  const can=document.getElementById('sfCanvas'),ctx=can.getContext('2d');
+  const W=can.width,H=can.height,pad=30;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const xMin=-3,xMax=3,yMin=-3,yMax=3;
+  const toX=x=>pad+(x-xMin)/(xMax-xMin)*(W-2*pad);
+  const toY=y=>H-pad-(y-yMin)/(yMax-yMin)*(H-2*pad);
+  const nx=20,ny=16;
+  for(let i=0;i<=nx;i++){for(let j=0;j<=ny;j++){
+    const x=xMin+i*(xMax-xMin)/nx;const y=yMin+j*(yMax-yMin)/ny;
+    const slope=k*fn(x,y);const ang=Math.atan(slope);const L=12;
+    const cx=toX(x),cy=toY(y);
+    const abs=Math.min(Math.abs(slope),4)/4;
+    ctx.strokeStyle=`rgba(${Math.round(abs*239)},${Math.round((1-abs)*167)},${Math.round(79)},0.7)`;
+    ctx.lineWidth=1.5;ctx.beginPath();
+    ctx.moveTo(cx-Math.cos(ang)*L,cy+Math.sin(ang)*L);
+    ctx.lineTo(cx+Math.cos(ang)*L,cy-Math.sin(ang)*L);ctx.stroke();
+  }}
+  // Axes
+  ctx.strokeStyle='#334155';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(toX(xMin),toY(0));ctx.lineTo(toX(xMax),toY(0));ctx.stroke();
+  ctx.beginPath();ctx.moveTo(toX(0),toY(yMin));ctx.lineTo(toX(0),toY(yMax));ctx.stroke();
+  // Draw saved solution curves
+  solutionCurves.forEach(({x0,y0})=>drawCurve(ctx,fn,k,x0,y0,toX,toY,xMin,xMax,yMin,yMax));
+  document.getElementById('sfEq').textContent=`${deTypes[type].lbl} (k=${k})
+
+Canvas par click karo → solution curve draw hogi
+Click different points to see family of solutions!`;
+}
+function drawCurve(ctx,fn,k,x0,y0,toX,toY,xMin,xMax,yMin,yMax){
+  ctx.strokeStyle='#00e5ff';ctx.lineWidth=2;ctx.shadowColor='#00e5ff';ctx.shadowBlur=6;
+  ctx.beginPath();
+  let x=x0,y=y0,first=true;const dt=0.05;
+  for(let t=0;t<100;t++){
+    if(x<xMin||x>xMax||y<yMin||y>yMax||!isFinite(y))break;
+    const px=toX(x),py=toY(y);first?ctx.moveTo(px,py):ctx.lineTo(px,py);first=false;
+    const slope=k*fn(x,y);x+=dt;y+=slope*dt;
+  }
+  // backward
+  x=x0;y=y0;first=true;
+  for(let t=0;t<100;t++){
+    if(x<xMin||x>xMax||y<yMin||y>yMax||!isFinite(y))break;
+    const px=toX(x),py=toY(y);first?ctx.moveTo(px,py):ctx.lineTo(px,py);first=false;
+    const slope=k*fn(x,y);x-=dt;y-=slope*dt;
+  }
+  ctx.stroke();ctx.shadowBlur=0;
+}
+document.getElementById('sfCanvas').addEventListener('click',e=>{
+  const can=document.getElementById('sfCanvas');const rect=can.getBoundingClientRect();
+  const px=(e.clientX-rect.left)*(can.width/rect.width);
+  const py=(e.clientY-rect.top)*(can.height/rect.height);
+  const pad=30;const xMin=-3,xMax=3,yMin=-3,yMax=3;
+  const x0=xMin+(px-pad)/(can.width-2*pad)*(xMax-xMin);
+  const y0=yMin+(1-(py-pad)/(can.height-2*pad))*(yMax-yMin);
+  solutionCurves.push({x0,y0});drawSlopeField();
+});
+function clearCurves(){solutionCurves=[];drawSlopeField();}
+drawSlopeField();
+</script>
+</body></html>

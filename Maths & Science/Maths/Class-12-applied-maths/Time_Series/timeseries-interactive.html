@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277" crossorigin="anonymous"></script>
+<title>Time Series Lab — Applied Maths 12 | AIkiPadhai</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../../style.css"/>
+<style>
+body{background:#0d1117;color:#e2e8f0;font-family:'Inter',sans-serif;}
+h1,h2,h3,h4{color:#f1f5f9!important;}p{color:#cbd5e1;}
+.hero h1{color:#fff!important;}.hero p{color:#fde68a!important;}
+nav a{color:#94a3b8;}
+.lab-wrap{max-width:960px;margin:2rem auto;padding:0 1.2rem;}
+.lab-card{background:#161b22;border:1px solid #30363d;border-radius:14px;padding:1.6rem;margin:1.4rem 0;}
+.lab-card h3{color:#fbbf24!important;margin:0 0 .4rem;}
+.lab-card p.hint{color:#64748b;font-size:.88rem;margin:.2rem 0 .8rem;}
+canvas{border-radius:10px;display:block;margin:.6rem auto;}
+.controls{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;margin:.6rem 0;}
+label{color:#94a3b8;font-size:.85rem;}
+input[type=range]{accent-color:#d97706;width:120px;}
+.val-badge{background:#1e293b;color:#fbbf24;border:1px solid #334155;border-radius:5px;padding:.15rem .5rem;font-weight:700;min-width:2.8rem;text-align:center;font-size:.83rem;}
+.eq-display{background:#0a0e1a;border-radius:8px;padding:.7rem 1rem;font-family:monospace;color:#fde68a;font-size:.85rem;margin:.5rem 0;white-space:pre-wrap;line-height:1.7;}
+.btn{padding:.5rem 1.1rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:.85rem;margin:.2rem;}
+.btn-v{background:linear-gradient(135deg,#d97706,#f59e0b);color:#fff;}
+textarea{background:#1e293b;color:#fbbf24;border:1px solid #334155;border-radius:8px;padding:.5rem;font-family:monospace;font-size:.82rem;width:100%;resize:vertical;}
+input[type=number]{background:#1e293b;color:#fbbf24;border:1px solid #334155;border-radius:6px;padding:.3rem .5rem;width:72px;font-size:.85rem;}
+</style></head><body>
+<header><div class="container header-content">
+<a href="../../../../index.html" class="logo">AIkiPadhai 🧠</a>
+<nav><a href="../index.html">Applied Maths 12</a><a href="index.html">Unit VI</a><a href="timeseries-interactive.html" class="active">Lab</a></nav>
+</div></header>
+<section class="hero" style="background:linear-gradient(135deg,#451a03,#78350f,#d97706);">
+<div class="container"><h1>Time Series Lab 📅</h1>
+<p>Moving average, trend fitting, index numbers — sab visually samjho!</p></div>
+</section>
+<div class="lab-wrap">
+
+<!-- LAB 1: Moving Average Smoother -->
+<div class="lab-card">
+<h3>📊 Lab 1: Moving Average — Trend Smoother</h3>
+<p class="hint">Wavy data mein moving average kaise trend reveal karta hai — period choose karo aur dekho!</p>
+<div class="controls">
+  <label>MA Period:</label>
+  <input type="range" id="maPeriod" min="2" max="7" value="3" oninput="drawMA()">
+  <span id="maPv" class="val-badge">3</span>
+  <label>Noise Level:</label>
+  <input type="range" id="noise" min="1" max="50" value="20" oninput="generateData(); drawMA()">
+  <span id="noisev" class="val-badge">20</span>
+  <button class="btn btn-v" onclick="generateData(); drawMA()">New Data →</button>
+</div>
+<canvas id="maCanvas" width="700" height="280" style="width:100%;background:#0a0e1a;"></canvas>
+<div class="eq-display" id="maEq"></div>
+</div>
+
+<!-- LAB 2: Trend Line Fitting -->
+<div class="lab-card">
+<h3>📈 Lab 2: Trend Line — Least Squares Fitting</h3>
+<p class="hint">Apna time-series data paste karo. Trend line automatically fit hogi aur future forecast dikhega!</p>
+<div class="controls" style="flex-direction:column;align-items:flex-start;">
+  <label>Yearly Data (one value per line, starting year 2015):</label>
+  <textarea id="tsData" rows="6">120
+135
+150
+142
+180
+195
+210
+225</textarea>
+  <div style="display:flex;gap:.5rem;align-items:center;margin-top:.3rem;">
+    <label>Forecast years:</label>
+    <input type="number" id="fcastYrs" value="3" min="1" max="10">
+    <button class="btn btn-v" onclick="drawTrend()">Fit & Forecast →</button>
+  </div>
+</div>
+<canvas id="trendCanvas" width="700" height="280" style="width:100%;background:#0a0e1a;"></canvas>
+<div class="eq-display" id="trendEq"></div>
+</div>
+
+<!-- LAB 3: Index Number Calculator -->
+<div class="lab-card">
+<h3>🧮 Lab 3: Index Number Calculator</h3>
+<p class="hint">Items ke prices aur quantities base/current year enter karo. Laspeyre's, Paasche's, Fisher's automatically calculate!</p>
+<div style="overflow-x:auto;">
+<table id="indexTable" style="background:#0a0e1a;border-collapse:collapse;width:100%;margin:.5rem 0;">
+<thead><tr>
+  <th style="background:#1e293b;color:#fbbf24;padding:.5rem .6rem;border:1px solid #30363d;">Item</th>
+  <th style="background:#1e293b;color:#fbbf24;padding:.5rem .6rem;border:1px solid #30363d;">P₀ (Base Price)</th>
+  <th style="background:#1e293b;color:#fbbf24;padding:.5rem .6rem;border:1px solid #30363d;">Q₀ (Base Qty)</th>
+  <th style="background:#1e293b;color:#fbbf24;padding:.5rem .6rem;border:1px solid #30363d;">P₁ (Current Price)</th>
+  <th style="background:#1e293b;color:#fbbf24;padding:.5rem .6rem;border:1px solid #30363d;">Q₁ (Current Qty)</th>
+</tr></thead>
+<tbody id="indexBody"></tbody>
+</table>
+</div>
+<div class="controls">
+  <button class="btn btn-v" onclick="calcIndex()">Calculate Index →</button>
+  <button class="btn" style="background:#1e293b;color:#94a3b8;border:1px solid #334155;" onclick="addRow()">+ Add Item</button>
+</div>
+<div class="eq-display" id="indexEq"></div>
+</div>
+
+<!-- LAB 4: Seasonal Pattern Explorer -->
+<div class="lab-card">
+<h3>🌊 Lab 4: Seasonal Pattern Explorer</h3>
+<p class="hint">Trend + seasonality = real-world data! Sliders se dono components control karo aur combined effect dekho!</p>
+<div class="controls">
+  <label>Trend slope:</label><input type="range" id="tSlope" min="-5" max="20" value="5" oninput="drawSeasonal()"><span id="tSlopev" class="val-badge">5</span>
+  <label>Season amplitude:</label><input type="range" id="sAmp" min="0" max="40" value="15" oninput="drawSeasonal()"><span id="sAmpv" class="val-badge">15</span>
+  <label>Season period:</label><input type="range" id="sPer" min="2" max="12" value="4" oninput="drawSeasonal()"><span id="sPerv" class="val-badge">4</span>
+  <label>Noise:</label><input type="range" id="sNoise" min="0" max="20" value="5" oninput="drawSeasonal()"><span id="sNoisev" class="val-badge">5</span>
+</div>
+<canvas id="seaCanvas" width="700" height="280" style="width:100%;background:#0a0e1a;"></canvas>
+<div class="eq-display" id="seaEq"></div>
+</div>
+
+</div>
+<script>
+// ─── Lab 1: Moving Average ───
+let tsRaw=[];
+function generateData(){
+  const noise=+document.getElementById('noise').value;
+  document.getElementById('noisev').textContent=noise;
+  tsRaw=Array.from({length:20},(_,i)=>Math.round(50+i*3+Math.sin(i/3)*15+(Math.random()-0.5)*noise));
+}
+generateData();
+function movingAvg(data,k){
+  const result=[];for(let i=0;i<data.length;i++){
+    if(i<Math.floor(k/2)||i>data.length-1-Math.ceil(k/2)){result.push(null);continue;}
+    let sum=0;for(let j=i-Math.floor(k/2);j<=i+Math.floor(k/2)&&j<data.length;j++)sum+=data[j];
+    result.push(sum/k);
+  }return result;
+}
+function drawMA(){
+  const k=+document.getElementById('maPeriod').value;
+  document.getElementById('maPv').textContent=k;
+  const ma=movingAvg(tsRaw,k);
+  const can=document.getElementById('maCanvas'),ctx=can.getContext('2d');
+  const W=can.width,H=can.height,pad=40;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const n=tsRaw.length,xMin=0,xMax=n-1;
+  const yMin=Math.min(...tsRaw)*0.9,yMax=Math.max(...tsRaw)*1.1;
+  const toX=i=>pad+i/(n-1)*(W-2*pad);const toY=v=>H-pad-(v-yMin)/(yMax-yMin)*(H-2*pad);
+  // Raw data
+  ctx.strokeStyle='#334155';ctx.lineWidth=1.5;ctx.beginPath();
+  tsRaw.forEach((v,i)=>i===0?ctx.moveTo(toX(i),toY(v)):ctx.lineTo(toX(i),toY(v)));ctx.stroke();
+  // Points
+  tsRaw.forEach((v,i)=>{ctx.fillStyle='#64748b';ctx.beginPath();ctx.arc(toX(i),toY(v),3,0,Math.PI*2);ctx.fill();});
+  // Moving average
+  ctx.strokeStyle='#fbbf24';ctx.lineWidth=2.5;ctx.shadowColor='#fbbf24';ctx.shadowBlur=6;
+  ctx.beginPath();let f=true;
+  ma.forEach((v,i)=>{if(v!==null){f?ctx.moveTo(toX(i),toY(v)):ctx.lineTo(toX(i),toY(v));f=false;}});
+  ctx.stroke();ctx.shadowBlur=0;
+  // x axis
+  ctx.fillStyle='#475569';ctx.font='10px Inter';ctx.textAlign='center';
+  for(let i=0;i<n;i+=2) ctx.fillText(i+1,toX(i),H-pad+14);
+  // Legend
+  ctx.fillStyle='#64748b';ctx.font='11px Inter';ctx.fillText('─ Raw Data',W-130,20);
+  ctx.fillStyle='#fbbf24';ctx.fillText('─ '+k+'-point MA',W-130,36);
+  const maNonNull=ma.filter(v=>v!==null);
+  document.getElementById('maEq').textContent=
+    `${k}-Point Moving Average
+Formula: MAₜ = (Yₜ₋₍ₖ₋₁₎/₂ + ... + Yₜ₊₍ₖ₋₁₎/₂) / ${k}
+
+Smoothing effect: ${k} badhane se → zyada smooth → trend clearer
+Trade-off: Endpoints (${Math.floor(k/2)} start & end) kho jaate hain!
+
+MA values: ${maNonNull.map(v=>v.toFixed(1)).slice(0,5).join(', ')}...`;
+}
+drawMA();
+
+// ─── Lab 2: Trend ───
+function drawTrend(){
+  const lines=document.getElementById('tsData').value.trim().split('\n').map(Number).filter(v=>!isNaN(v));
+  if(!lines.length)return;
+  const n=lines.length;const startYr=2015;
+  const ts=Array.from({length:n},(_,i)=>i+1);
+  const sy=lines.reduce((a,b)=>a+b,0),st=ts.reduce((a,b)=>a+b,0);
+  const sty=ts.reduce((s,t,i)=>s+t*lines[i],0),st2=ts.reduce((s,t)=>s+t*t,0);
+  const b=(n*sty-st*sy)/(n*st2-st*st);const a=sy/n-b*st/n;
+  const fYrs=+document.getElementById('fcastYrs').value||3;
+  const totalPts=n+fYrs;
+  const can=document.getElementById('trendCanvas'),ctx=can.getContext('2d');
+  const W=can.width,H=can.height,pad=50;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const allY=[...lines,...Array.from({length:fYrs},(_,i)=>a+b*(n+i+1))];
+  const yMin=Math.min(...allY)*0.9,yMax=Math.max(...allY)*1.1;
+  const toX=t=>pad+(t-1)/(totalPts)*(W-2*pad);const toY=v=>H-pad-(v-yMin)/(yMax-yMin)*(H-2*pad);
+  // Forecast region
+  ctx.fillStyle='rgba(251,191,36,0.06)';ctx.fillRect(toX(n+0.5),pad,W-pad-toX(n+0.5),H-2*pad);
+  ctx.fillStyle='#1e293b';ctx.font='11px Inter';ctx.textAlign='center';
+  ctx.fillText('← Historical │ Forecast →',toX(n+0.5),pad-5);
+  // Trend line (full)
+  ctx.strokeStyle='#fbbf24';ctx.lineWidth=2;ctx.setLineDash([8,4]);
+  ctx.beginPath();ctx.moveTo(toX(0.5),toY(a+b*0.5));ctx.lineTo(toX(totalPts+0.5),toY(a+b*(totalPts+0.5)));ctx.stroke();ctx.setLineDash([]);
+  // Actual data
+  ctx.strokeStyle='#60a5fa';ctx.lineWidth=2.5;ctx.shadowColor='#60a5fa';ctx.shadowBlur=4;
+  ctx.beginPath();lines.forEach((v,i)=>i===0?ctx.moveTo(toX(i+1),toY(v)):ctx.lineTo(toX(i+1),toY(v)));ctx.stroke();ctx.shadowBlur=0;
+  lines.forEach((v,i)=>{ctx.fillStyle='#60a5fa';ctx.beginPath();ctx.arc(toX(i+1),toY(v),4,0,Math.PI*2);ctx.fill();ctx.fillStyle='#94a3b8';ctx.font='9px Inter';ctx.textAlign='center';ctx.fillText(startYr+i,toX(i+1),H-pad+14);});
+  // Forecast points
+  for(let i=1;i<=fYrs;i++){const yf=a+b*(n+i);ctx.fillStyle='#fbbf24';ctx.shadowColor='#fbbf24';ctx.shadowBlur=5;ctx.beginPath();ctx.arc(toX(n+i),toY(yf),5,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle='#fbbf24';ctx.font='bold 9px Inter';ctx.fillText(`${startYr+n+i-1}:${Math.round(yf)}`,toX(n+i),toY(yf)-10);}
+  const forecasts=Array.from({length:fYrs},(_,i)=>`${startYr+n+i}: ${(a+b*(n+i+1)).toFixed(1)}`);
+  document.getElementById('trendEq').textContent=
+    `Linear Trend: Ŷ = ${a.toFixed(2)} + ${b.toFixed(2)}t
+a = ${a.toFixed(4)}, b = ${b.toFixed(4)}
+
+Forecasts:
+${forecasts.join('\n')}
+
+(Positive b → upward trend, negative → downward)`;
+}
+drawTrend();
+
+// ─── Lab 3: Index Numbers ───
+const defaultItems=[{n:'Food',p0:100,q0:50,p1:120,q1:55},{n:'Clothing',p0:80,q0:20,p1:90,q1:22},{n:'Housing',p0:200,q0:10,p1:240,q1:10}];
+function renderTable(){
+  const tb=document.getElementById('indexBody');tb.innerHTML='';
+  defaultItems.forEach((item,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td contenteditable="true" style="border:1px solid #30363d;padding:.4rem .6rem;color:#e2e8f0;">${item.n}</td>
+    <td contenteditable="true" style="border:1px solid #30363d;padding:.4rem .6rem;color:#6ee7b7;">${item.p0}</td>
+    <td contenteditable="true" style="border:1px solid #30363d;padding:.4rem .6rem;color:#93c5fd;">${item.q0}</td>
+    <td contenteditable="true" style="border:1px solid #30363d;padding:.4rem .6rem;color:#fbbf24;">${item.p1}</td>
+    <td contenteditable="true" style="border:1px solid #30363d;padding:.4rem .6rem;color:#f9a8d4;">${item.q1}</td>`;
+    tb.appendChild(tr);
+  });
+}
+renderTable();
+function addRow(){defaultItems.push({n:'Item',p0:100,q0:10,p1:110,q1:12});renderTable();}
+function calcIndex(){
+  const rows=document.getElementById('indexBody').querySelectorAll('tr');
+  let sP1Q0=0,sP0Q0=0,sP1Q1=0,sP0Q1=0;
+  const tbl=[];
+  rows.forEach(r=>{
+    const cells=r.querySelectorAll('td');
+    const p0=+cells[1].textContent||0,q0=+cells[2].textContent||0;
+    const p1=+cells[3].textContent||0,q1=+cells[4].textContent||0;
+    sP1Q0+=p1*q0;sP0Q0+=p0*q0;sP1Q1+=p1*q1;sP0Q1+=p0*q1;
+    tbl.push(`${cells[0].textContent}: P₁Q₀=${p1*q0}, P₀Q₀=${p0*q0}, P₁Q₁=${p1*q1}, P₀Q₁=${p0*q1}`);
+  });
+  const L=sP0Q0>0?(sP1Q0/sP0Q0*100).toFixed(2):'N/A';
+  const P=sP0Q1>0?(sP1Q1/sP0Q1*100).toFixed(2):'N/A';
+  const F=(+L*+P>0)?Math.sqrt(+L*+P).toFixed(2):'N/A';
+  document.getElementById('indexEq').textContent=
+    `Calculations:
+${tbl.join('\n')}
+
+ΣP₁Q₀=${sP1Q0}, ΣP₀Q₀=${sP0Q0}
+ΣP₁Q₁=${sP1Q1}, ΣP₀Q₁=${sP0Q1}
+
+Laspeyre's  = (${sP1Q0}/${sP0Q0})×100 = ${L}
+Paasche's   = (${sP1Q1}/${sP0Q1})×100 = ${P}
+Fisher's    = √(${L} × ${P}) = ${F}
+
+Inflation rate ≈ ${F-100>=0?'+':''}${(+F-100).toFixed(2)}%`;
+}
+calcIndex();
+
+// ─── Lab 4: Seasonal ───
+function drawSeasonal(){
+  const slope=+document.getElementById('tSlope').value;
+  const amp=+document.getElementById('sAmp').value;
+  const per=+document.getElementById('sPer').value;
+  const noise=+document.getElementById('sNoise').value;
+  document.getElementById('tSlopev').textContent=slope;document.getElementById('sAmpv').textContent=amp;
+  document.getElementById('sPerv').textContent=per;document.getElementById('sNoisev').textContent=noise;
+  const n=24;const base=100;
+  const trend=Array.from({length:n},(_,i)=>base+slope*i/n*10);
+  const seasonal=Array.from({length:n},(_,i)=>amp*Math.sin(2*Math.PI*i/per));
+  const noiseArr=Array.from({length:n},()=>(Math.random()-0.5)*noise*2);
+  const combined=Array.from({length:n},(_,i)=>trend[i]+seasonal[i]+noiseArr[i]);
+  const can=document.getElementById('seaCanvas'),ctx=can.getContext('2d');
+  const W=can.width,H=can.height,pad=40;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0e1a';ctx.fillRect(0,0,W,H);
+  const allVals=[...combined,...trend];
+  const yMin=Math.min(...allVals)*0.9,yMax=Math.max(...allVals)*1.1;
+  const toX=i=>pad+i/(n-1)*(W-2*pad);const toY=v=>H-pad-(v-yMin)/(yMax-yMin)*(H-2*pad);
+  // Combined
+  ctx.strokeStyle='#60a5fa';ctx.lineWidth=2;ctx.beginPath();
+  combined.forEach((v,i)=>i===0?ctx.moveTo(toX(i),toY(v)):ctx.lineTo(toX(i),toY(v)));ctx.stroke();
+  // Trend only
+  ctx.strokeStyle='#fbbf24';ctx.lineWidth=2;ctx.setLineDash([8,4]);ctx.beginPath();
+  trend.forEach((v,i)=>i===0?ctx.moveTo(toX(i),toY(v)):ctx.lineTo(toX(i),toY(v)));ctx.stroke();ctx.setLineDash([]);
+  // Legend
+  ctx.fillStyle='#60a5fa';ctx.font='11px Inter';ctx.fillText('─ Actual (T+S+I)',pad+5,20);
+  ctx.fillStyle='#fbbf24';ctx.fillText('- - Trend only',pad+5,36);
+  document.getElementById('seaEq').textContent=
+    `Y = T + S + I (Additive Model)
+Trend: T = ${base} + ${slope}t/10 (${slope>0?'Upward ↗':slope<0?'Downward ↘':'Flat →'})
+Seasonal: S = ${amp}×sin(2π×t/${per}), Period=${per} units
+Noise: I ~ U[−${noise}, ${noise}]
+
+Real-world mein: Moving average se T find karo
+Then S = Y − T, seasonal index calculate karo!`;
+}
+drawSeasonal();
+</script>
+</body></html>
