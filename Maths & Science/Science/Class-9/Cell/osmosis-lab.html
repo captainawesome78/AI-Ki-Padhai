@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Virtual Osmosis Lab | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #083344, #0e7490); color: #e2e8f0; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #a5f3fc; text-decoration: none; border: 1px solid rgba(165,243,252,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(165,243,252,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { display: flex; gap: 20px; padding: 20px; max-width: 1100px; margin: 0 auto; flex-wrap: wrap; }
+        .stage { flex: 1 1 380px; min-width: 300px; background: rgba(255,255,255,0.04); border-radius: 18px; padding: 16px; text-align: center; }
+        .stage svg { width: 100%; max-width: 340px; height: auto; }
+        .controls { flex: 1 1 320px; min-width: 300px; }
+        .card { background: rgba(255,255,255,0.06); border-radius: 16px; padding: 18px 20px; margin-bottom: 16px; }
+        .card h3 { color: #fff; font-size: 15px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: .05em; }
+        .chips { display: flex; gap: 10px; flex-wrap: wrap; }
+        .chip { background: rgba(255,255,255,0.1); border: 2px solid transparent; color: #e2e8f0; padding: 10px 14px; border-radius: 12px; cursor: pointer; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .chip.active { border-color: #22d3ee; background: rgba(34,211,238,0.15); }
+        .chip .em { font-size: 22px; }
+        input[type=range] { width: 100%; accent-color: #22d3ee; }
+        .saltval { display: flex; justify-content: space-between; font-size: 13px; color: #94a3b8; margin-top: 6px; }
+        .tonic-badge { display: inline-block; padding: 5px 14px; border-radius: 999px; font-weight: 800; font-size: 14px; margin-top: 10px; }
+        .t-hypo { background: #1e3a8a; color: #bfdbfe; }
+        .t-iso { background: #064e3b; color: #6ee7b7; }
+        .t-hyper { background: #7f1d1d; color: #fecaca; }
+        button.run { width: 100%; background: #06b6d4; color: #04222b; border: none; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: 800; cursor: pointer; margin-top: 4px; }
+        button.run:hover { background: #22d3ee; }
+        button.reset { width: 100%; background: transparent; color: #a5f3fc; border: 1px solid rgba(165,243,252,0.4); padding: 10px; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 10px; }
+        .result { background: rgba(0,0,0,0.25); border-radius: 12px; padding: 16px; margin-top: 4px; min-height: 60px; font-size: 15px; line-height: 1.6; }
+        .result .rhead { font-weight: 800; font-size: 17px; margin-bottom: 6px; }
+        .readout { display: flex; justify-content: space-around; margin-top: 12px; text-align: center; }
+        .readout div span { display: block; }
+        .readout .num { font-size: 22px; font-weight: 800; color: #fff; }
+        .readout .cap { font-size: 12px; color: #94a3b8; }
+        .obs { font-size: 13px; color: #94a3b8; text-align: center; margin-top: 8px; min-height: 18px; }
+        .explain { margin-top: 14px; border-top: 1px dashed rgba(255,255,255,0.15); padding-top: 12px; }
+        .explain .eh { font-weight: 800; color: #a5f3fc; font-size: 14px; margin-bottom: 8px; }
+        .step { display: flex; gap: 10px; margin: 8px 0; font-size: 14px; line-height: 1.5; }
+        .step .n { flex: 0 0 24px; height: 24px; background: #06b6d4; color: #04222b; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; }
+        .step b { color: #fff; }
+        .live-tag { display:inline-block; background:#0e7490; color:#a5f3fc; font-size:11px; font-weight:800; padding:2px 8px; border-radius:999px; margin-left:6px; vertical-align:middle; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="cell-membrane-and-transport.html">&larr; Back to Lesson</a>
+        <div class="title">🧪 Virtual Osmosis Lab</div>
+        <span style="width:70px"></span>
+    </div>
+
+    <div class="wrap">
+        <div class="stage">
+            <svg viewBox="0 0 300 340" xmlns="http://www.w3.org/2000/svg">
+                <path d="M60 40 L60 300 Q60 320 80 320 L220 320 Q240 320 240 300 L240 40" fill="none" stroke="#e2e8f0" stroke-width="4"/>
+                <line x1="52" y1="40" x2="248" y2="40" stroke="#e2e8f0" stroke-width="4"/>
+                <path id="liquid" d="M64 120 L64 300 Q64 316 80 316 L220 316 Q236 316 236 300 L236 120 Z" fill="#38bdf8" opacity="0.45"/>
+                <g id="molecules"></g>
+                <g id="specimen">
+                    <circle id="spec" cx="150" cy="215" r="55" fill="#fcd34d" stroke="#b45309" stroke-width="3"/>
+                    <text id="spec-emoji" x="150" y="228" text-anchor="middle" font-size="42">🥔</text>
+                </g>
+                <g id="arrows"></g>
+            </svg>
+            <div class="obs" id="obs">Slider ghumao ya specimen badlo - sab kuch LIVE update hoga.</div>
+        </div>
+
+        <div class="controls">
+            <div class="card">
+                <h3>1. Specimen chuno</h3>
+                <div class="chips" id="spec-chips">
+                    <div class="chip active" data-spec="potato"><span class="em">🥔</span>Aloo (Potato)</div>
+                    <div class="chip" data-spec="raisin"><span class="em">🍇</span>Kishmish (Raisin)</div>
+                    <div class="chip" data-spec="rbc"><span class="em">🔴</span>Blood cell (RBC)</div>
+                </div>
+            </div>
+            <div class="card">
+                <h3>2. Solution ka namak (salt %) set karo</h3>
+                <input type="range" id="salt" min="0" max="25" value="0" step="1" oninput="onSalt()">
+                <div class="saltval"><span>0% (saada paani)</span><span id="saltnow">0%</span><span>25% (bahut namkeen)</span></div>
+                <div id="tonic" class="tonic-badge t-hypo">Hypotonic solution</div>
+            </div>
+            <div class="card">
+                <button class="run" onclick="runExp()">&#9654; Play Animation (dobara dekho)</button>
+                <button class="reset" onclick="resetExp()">&#8635; Reset</button>
+            </div>
+            <div class="card">
+                <div class="result" id="result"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var CELL_CONC = 5;
+        var SPECS = {
+            potato: { emoji: "🥔", base: "#fcd34d", stroke: "#b45309", name: "Aloo (Potato)", sens: 0.9, wall: true,  canBurst: false, note: "Aloo mein cell wall hoti hai, isliye ye zyada nahi phoolta - bas kada (turgid) ho jaata hai." },
+            raisin: { emoji: "🍇", base: "#a78bfa", stroke: "#6d28d9", name: "Kishmish (Raisin)", sens: 1.7, wall: true,  canBurst: false, note: "Kishmish pehle se sookhi hoti hai, isliye ye paani soakkar sabse zyada phoolti hai." },
+            rbc:    { emoji: "🔴", base: "#f87171", stroke: "#b91c1c", name: "Blood cell (RBC)", sens: 2.2, wall: false, canBurst: true,  note: "RBC mein cell wall NAHI hoti, isliye ye osmosis ke liye sabse naazuk (sensitive) hai." }
+        };
+        var currentSpec = "potato";
+        var salt = 0;
+        var baseR = 55;
+        var animId = null;
+
+        (function () {
+            var g = document.getElementById('molecules');
+            for (var i = 0; i < 14; i++) {
+                var c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                var x = 70 + Math.random() * 160, y = 130 + Math.random() * 170;
+                c.setAttribute('cx', x); c.setAttribute('cy', y); c.setAttribute('r', 3);
+                c.setAttribute('fill', '#e0f2fe'); c.setAttribute('opacity', '0.6');
+                g.appendChild(c);
+            }
+        })();
+
+        document.querySelectorAll('#spec-chips .chip').forEach(function (chip) {
+            chip.addEventListener('click', function () {
+                document.querySelectorAll('#spec-chips .chip').forEach(function (c) { c.classList.remove('active'); });
+                chip.classList.add('active');
+                currentSpec = chip.getAttribute('data-spec');
+                var s = SPECS[currentSpec];
+                document.getElementById('spec').setAttribute('fill', s.base);
+                document.getElementById('spec').setAttribute('stroke', s.stroke);
+                applyState(true);
+            });
+        });
+
+        function tonicity() {
+            if (salt < CELL_CONC - 1) return "hypo";
+            if (salt > CELL_CONC + 1) return "hyper";
+            return "iso";
+        }
+
+        function onSalt() {
+            salt = parseInt(document.getElementById('salt').value, 10);
+            document.getElementById('saltnow').textContent = salt + '%';
+            var t = tonicity();
+            var badge = document.getElementById('tonic');
+            badge.className = 'tonic-badge ' + (t === 'hypo' ? 't-hypo' : t === 'iso' ? 't-iso' : 't-hyper');
+            badge.textContent = (t === 'hypo' ? 'Hypotonic solution (bahar zyada paani)' :
+                t === 'iso' ? 'Isotonic solution (balance)' : 'Hypertonic solution (bahar zyada namak)');
+            var op = 0.35 + salt / 60;
+            document.getElementById('liquid').setAttribute('opacity', op.toFixed(2));
+            applyState(false);
+        }
+
+        function computeState() {
+            var s = SPECS[currentSpec];
+            var t = tonicity();
+            var targetR, burst = false;
+            if (t === 'hypo') {
+                var rawR = baseR + (CELL_CONC - salt) * 2.4 * s.sens;
+                if (s.canBurst && rawR > 76) { targetR = 80; burst = true; }
+                else targetR = Math.min(74, rawR);
+            } else if (t === 'hyper') {
+                targetR = Math.max(28, baseR - (salt - CELL_CONC) * 1.5 * s.sens);
+            } else {
+                targetR = baseR;
+            }
+            return { t: t, targetR: targetR, burst: burst };
+        }
+
+        function drawArrows(dir) {
+            var g = document.getElementById('arrows');
+            g.innerHTML = '';
+            if (dir === 0) return;
+            var positions = [[150, 150], [95, 215], [205, 215], [150, 280]];
+            positions.forEach(function (p) {
+                var a = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                var cx = 150, cy = 215, sx = p[0], sy = p[1];
+                var d = dir > 0 ? ('M' + sx + ' ' + sy + ' L' + (cx + (sx - cx) * 0.35) + ' ' + (cy + (sy - cy) * 0.35))
+                                : ('M' + (cx + (sx - cx) * 0.35) + ' ' + (cy + (sy - cy) * 0.35) + ' L' + sx + ' ' + sy);
+                a.setAttribute('d', d);
+                a.setAttribute('stroke', dir > 0 ? '#22d3ee' : '#f87171');
+                a.setAttribute('stroke-width', '3');
+                a.setAttribute('marker-end', 'url(#ah_' + (dir > 0 ? 'in' : 'out') + ')');
+                g.appendChild(a);
+            });
+            ensureMarkers();
+        }
+
+        function ensureMarkers() {
+            if (document.getElementById('ah_in')) return;
+            var svg = document.querySelector('svg');
+            var defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+            defs.innerHTML =
+                '<marker id="ah_in" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#22d3ee"/></marker>' +
+                '<marker id="ah_out" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#f87171"/></marker>';
+            svg.prepend(defs);
+        }
+
+        function applyState(animate) {
+            if (animId) cancelAnimationFrame(animId);
+            var st = computeState();
+            var finalR = st.burst ? 80 : st.targetR;
+            drawArrows(st.t === 'hypo' ? 1 : st.t === 'hyper' ? -1 : 0);
+            var spec = document.getElementById('spec');
+            var emoji = document.getElementById('spec-emoji');
+            if (!animate) {
+                spec.setAttribute('r', finalR);
+                emoji.textContent = st.burst ? '💥' : SPECS[currentSpec].emoji;
+                writeResult(st);
+                setObs(st, false);
+                return;
+            }
+            var startR = parseFloat(spec.getAttribute('r')) || baseR;
+            var t0 = null, dur = 1400;
+            emoji.textContent = SPECS[currentSpec].emoji;
+            setObs(st, true);
+            function step(ts) {
+                if (!t0) t0 = ts;
+                var p = Math.min((ts - t0) / dur, 1);
+                var e = 1 - Math.pow(1 - p, 3);
+                spec.setAttribute('r', startR + (finalR - startR) * e);
+                if (p < 1) { animId = requestAnimationFrame(step); }
+                else { if (st.burst) emoji.textContent = '💥'; writeResult(st); setObs(st, false); }
+            }
+            animId = requestAnimationFrame(step);
+        }
+
+        function setObs(st, running) {
+            var el = document.getElementById('obs');
+            if (running) {
+                el.textContent = (st.t === 'iso') ? 'Paani dono taraf barabar move ho raha hai...' :
+                    (st.t === 'hypo' ? 'Paani cell ke ANDAR ja raha hai (neeli arrows)...' : 'Paani cell se BAHAR nikal raha hai (laal arrows)...');
+                return;
+            }
+            el.textContent = st.t === 'hypo' ? '💧 Neeli arrows = paani andar aa raha hai.' :
+                st.t === 'hyper' ? '🌵 Laal arrows = paani bahar ja raha hai.' : '⚖️ Koi net movement nahi.';
+        }
+
+        function buildExplain(t) {
+            var solTxt = salt + '% namak', cellTxt = CELL_CONC + '% (cell ke andar)';
+            var compare, move, why, result;
+            if (t === 'hypo') {
+                compare = 'Solution (<b>' + solTxt + '</b>) mein cell (<b>' + cellTxt + '</b>) se <b>kam namak</b> hai, matlab solution mein paani zyada.';
+                move = 'Paani <b>solution se cell ke ANDAR</b> gaya.';
+                why = 'Osmosis mein paani hamesha zyada-paani wali side se kam-paani (zyada-namak) wali side jaata hai, taaki dono barabar ho jaayein.';
+                result = 'Andar paani bharne se cell <b>phool</b> gaya (turgid).';
+            } else if (t === 'hyper') {
+                compare = 'Solution (<b>' + solTxt + '</b>) mein cell (<b>' + cellTxt + '</b>) se <b>zyada namak</b> hai, matlab solution mein paani kam.';
+                move = 'Paani <b>cell ke andar se BAHAR solution mein</b> gaya.';
+                why = 'Paani zyada-paani wali side (cell ke andar) se kam-paani (zyada-namak) wali side (solution) ki taraf jaata hai.';
+                result = 'Paani nikalne se cell <b>sikud</b> gaya (flaccid).';
+            } else {
+                compare = 'Solution (<b>' + solTxt + '</b>) aur cell (<b>' + cellTxt + '</b>) mein namak <b>lagbhag barabar</b> hai.';
+                move = 'Paani dono taraf barabar move karta hai.';
+                why = 'Jab dono side barabar ho, net (total) movement zero hota hai.';
+                result = 'Cell ka size <b>same</b> rehta hai (no change).';
+            }
+            return '<div class="explain"><div class="eh">🔎 Kya hua aur KYUN? (3 steps)</div>' +
+                '<div class="step"><span class="n">1</span><span><b>Compare:</b> ' + compare + '</span></div>' +
+                '<div class="step"><span class="n">2</span><span><b>Paani ki direction:</b> ' + move + ' ' + why + '</span></div>' +
+                '<div class="step"><span class="n">3</span><span><b>Result:</b> ' + result + '</span></div></div>';
+        }
+
+        function writeResult(st) {
+            var s = SPECS[currentSpec];
+            var pct = Math.round(st.targetR / baseR * 100);
+            var head, body;
+            if (st.burst) {
+                head = '💥 ' + s.name + ' PHATT gayi! (Haemolysis)';
+                body = 'Namak itna kam tha ki bahut zyada paani andar bhar gaya. RBC mein cell wall nahi hoti, isliye ye phool-phool kar <b>phatt</b> gayi. ' + s.note;
+            } else if (st.t === 'hypo') {
+                head = '💧 ' + s.name + ' PHOOL gaya! (Swollen / Turgid)';
+                body = 'Paani cell ke andar gaya, isliye specimen phool gaya. ' + s.note;
+            } else if (st.t === 'hyper') {
+                head = '🌵 ' + s.name + ' SIKUD gaya! (Shrunken / Flaccid)';
+                body = 'Paani cell se bahar nikal gaya, isliye specimen sikud gaya. ' + s.note +
+                    ' Yahi wajah hai ki namak/cheeni mein rakhi cheezein (achaar, murabba) kharab nahi hoti.';
+            } else {
+                head = '⚖️ ' + s.name + ' mein koi change nahi (Isotonic)';
+                body = 'Solution aur cell mein namak barabar tha, isliye net change zero. ' + s.note;
+            }
+            document.getElementById('result').innerHTML =
+                '<div class="rhead">' + head + ' <span class="live-tag">LIVE</span></div>' + body +
+                '<div class="readout"><div><span class="num">100%</span><span class="cap">Shuru ka size</span></div>' +
+                '<div><span class="num">' + (st.burst ? '💥' : pct + '%') + '</span><span class="cap">Ab ka size</span></div></div>' +
+                buildExplain(st.t);
+        }
+
+        function runExp() { applyState(true); }
+
+        function resetExp() {
+            document.getElementById('salt').value = 0; salt = 0;
+            document.querySelectorAll('#spec-chips .chip').forEach(function (c) { c.classList.remove('active'); });
+            document.querySelector('#spec-chips .chip[data-spec="potato"]').classList.add('active');
+            currentSpec = 'potato';
+            document.getElementById('spec').setAttribute('fill', SPECS.potato.base);
+            document.getElementById('spec').setAttribute('stroke', SPECS.potato.stroke);
+            onSalt();
+        }
+
+        onSalt();
+    </script>
+</body>
+
+</html>

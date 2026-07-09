@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cell Explorer — Interactive | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #0f172a, #134e4a); color: #e2e8f0; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #a7f3d0; text-decoration: none; border: 1px solid rgba(167,243,208,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(167,243,208,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .toggle { display: flex; background: rgba(255,255,255,0.1); border-radius: 999px; padding: 4px; }
+        .toggle button { border: none; background: transparent; color: #cbd5e1; padding: 7px 16px; border-radius: 999px; cursor: pointer; font-weight: 700; font-size: 14px; transition: all .2s; }
+        .toggle button.active { background: #10b981; color: #04241c; }
+
+        .wrap { display: flex; gap: 20px; padding: 20px; max-width: 1150px; margin: 0 auto; flex-wrap: wrap; }
+        .stage { flex: 1 1 460px; min-width: 320px; background: rgba(255,255,255,0.04); border-radius: 18px; padding: 14px; position: relative; }
+        .stage svg { width: 100%; height: auto; display: block; }
+        .hint { text-align: center; font-size: 13px; color: #94a3b8; margin-top: 8px; }
+
+        .panel { flex: 1 1 320px; min-width: 300px; background: rgba(255,255,255,0.06); border-radius: 18px; padding: 22px; align-self: flex-start; }
+        .panel .emoji { font-size: 44px; }
+        .panel h2 { color: #fff; font-size: 22px; margin: 6px 0 4px; }
+        .panel .nick { display: inline-block; background: #10b981; color: #04241c; font-size: 12px; font-weight: 800; padding: 3px 12px; border-radius: 999px; margin-bottom: 12px; }
+        .panel p { color: #cbd5e1; font-size: 15.5px; line-height: 1.7; }
+        .panel .placeholder { color: #64748b; font-style: italic; }
+
+        .progress { margin-top: 18px; }
+        .progress .bar { height: 12px; background: rgba(255,255,255,0.1); border-radius: 999px; overflow: hidden; }
+        .progress .fill { height: 100%; width: 0; background: linear-gradient(90deg,#34d399,#10b981); border-radius: 999px; transition: width .4s; }
+        .progress .lbl { font-size: 13px; color: #94a3b8; margin-top: 6px; }
+        .done-msg { margin-top: 14px; background: #052e2b; border: 1px solid #10b981; color: #6ee7b7; padding: 12px; border-radius: 10px; font-weight: 700; text-align: center; display: none; }
+
+        /* organelle interactivity */
+        .hot { cursor: pointer; transition: transform .15s; transform-box: fill-box; transform-origin: center; }
+        .hot:hover { transform: scale(1.08); }
+        .hot.selected { filter: drop-shadow(0 0 8px #fde047); }
+        .pulse { animation: pulse 2.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+        @keyframes pulse { 0%,100% { opacity: .85; } 50% { opacity: 1; } }
+        .visited-tick { font-size: 12px; }
+        @media (max-width: 720px) { .wrap { padding: 12px; } }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="cell-organelles.html">← Back to Lesson</a>
+        <div class="title">🔬 Cell Explorer</div>
+        <div class="toggle">
+            <button id="btn-animal" class="active" onclick="setType('animal')">🐾 Animal</button>
+            <button id="btn-plant" onclick="setType('plant')">🌱 Plant</button>
+        </div>
+    </div>
+
+    <div class="wrap">
+        <div class="stage">
+            <div id="svg-holder"></div>
+            <div class="hint">👆 Kisi bhi organelle par tap/click karo uska kaam jaanne ke liye</div>
+        </div>
+
+        <div class="panel">
+            <div id="p-emoji" class="emoji">👋</div>
+            <h2 id="p-name">Cell Explorer mein aapka swagat hai!</h2>
+            <span id="p-nick" class="nick" style="display:none"></span>
+            <p id="p-desc" class="placeholder">Left side par cell dikh rahi hai. Kisi bhi rang-birange part par tap
+                karo — main aapko bataunga wo kya hai aur kya kaam karta hai. Upar se Animal ya Plant cell choose kar
+                sakte ho.</p>
+
+            <div class="progress">
+                <div class="bar"><div id="fill" class="fill"></div></div>
+                <div class="lbl" id="prog-lbl">0 / 0 organelles explored</div>
+            </div>
+            <div id="done" class="done-msg">🎉 Shaabaash! Aapne saare organelles explore kar liye!</div>
+        </div>
+    </div>
+
+    <script>
+        // ---- Organelle data ----
+        var DATA = {
+            membrane:   { emoji: "🚪", name: "Cell Membrane", nick: "Smart Darwaza", desc: "Cell ki bahar wali boundary. Ye 'selectively permeable' hai — chun-chun kar cheezein andar-bahar aane deti hai." },
+            wall:       { emoji: "🧱", name: "Cell Wall", nick: "Sirf Plants", desc: "Cellulose ki mazboot deewaar (sirf plant cells mein). Isse plant ko shape aur support milta hai aur cell fatt-ne se bachti hai." },
+            nucleus:    { emoji: "🧠", name: "Nucleus", nick: "Control Room", desc: "Cell ka boss! Isme DNA (poori instruction book) hoti hai. Ye decide karta hai cell kya kare aur kab divide ho." },
+            mito:       { emoji: "🔋", name: "Mitochondria", nick: "Power House", desc: "Khaane ko todkar energy (ATP) banata hai. Jitna mehnati cell, utne zyada mitochondria. Iska apna DNA bhi hota hai!" },
+            ribo:       { emoji: "🏭", name: "Ribosomes", nick: "Protein Factory", desc: "Sabse chhote organelle. Inka ek hi kaam — protein banana, jisse body ke building blocks bante hain." },
+            er:         { emoji: "🛣️", name: "Endoplasmic Reticulum", nick: "Transport Roads", desc: "Naali-numa network jo cell ke andar cheezein ek jagah se doosri jagah pahunchata hai. Rough ER par ribosomes chipke hote hain." },
+            golgi:      { emoji: "📦", name: "Golgi Apparatus", nick: "Post Office", desc: "ER se cheezein leta hai, unhe pack karta hai aur sahi jagah deliver karta hai. Cell ka courier service!" },
+            lyso:       { emoji: "🧹", name: "Lysosome", nick: "Suicide Bag", desc: "Kachra saaf karta hai. Purane parts aur germs ko digest karta hai. Cell marne par khud ko digest kar leta hai." },
+            vacuole:    { emoji: "💧", name: "Vacuole", nick: "Storage Tank", desc: "Paani, food aur waste store karta hai. Plant cell mein bada central vacuole cell ko 'tight' (turgid) rakhta hai." },
+            chloro:     { emoji: "🌞", name: "Chloroplast", nick: "Solar Kitchen", desc: "Sirf plant cells mein. Chlorophyll se sunlight pakadta hai aur khana (glucose) banata hai — photosynthesis!" }
+        };
+
+        // Which organelles appear in each cell type (for progress count)
+        var SETS = {
+            animal: ["membrane","nucleus","mito","ribo","er","golgi","lyso","vacuole"],
+            plant:  ["membrane","wall","nucleus","mito","ribo","er","golgi","vacuole","chloro"]
+        };
+
+        // ---- SVG scenes ----
+        function animalSVG() {
+            return '<svg viewBox="0 0 500 440" xmlns="http://www.w3.org/2000/svg">' +
+            '<path id="membrane" class="hot" data-o="membrane" d="M250 20 C140 20 55 120 65 220 C55 350 170 425 250 418 C340 425 445 345 435 225 C445 110 360 20 250 20 Z" fill="#fef3c7" stroke="#f59e0b" stroke-width="6"/>' +
+            '<circle id="nucleus" class="hot pulse" data-o="nucleus" cx="250" cy="200" r="62" fill="#e9d5ff" stroke="#7e22ce" stroke-width="4"/>' +
+            '<circle cx="250" cy="200" r="24" fill="#a855f7"/>' +
+            '<ellipse id="mito" class="hot pulse" data-o="mito" cx="120" cy="150" rx="46" ry="22" fill="#fca5a5" stroke="#dc2626" stroke-width="3"/>' +
+            '<ellipse id="mito2" class="hot" data-o="mito" cx="380" cy="300" rx="46" ry="22" fill="#fca5a5" stroke="#dc2626" stroke-width="3"/>' +
+            '<g id="er" class="hot" data-o="er"><path d="M330 120 q46 22 0 44 q-46 22 0 44" fill="none" stroke="#0284c7" stroke-width="6"/>' +
+            '<circle cx="338" cy="120" r="4" fill="#1e3a8a"/><circle cx="338" cy="142" r="4" fill="#1e3a8a"/><circle cx="338" cy="164" r="4" fill="#1e3a8a"/><circle cx="338" cy="208" r="4" fill="#1e3a8a"/></g>' +
+            '<g id="golgi" class="hot" data-o="golgi"><path d="M120 320 q64 -14 0 -26 M126 336 q58 -14 0 -26 M132 352 q52 -14 0 -26" fill="none" stroke="#ca8a04" stroke-width="6"/></g>' +
+            '<circle id="lyso" class="hot pulse" data-o="lyso" cx="330" cy="360" r="24" fill="#93c5fd" stroke="#2563eb" stroke-width="3"/>' +
+            '<circle id="vacuole" class="hot" data-o="vacuole" cx="180" cy="330" r="26" fill="#bae6fd" stroke="#0284c7" stroke-width="3"/>' +
+            '<circle id="ribo" class="hot" data-o="ribo" cx="300" cy="120" r="9" fill="#16a34a"/>' +
+            '<circle class="hot" data-o="ribo" cx="200" cy="110" r="9" fill="#16a34a"/>' +
+            '<circle class="hot" data-o="ribo" cx="240" cy="300" r="9" fill="#16a34a"/>' +
+            '</svg>';
+        }
+
+        function plantSVG() {
+            return '<svg viewBox="0 0 500 440" xmlns="http://www.w3.org/2000/svg">' +
+            '<rect id="wall" class="hot" data-o="wall" x="30" y="30" width="440" height="380" rx="26" fill="#166534"/>' +
+            '<rect id="membrane" class="hot" data-o="membrane" x="46" y="46" width="408" height="348" rx="18" fill="#dcfce7" stroke="#22c55e" stroke-width="4"/>' +
+            '<rect id="vacuole" class="hot pulse" data-o="vacuole" x="150" y="150" width="230" height="180" rx="22" fill="#bae6fd" stroke="#0284c7" stroke-width="4"/>' +
+            '<circle id="nucleus" class="hot pulse" data-o="nucleus" cx="120" cy="120" r="48" fill="#e9d5ff" stroke="#7e22ce" stroke-width="4"/>' +
+            '<circle cx="120" cy="120" r="18" fill="#a855f7"/>' +
+            '<ellipse id="chloro" class="hot pulse" data-o="chloro" cx="380" cy="110" rx="40" ry="20" fill="#4ade80" stroke="#15803d" stroke-width="3" transform="rotate(30 380 110)"/>' +
+            '<ellipse id="chloro2" class="hot" data-o="chloro" cx="370" cy="360" rx="40" ry="20" fill="#4ade80" stroke="#15803d" stroke-width="3" transform="rotate(-20 370 360)"/>' +
+            '<ellipse id="mito" class="hot" data-o="mito" cx="110" cy="280" rx="40" ry="19" fill="#fca5a5" stroke="#dc2626" stroke-width="3"/>' +
+            '<g id="golgi" class="hot" data-o="golgi"><path d="M95 200 q56 -13 0 -24 M101 215 q50 -13 0 -24" fill="none" stroke="#ca8a04" stroke-width="6"/></g>' +
+            '<g id="er" class="hot" data-o="er"><path d="M420 210 q30 20 0 40 q-30 20 0 40" fill="none" stroke="#0284c7" stroke-width="6"/></g>' +
+            '<circle id="ribo" class="hot" data-o="ribo" cx="230" cy="90" r="9" fill="#16a34a"/>' +
+            '<circle class="hot" data-o="ribo" cx="300" cy="120" r="9" fill="#16a34a"/>' +
+            '<circle class="hot" data-o="ribo" cx="180" cy="360" r="9" fill="#16a34a"/>' +
+            '</svg>';
+        }
+
+        var currentType = 'animal';
+        var visited = { animal: {}, plant: {} };
+
+        function setType(t) {
+            currentType = t;
+            document.getElementById('btn-animal').classList.toggle('active', t === 'animal');
+            document.getElementById('btn-plant').classList.toggle('active', t === 'plant');
+            document.getElementById('svg-holder').innerHTML = (t === 'animal') ? animalSVG() : plantSVG();
+            attachHandlers();
+            updateProgress();
+            // restore selected highlight none
+        }
+
+        function attachHandlers() {
+            var els = document.querySelectorAll('.hot');
+            els.forEach(function (el) {
+                el.addEventListener('click', function () {
+                    var key = el.getAttribute('data-o');
+                    showInfo(key);
+                    document.querySelectorAll('.hot').forEach(function (e) { e.classList.remove('selected'); });
+                    // highlight all shapes of same organelle
+                    document.querySelectorAll('.hot[data-o="' + key + '"]').forEach(function (e) { e.classList.add('selected'); });
+                    visited[currentType][key] = true;
+                    updateProgress();
+                });
+            });
+        }
+
+        function showInfo(key) {
+            var d = DATA[key];
+            document.getElementById('p-emoji').textContent = d.emoji;
+            document.getElementById('p-name').textContent = d.name;
+            var nick = document.getElementById('p-nick');
+            nick.textContent = d.nick; nick.style.display = 'inline-block';
+            var desc = document.getElementById('p-desc');
+            desc.textContent = d.desc; desc.classList.remove('placeholder');
+        }
+
+        function updateProgress() {
+            var set = SETS[currentType];
+            var total = set.length;
+            var count = 0;
+            set.forEach(function (k) { if (visited[currentType][k]) count++; });
+            var pct = total ? Math.round(count / total * 100) : 0;
+            document.getElementById('fill').style.width = pct + '%';
+            document.getElementById('prog-lbl').textContent = count + ' / ' + total + ' organelles explored (' +
+                (currentType === 'animal' ? 'Animal' : 'Plant') + ' cell)';
+            document.getElementById('done').style.display = (count === total && total > 0) ? 'block' : 'none';
+        }
+
+        // init
+        setType('animal');
+    </script>
+</body>
+
+</html>

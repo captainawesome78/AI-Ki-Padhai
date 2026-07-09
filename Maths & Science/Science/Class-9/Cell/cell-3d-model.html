@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Cell Model — Rotate &amp; Explore | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: radial-gradient(circle at 50% 30%, #123b52, #06121c); color: #e2e8f0; min-height: 100vh; overflow: hidden; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.35); flex-wrap: wrap; gap: 10px; position: relative; z-index: 5; }
+        .topbar a.back { color: #a7f3d0; text-decoration: none; border: 1px solid rgba(167,243,208,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(167,243,208,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .toggle { display: flex; background: rgba(255,255,255,0.1); border-radius: 999px; padding: 4px; }
+        .toggle button { border: none; background: transparent; color: #cbd5e1; padding: 7px 16px; border-radius: 999px; cursor: pointer; font-weight: 700; font-size: 14px; }
+        .toggle button.active { background: #10b981; color: #04241c; }
+
+        #stage { position: fixed; inset: 0; z-index: 1; touch-action: none; cursor: grab; }
+        #stage:active { cursor: grabbing; }
+
+        .hud { position: fixed; left: 0; right: 0; bottom: 0; z-index: 4; display: flex; justify-content: center; pointer-events: none; padding: 14px; }
+        .hint { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.12); border-radius: 999px; padding: 8px 18px; font-size: 13px; color: #cbd5e1; }
+
+        .panel { position: fixed; top: 74px; right: 16px; width: 320px; max-width: calc(100vw - 32px); background: rgba(8,20,28,0.9); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 20px; z-index: 6; box-shadow: 0 12px 30px rgba(0,0,0,0.5); }
+        .panel .emoji { font-size: 40px; }
+        .panel h2 { color: #fff; font-size: 20px; margin: 6px 0 4px; }
+        .panel .nick { display: inline-block; background: #10b981; color: #04241c; font-size: 12px; font-weight: 800; padding: 3px 12px; border-radius: 999px; margin-bottom: 10px; }
+        .panel p { color: #cbd5e1; font-size: 15px; line-height: 1.65; }
+        .panel .placeholder { color: #64748b; font-style: italic; }
+        .progress { margin-top: 16px; }
+        .progress .bar { height: 10px; background: rgba(255,255,255,0.1); border-radius: 999px; overflow: hidden; }
+        .progress .fill { height: 100%; width: 0; background: linear-gradient(90deg,#34d399,#10b981); transition: width .4s; }
+        .progress .lbl { font-size: 12px; color: #94a3b8; margin-top: 6px; }
+
+        #fallback { position: fixed; inset: 0; z-index: 20; display: none; align-items: center; justify-content: center; text-align: center; padding: 30px; background: #06121c; }
+        #fallback a { color: #34d399; font-weight: 700; }
+        @media (max-width: 720px) {
+            .panel { position: fixed; top: auto; bottom: 64px; right: 8px; left: 8px; width: auto; padding: 16px; }
+            .hud { display: none; }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="cell-organelles.html">← Back to Lesson</a>
+        <div class="title">🧊 3D Cell Model</div>
+        <div class="toggle">
+            <button id="btn-animal" class="active" onclick="setType('animal')">🐾 Animal</button>
+            <button id="btn-plant" onclick="setType('plant')">🌱 Plant</button>
+        </div>
+    </div>
+
+    <div id="stage"></div>
+
+    <div class="panel">
+        <div id="p-emoji" class="emoji">👋</div>
+        <h2 id="p-name">3D Cell Model</h2>
+        <span id="p-nick" class="nick" style="display:none"></span>
+        <p id="p-desc" class="placeholder">Cell ko <b>drag karke ghumao</b> (rotate). Kisi bhi organelle par
+            <b>tap/click</b> karo uska kaam jaanne ke liye. Upar se Plant/Animal choose kar sakte ho.</p>
+        <div class="progress">
+            <div class="bar"><div id="fill" class="fill"></div></div>
+            <div class="lbl" id="prog-lbl">0 / 0 organelles explored</div>
+        </div>
+    </div>
+
+    <div class="hud"><div class="hint">🖱️ Drag = ghumao &nbsp;•&nbsp; 👆 Tap organelle = jaano</div></div>
+
+    <div id="fallback">
+        <div>
+            <h2 style="color:#fff;margin-bottom:10px;">3D model load nahi ho paaya 😕</h2>
+            <p style="color:#cbd5e1;max-width:420px;margin:0 auto 16px;">Shayad internet slow hai ya device purana hai.
+                Koi baat nahi — 2D wala <b>Cell Explorer</b> bilkul same cheez sikhata hai aur offline bhi chalta hai.</p>
+            <a href="cell-explorer-interactive.html">→ 2D Cell Explorer kholo</a>
+        </div>
+    </div>
+
+    <script>
+        var DATA = {
+            membrane: { emoji: "🚪", name: "Cell Membrane", nick: "Smart Darwaza", desc: "Cell ki bahar wali boundary. Selectively permeable — chun-chun kar cheezein andar-bahar aane deti hai." },
+            wall:     { emoji: "🧱", name: "Cell Wall", nick: "Sirf Plants", desc: "Cellulose ki mazboot deewaar (sirf plant cells). Isse plant ko shape aur support milta hai." },
+            nucleus:  { emoji: "🧠", name: "Nucleus", nick: "Control Room", desc: "Cell ka boss. Isme DNA hoti hai. Ye decide karta hai cell kya kare aur kab divide ho." },
+            mito:     { emoji: "🔋", name: "Mitochondria", nick: "Power House", desc: "Khaane ko todkar energy (ATP) banata hai. Iska apna DNA bhi hota hai!" },
+            ribo:     { emoji: "🏭", name: "Ribosomes", nick: "Protein Factory", desc: "Sabse chhote organelle. Inka kaam — protein banana." },
+            er:       { emoji: "🛣️", name: "Endoplasmic Reticulum", nick: "Transport Roads", desc: "Naali-numa network jo cell ke andar cheezein transport karta hai." },
+            golgi:    { emoji: "📦", name: "Golgi Apparatus", nick: "Post Office", desc: "Cheezein pack karke sahi jagah deliver karta hai — cell ka courier." },
+            lyso:     { emoji: "🧹", name: "Lysosome", nick: "Suicide Bag", desc: "Kachra saaf karta hai. Purane parts aur germs ko digest karta hai." },
+            vacuole:  { emoji: "💧", name: "Vacuole", nick: "Storage Tank", desc: "Paani, food aur waste store karta hai. Plant mein bada central vacuole hota hai." },
+            chloro:   { emoji: "🌞", name: "Chloroplast", nick: "Solar Kitchen", desc: "Sirf plants mein. Sunlight se khana banata hai — photosynthesis." }
+        };
+        var SETS = {
+            animal: ["membrane","nucleus","mito","ribo","er","golgi","lyso","vacuole"],
+            plant:  ["membrane","wall","nucleus","mito","ribo","er","golgi","vacuole","chloro"]
+        };
+
+        var scene, camera, renderer, pivot, raycaster, pointer;
+        var clickable = [];
+        var currentType = 'animal';
+        var visited = { animal: {}, plant: {} };
+        var autoRotate = true, idleTimer = null;
+
+        function init() {
+            if (typeof THREE === 'undefined') { document.getElementById('fallback').style.display = 'flex'; return; }
+            var stage = document.getElementById('stage');
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+            camera.position.set(0, 0, 16);
+            try {
+                renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            } catch (e) { document.getElementById('fallback').style.display = 'flex'; return; }
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            stage.appendChild(renderer.domElement);
+
+            scene.add(new THREE.AmbientLight(0xffffff, 0.75));
+            var d1 = new THREE.DirectionalLight(0xffffff, 0.9); d1.position.set(6, 8, 10); scene.add(d1);
+            var d2 = new THREE.DirectionalLight(0x88ccff, 0.4); d2.position.set(-8, -4, -6); scene.add(d2);
+
+            raycaster = new THREE.Raycaster();
+            pointer = new THREE.Vector2();
+
+            buildCell(currentType);
+            addPointerEvents();
+            window.addEventListener('resize', onResize);
+            animate();
+        }
+
+        function mat(color, opts) {
+            opts = opts || {};
+            return new THREE.MeshPhongMaterial({
+                color: color, shininess: 60,
+                transparent: !!opts.transparent, opacity: opts.opacity == null ? 1 : opts.opacity,
+                emissive: 0x000000
+            });
+        }
+
+        function addOrganelle(mesh, key) {
+            mesh.userData.key = key;
+            mesh.userData.baseEmissive = mesh.material.emissive.getHex();
+            pivot.add(mesh);
+            clickable.push(mesh);
+        }
+
+        function buildCell(type) {
+            // reset
+            if (pivot) scene.remove(pivot);
+            pivot = new THREE.Group();
+            scene.add(pivot);
+            clickable = [];
+
+            // Cell wall (plant only) - green translucent shell, slightly larger
+            if (type === 'plant') {
+                var wall = new THREE.Mesh(new THREE.BoxGeometry(13.2, 13.2, 13.2), mat(0x166534, { transparent: true, opacity: 0.16 }));
+                addOrganelle(wall, 'wall');
+            }
+            // Membrane - translucent sphere
+            var memColor = type === 'plant' ? 0x86efac : 0xfcd34d;
+            var membrane = new THREE.Mesh(new THREE.SphereGeometry(6, 40, 40), mat(memColor, { transparent: true, opacity: 0.22 }));
+            addOrganelle(membrane, 'membrane');
+
+            // Nucleus - big purple sphere
+            var nuc = new THREE.Mesh(new THREE.SphereGeometry(1.9, 32, 32), mat(0xa855f7));
+            nuc.position.set(type === 'plant' ? -2.6 : 0, type === 'plant' ? 2.4 : 0.4, 0);
+            addOrganelle(nuc, 'nucleus');
+            // nucleolus (decor, not clickable-separate)
+            var nucleolus = new THREE.Mesh(new THREE.SphereGeometry(0.7, 16, 16), mat(0x6b21a8));
+            nucleolus.position.copy(nuc.position); pivot.add(nucleolus);
+
+            // Vacuole - big blue (plant) / small (animal)
+            var vac = new THREE.Mesh(new THREE.SphereGeometry(type === 'plant' ? 2.6 : 1.1, 28, 28), mat(0x38bdf8, { transparent: true, opacity: 0.55 }));
+            vac.position.set(type === 'plant' ? 1.4 : 2.6, type === 'plant' ? -0.4 : -2.2, 0.4);
+            addOrganelle(vac, 'vacuole');
+
+            // Mitochondria - a couple of red ellipsoids
+            [[3.3, 2.4, 1.2], [-3.4, -2.2, -1.4]].forEach(function (p) {
+                var m = new THREE.Mesh(new THREE.SphereGeometry(0.95, 20, 16), mat(0xef4444));
+                m.scale.set(1.7, 0.8, 0.8);
+                m.position.set(p[0], p[1], p[2]);
+                m.rotation.z = Math.random();
+                addOrganelle(m, 'mito');
+            });
+
+            // ER - torus around nucleus
+            var er = new THREE.Mesh(new THREE.TorusGeometry(3.0, 0.22, 12, 60), mat(0x0ea5e9));
+            er.position.copy(nuc.position);
+            er.rotation.x = 1.1; er.rotation.y = 0.5;
+            addOrganelle(er, 'er');
+
+            // Golgi - stack of flattened gold discs
+            var golgiGroup = new THREE.Group();
+            for (var i = 0; i < 4; i++) {
+                var disc = new THREE.Mesh(new THREE.TorusGeometry(0.7 - i * 0.05, 0.14, 10, 30), mat(0xf59e0b));
+                disc.rotation.x = Math.PI / 2; disc.position.y = i * 0.28;
+                golgiGroup.add(disc);
+            }
+            golgiGroup.position.set(-3.0, 1.0, 2.6);
+            // make group clickable: wrap each disc key
+            golgiGroup.children.forEach(function (c) { c.userData.key = 'golgi'; c.userData.baseEmissive = 0x000000; clickable.push(c); });
+            pivot.add(golgiGroup);
+
+            // Lysosomes - small blue spheres (animal emphasis)
+            [[2.4, 2.6, -2.0], [-1.4, -3.0, 2.2]].forEach(function (p) {
+                var l = new THREE.Mesh(new THREE.SphereGeometry(0.55, 16, 16), mat(0x2563eb));
+                l.position.set(p[0], p[1], p[2]);
+                addOrganelle(l, 'lyso');
+            });
+
+            // Ribosomes - tiny green dots scattered
+            for (var r = 0; r < 12; r++) {
+                var rib = new THREE.Mesh(new THREE.SphereGeometry(0.22, 10, 10), mat(0x22c55e));
+                var u = Math.random() * Math.PI * 2, v = Math.random() * Math.PI, rad = 3.2 + Math.random() * 1.6;
+                rib.position.set(rad * Math.sin(v) * Math.cos(u), rad * Math.cos(v), rad * Math.sin(v) * Math.sin(u));
+                addOrganelle(rib, 'ribo');
+            }
+
+            // Chloroplasts - plant only, green lens shapes
+            if (type === 'plant') {
+                [[3.4, 2.2, 1.6], [-2.0, -3.2, -2.0], [3.0, -2.4, -1.4]].forEach(function (p) {
+                    var ch = new THREE.Mesh(new THREE.SphereGeometry(0.9, 20, 16), mat(0x4ade80));
+                    ch.scale.set(1.6, 0.7, 0.9);
+                    ch.position.set(p[0], p[1], p[2]);
+                    ch.rotation.z = Math.random();
+                    addOrganelle(ch, 'chloro');
+                });
+            }
+            updateProgress();
+        }
+
+        // ---- interaction: drag to rotate, tap to select ----
+        var isDown = false, moved = false, lastX = 0, lastY = 0, velX = 0, velY = 0;
+
+        function addPointerEvents() {
+            var el = renderer.domElement;
+            el.addEventListener('pointerdown', function (e) {
+                isDown = true; moved = false; lastX = e.clientX; lastY = e.clientY;
+                autoRotate = false; el.setPointerCapture(e.pointerId);
+            });
+            el.addEventListener('pointermove', function (e) {
+                if (!isDown) return;
+                var dx = e.clientX - lastX, dy = e.clientY - lastY;
+                if (Math.abs(dx) + Math.abs(dy) > 4) moved = true;
+                pivot.rotation.y += dx * 0.008;
+                pivot.rotation.x += dy * 0.008;
+                pivot.rotation.x = Math.max(-1.3, Math.min(1.3, pivot.rotation.x));
+                velX = dx * 0.008; velY = dy * 0.008;
+                lastX = e.clientX; lastY = e.clientY;
+            });
+            function up(e) {
+                if (!isDown) return;
+                isDown = false;
+                if (!moved) pick(e);
+                scheduleAutoRotate();
+            }
+            el.addEventListener('pointerup', up);
+            el.addEventListener('pointercancel', up);
+        }
+
+        function scheduleAutoRotate() {
+            if (idleTimer) clearTimeout(idleTimer);
+            idleTimer = setTimeout(function () { autoRotate = true; }, 3500);
+        }
+
+        function pick(e) {
+            var rect = renderer.domElement.getBoundingClientRect();
+            pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+            pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+            raycaster.setFromCamera(pointer, camera);
+            var hits = raycaster.intersectObjects(clickable, false);
+            // prefer a non-membrane hit if the ray also grazes the membrane
+            var chosen = null;
+            for (var i = 0; i < hits.length; i++) {
+                var k = hits[i].object.userData.key;
+                if (k && k !== 'membrane' && k !== 'wall') { chosen = hits[i].object; break; }
+            }
+            if (!chosen && hits.length) chosen = hits[0].object;
+            if (chosen) selectKey(chosen.userData.key);
+        }
+
+        function clearHighlight() {
+            clickable.forEach(function (m) { if (m.material && m.userData.baseEmissive != null) m.material.emissive.setHex(m.userData.baseEmissive); });
+        }
+
+        function selectKey(key) {
+            clearHighlight();
+            clickable.forEach(function (m) { if (m.userData.key === key && m.material) m.material.emissive.setHex(0xffee66); });
+            var d = DATA[key];
+            document.getElementById('p-emoji').textContent = d.emoji;
+            document.getElementById('p-name').textContent = d.name;
+            var nick = document.getElementById('p-nick'); nick.textContent = d.nick; nick.style.display = 'inline-block';
+            var desc = document.getElementById('p-desc'); desc.textContent = d.desc; desc.classList.remove('placeholder');
+            visited[currentType][key] = true;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            var set = SETS[currentType], total = set.length, count = 0;
+            set.forEach(function (k) { if (visited[currentType][k]) count++; });
+            document.getElementById('fill').style.width = (total ? Math.round(count / total * 100) : 0) + '%';
+            document.getElementById('prog-lbl').textContent = count + ' / ' + total + ' organelles explored (' +
+                (currentType === 'animal' ? 'Animal' : 'Plant') + ' cell)';
+        }
+
+        function setType(t) {
+            currentType = t;
+            document.getElementById('btn-animal').classList.toggle('active', t === 'animal');
+            document.getElementById('btn-plant').classList.toggle('active', t === 'plant');
+            if (!scene) return;
+            buildCell(t);
+        }
+
+        function onResize() {
+            if (!renderer) return;
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            if (pivot) {
+                if (autoRotate) { pivot.rotation.y += 0.0035; }
+                else if (!isDown) { // gentle inertia after drag
+                    pivot.rotation.y += velX; pivot.rotation.x += velY;
+                    velX *= 0.94; velY *= 0.94;
+                    pivot.rotation.x = Math.max(-1.3, Math.min(1.3, pivot.rotation.x));
+                }
+            }
+            renderer.render(scene, camera);
+        }
+
+        init();
+    </script>
+</body>
+
+</html>
