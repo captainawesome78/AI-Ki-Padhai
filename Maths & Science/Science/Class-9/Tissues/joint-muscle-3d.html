@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Joint &amp; Muscle (Elbow) | AIkiPadhai</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="../sci-3d.js"></script>
+</head>
+
+<body>
+    <script>
+        function rot2(x, y, ang) { // rotate (x,y) about origin by ang (Z)
+            return [x * Math.cos(ang) - y * Math.sin(ang), x * Math.sin(ang) + y * Math.cos(ang)];
+        }
+        function placeMuscle(T, mesh, A, B) {
+            var a = new T.Vector3(A[0], A[1], A[2]), b = new T.Vector3(B[0], B[1], B[2]);
+            var mid = a.clone().add(b).multiplyScalar(0.5);
+            var dir = b.clone().sub(a); var len = dir.length(); dir.normalize();
+            mesh.position.copy(mid);
+            mesh.quaternion.setFromUnitVectors(new T.Vector3(0, 1, 0), dir);
+            var r = 0.3 + 0.9 * (1 - Math.min(len, 7.5) / 7.5);
+            mesh.scale.set(r, len, r);
+        }
+        function updateArm(flex, ctx) {
+            var m = ctx.model, T = ctx.THREE, ang = flex * 2.5;
+            m.forearm.rotation.z = ang;
+            var bB = rot2(0.9, -1.9, ang);   // biceps forearm attach (front)
+            placeMuscle(T, m.biceps, [0.9, 5.3, 0], [bB[0], bB[1], 0]);
+            var tB = rot2(-1.2, 0.7, ang);   // triceps forearm attach (olecranon, back)
+            placeMuscle(T, m.triceps, [-0.9, 5.3, 0], [tB[0], tB[1], 0]);
+        }
+        Sci3D({
+            title: "💪 3D Elbow: Joint & Muscle",
+            back: { href: "joints-and-care.html", label: "Back to Lesson" },
+            intro: { name: "3D Elbow Joint", desc: "Neeche wale slider se kohni (elbow) modo aur dekho biceps kaise phoolti (contract) hai aur triceps kaise dheeli (relax) hoti hai. Parts par tap karke jaano." },
+            camZ: 20,
+            data: {
+                humerus: { emoji: "🦴", name: "Humerus", nick: "Upper Arm Bone", desc: "Kandhe (shoulder) se kohni tak ki upar wali haddi. Ye fixed rehti hai jab hum haath modte hain." },
+                forearm: { emoji: "🦴", name: "Forearm (Radius/Ulna)", nick: "Neeche ki Haddi", desc: "Kohni se kalai (wrist) tak ki haddi. Ye elbow joint par ghoomti hai." },
+                elbow: { emoji: "🔩", name: "Elbow (Hinge Joint)", nick: "Darwaza Joint", desc: "Hinge joint - sirf ek direction mein mudta hai, bilkul darwaze ki tarah. Yahin do haddiyan milti hain." },
+                biceps: { emoji: "💪", name: "Biceps Muscle", nick: "Flexor", desc: "Haath ke aage wali muscle. Jab ye SIKUDTI (contract) hai toh haddi ko kheench kar kohni MODTI hai - aur phool (bulge) jaati hai." },
+                triceps: { emoji: "🔻", name: "Triceps Muscle", nick: "Extensor", desc: "Haath ke peeche wali muscle. Ye biceps ki OPPOSITE kaam karti hai - jab biceps modti hai, triceps DHEELI (relax) hoti hai. Isi jodi ko antagonistic pair kehte hain." }
+            },
+            controls: [
+                { id: "flex", label: "💪 Elbow flex (kohni modo)", min: 0, max: 100, step: 1, value: 0, on: function (v, ctx) { updateArm(v / 100, ctx); } }
+            ],
+            build: function (ctx) {
+                var T = ctx.THREE, P = ctx.pivot;
+                var boneMat = 0xe7e5e4;
+                // Humerus (fixed upper arm) y: 0..6
+                var hum = new T.Mesh(new T.CylinderGeometry(0.55, 0.6, 6, 20), ctx.mat(boneMat));
+                hum.position.set(0, 3, 0);
+                ctx.addPart(hum, 'humerus'); P.add(hum);
+                var shoulder = new T.Mesh(new T.SphereGeometry(0.95, 24, 24), ctx.mat(boneMat));
+                shoulder.position.set(0, 6, 0); P.add(shoulder);
+                // Elbow joint knob
+                var elbow = new T.Mesh(new T.SphereGeometry(0.8, 24, 24), ctx.mat(0xcbd5e1));
+                elbow.position.set(0, 0, 0);
+                ctx.addPart(elbow, 'elbow'); P.add(elbow);
+                // Forearm group (rotates at elbow)
+                var fg = new T.Group();
+                var fbone = new T.Mesh(new T.CylinderGeometry(0.5, 0.4, 6, 20), ctx.mat(boneMat));
+                fbone.position.set(0, -3, 0); fg.add(fbone);
+                var wrist = new T.Mesh(new T.SphereGeometry(0.55, 20, 20), ctx.mat(boneMat));
+                wrist.position.set(0, -6, 0); fg.add(wrist);
+                ctx.addPart(fg, 'forearm'); P.add(fg);
+                // Muscles
+                var biceps = new T.Mesh(new T.CylinderGeometry(1, 1, 1, 16), ctx.mat(0xef4444));
+                ctx.addPart(biceps, 'biceps'); P.add(biceps);
+                var triceps = new T.Mesh(new T.CylinderGeometry(1, 1, 1, 16), ctx.mat(0xb91c1c));
+                ctx.addPart(triceps, 'triceps'); P.add(triceps);
+                ctx.model = { T: T, forearm: fg, biceps: biceps, triceps: triceps };
+                updateArm(0, ctx);
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Neuron Model | AIkiPadhai</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="../sci-3d.js"></script>
+</head>
+
+<body>
+    <script>
+        Sci3D({
+            title: "🧠 3D Neuron",
+            back: { href: "muscular-and-nervous.html", label: "Back to Lesson" },
+            intro: { name: "3D Neuron", desc: "Nervous tissue ki cell - Neuron. Ise drag karke ghumao aur kisi bhi part par tap karke uska kaam jaano." },
+            camZ: 22,
+            data: {
+                soma: { emoji: "⚪", name: "Cell Body (Soma)", nick: "Control Centre", desc: "Neuron ka main hissa jisme nucleus hota hai. Yahan se poori cell control hoti hai." },
+                dendrites: { emoji: "🌿", name: "Dendrites", nick: "Message IN", desc: "Chhoti branches jo doosre neurons se message RECEIVE (lene) ka kaam karti hain." },
+                axon: { emoji: "🔌", name: "Axon", nick: "Long Wire", desc: "Lamba taar jo message ko cell body se DOOR le jaata hai. Ye neuron ka sabse lamba part hai." },
+                myelin: { emoji: "🛡️", name: "Myelin Sheath", nick: "Speed Booster", desc: "Axon ke upar chikni (fatty) covering. Ye message ki speed badhati hai - jaise taar par insulation." },
+                terminals: { emoji: "🔚", name: "Axon Terminals", nick: "Message OUT", desc: "Axon ke aakhir mein branches jo agle neuron ya muscle ko message DETI (bhejti) hain." }
+            },
+            build: function (ctx) {
+                var T = ctx.THREE, P = ctx.pivot;
+                function cylX(len, r, hex) { // cylinder oriented along X
+                    var m = new T.Mesh(new T.CylinderGeometry(r, r, len, 20), ctx.mat(hex));
+                    m.rotation.z = Math.PI / 2; return m;
+                }
+                // Soma
+                var soma = new T.Mesh(new T.SphereGeometry(2.3, 32, 32), ctx.mat(0xa855f7));
+                soma.position.set(-8, 0, 0);
+                var nuc = new T.Mesh(new T.SphereGeometry(0.9, 20, 20), ctx.mat(0x6b21a8));
+                nuc.position.copy(soma.position);
+                var somaG = new T.Group(); somaG.add(soma); somaG.add(nuc);
+                ctx.addPart(somaG, 'soma'); P.add(somaG);
+                // Dendrites (fan out to the left)
+                var dG = new T.Group();
+                [[-2.4, 1.6, 0.4], [-2.6, -0.2, -0.6], [-2.3, -1.7, 0.5], [-1.8, 2.1, -0.7], [-1.9, -2.2, 0.3]].forEach(function (d) {
+                    var den = new T.Mesh(new T.CylinderGeometry(0.08, 0.35, 3.2, 12), ctx.mat(0xc084fc));
+                    den.position.set(-8, 0, 0);
+                    den.geometry.translate(0, 1.6, 0); // pivot at base
+                    den.position.set(-8, 0, 0);
+                    var dir = new T.Vector3(d[0], d[1], d[2]).normalize();
+                    den.quaternion.setFromUnitVectors(new T.Vector3(0, 1, 0), dir);
+                    den.position.set(-8 + dir.x * 2, dir.y * 2, dir.z * 2);
+                    dG.add(den);
+                });
+                ctx.addPart(dG, 'dendrites'); P.add(dG);
+                // Axon (long, thin) from soma to right
+                var axon = cylX(13, 0.32, 0.5); axon.material = ctx.mat(0xc4b5fd);
+                axon.position.set(0.5, 0, 0);
+                ctx.addPart(axon, 'axon'); P.add(axon);
+                // Myelin sheath segments
+                var mG = new T.Group();
+                [-3, 0.3, 3.6].forEach(function (x) {
+                    var seg = cylX(2.2, 0.8, 0xfcd34d);
+                    seg.position.set(x, 0, 0); mG.add(seg);
+                });
+                ctx.addPart(mG, 'myelin'); P.add(mG);
+                // Terminals (fan out right)
+                var tG = new T.Group();
+                [[2.2, 1.4, 0.3], [2.4, 0, -0.5], [2.2, -1.4, 0.4]].forEach(function (d) {
+                    var tr = new T.Mesh(new T.CylinderGeometry(0.06, 0.28, 2.6, 12), ctx.mat(0xc084fc));
+                    tr.geometry.translate(0, 1.3, 0);
+                    var dir = new T.Vector3(d[0], d[1], d[2]).normalize();
+                    tr.quaternion.setFromUnitVectors(new T.Vector3(0, 1, 0), dir);
+                    tr.position.set(7, 0, 0);
+                    tG.add(tr);
+                });
+                ctx.addPart(tG, 'terminals'); P.add(tG);
+                P.rotation.x = 0.2;
+            }
+        });
+    </script>
+</body>
+
+</html>

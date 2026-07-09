@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meristem Growth Lab | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #052e2b, #0e7490); color: #e2e8f0; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #a7f3d0; text-decoration: none; border: 1px solid rgba(167,243,208,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(167,243,208,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { display: flex; gap: 20px; padding: 20px; max-width: 1050px; margin: 0 auto; flex-wrap: wrap; }
+        .stage { flex: 1 1 320px; min-width: 280px; background: rgba(255,255,255,0.04); border-radius: 18px; padding: 16px; text-align: center; }
+        .stage svg { width: 100%; max-width: 300px; height: auto; }
+        .controls { flex: 1 1 340px; min-width: 300px; }
+        .card { background: rgba(255,255,255,0.06); border-radius: 16px; padding: 18px 20px; margin-bottom: 16px; }
+        .card h3 { color: #fff; font-size: 15px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .05em; }
+        input[type=range] { width: 100%; accent-color: #34d399; }
+        .rowlbl { display: flex; justify-content: space-between; font-size: 13px; color: #94a3b8; margin-top: 6px; }
+        .modebtns { display: flex; gap: 8px; }
+        .modebtns button { flex: 1; border: none; background: rgba(255,255,255,0.1); color: #cbd5e1; padding: 9px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 13px; }
+        .modebtns button.active { background: #10b981; color: #04241c; }
+        button.run { width: 100%; background: #06b6d4; color: #04222b; border: none; padding: 13px; border-radius: 12px; font-size: 15px; font-weight: 800; cursor: pointer; }
+        button.run:hover { background: #22d3ee; }
+        button.reset { width: 100%; background: transparent; color: #a5f3fc; border: 1px solid rgba(165,243,252,0.4); padding: 9px; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 8px; }
+        .result { background: rgba(0,0,0,0.25); border-radius: 12px; padding: 16px; font-size: 15px; line-height: 1.6; }
+        .result .rhead { font-weight: 800; font-size: 16px; margin-bottom: 6px; color: #fff; }
+        .obs { font-size: 13px; color: #94a3b8; text-align: center; margin-top: 8px; min-height: 18px; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="meristematic-tissues.html">← Back to Lesson</a>
+        <div class="title">🧪 Meristem Growth Lab</div>
+        <span style="width:60px"></span>
+    </div>
+
+    <div class="wrap">
+        <div class="stage">
+            <svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+                <!-- ruler -->
+                <line x1="40" y1="30" x2="40" y2="380" stroke="#94a3b8" stroke-width="2"/>
+                <g id="ruler"></g>
+                <!-- plant/root -->
+                <g id="plant"></g>
+            </svg>
+            <div class="obs" id="obs">Plant par barabar nishaan (marks) lage hain. "Grow" dabao aur dekho kya hota hai.</div>
+        </div>
+
+        <div class="controls">
+            <div class="card">
+                <h3>1. Growth mode</h3>
+                <div class="modebtns">
+                    <button id="m-apical" class="active" onclick="setMode('apical')">🌱 Asliyat (Apical)</button>
+                    <button id="m-uniform" onclick="setMode('uniform')">📏 Agar uniform hota</button>
+                </div>
+                <p style="font-size:13px;color:#94a3b8;margin-top:10px;">Pehle guess karo: plant tip se badhta hai ya
+                    har jagah barabar? Dono modes try karke dekho!</p>
+            </div>
+
+            <div class="card">
+                <h3>2. Kitne din (days) beet gaye?</h3>
+                <input type="range" id="days" min="0" max="10" step="1" value="0" oninput="onDays()">
+                <div class="rowlbl"><span>Din 0</span><span id="daynow">0 din</span><span>Din 10</span></div>
+            </div>
+
+            <div class="card">
+                <button class="run" onclick="playGrow()">▶ Auto-Grow (10 din)</button>
+                <button class="reset" onclick="resetLab()">↺ Reset (nishaan dobara lagao)</button>
+            </div>
+
+            <div class="card">
+                <div class="result" id="result"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var topY = 40, cx = 150, w = 40, segBase = 40, N = 5;
+        var WEIGHTS = { apical: [0.03, 0.07, 0.15, 0.30, 0.45], uniform: [0.2, 0.2, 0.2, 0.2, 0.2] };
+        var mode = 'apical', days = 0, animId = null;
+
+        // static ruler ticks
+        (function () {
+            var r = '';
+            for (var y = 40; y <= 380; y += 34) {
+                var cm = Math.round((y - 40) / 34);
+                r += '<line x1="34" y1="' + y + '" x2="46" y2="' + y + '" stroke="#94a3b8" stroke-width="2"/>';
+                r += '<text x="30" y="' + (y + 4) + '" text-anchor="end" font-size="10" fill="#94a3b8">' + cm + '</text>';
+            }
+            document.getElementById('ruler').innerHTML = r;
+        })();
+
+        function segLengths() {
+            var extra = days * 11;
+            return WEIGHTS[mode].map(function (wt) { return segBase + extra * wt; });
+        }
+
+        function render() {
+            var L = segLengths();
+            var plant = '', y = topY;
+            // segments (top = base, bottom = tip)
+            for (var i = 0; i < N; i++) {
+                var h = L[i];
+                var isTip = (i === N - 1);
+                var fill = (mode === 'apical' && (i >= 3)) ? '#4ade80' : '#bbf7d0';
+                if (i === N - 1) {
+                    // tip segment as body + pointed tip
+                    plant += '<rect x="' + (cx - w / 2) + '" y="' + y + '" width="' + w + '" height="' + (h - 14) + '" fill="' + fill + '" stroke="#15803d" stroke-width="2"/>';
+                    plant += '<path d="M' + (cx - w / 2) + ' ' + (y + h - 14) + ' L' + (cx + w / 2) + ' ' + (y + h - 14) + ' L' + cx + ' ' + (y + h + 10) + ' Z" fill="' + fill + '" stroke="#15803d" stroke-width="2"/>';
+                } else {
+                    plant += '<rect x="' + (cx - w / 2) + '" y="' + y + '" width="' + w + '" height="' + h + '" fill="' + fill + '" stroke="#15803d" stroke-width="2"/>';
+                }
+                // gap length label
+                plant += '<text x="' + (cx + w / 2 + 8) + '" y="' + (y + h / 2 + 4) + '" font-size="11" fill="#e2e8f0">' + (h / 10).toFixed(1) + ' cm</text>';
+                y += h;
+            }
+            // ink marks (dark bands) at each boundary
+            var yy = topY;
+            for (var j = 0; j <= N; j++) {
+                plant += '<line x1="' + (cx - w / 2 - 4) + '" y1="' + yy + '" x2="' + (cx + w / 2 + 4) + '" y2="' + yy + '" stroke="#4c1d95" stroke-width="4"/>';
+                if (j < N) yy += L[j];
+            }
+            // labels base & tip
+            plant += '<text x="' + (cx - w / 2 - 10) + '" y="' + (topY + 6) + '" text-anchor="end" font-size="11" font-weight="700" fill="#a7f3d0">Base</text>';
+            plant += '<text x="' + cx + '" y="' + (y + 26) + '" text-anchor="middle" font-size="11" font-weight="700" fill="#a7f3d0">Tip 🌱</text>';
+            document.getElementById('plant').innerHTML = plant;
+            writeResult(L);
+        }
+
+        function writeResult(L) {
+            var res = document.getElementById('result');
+            var tipGap = (L[N - 1] / 10).toFixed(1), baseGap = (L[0] / 10).toFixed(1);
+            if (days === 0) {
+                res.innerHTML = '<div class="rhead">Shuruaat 🔬</div>Sabhi nishaan (marks) barabar doori par hain (' +
+                    baseGap + ' cm). Ab "Grow" karo aur dhyan do kaunse nishaan zyada door hote hain.';
+                return;
+            }
+            if (mode === 'apical') {
+                res.innerHTML = '<div class="rhead">🌱 Tip ke paas sabse zyada growth!</div>' +
+                    'Tip ke paas wala gap ab <b>' + tipGap + ' cm</b> hai, lekin base ke paas wala sirf <b>' + baseGap +
+                    ' cm</b> (lagbhag same). Matlab growth <b>sirf tip (aage) ke paas</b> hui.' +
+                    '<div style="margin-top:8px;color:#a7f3d0;"><b>Nateeja:</b> Plant ki lambai <b>Apical Meristem</b> ' +
+                    '(tip par maujood) ki wajah se badhti hai. Yahi is experiment ka result hai!</div>';
+            } else {
+                res.innerHTML = '<div class="rhead">📏 Sab jagah barabar growth</div>' +
+                    'Is (kaal-panik / imaginary) mode mein har gap barabar bada hua (' + tipGap + ' cm). ' +
+                    '<div style="margin-top:8px;color:#fcd34d;"><b>Lekin asli plant mein aisa NAHI hota!</b> Asli plant ' +
+                    'sirf tip se badhta hai. "Asliyat (Apical)" mode try karke difference dekho.</div>';
+            }
+        }
+
+        function onDays() { days = parseInt(document.getElementById('days').value, 10); document.getElementById('daynow').textContent = days + ' din'; render(); }
+
+        function setMode(m) {
+            mode = m;
+            document.getElementById('m-apical').classList.toggle('active', m === 'apical');
+            document.getElementById('m-uniform').classList.toggle('active', m === 'uniform');
+            render();
+        }
+
+        function playGrow() {
+            if (animId) clearInterval(animId);
+            days = 0; document.getElementById('days').value = 0;
+            document.getElementById('obs').textContent = 'Plant badh raha hai... nishaan dhyan se dekho.';
+            animId = setInterval(function () {
+                days++;
+                document.getElementById('days').value = days;
+                document.getElementById('daynow').textContent = days + ' din';
+                render();
+                if (days >= 10) { clearInterval(animId); document.getElementById('obs').textContent = 'Growth complete! Result padho 👉'; }
+            }, 350);
+        }
+
+        function resetLab() {
+            if (animId) clearInterval(animId);
+            days = 0; document.getElementById('days').value = 0; document.getElementById('daynow').textContent = '0 din';
+            document.getElementById('obs').textContent = 'Plant par barabar nishaan (marks) lage hain. "Grow" dabao aur dekho kya hota hai.';
+            render();
+        }
+
+        render();
+    </script>
+</body>
+
+</html>

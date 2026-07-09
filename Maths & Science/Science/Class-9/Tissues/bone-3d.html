@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Bone Model | AIkiPadhai</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="../sci-3d.js"></script>
+</head>
+
+<body>
+    <script>
+        Sci3D({
+            title: "🦴 3D Bone (Osteon)",
+            back: { href: "epithelial-and-connective.html", label: "Back to Lesson" },
+            intro: { name: "3D Bone - Osteon", desc: "Bone ek connective tissue hai. Ye ek 'osteon' (bone ki basic unit) hai. Drag karke ghumao aur parts par tap karo." },
+            camZ: 16,
+            data: {
+                canal: { emoji: "🩸", name: "Haversian Canal", nick: "Beech ki Naali", desc: "Osteon ke center mein naali jisme blood vessel aur nerve chalte hain - bone cells ko khaana aur oxygen pahunchate hain." },
+                lamellae: { emoji: "⭕", name: "Lamellae", nick: "Concentric Rings", desc: "Calcium wali matrix ki gol-gol layered rings (chhalle) jo bone ko bahut mazboot banati hain." },
+                lacunae: { emoji: "🔵", name: "Lacunae", nick: "Cell ke Ghar", desc: "Chhote khaali khaane (spaces) jinme bone cells (osteocytes) rehti hain aur bone ko zinda rakhti hain." },
+                matrix: { emoji: "🦴", name: "Bone Matrix", nick: "Hard Base", desc: "Calcium aur phosphorus ka hard padarth jo bone ko body ka framework banane layak strong banata hai." }
+            },
+            build: function (ctx) {
+                var T = ctx.THREE, P = ctx.pivot, H = 8;
+                function tube(r, hex, op) {
+                    var m = new T.Mesh(new T.CylinderGeometry(r, r, H, 48, 1, true),
+                        new T.MeshPhongMaterial({ color: hex, shininess: 40, transparent: true, opacity: op, side: T.DoubleSide }));
+                    return m;
+                }
+                // Haversian canal (central)
+                var canal = new T.Mesh(new T.CylinderGeometry(0.55, 0.55, H + 0.2, 24), ctx.mat(0xb91c1c));
+                ctx.addPart(canal, 'canal'); P.add(canal);
+                // Lamellae (concentric ring walls)
+                var lamG = new T.Group();
+                [1.5, 2.4, 3.3].forEach(function (r, i) {
+                    var wall = tube(r, i % 2 ? 0xfef3c7 : 0xfde68a, 0.5);
+                    lamG.add(wall);
+                });
+                ctx.addPart(lamG, 'lamellae'); P.add(lamG);
+                // Outer matrix (faint boundary)
+                var outer = tube(3.9, 0xe7e5e4, 0.18);
+                ctx.addPart(outer, 'matrix'); P.add(outer);
+                // Lacunae (bone cells between rings)
+                var lacG = new T.Group();
+                var rings = [2.0, 2.9], count = 8;
+                rings.forEach(function (r) {
+                    for (var k = 0; k < count; k++) {
+                        var a = (k / count) * Math.PI * 2 + (r === 2.9 ? 0.4 : 0);
+                        var lac = new T.Mesh(new T.SphereGeometry(0.22, 12, 12), ctx.mat(0x2563eb));
+                        lac.scale.set(1.8, 0.8, 0.8);
+                        lac.position.set(Math.cos(a) * r, (Math.random() - 0.5) * 5.5, Math.sin(a) * r);
+                        lac.lookAt(0, lac.position.y, 0);
+                        lacG.add(lac);
+                    }
+                });
+                ctx.addPart(lacG, 'lacunae'); P.add(lacG);
+                P.rotation.x = 0.35;
+            }
+        });
+    </script>
+</body>
+
+</html>
