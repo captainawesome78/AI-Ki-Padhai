@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Flower Model | AIkiPadhai</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="../sci-3d.js"></script>
+</head>
+
+<body>
+    <script>
+        Sci3D({
+            title: "🌸 3D Flower",
+            back: { href: "flowering-plants.html", label: "Back to Lesson" },
+            intro: { name: "3D Flower", desc: "Phool ko drag karke ghumao aur kisi bhi part par tap karke uska kaam jaano - petals, stamen aur carpel." },
+            camZ: 13,
+            data: {
+                sepal: { emoji: "🍃", name: "Sepal", nick: "Protector", desc: "Baahri hare parts jo kali (bud) ko surakshit rakhte hain." },
+                petal: { emoji: "🌸", name: "Petal", nick: "Attraction", desc: "Rangeen pankhudiyan jo keedon ko attract karti hain (pollination ke liye)." },
+                stamen: { emoji: "♂️", name: "Stamen", nick: "Male Part", desc: "Anther (pollen banata hai) + filament. Ye phool ka male part hai." },
+                stigma: { emoji: "🎯", name: "Stigma", nick: "Landing Pad", desc: "Carpel ka chipchipa top jo pollen pakadta hai." },
+                style: { emoji: "🛣️", name: "Style", nick: "The Path", desc: "Naali jisse pollen tube ovary tak jaata hai." },
+                ovary: { emoji: "🥚", name: "Ovary", nick: "Future Fruit", desc: "Isme ovules (eggs) hote hain. Fertilisation ke baad ye Fruit ban jaati hai." }
+            },
+            build: function (ctx) {
+                var T = ctx.THREE, P = ctx.pivot;
+                // Sepals (green, below, radius 2.4)
+                var sepG = new T.Group();
+                for (var i = 0; i < 5; i++) {
+                    var a = (i / 5) * Math.PI * 2 + 0.3;
+                    var sp = new T.Mesh(new T.SphereGeometry(1, 16, 12), ctx.mat(0x4d7c0f));
+                    sp.scale.set(1.5, 0.22, 0.7);
+                    sp.position.set(Math.cos(a) * 2.3, -0.5, Math.sin(a) * 2.3);
+                    sp.rotation.y = -a; sp.rotation.z = -0.4;
+                    sepG.add(sp);
+                }
+                ctx.addPart(sepG, 'sepal'); P.add(sepG);
+                // Petals (pink, radius 2.7, tilted up)
+                var petG = new T.Group();
+                for (var j = 0; j < 5; j++) {
+                    var pa = (j / 5) * Math.PI * 2;
+                    var pt = new T.Mesh(new T.SphereGeometry(1, 20, 16), ctx.mat(0xf472b6));
+                    pt.scale.set(1.9, 0.28, 1.05);
+                    pt.position.set(Math.cos(pa) * 2.7, 0.5, Math.sin(pa) * 2.7);
+                    pt.rotation.y = -pa; pt.rotation.z = 0.5;
+                    petG.add(pt);
+                }
+                ctx.addPart(petG, 'petal'); P.add(petG);
+                // Stamens (filaments + anthers)
+                var stG = new T.Group();
+                for (var k = 0; k < 6; k++) {
+                    var ka = (k / 6) * Math.PI * 2;
+                    var fil = new T.Mesh(new T.CylinderGeometry(0.06, 0.06, 1.8, 10), ctx.mat(0xfbbf24));
+                    fil.position.set(Math.cos(ka) * 0.75, 1.0, Math.sin(ka) * 0.75);
+                    fil.rotation.z = -Math.cos(ka) * 0.35; fil.rotation.x = Math.sin(ka) * 0.35;
+                    stG.add(fil);
+                    var anther = new T.Mesh(new T.SphereGeometry(0.22, 12, 12), ctx.mat(0xf59e0b));
+                    anther.position.set(Math.cos(ka) * 1.05, 1.85, Math.sin(ka) * 1.05);
+                    stG.add(anther);
+                }
+                ctx.addPart(stG, 'stamen'); P.add(stG);
+                // Carpel: ovary, style, stigma
+                var ovary = new T.Mesh(new T.SphereGeometry(0.7, 20, 16), ctx.mat(0x34d399));
+                ovary.scale.set(0.85, 1.1, 0.85); ovary.position.set(0, 0.1, 0);
+                ctx.addPart(ovary, 'ovary'); P.add(ovary);
+                var style = new T.Mesh(new T.CylinderGeometry(0.12, 0.14, 1.9, 12), ctx.mat(0x059669));
+                style.position.set(0, 1.2, 0);
+                ctx.addPart(style, 'style'); P.add(style);
+                var stigma = new T.Mesh(new T.SphereGeometry(0.34, 16, 12), ctx.mat(0x065f46));
+                stigma.scale.set(1, 0.6, 1); stigma.position.set(0, 2.2, 0);
+                ctx.addPart(stigma, 'stigma'); P.add(stigma);
+                P.rotation.x = 0.5;
+            }
+        });
+    </script>
+</body>
+
+</html>

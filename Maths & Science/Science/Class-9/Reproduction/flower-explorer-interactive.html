@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flower Explorer | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #500724, #831843); color: #fce7f3; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #fbcfe8; text-decoration: none; border: 1px solid rgba(251,207,232,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(251,207,232,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { display: flex; gap: 20px; padding: 20px; max-width: 1100px; margin: 0 auto; flex-wrap: wrap; }
+        .stage { flex: 1 1 380px; min-width: 300px; background: rgba(255,255,255,0.05); border-radius: 18px; padding: 14px; }
+        .stage svg { width: 100%; height: auto; display: block; }
+        .hint { text-align: center; font-size: 13px; color: #f9a8d4; margin-top: 8px; }
+        .panel { flex: 1 1 320px; min-width: 300px; background: rgba(255,255,255,0.07); border-radius: 18px; padding: 22px; align-self: flex-start; }
+        .panel .emoji { font-size: 44px; }
+        .panel h2 { color: #fff; font-size: 22px; margin: 6px 0 4px; }
+        .panel .nick { display: inline-block; background: #ec4899; color: #500724; font-size: 12px; font-weight: 800; padding: 3px 12px; border-radius: 999px; margin-bottom: 12px; }
+        .panel p { color: #fbcfe8; font-size: 15.5px; line-height: 1.7; }
+        .panel .placeholder { color: #be6a97; font-style: italic; }
+        .progress { margin-top: 18px; }
+        .progress .bar { height: 12px; background: rgba(255,255,255,0.12); border-radius: 999px; overflow: hidden; }
+        .progress .fill { height: 100%; width: 0; background: linear-gradient(90deg,#f472b6,#ec4899); border-radius: 999px; transition: width .4s; }
+        .progress .lbl { font-size: 13px; color: #f9a8d4; margin-top: 6px; }
+        .done-msg { margin-top: 14px; background: #4a044e; border: 1px solid #ec4899; color: #fbcfe8; padding: 12px; border-radius: 10px; font-weight: 700; text-align: center; display: none; }
+        .hot { cursor: pointer; transition: transform .15s; transform-box: fill-box; transform-origin: center; }
+        .hot:hover { transform: scale(1.06); }
+        .hot.selected { filter: drop-shadow(0 0 7px #fde047); }
+        .pulse { animation: pulse 2.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+        @keyframes pulse { 0%,100% { opacity: .9; } 50% { opacity: 1; } }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="flowering-plants.html">← Back to Lesson</a>
+        <div class="title">🌸 Flower Explorer</div>
+        <span style="width:60px"></span>
+    </div>
+
+    <div class="wrap">
+        <div class="stage">
+            <div id="svg-holder"></div>
+            <div class="hint">👆 Phool ke kisi bhi part par tap karo</div>
+        </div>
+        <div class="panel">
+            <div id="p-emoji" class="emoji">👋</div>
+            <h2 id="p-name">Flower Explorer</h2>
+            <span id="p-nick" class="nick" style="display:none"></span>
+            <p id="p-desc" class="placeholder">Phool ke rang-birange part par tap karo - main bataunga wo kya hai aur
+                kya kaam karta hai.</p>
+            <div class="progress">
+                <div class="bar"><div id="fill" class="fill"></div></div>
+                <div class="lbl" id="prog-lbl">0 / 6 parts explored</div>
+            </div>
+            <div id="done" class="done-msg">🎉 Shaabaash! Poora phool explore kar liya!</div>
+        </div>
+    </div>
+
+    <script>
+        var DATA = {
+            sepal:  { emoji: "🍃", name: "Sepal", nick: "Protector", desc: "Phool ke sabse bahar, hare rang ke. Jab phool kali (bud) hota hai, ye use dhak kar surakshit rakhte hain." },
+            petal:  { emoji: "🌸", name: "Petal", nick: "Attraction", desc: "Rangeen aur khushboo-daar pankhudiyan. Ye keedon aur titliyon ko attract karti hain jo pollination mein madad karte hain." },
+            stamen: { emoji: "♂️", name: "Stamen (Anther + Filament)", nick: "Male Part", desc: "Phool ka male part. Anther (upar) pollen grains (male gametes) banata hai, aur filament use pakadta hai." },
+            stigma: { emoji: "🎯", name: "Stigma", nick: "Landing Pad", desc: "Carpel (female part) ka chipchipa upari hissa. Ye pollen grains ko pakadta hai jab wo yahan girte hain." },
+            style:  { emoji: "🛣️", name: "Style", nick: "The Path", desc: "Naali jo stigma ko ovary se jodti hai. Pollination ke baad pollen tube isi ke through neeche ovary tak jaata hai." },
+            ovary:  { emoji: "🥚", name: "Ovary", nick: "Future Fruit", desc: "Carpel ka base. Isme ovules (female gametes/eggs) hote hain. Fertilisation ke baad ovary FRUIT ban jaati hai aur ovule SEED." }
+        };
+        var PARTS = ["sepal", "petal", "stamen", "stigma", "style", "ovary"];
+        var visited = {};
+
+        function flowerSVG() {
+            var s = '<svg viewBox="0 0 440 450" xmlns="http://www.w3.org/2000/svg">';
+            // stem
+            s += '<rect x="214" y="300" width="12" height="140" fill="#4d7c0f"/>';
+            // sepals (behind petals)
+            s += '<g class="hot" data-o="sepal">';
+            for (var a = 0; a < 5; a++) {
+                var ang = (a / 5) * Math.PI * 2 + 0.3;
+                var x = 220 + Math.cos(ang) * 95, y = 210 + Math.sin(ang) * 95;
+                s += '<ellipse cx="' + x.toFixed(0) + '" cy="' + y.toFixed(0) + '" rx="18" ry="46" fill="#4d7c0f" stroke="#365314" stroke-width="2" transform="rotate(' + (ang * 180 / Math.PI + 90).toFixed(0) + ' ' + x.toFixed(0) + ' ' + y.toFixed(0) + ')"/>';
+            }
+            s += '</g>';
+            // petals
+            s += '<g class="hot" data-o="petal">';
+            for (var p = 0; p < 5; p++) {
+                var pang = (p / 5) * Math.PI * 2;
+                var px = 220 + Math.cos(pang) * 72, py = 210 + Math.sin(pang) * 72;
+                s += '<ellipse cx="' + px.toFixed(0) + '" cy="' + py.toFixed(0) + '" rx="30" ry="60" fill="#f472b6" stroke="#db2777" stroke-width="2" transform="rotate(' + (pang * 180 / Math.PI + 90).toFixed(0) + ' ' + px.toFixed(0) + ' ' + py.toFixed(0) + ')"/>';
+            }
+            s += '</g>';
+            // stamens (around center)
+            s += '<g class="hot pulse" data-o="stamen">';
+            for (var st = 0; st < 6; st++) {
+                var sang = (st / 6) * Math.PI * 2;
+                var fx = 220 + Math.cos(sang) * 40, fy = 210 + Math.sin(sang) * 40;
+                s += '<line x1="220" y1="210" x2="' + fx.toFixed(0) + '" y2="' + fy.toFixed(0) + '" stroke="#fbbf24" stroke-width="4"/>';
+                s += '<ellipse cx="' + fx.toFixed(0) + '" cy="' + fy.toFixed(0) + '" rx="8" ry="6" fill="#f59e0b" stroke="#b45309"/>';
+            }
+            s += '</g>';
+            // carpel: ovary (base), style, stigma
+            s += '<ellipse class="hot" data-o="ovary" cx="220" cy="255" rx="24" ry="30" fill="#a7f3d0" stroke="#059669" stroke-width="2"/>';
+            s += '<circle cx="212" cy="258" r="3.5" fill="#065f46"/><circle cx="228" cy="258" r="3.5" fill="#065f46"/>';
+            s += '<rect class="hot" data-o="style" x="216" y="200" width="8" height="58" fill="#34d399"/>';
+            s += '<ellipse class="hot pulse" data-o="stigma" cx="220" cy="196" rx="16" ry="9" fill="#059669" stroke="#065f46" stroke-width="2"/>';
+            s += '</svg>';
+            return s;
+        }
+
+        function attach() {
+            document.querySelectorAll('.hot').forEach(function (el) {
+                el.addEventListener('click', function () {
+                    var key = el.getAttribute('data-o');
+                    showInfo(key);
+                    document.querySelectorAll('.hot').forEach(function (e) { e.classList.remove('selected'); });
+                    document.querySelectorAll('.hot[data-o="' + key + '"]').forEach(function (e) { e.classList.add('selected'); });
+                    visited[key] = true; updateProgress();
+                });
+            });
+        }
+        function showInfo(key) {
+            var d = DATA[key];
+            document.getElementById('p-emoji').textContent = d.emoji;
+            document.getElementById('p-name').textContent = d.name;
+            var nk = document.getElementById('p-nick'); nk.textContent = d.nick; nk.style.display = 'inline-block';
+            var ds = document.getElementById('p-desc'); ds.textContent = d.desc; ds.classList.remove('placeholder');
+        }
+        function updateProgress() {
+            var c = 0; PARTS.forEach(function (k) { if (visited[k]) c++; });
+            document.getElementById('fill').style.width = Math.round(c / PARTS.length * 100) + '%';
+            document.getElementById('prog-lbl').textContent = c + ' / ' + PARTS.length + ' parts explored';
+            document.getElementById('done').style.display = (c === PARTS.length) ? 'block' : 'none';
+        }
+        document.getElementById('svg-holder').innerHTML = flowerSVG();
+        attach(); updateProgress();
+    </script>
+</body>
+
+</html>
