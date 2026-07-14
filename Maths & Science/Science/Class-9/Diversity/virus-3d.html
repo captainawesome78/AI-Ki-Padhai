@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Virus (Bacteriophage) | AIkiPadhai</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="../sci-3d.js"></script>
+</head>
+
+<body>
+    <script>
+        Sci3D({
+            title: "🧊 3D Virus (Bacteriophage)",
+            back: { href: "nomenclature-viruses.html", label: "Back to Lesson" },
+            intro: { name: "3D Bacteriophage", desc: "Ye ek virus hai jo bacteria ko infect karta hai. Ise drag karke ghumao aur parts par tap karke jaano. Yaad rakho - virus acellular hai (koi cell nahi)!" },
+            camZ: 15,
+            data: {
+                head: { emoji: "🔷", name: "Head (Capsid)", nick: "Protein Coat", desc: "Protein ka bahri cover (capsid) jo andar genetic material ko protect karta hai. Iski shape geometric (icosahedral) hoti hai." },
+                dna: { emoji: "🧬", name: "Genetic Material (DNA)", nick: "The Blueprint", desc: "Head ke andar DNA (ya kuch viruses mein RNA). Ye instructions host cell mein daalkar naye virus banwata hai." },
+                sheath: { emoji: "🧴", name: "Tail Sheath", nick: "Injector", desc: "Lambi naali jisse virus apna DNA host bacteria ke andar inject karta hai." },
+                baseplate: { emoji: "🛑", name: "Base Plate", nick: "Anchor", desc: "Tail ka base jo bacteria ki surface par tikta (attach) hai." },
+                fibers: { emoji: "🦿", name: "Tail Fibres", nick: "Landing Legs", desc: "Patli 'taangein' jo host bacteria ko pakadti hain - taaki virus theek se attach ho sake." }
+            },
+            build: function (ctx) {
+                var T = ctx.THREE, P = ctx.pivot;
+                // Head - icosahedral capsid (semi-transparent so DNA shows)
+                var head = new T.Mesh(new T.IcosahedronGeometry(2.2, 0), ctx.mat(0x8b5cf6, { transparent: true, opacity: 0.55 }));
+                head.position.set(0, 4, 0);
+                ctx.addPart(head, 'head'); P.add(head);
+                // DNA - coiled knot inside head
+                var dna = new T.Mesh(new T.TorusKnotGeometry(0.7, 0.18, 60, 8), ctx.mat(0xfacc15));
+                dna.position.set(0, 4, 0);
+                ctx.addPart(dna, 'dna'); P.add(dna);
+                // Collar
+                var collar = new T.Mesh(new T.CylinderGeometry(0.55, 0.55, 0.35, 16), ctx.mat(0x7c3aed));
+                collar.position.set(0, 2.35, 0); P.add(collar);
+                // Tail sheath
+                var sheath = new T.Mesh(new T.CylinderGeometry(0.42, 0.42, 2.6, 16), ctx.mat(0xa78bfa));
+                sheath.position.set(0, 0.95, 0);
+                ctx.addPart(sheath, 'sheath'); P.add(sheath);
+                // Base plate (hexagonal)
+                var base = new T.Mesh(new T.CylinderGeometry(1.05, 1.05, 0.3, 6), ctx.mat(0x6d28d9));
+                base.position.set(0, -0.5, 0);
+                ctx.addPart(base, 'baseplate'); P.add(base);
+                // Tail fibres (6 legs)
+                var fib = new T.Group();
+                for (var i = 0; i < 6; i++) {
+                    var a = (i / 6) * Math.PI * 2;
+                    var leg = new T.Mesh(new T.CylinderGeometry(0.07, 0.07, 2.4, 8), ctx.mat(0xc4b5fd));
+                    var bx = Math.cos(a) * 0.9, bz = Math.sin(a) * 0.9;  // base attach
+                    var ex = Math.cos(a) * 2.0, ez = Math.sin(a) * 2.0;  // end (out)
+                    var A = new T.Vector3(bx, -0.6, bz), B = new T.Vector3(ex, -2.4, ez);
+                    var mid = A.clone().add(B).multiplyScalar(0.5);
+                    var dir = B.clone().sub(A).normalize();
+                    leg.position.copy(mid);
+                    leg.quaternion.setFromUnitVectors(new T.Vector3(0, 1, 0), dir);
+                    fib.add(leg);
+                }
+                ctx.addPart(fib, 'fibers'); P.add(fib);
+                P.position.y = -1;
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Classify It! Game | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #083344, #0e7490); color: #e2e8f0; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #a5f3fc; text-decoration: none; border: 1px solid rgba(165,243,252,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(165,243,252,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 640px; margin: 0 auto; padding: 20px; }
+        .scorebar { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.06); border-radius: 12px; padding: 12px 18px; margin-bottom: 16px; font-weight: 700; }
+        .scorebar .s { color: #34d399; }
+        .card { background: rgba(255,255,255,0.06); border-radius: 18px; padding: 24px; text-align: center; }
+        .org-emoji { font-size: 70px; }
+        .org-name { font-size: 26px; font-weight: 800; color: #fff; margin: 4px 0 14px; }
+        .clues { display: flex; flex-direction: column; gap: 8px; margin: 0 auto 18px; max-width: 420px; }
+        .clue { background: rgba(0,0,0,0.25); border-radius: 10px; padding: 10px 14px; font-size: 15px; text-align: left; }
+        .clue b { color: #67e8f9; }
+        .q { font-weight: 700; margin-bottom: 12px; color: #fff; }
+        .kbtns { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 10px; }
+        .kbtn { background: rgba(255,255,255,0.1); border: 2px solid transparent; color: #e2e8f0; padding: 14px 10px; border-radius: 12px; cursor: pointer; font-size: 15px; font-weight: 700; }
+        .kbtn:hover { border-color: #22d3ee; }
+        .kbtn.correct { background: #052e2b; border-color: #22c55e; color: #6ee7b7; }
+        .kbtn.wrong { background: #3f0a0a; border-color: #ef4444; color: #fca5a5; }
+        .feedback { margin-top: 16px; font-size: 15px; line-height: 1.6; min-height: 40px; }
+        .feedback.ok { color: #6ee7b7; } .feedback.no { color: #fca5a5; }
+        button.next { margin-top: 14px; background: #06b6d4; color: #04222b; border: none; padding: 13px 30px; border-radius: 12px; font-size: 16px; font-weight: 800; cursor: pointer; display: none; }
+        button.next:hover { background: #22d3ee; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="five-kingdoms.html">← Back to Lesson</a>
+        <div class="title">🎮 Classify It!</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="scorebar">
+            <div>Score: <span class="s" id="score">0</span> / <span id="total">0</span></div>
+            <div id="streak">🔥 Streak: 0</div>
+        </div>
+        <div class="card">
+            <div class="org-emoji" id="org-emoji">🦠</div>
+            <div class="org-name" id="org-name">?</div>
+            <div class="clues" id="clues"></div>
+            <div class="q">Ye jeev kis Kingdom mein aata hai?</div>
+            <div class="kbtns" id="kbtns"></div>
+            <div class="feedback" id="feedback"></div>
+            <button class="next" id="next" onclick="nextOrg()">Next ▶</button>
+        </div>
+    </div>
+
+    <script>
+        var KINGDOMS = ["Monera", "Protista", "Fungi", "Plantae", "Animalia"];
+        var ORGS = [
+            { em: "🦠", name: "Bacteria", k: "Monera", cell: "Prokaryotic (no nucleus)", num: "Unicellular", nut: "Auto/Hetero", why: "Nucleus nahi hota - isliye Monera." },
+            { em: "🌀", name: "Amoeba", k: "Protista", cell: "Eukaryotic", num: "Unicellular", nut: "Heterotroph", why: "Single-cell eukaryote - isliye Protista." },
+            { em: "🩰", name: "Paramecium", k: "Protista", cell: "Eukaryotic", num: "Unicellular", nut: "Heterotroph", why: "Cilia wala single-cell eukaryote - Protista." },
+            { em: "🍄", name: "Mushroom", k: "Fungi", cell: "Eukaryotic", num: "Multicellular", nut: "Saprophyte (heterotroph)", why: "Chlorophyll nahi, marte padarth se khaana - Fungi." },
+            { em: "🍞", name: "Yeast", k: "Fungi", cell: "Eukaryotic", num: "Unicellular", nut: "Saprophyte", why: "Unicellular fungus jo bread phulaata hai - Fungi." },
+            { em: "🥭", name: "Mango Tree", k: "Plantae", cell: "Eukaryotic", num: "Multicellular", nut: "Autotroph (photosynthesis)", why: "Khaana khud banata hai, cell wall cellulose - Plantae." },
+            { em: "🌿", name: "Fern", k: "Plantae", cell: "Eukaryotic", num: "Multicellular", nut: "Autotroph", why: "Vascular plant jo khud khaana banata hai - Plantae." },
+            { em: "🪱", name: "Earthworm", k: "Animalia", cell: "Eukaryotic", num: "Multicellular", nut: "Heterotroph", why: "Multicellular, khaana doosron se, no cell wall - Animalia." },
+            { em: "🐸", name: "Frog", k: "Animalia", cell: "Eukaryotic", num: "Multicellular", nut: "Heterotroph", why: "Backbone wala animal - Animalia." },
+            { em: "🪰", name: "Housefly", k: "Animalia", cell: "Eukaryotic", num: "Multicellular", nut: "Heterotroph", why: "Arthropod (jointed legs) - Animalia." },
+            { em: "🌊", name: "Nostoc (Blue-green algae)", k: "Monera", cell: "Prokaryotic", num: "Unicellular", nut: "Autotroph", why: "Cyanobacteria - prokaryotic - Monera." },
+            { em: "🧽", name: "Sponge (Sycon)", k: "Animalia", cell: "Eukaryotic", num: "Multicellular", nut: "Heterotroph", why: "Porifera - simplest animal - Animalia." }
+        ];
+        var order = [], idx = -1, score = 0, total = 0, streak = 0, answered = false;
+
+        function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+
+        function nextOrg() {
+            answered = false;
+            idx++;
+            if (idx >= order.length) { order = shuffle(ORGS.slice()); idx = 0; }
+            var o = order[idx];
+            document.getElementById('org-emoji').textContent = o.em;
+            document.getElementById('org-name').textContent = o.name;
+            document.getElementById('clues').innerHTML =
+                '<div class="clue"><b>Cell type:</b> ' + o.cell + '</div>' +
+                '<div class="clue"><b>Cells:</b> ' + o.num + '</div>' +
+                '<div class="clue"><b>Nutrition:</b> ' + o.nut + '</div>';
+            var kb = document.getElementById('kbtns'); kb.innerHTML = '';
+            KINGDOMS.forEach(function (k) {
+                var b = document.createElement('button');
+                b.className = 'kbtn'; b.textContent = k;
+                b.onclick = function () { answer(k, b, o); };
+                kb.appendChild(b);
+            });
+            document.getElementById('feedback').textContent = '';
+            document.getElementById('feedback').className = 'feedback';
+            document.getElementById('next').style.display = 'none';
+        }
+        function answer(k, btn, o) {
+            if (answered) return; answered = true; total++;
+            var fb = document.getElementById('feedback');
+            document.querySelectorAll('.kbtn').forEach(function (b) {
+                if (b.textContent === o.k) b.classList.add('correct');
+                b.disabled = true;
+            });
+            if (k === o.k) {
+                score++; streak++;
+                fb.className = 'feedback ok';
+                fb.innerHTML = '✅ Sahi! ' + o.why;
+            } else {
+                streak = 0;
+                btn.classList.add('wrong');
+                fb.className = 'feedback no';
+                fb.innerHTML = '❌ Nahi. Sahi jawab: <b>' + o.k + '</b>. ' + o.why;
+            }
+            document.getElementById('score').textContent = score;
+            document.getElementById('total').textContent = total;
+            document.getElementById('streak').textContent = '🔥 Streak: ' + streak;
+            document.getElementById('next').style.display = 'inline-block';
+        }
+        order = shuffle(ORGS.slice());
+        nextOrg();
+    </script>
+</body>
+
+</html>

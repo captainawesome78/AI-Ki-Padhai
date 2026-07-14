@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dichotomous Key | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #052e2b, #0d9488); color: #e2e8f0; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #99f6e4; text-decoration: none; border: 1px solid rgba(153,246,228,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(153,246,228,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 620px; margin: 0 auto; padding: 20px; }
+        .intro { text-align: center; color: #99f6e4; font-size: 14px; margin-bottom: 16px; }
+        .card { background: rgba(255,255,255,0.06); border-radius: 18px; padding: 26px; text-align: center; }
+        .step { font-size: 13px; color: #5eead4; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 10px; }
+        .q { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 22px; line-height: 1.4; }
+        .yn { display: flex; gap: 14px; justify-content: center; }
+        .yn button { flex: 1; max-width: 180px; border: none; padding: 16px; border-radius: 14px; font-size: 17px; font-weight: 800; cursor: pointer; }
+        .yes { background: #14b8a6; color: #04241c; } .yes:hover { background: #2dd4bf; }
+        .no { background: rgba(255,255,255,0.12); color: #e2e8f0; } .no:hover { background: rgba(255,255,255,0.2); }
+        .result .em { font-size: 68px; }
+        .result h2 { color: #fff; font-size: 26px; margin: 6px 0 10px; }
+        .result p { color: #ccfbf1; font-size: 16px; line-height: 1.6; }
+        .trail { margin-top: 20px; font-size: 13px; color: #99f6e4; text-align: left; }
+        .trail .t { padding: 4px 0; border-bottom: 1px dashed rgba(255,255,255,0.1); }
+        button.restart { margin-top: 18px; background: transparent; color: #99f6e4; border: 1px solid rgba(153,246,228,0.4); padding: 12px 28px; border-radius: 12px; font-weight: 700; cursor: pointer; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="nomenclature-viruses.html">← Back to Lesson</a>
+        <div class="title">🔑 Dichotomous Key</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="intro">Ek jeev socho (ya koi bhi), phir sawaalon ke jawab do - key aapko batayegi wo kis group ka hai!</div>
+        <div class="card" id="card"></div>
+    </div>
+
+    <script>
+        // Tree nodes: question nodes have {q, yes, no}; result nodes have {result:true, em, name, desc}
+        var TREE = {
+            start: { q: "Kya is jeev mein proper NUCLEUS hota hai? (Yes = eukaryotic)", yes: "n1", no: "monera" },
+            n1: { q: "Kya ye SINGLE cell (unicellular) se bana hai?", yes: "protista", no: "n2" },
+            n2: { q: "Kya ye apna khaana KHUD banata hai (chlorophyll / photosynthesis)?", yes: "plantae", no: "n3" },
+            n3: { q: "Kya iski body dhaagon (hyphae) se bani hai aur ye MARTE/SADTE padarth se khaana leta hai?", yes: "fungi", no: "n4" },
+            n4: { q: "Kya is animal mein REEDH KI HADDI (backbone) hoti hai?", yes: "vert", no: "invert" },
+            monera:   { result: true, em: "🦠", name: "Kingdom Monera", desc: "Nucleus nahi hai - ye ek prokaryote hai! Jaise bacteria ya blue-green algae." },
+            protista: { result: true, em: "🌀", name: "Kingdom Protista", desc: "Single-cell eukaryote - jaise Amoeba, Paramecium ya Euglena." },
+            plantae:  { result: true, em: "🌳", name: "Kingdom Plantae", desc: "Multicellular autotroph jo khud khaana banata hai - ek plant!" },
+            fungi:    { result: true, em: "🍄", name: "Kingdom Fungi", desc: "Hyphae wali body, saprophytic nutrition - jaise mushroom ya mould." },
+            vert:     { result: true, em: "🦴", name: "Animalia - Vertebrate (Chordata)", desc: "Backbone wala animal! Jaise machhli, mendhak, saanp, chidiya ya mammal (insaan, kutta)." },
+            invert:   { result: true, em: "🐛", name: "Animalia - Invertebrate", desc: "Bina backbone wala animal! Jaise sponge, hydra, kenchua, keede, ghongha ya starfish." }
+        };
+        var cur = "start", trail = [];
+
+        function render() {
+            var node = TREE[cur];
+            var card = document.getElementById('card');
+            if (node.result) {
+                var tr = trail.map(function (t) { return '<div class="t">' + t + '</div>'; }).join('');
+                card.innerHTML = '<div class="result"><div class="em">' + node.em + '</div><h2>' + node.name + '</h2><p>' + node.desc + '</p></div>' +
+                    '<div class="trail"><b>Aapke jawab:</b>' + tr + '</div>' +
+                    '<button class="restart" onclick="restart()">↺ Dobara shuru karo</button>';
+            } else {
+                card.innerHTML = '<div class="step">Sawaal ' + (trail.length + 1) + '</div>' +
+                    '<div class="q">' + node.q + '</div>' +
+                    '<div class="yn"><button class="yes" onclick="ans(true)">✅ Haan (Yes)</button>' +
+                    '<button class="no" onclick="ans(false)">❌ Nahi (No)</button></div>';
+            }
+        }
+        function ans(isYes) {
+            var node = TREE[cur];
+            trail.push((isYes ? '✅ ' : '❌ ') + node.q);
+            cur = isYes ? node.yes : node.no;
+            render();
+        }
+        function restart() { cur = "start"; trail = []; render(); }
+        render();
+    </script>
+</body>
+
+</html>

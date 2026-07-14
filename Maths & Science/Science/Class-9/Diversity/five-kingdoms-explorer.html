@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Five Kingdoms Explorer | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #451a03, #92400e); color: #fef3c7; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #fde68a; text-decoration: none; border: 1px solid rgba(253,230,138,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(253,230,138,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { display: flex; gap: 20px; padding: 20px; max-width: 1050px; margin: 0 auto; flex-wrap: wrap; }
+        .tiles-col { flex: 1 1 340px; min-width: 300px; }
+        .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
+        .tile { background: rgba(255,255,255,0.08); border: 2px solid transparent; border-radius: 16px; padding: 18px 12px; text-align: center; cursor: pointer; transition: all .15s; }
+        .tile:hover { transform: translateY(-3px); border-color: #fbbf24; }
+        .tile.active { border-color: #fbbf24; background: rgba(251,191,36,0.18); }
+        .tile .em { font-size: 40px; }
+        .tile .nm { font-weight: 800; margin-top: 6px; font-size: 15px; color: #fff; }
+        .tile .vt { font-size: 11px; color: #fcd34d; margin-top: 2px; }
+        .panel { flex: 1 1 320px; min-width: 300px; background: rgba(255,255,255,0.08); border-radius: 18px; padding: 22px; align-self: flex-start; }
+        .panel .emoji { font-size: 46px; }
+        .panel h2 { color: #fff; font-size: 22px; margin: 6px 0 10px; }
+        .panel .row { margin: 8px 0; font-size: 15px; line-height: 1.5; }
+        .panel .lbl { color: #fbbf24; font-weight: 800; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+        .panel .placeholder { color: #b08968; font-style: italic; }
+        .progress { margin-top: 18px; }
+        .progress .bar { height: 12px; background: rgba(255,255,255,0.12); border-radius: 999px; overflow: hidden; }
+        .progress .fill { height: 100%; width: 0; background: linear-gradient(90deg,#fbbf24,#f59e0b); transition: width .4s; }
+        .progress .lbl2 { font-size: 13px; color: #fcd34d; margin-top: 6px; }
+        .done { margin-top: 12px; background: #422006; border: 1px solid #f59e0b; color: #fde68a; padding: 12px; border-radius: 10px; font-weight: 700; text-align: center; display: none; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="five-kingdoms.html">← Back to Lesson</a>
+        <div class="title">👑 Five Kingdoms Explorer</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="tiles-col">
+            <div class="tiles" id="tiles"></div>
+            <div style="text-align:center;font-size:13px;color:#fcd34d;margin-top:12px;">👆 Kisi bhi kingdom par tap karo</div>
+        </div>
+        <div class="panel">
+            <div id="p-emoji" class="emoji">👋</div>
+            <h2 id="p-name">Five Kingdoms Explorer</h2>
+            <p id="p-body" class="placeholder">Left se kisi bhi kingdom par tap karo - uske features aur examples yahan
+                dikhenge.</p>
+            <div class="progress">
+                <div class="bar"><div id="fill" class="fill"></div></div>
+                <div class="lbl2" id="prog">0 / 5 kingdoms explored</div>
+            </div>
+            <div id="done" class="done">🎉 Shaabaash! Saare 5 kingdoms explore kar liye!</div>
+        </div>
+    </div>
+
+    <script>
+        var K = [
+            { id: "monera", em: "🦠", name: "Monera", cell: "Prokaryotic (no nucleus)", num: "Unicellular", nut: "Auto ya Hetero", ex: "Bacteria, Blue-green algae (Nostoc), Mycoplasma", fact: "Earth ke sabse purane jeev - inke paas nucleus nahi hota!" },
+            { id: "protista", em: "🌀", name: "Protista", cell: "Eukaryotic", num: "Unicellular", nut: "Auto ya Hetero", ex: "Amoeba, Paramecium, Euglena, diatoms", fact: "'Bridge' kingdom - kuch plant jaise, kuch animal jaise." },
+            { id: "fungi", em: "🍄", name: "Fungi", cell: "Eukaryotic", num: "Mostly multicellular", nut: "Heterotroph (saprophyte)", ex: "Mushroom, Yeast, Rhizopus, Penicillium", fact: "Plant nahi hai! Chlorophyll nahi hota - marte padarth se khaana lete hain." },
+            { id: "plantae", em: "🌳", name: "Plantae", cell: "Eukaryotic", num: "Multicellular", nut: "Autotroph (photosynthesis)", ex: "Algae, moss, fern, pine, aam, gulab", fact: "Cell wall cellulose ki, aur khaana khud banate hain." },
+            { id: "animalia", em: "🐘", name: "Animalia", cell: "Eukaryotic", num: "Multicellular", nut: "Heterotroph", ex: "Sponge, Hydra, keede, machhli, insaan", fact: "Sabse zyada variety - koi cell wall nahi hoti." }
+        ];
+        var visited = {};
+
+        function renderTiles() {
+            var box = document.getElementById('tiles'); box.innerHTML = '';
+            K.forEach(function (k) {
+                var d = document.createElement('div');
+                d.className = 'tile' + (visited[k.id] ? '' : '') ;
+                d.id = 'tile-' + k.id;
+                d.innerHTML = '<div class="em">' + k.em + '</div><div class="nm">' + k.name + '</div><div class="vt">' + (visited[k.id] ? '✓ explored' : 'tap karo') + '</div>';
+                d.onclick = function () { select(k.id); };
+                box.appendChild(d);
+            });
+        }
+        function select(id) {
+            var k = K.find(function (x) { return x.id === id; });
+            document.getElementById('p-emoji').textContent = k.em;
+            document.getElementById('p-name').textContent = k.name;
+            document.getElementById('p-body').classList.remove('placeholder');
+            document.getElementById('p-body').innerHTML =
+                '<div class="row"><span class="lbl">Cell type:</span> ' + k.cell + '</div>' +
+                '<div class="row"><span class="lbl">Cells:</span> ' + k.num + '</div>' +
+                '<div class="row"><span class="lbl">Nutrition:</span> ' + k.nut + '</div>' +
+                '<div class="row"><span class="lbl">Examples:</span> ' + k.ex + '</div>' +
+                '<div class="row" style="margin-top:12px;color:#fde68a;">💡 ' + k.fact + '</div>';
+            visited[id] = true;
+            document.querySelectorAll('.tile').forEach(function (t) { t.classList.remove('active'); });
+            document.getElementById('tile-' + id).classList.add('active');
+            renderTiles(); document.getElementById('tile-' + id).classList.add('active');
+            updateProg();
+        }
+        function updateProg() {
+            var c = Object.keys(visited).length;
+            document.getElementById('fill').style.width = (c / K.length * 100) + '%';
+            document.getElementById('prog').textContent = c + ' / ' + K.length + ' kingdoms explored';
+            document.getElementById('done').style.display = (c === K.length) ? 'block' : 'none';
+        }
+        renderTiles(); updateProg();
+    </script>
+</body>
+
+</html>
