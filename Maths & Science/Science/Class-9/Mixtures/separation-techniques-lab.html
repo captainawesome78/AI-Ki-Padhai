@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Separation Techniques Lab | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #2e1065, #6d28d9); color: #ede9fe; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #ddd6fe; text-decoration: none; border: 1px solid rgba(221,214,254,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(221,214,254,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { display: flex; gap: 20px; padding: 20px; max-width: 1050px; margin: 0 auto; flex-wrap: wrap; }
+        .stage { flex: 1 1 340px; min-width: 300px; background: rgba(255,255,255,0.05); border-radius: 18px; padding: 16px; text-align: center; }
+        .stage svg { width: 100%; max-width: 320px; height: auto; background: rgba(0,0,0,0.15); border-radius: 12px; }
+        .controls { flex: 1 1 320px; min-width: 300px; }
+        .card { background: rgba(255,255,255,0.06); border-radius: 16px; padding: 16px 18px; margin-bottom: 14px; }
+        .card h3 { color: #fff; font-size: 14px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .05em; }
+        .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+        .chip { background: rgba(255,255,255,0.1); border: 2px solid transparent; color: #ede9fe; padding: 8px 12px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 600; }
+        .chip.active { border-color: #a78bfa; background: rgba(167,139,250,0.2); }
+        button.run { width: 100%; background: #8b5cf6; color: #1e1046; border: none; padding: 13px; border-radius: 12px; font-size: 16px; font-weight: 800; cursor: pointer; }
+        button.run:hover { background: #a78bfa; }
+        button.reset { width: 100%; background: transparent; color: #ddd6fe; border: 1px solid rgba(221,214,254,0.4); padding: 9px; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 8px; }
+        .result { background: rgba(0,0,0,0.25); border-radius: 12px; padding: 16px; font-size: 15px; line-height: 1.6; }
+        .result .rhead { font-weight: 800; font-size: 16px; margin-bottom: 6px; color: #fff; }
+        .obs { font-size: 13px; color: #c4b5fd; text-align: center; margin-top: 8px; min-height: 18px; }
+        .ok { color: #6ee7b7; } .no { color: #fca5a5; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="separation-solids.html">← Back to Lesson</a>
+        <div class="title">🧪 Separation Techniques Lab</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="stage">
+            <svg id="scene" viewBox="0 0 320 300" xmlns="http://www.w3.org/2000/svg"></svg>
+            <div class="obs" id="obs">Ek mixture aur method chuno, phir "Separate" dabao.</div>
+        </div>
+        <div class="controls">
+            <div class="card">
+                <h3>1. Mixture chuno</h3>
+                <div class="chips" id="mix-chips">
+                    <div class="chip active" data-mix="sandwater">🏖️ Ret + Paani</div>
+                    <div class="chip" data-mix="saltwater">🧂 Namak + Paani</div>
+                    <div class="chip" data-mix="sandiron">🧲 Ret + Loha</div>
+                    <div class="chip" data-mix="oilwater">🛢️ Tel + Paani</div>
+                </div>
+            </div>
+            <div class="card">
+                <h3>2. Method chuno</h3>
+                <div class="chips" id="method-chips">
+                    <div class="chip active" data-method="filtration">🫗 Filtration</div>
+                    <div class="chip" data-method="evaporation">☀️ Evaporation</div>
+                    <div class="chip" data-method="magnet">🧲 Magnetic</div>
+                    <div class="chip" data-method="funnel">🧴 Sep. Funnel</div>
+                </div>
+            </div>
+            <div class="card">
+                <button class="run" onclick="run()">▶ Separate!</button>
+                <button class="reset" onclick="resetLab()">↺ Reset</button>
+            </div>
+            <div class="card">
+                <div class="result" id="result"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var MIX = {
+            sandwater: { name: "Ret + Paani", correct: "filtration", solidColor: "#c2a36b", liquid: "#38bdf8", insoluble: true, note: "Ret paani mein ghulta nahi (insoluble). Filter paper ret ko rok leta hai, saaf paani neeche nikal jaata hai." },
+            saltwater: { name: "Namak + Paani", correct: "evaporation", solidColor: "#e5e7eb", liquid: "#38bdf8", dissolved: true, note: "Namak paani mein ghul gaya (dissolved). Paani ko uda do (evaporate), namak crystals peeche reh jaate hain." },
+            sandiron:  { name: "Ret + Loha", correct: "magnet", solidColor: "#c2a36b", iron: true, note: "Loha (iron) magnetic hai. Magnet loha kheench leta hai, ret peeche reh jaati hai." },
+            oilwater:  { name: "Tel + Paani", correct: "funnel", top: "#fde047", bottom: "#38bdf8", immiscible: true, note: "Tel aur paani milte nahi (immiscible), do layers banate hain. Separating funnel ka tap khol kar neeche wala paani nikaal lo." }
+        };
+        var METHOD_NAME = { filtration: "Filtration", evaporation: "Evaporation", magnet: "Magnetic Separation", funnel: "Separating Funnel" };
+        var curMix = "sandwater", curMethod = "filtration", animId = null;
+
+        function isCorrect() { return MIX[curMix].correct === curMethod; }
+
+        function scene(p) {
+            var ok = isCorrect(), m = MIX[curMix], s = '';
+            if (curMethod === 'filtration') {
+                s += '<path d="M120 40 L200 40 L172 110 L160 150 L148 110 Z" fill="none" stroke="#ddd6fe" stroke-width="3"/>';
+                s += '<line x1="130" y1="58" x2="190" y2="58" stroke="#c4b5fd" stroke-width="2" stroke-dasharray="3"/>';
+                s += '<rect x="128" y="200" width="64" height="70" rx="4" fill="none" stroke="#ddd6fe" stroke-width="3"/>';
+                var fill = Math.min(p, 1) * 55;
+                s += '<rect x="131" y="' + (267 - fill) + '" width="58" height="' + fill + '" fill="' + (ok ? '#38bdf8' : '#7dd3fc') + '" opacity="' + (ok ? '0.6' : '0.4') + '"/>';
+                if (m.insoluble) for (var i = 0; i < 6; i++) s += '<circle cx="' + (145 + (i % 3) * 12) + '" cy="' + (95 + Math.floor(i / 3) * 8) + '" r="3" fill="' + m.solidColor + '"/>';
+                for (var d = 0; d < 3; d++) { var dy = 150 + ((p * 120 + d * 30) % 60); s += '<circle cx="160" cy="' + dy + '" r="2.5" fill="' + (ok ? '#38bdf8' : '#7dd3fc') + '"/>'; }
+                s += '<text x="160" y="290" text-anchor="middle" font-size="10" fill="#c4b5fd">' + (ok ? 'saaf paani neeche' : 'sab kuch nikal gaya') + '</text>';
+            } else if (curMethod === 'evaporation') {
+                s += '<path d="M100 190 Q160 220 220 190 L210 160 L110 160 Z" fill="none" stroke="#ddd6fe" stroke-width="3"/>';
+                var lv = (1 - Math.min(p, 1)) * 26;
+                s += '<path d="M112 ' + (185 - lv) + ' Q160 ' + (195 - lv) + ' 208 ' + (185 - lv) + ' L206 185 Q160 200 114 185 Z" fill="#38bdf8" opacity="0.6"/>';
+                s += '<text x="160" y="235" text-anchor="middle" font-size="18">🔥</text>';
+                for (var v = 0; v < 4; v++) { var vy = 150 - ((p * 100 + v * 25) % 90); s += '<text x="' + (135 + v * 18) + '" y="' + vy + '" font-size="13">💨</text>'; }
+                if (p > 0.6 && m.dissolved) for (var c = 0; c < 5; c++) s += '<rect x="' + (135 + c * 10) + '" y="182" width="6" height="5" fill="#f1f5f9"/>';
+                s += '<text x="160" y="270" text-anchor="middle" font-size="10" fill="#c4b5fd">' + (ok ? 'paani uda, namak crystals bache' : (m.insoluble ? 'paani uda, ret bachi (waste!)' : 'kuch khaas nahi hua')) + '</text>';
+            } else if (curMethod === 'magnet') {
+                s += '<path d="M90 200 Q160 230 230 200 L222 175 L98 175 Z" fill="none" stroke="#ddd6fe" stroke-width="3"/>';
+                var my = 60 + Math.min(p, 1) * 70;
+                s += '<rect x="140" y="' + my + '" width="40" height="18" rx="3" fill="#dc2626"/><text x="160" y="' + (my + 13) + '" text-anchor="middle" font-size="10" fill="#fff">N  S</text>';
+                for (var g = 0; g < 6; g++) {
+                    var bx = 115 + g * 15, baseY = 190;
+                    if (m.iron && g % 2 === 0) { var jy = baseY - Math.min(p, 1) * (baseY - my - 20); s += '<circle cx="' + bx + '" cy="' + jy + '" r="3.5" fill="#334155"/>'; }
+                    else s += '<circle cx="' + bx + '" cy="' + baseY + '" r="3.5" fill="' + (m.solidColor || '#c2a36b') + '"/>';
+                }
+                s += '<text x="160" y="255" text-anchor="middle" font-size="10" fill="#c4b5fd">' + (ok ? 'loha magnet se chipak gaya!' : 'kuch magnet se nahi chipka') + '</text>';
+            } else if (curMethod === 'funnel') {
+                s += '<path d="M120 30 L200 30 L176 150 L160 210 L144 150 Z" fill="none" stroke="#ddd6fe" stroke-width="3"/>';
+                s += '<rect x="154" y="205" width="12" height="18" fill="#ddd6fe"/>';
+                if (m.immiscible) {
+                    var drained = Math.min(p, 1);
+                    s += '<path d="M132 60 L188 60 L178 110 L142 110 Z" fill="' + m.top + '" opacity="0.8"/>';
+                    var bh = (1 - drained) * 40;
+                    if (bh > 1) s += '<path d="M142 ' + (150 - bh) + ' L178 ' + (150 - bh) + ' L168 150 L152 150 Z" fill="' + m.bottom + '" opacity="0.7"/>';
+                    for (var w = 0; w < 3 && drained > 0.1; w++) { var wy = 220 + ((p * 80 + w * 20) % 40); s += '<circle cx="160" cy="' + wy + '" r="2.5" fill="' + m.bottom + '"/>'; }
+                    s += '<text x="160" y="280" text-anchor="middle" font-size="10" fill="#c4b5fd">tel upar, paani neeche nikla</text>';
+                } else {
+                    s += '<path d="M134 60 L186 60 L160 200 Z" fill="' + (m.liquid || '#38bdf8') + '" opacity="0.6"/>';
+                    s += '<text x="160" y="270" text-anchor="middle" font-size="10" fill="#c4b5fd">ek hi layer - alag nahi hua</text>';
+                }
+            }
+            document.getElementById('scene').innerHTML = s;
+        }
+
+        function run() {
+            if (animId) cancelAnimationFrame(animId);
+            document.getElementById('obs').textContent = METHOD_NAME[curMethod] + ' chal raha hai...';
+            document.getElementById('result').innerHTML = '';
+            var t0 = null, dur = 2200;
+            function step(ts) { if (!t0) t0 = ts; var p = Math.min((ts - t0) / dur, 1); scene(p); if (p < 1) animId = requestAnimationFrame(step); else finish(); }
+            animId = requestAnimationFrame(step);
+        }
+        function finish() {
+            var m = MIX[curMix], ok = isCorrect();
+            document.getElementById('obs').textContent = ok ? '✅ Separation successful!' : '❌ Ye method theek nahi tha.';
+            var r = document.getElementById('result');
+            if (ok) r.innerHTML = '<div class="rhead ok">✅ Sahi method!</div>' + m.note;
+            else r.innerHTML = '<div class="rhead no">❌ Ye method ' + m.name + ' ke liye theek nahi</div>Sahi method: <b>' +
+                METHOD_NAME[m.correct] + '</b>. ' + m.note + ' <br><br>Us method ko chunkar dobara try karo!';
+        }
+        function resetLab() { if (animId) cancelAnimationFrame(animId); scene(0); document.getElementById('obs').textContent = '"Separate" dabao aur dekho kya hota hai.'; document.getElementById('result').innerHTML = '<div class="rhead">Mixture: ' + MIX[curMix].name + '</div>Method chuno aur separate karo. Sahi method dhundho!'; }
+
+        document.querySelectorAll('#mix-chips .chip').forEach(function (c) { c.onclick = function () { document.querySelectorAll('#mix-chips .chip').forEach(function (x) { x.classList.remove('active'); }); c.classList.add('active'); curMix = c.getAttribute('data-mix'); resetLab(); }; });
+        document.querySelectorAll('#method-chips .chip').forEach(function (c) { c.onclick = function () { document.querySelectorAll('#method-chips .chip').forEach(function (x) { x.classList.remove('active'); }); c.classList.add('active'); curMethod = c.getAttribute('data-method'); resetLab(); }; });
+        resetLab();
+    </script>
+</body>
+
+</html>

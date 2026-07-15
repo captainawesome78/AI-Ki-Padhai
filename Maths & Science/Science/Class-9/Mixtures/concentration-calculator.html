@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Concentration Calculator | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #451a03, #b45309); color: #fef3c7; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #fde68a; text-decoration: none; border: 1px solid rgba(253,230,138,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(253,230,138,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 680px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,0.07); border-radius: 16px; padding: 20px; margin-bottom: 16px; }
+        .card h3 { color: #fff; font-size: 14px; margin-bottom: 14px; text-transform: uppercase; letter-spacing: .05em; }
+        .slider-row { margin-bottom: 16px; }
+        .slider-row label { display: flex; justify-content: space-between; font-size: 15px; margin-bottom: 6px; }
+        .slider-row label b { color: #fbbf24; font-size: 17px; }
+        input[type=range] { width: 100%; accent-color: #f59e0b; }
+        .out { display: flex; gap: 12px; flex-wrap: wrap; }
+        .outbox { flex: 1 1 150px; background: rgba(0,0,0,0.25); border-radius: 12px; padding: 16px; text-align: center; }
+        .outbox .big { font-size: 30px; font-weight: 800; color: #fff; }
+        .outbox .lbl { font-size: 12px; color: #fcd34d; margin-top: 4px; }
+        .steps { background: rgba(0,0,0,0.2); border-radius: 12px; padding: 16px; font-size: 14.5px; line-height: 1.8; margin-top: 6px; }
+        .steps .s { color: #fde68a; }
+        .bar { height: 26px; border-radius: 8px; overflow: hidden; display: flex; margin-top: 6px; font-size: 12px; font-weight: 700; }
+        .bar .solute { background: #f59e0b; color: #451a03; display: flex; align-items: center; justify-content: center; }
+        .bar .solvent { background: #0ea5e9; color: #04222b; display: flex; align-items: center; justify-content: center; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="concentration.html">← Back to Lesson</a>
+        <div class="title">🧮 Concentration Calculator</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <h3>Maatra set karo (sliders)</h3>
+            <div class="slider-row">
+                <label>Solute (namak/cheeni) ki mass <b><span id="soluteV">10</span> g</b></label>
+                <input type="range" id="solute" min="1" max="60" value="10" oninput="calc()">
+            </div>
+            <div class="slider-row">
+                <label>Solvent (paani) ki mass <b><span id="solventV">40</span> g</b></label>
+                <input type="range" id="solvent" min="10" max="200" value="40" oninput="calc()">
+            </div>
+            <div class="slider-row">
+                <label>Solution ka volume <b><span id="volV">50</span> mL</b></label>
+                <input type="range" id="vol" min="10" max="250" value="50" oninput="calc()">
+            </div>
+            <div class="bar" id="bar"></div>
+        </div>
+        <div class="card">
+            <h3>Live Concentration</h3>
+            <div class="out">
+                <div class="outbox"><div class="big" id="massPct">-</div><div class="lbl">Mass by Mass %</div></div>
+                <div class="outbox"><div class="big" id="mvPct">-</div><div class="lbl">Mass by Volume %</div></div>
+            </div>
+        </div>
+        <div class="card">
+            <h3>Steps (kaise nikla)</h3>
+            <div class="steps" id="steps"></div>
+        </div>
+    </div>
+
+    <script>
+        function calc() {
+            var solute = +document.getElementById('solute').value;
+            var solvent = +document.getElementById('solvent').value;
+            var vol = +document.getElementById('vol').value;
+            document.getElementById('soluteV').textContent = solute;
+            document.getElementById('solventV').textContent = solvent;
+            document.getElementById('volV').textContent = vol;
+
+            var soln = solute + solvent;
+            var massPct = (solute / soln) * 100;
+            var mvPct = (solute / vol) * 100;
+
+            document.getElementById('massPct').textContent = massPct.toFixed(1) + '%';
+            document.getElementById('mvPct').textContent = mvPct.toFixed(1) + '%';
+
+            // proportion bar
+            var sp = Math.round(solute / soln * 100);
+            document.getElementById('bar').innerHTML =
+                '<div class="solute" style="width:' + sp + '%">' + (sp > 12 ? 'solute' : '') + '</div>' +
+                '<div class="solvent" style="width:' + (100 - sp) + '%">' + ((100 - sp) > 12 ? 'solvent' : '') + '</div>';
+
+            document.getElementById('steps').innerHTML =
+                '<b>Mass by Mass %:</b><br>' +
+                '<span class="s">Mass of solution</span> = solute + solvent = ' + solute + ' + ' + solvent + ' = <b>' + soln + ' g</b><br>' +
+                'Mass % = (solute &divide; solution) &times; 100 = (' + solute + ' &divide; ' + soln + ') &times; 100 = <b>' + massPct.toFixed(1) + '%</b>' +
+                '<br><br><b>Mass by Volume %:</b><br>' +
+                'm/v % = (solute in g &divide; volume in mL) &times; 100 = (' + solute + ' &divide; ' + vol + ') &times; 100 = <b>' + mvPct.toFixed(1) + '%</b>';
+        }
+        calc();
+    </script>
+</body>
+
+</html>

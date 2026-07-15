@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Build-an-Atom | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #0c1a2b, #0e7490); color: #e2e8f0; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.35); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #a5f3fc; text-decoration: none; border: 1px solid rgba(165,243,252,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(165,243,252,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { display: flex; gap: 20px; padding: 20px; max-width: 1050px; margin: 0 auto; flex-wrap: wrap; }
+        .stage { flex: 1 1 340px; min-width: 300px; background: rgba(255,255,255,0.05); border-radius: 18px; padding: 16px; text-align: center; }
+        .stage svg { width: 100%; max-width: 340px; height: auto; }
+        .controls { flex: 1 1 320px; min-width: 300px; }
+        .card { background: rgba(255,255,255,0.06); border-radius: 16px; padding: 16px 18px; margin-bottom: 14px; }
+        .counter { display: flex; align-items: center; justify-content: space-between; margin: 10px 0; }
+        .counter .lbl { font-weight: 700; font-size: 15px; }
+        .counter .lbl .dot { display: inline-block; width: 14px; height: 14px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+        .counter .ctrls { display: flex; align-items: center; gap: 10px; }
+        .counter button { width: 34px; height: 34px; border: none; border-radius: 8px; background: #0e7490; color: #fff; font-size: 20px; font-weight: 800; cursor: pointer; }
+        .counter button:hover { background: #0891b2; }
+        .counter .val { min-width: 30px; text-align: center; font-size: 20px; font-weight: 800; color: #fff; }
+        .readout { background: rgba(0,0,0,0.25); border-radius: 12px; padding: 16px; }
+        .readout .el { font-size: 30px; font-weight: 800; color: #fff; text-align: center; }
+        .readout .sub { text-align: center; color: #94a3b8; margin-bottom: 10px; }
+        .readout .row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px dashed rgba(255,255,255,0.1); font-size: 15px; }
+        .readout .row b { color: #67e8f9; }
+        .verdict { margin-top: 10px; padding: 10px; border-radius: 8px; font-weight: 800; text-align: center; }
+        .v-neutral { background: #052e2b; color: #6ee7b7; } .v-ion { background: #422006; color: #fcd34d; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="atomic-number-mass.html">← Back to Lesson</a>
+        <div class="title">🔧 Build-an-Atom</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="stage">
+            <svg id="scene" viewBox="0 0 340 300" xmlns="http://www.w3.org/2000/svg"></svg>
+            <div style="font-size:13px;color:#94a3b8;margin-top:6px;">Laal = proton, Grey = neutron, Neela = electron</div>
+        </div>
+        <div class="controls">
+            <div class="card">
+                <div class="counter">
+                    <div class="lbl"><span class="dot" style="background:#ef4444"></span>Protons</div>
+                    <div class="ctrls"><button onclick="chg('p',-1)">−</button><span class="val" id="pV">6</span><button onclick="chg('p',1)">+</button></div>
+                </div>
+                <div class="counter">
+                    <div class="lbl"><span class="dot" style="background:#94a3b8"></span>Neutrons</div>
+                    <div class="ctrls"><button onclick="chg('n',-1)">−</button><span class="val" id="nV">6</span><button onclick="chg('n',1)">+</button></div>
+                </div>
+                <div class="counter">
+                    <div class="lbl"><span class="dot" style="background:#3b82f6"></span>Electrons</div>
+                    <div class="ctrls"><button onclick="chg('e',-1)">−</button><span class="val" id="eV">6</span><button onclick="chg('e',1)">+</button></div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="readout" id="readout"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var NAMES = ["-", "Hydrogen (H)", "Helium (He)", "Lithium (Li)", "Beryllium (Be)", "Boron (B)", "Carbon (C)",
+            "Nitrogen (N)", "Oxygen (O)", "Fluorine (F)", "Neon (Ne)", "Sodium (Na)", "Magnesium (Mg)", "Aluminium (Al)",
+            "Silicon (Si)", "Phosphorus (P)", "Sulphur (S)", "Chlorine (Cl)", "Argon (Ar)", "Potassium (K)", "Calcium (Ca)"];
+        var p = 6, n = 6, e = 6;
+
+        function config(z) { var order = [2, 8, 8, 2], rem = z, out = []; for (var i = 0; i < order.length && rem > 0; i++) { var c = Math.min(order[i], rem); out.push(c); rem -= c; } return out; }
+
+        function chg(which, d) {
+            if (which === 'p') p = Math.max(0, Math.min(20, p + d));
+            if (which === 'n') n = Math.max(0, Math.min(24, n + d));
+            if (which === 'e') e = Math.max(0, Math.min(20, e + d));
+            render();
+        }
+
+        function render() {
+            document.getElementById('pV').textContent = p;
+            document.getElementById('nV').textContent = n;
+            document.getElementById('eV').textContent = e;
+            // scene
+            var s = '', cx = 170, cy = 150;
+            // nucleus clump
+            var tot = p + n, R = 6 + Math.min(tot, 44) * 1.1;
+            var idx = 0;
+            for (var i = 0; i < tot; i++) {
+                var ang = i * 2.399, rr = R * Math.sqrt(i / Math.max(tot, 1));
+                var x = cx + rr * Math.cos(ang), y = cy + rr * Math.sin(ang);
+                s += '<circle cx="' + x.toFixed(0) + '" cy="' + y.toFixed(0) + '" r="6" fill="' + (i < p ? '#ef4444' : '#94a3b8') + '"/>';
+            }
+            // electron shells
+            var cfg = config(e), baseR = R + 26;
+            cfg.forEach(function (count, si) {
+                var sr = baseR + si * 26;
+                s += '<circle cx="' + cx + '" cy="' + cy + '" r="' + sr + '" fill="none" stroke="#475569" stroke-width="1.2"/>';
+                for (var k = 0; k < count; k++) {
+                    var a = (k / count) * Math.PI * 2 - Math.PI / 2;
+                    s += '<circle cx="' + (cx + sr * Math.cos(a)).toFixed(0) + '" cy="' + (cy + sr * Math.sin(a)).toFixed(0) + '" r="5" fill="#3b82f6"/>';
+                }
+            });
+            document.getElementById('scene').innerHTML = s;
+            // readout
+            var mass = p + n, charge = p - e;
+            var elName = (p >= 1 && p <= 20) ? NAMES[p] : (p === 0 ? "Koi element nahi" : "Element (Z>20)");
+            var chargeStr = charge === 0 ? "0 (neutral)" : (charge > 0 ? "+" + charge : "" + charge);
+            var ion = charge === 0 ? "Neutral atom" : (charge > 0 ? "Positive ion (cation)" : "Negative ion (anion)");
+            var out = '<div class="el">' + elName + '</div>' +
+                '<div class="sub">Atomic Number Z = ' + p + '</div>' +
+                '<div class="row"><span>Mass Number (A = p+n)</span><b>' + mass + '</b></div>' +
+                '<div class="row"><span>Charge (p − e)</span><b>' + chargeStr + '</b></div>' +
+                '<div class="row"><span>Config (K,L,M,N)</span><b>' + (e > 0 ? config(e).join(', ') : '-') + '</b></div>' +
+                '<div class="verdict ' + (charge === 0 ? 'v-neutral' : 'v-ion') + '">' +
+                (charge === 0 ? '⚖️ ' + ion + ' (protons = electrons)' : '⚡ ' + ion + ' (charge ' + chargeStr + ')') + '</div>';
+            document.getElementById('readout').innerHTML = out;
+        }
+        render();
+    </script>
+</body>
+
+</html>

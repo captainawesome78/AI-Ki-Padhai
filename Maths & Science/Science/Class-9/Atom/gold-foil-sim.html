@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rutherford Gold-Foil Simulation | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #451a03, #92400e); color: #fef3c7; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #fde68a; text-decoration: none; border: 1px solid rgba(253,230,138,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(253,230,138,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 780px; margin: 0 auto; padding: 20px; }
+        .stage { background: #0a0500; border-radius: 16px; padding: 10px; text-align: center; }
+        canvas { width: 100%; height: auto; border-radius: 10px; background: #0a0500; }
+        .btns { display: flex; gap: 10px; margin: 14px 0; }
+        .btns button { flex: 1; border: none; padding: 13px; border-radius: 12px; font-size: 15px; font-weight: 800; cursor: pointer; }
+        .fire { background: #f59e0b; color: #451a03; } .fire:hover { background: #fbbf24; }
+        .reset { background: transparent; color: #fde68a; border: 1px solid rgba(253,230,138,0.4); }
+        .stats { display: flex; gap: 10px; flex-wrap: wrap; }
+        .stat { flex: 1 1 120px; background: rgba(255,255,255,0.07); border-radius: 12px; padding: 14px; text-align: center; }
+        .stat .n { font-size: 26px; font-weight: 800; color: #fff; }
+        .stat .l { font-size: 12px; color: #fcd34d; margin-top: 2px; }
+        .info { background: rgba(0,0,0,0.25); border-radius: 12px; padding: 16px; margin-top: 14px; font-size: 14.5px; line-height: 1.6; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="atomic-models.html">← Back to Lesson</a>
+        <div class="title">🎯 Gold-Foil Simulation</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="stage">
+            <canvas id="cv" width="640" height="340"></canvas>
+        </div>
+        <div class="btns">
+            <button class="fire" onclick="fire()">☢️ Fire Alpha Particles</button>
+            <button class="reset" onclick="resetSim()">↺ Reset</button>
+        </div>
+        <div class="stats">
+            <div class="stat"><div class="n" id="s-total">0</div><div class="l">Total fired</div></div>
+            <div class="stat"><div class="n" id="s-straight">0</div><div class="l">Seedhe nikle</div></div>
+            <div class="stat"><div class="n" id="s-defl">0</div><div class="l">Mud gaye</div></div>
+            <div class="stat"><div class="n" id="s-back">0</div><div class="l">Wapas bounce</div></div>
+        </div>
+        <div class="info" id="info">
+            Alpha particles (positive) gold foil par firaao. Dekho: <b>zyada-tar seedhe</b> nikal jaate hain (atom mostly
+            khaali), <b>kuch mud</b> jaate hain (nucleus ke paas se), aur <b>bahut kam wapas</b> bounce hote hain
+            (seedhe nucleus se takraakar). Yahi Rutherford ne dekha tha!
+        </div>
+    </div>
+
+    <script>
+        var cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+        var W = cv.width, H = cv.height, foilX = 340;
+        var nuclei = [];
+        for (var i = 0; i < 7; i++) nuclei.push({ x: foilX + (Math.random() - 0.5) * 8, y: 40 + i * 42 });
+        var particles = [], stats = { total: 0, straight: 0, defl: 0, back: 0 };
+
+        function fire() {
+            for (var i = 0; i < 18; i++) {
+                var y = 30 + Math.random() * (H - 60);
+                // decide fate by nearest nucleus distance
+                var nearest = 999;
+                nuclei.forEach(function (nu) { nearest = Math.min(nearest, Math.abs(nu.y - y)); });
+                var fate = 'straight';
+                if (nearest < 4) fate = 'back';
+                else if (nearest < 22) fate = 'defl';
+                particles.push({ x: 20, y: y, vx: 2.4, vy: 0, fate: fate, done: false, counted: false });
+                stats.total++;
+            }
+            updateStats();
+        }
+
+        function step() {
+            ctx.clearRect(0, 0, W, H);
+            // source
+            ctx.fillStyle = '#fbbf24'; ctx.font = '22px serif'; ctx.fillText('☢️', 2, H / 2 + 8);
+            ctx.fillStyle = '#94a3b8'; ctx.font = '11px sans-serif'; ctx.fillText('alpha source', 4, H / 2 + 28);
+            // foil
+            ctx.fillStyle = 'rgba(251,191,36,0.25)'; ctx.fillRect(foilX - 5, 15, 10, H - 30);
+            ctx.fillStyle = '#a16207'; ctx.font = '11px sans-serif'; ctx.fillText('gold foil', foilX - 22, H - 6);
+            nuclei.forEach(function (nu) { ctx.beginPath(); ctx.arc(nu.x, nu.y, 4, 0, 7); ctx.fillStyle = '#dc2626'; ctx.fill(); });
+            // particles
+            particles.forEach(function (pt) {
+                if (!pt.done) {
+                    // approaching foil
+                    if (pt.fate === 'straight') { pt.x += pt.vx; }
+                    else if (pt.fate === 'defl') {
+                        pt.x += pt.vx;
+                        if (pt.x > foilX) { pt.vy += (pt.y < H / 2 ? -0.12 : 0.12); pt.y += pt.vy; }
+                    } else { // back
+                        if (pt.x < foilX - 6) pt.x += pt.vx;
+                        else { pt.vx = -Math.abs(pt.vx); pt.x += pt.vx; pt.vy += (pt.y < H / 2 ? -0.05 : 0.05); pt.y += pt.vy; }
+                    }
+                    if (pt.x > W + 20 || pt.x < -20 || pt.y < -20 || pt.y > H + 20) {
+                        pt.done = true;
+                        if (!pt.counted) { pt.counted = true; stats[pt.fate === 'straight' ? 'straight' : pt.fate === 'defl' ? 'defl' : 'back']++; updateStats(); }
+                    }
+                }
+                if (!pt.done) {
+                    ctx.beginPath(); ctx.arc(pt.x, pt.y, 3, 0, 7);
+                    ctx.fillStyle = pt.fate === 'back' ? '#ef4444' : pt.fate === 'defl' ? '#f59e0b' : '#22c55e';
+                    ctx.fill();
+                }
+            });
+            if (particles.length > 400) particles = particles.filter(function (x) { return !x.done; });
+            requestAnimationFrame(step);
+        }
+        function updateStats() {
+            document.getElementById('s-total').textContent = stats.total;
+            document.getElementById('s-straight').textContent = stats.straight;
+            document.getElementById('s-defl').textContent = stats.defl;
+            document.getElementById('s-back').textContent = stats.back;
+        }
+        function resetSim() { particles = []; stats = { total: 0, straight: 0, defl: 0, back: 0 }; updateStats(); }
+        step();
+    </script>
+</body>
+
+</html>

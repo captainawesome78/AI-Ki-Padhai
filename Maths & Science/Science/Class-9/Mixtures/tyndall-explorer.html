@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tyndall Effect Explorer | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #0c1a2b, #0e7490); color: #e2e8f0; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.35); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #a5f3fc; text-decoration: none; border: 1px solid rgba(165,243,252,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(165,243,252,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { display: flex; gap: 20px; padding: 20px; max-width: 1050px; margin: 0 auto; flex-wrap: wrap; }
+        .stage { flex: 1 1 360px; min-width: 300px; background: #060d16; border-radius: 18px; padding: 16px; text-align: center; }
+        .stage svg { width: 100%; max-width: 380px; height: auto; }
+        .controls { flex: 1 1 320px; min-width: 300px; }
+        .card { background: rgba(255,255,255,0.06); border-radius: 16px; padding: 16px 18px; margin-bottom: 14px; }
+        .card h3 { color: #fff; font-size: 14px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .05em; }
+        .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+        .chip { background: rgba(255,255,255,0.1); border: 2px solid transparent; color: #e2e8f0; padding: 9px 12px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 600; }
+        .chip.active { border-color: #22d3ee; background: rgba(34,211,238,0.15); }
+        button.act { width: 100%; background: #06b6d4; color: #04222b; border: none; padding: 12px; border-radius: 12px; font-size: 15px; font-weight: 800; cursor: pointer; margin-bottom: 8px; }
+        button.act:hover { background: #22d3ee; }
+        button.act.off { background: rgba(255,255,255,0.12); color: #e2e8f0; }
+        .props { font-size: 14px; line-height: 1.7; }
+        .props .row { display: flex; justify-content: space-between; border-bottom: 1px dashed rgba(255,255,255,0.1); padding: 4px 0; }
+        .props .row b { color: #67e8f9; }
+        .verdict { margin-top: 10px; font-weight: 800; text-align: center; padding: 8px; border-radius: 8px; }
+        .v-yes { background: #052e2b; color: #6ee7b7; } .v-no { background: #1e293b; color: #94a3b8; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="colloids-suspensions.html">← Back to Lesson</a>
+        <div class="title">🔦 Tyndall Effect Explorer</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="stage">
+            <svg id="scene" viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+        <div class="controls">
+            <div class="card">
+                <h3>1. Mixture chuno</h3>
+                <div class="chips" id="type-chips">
+                    <div class="chip active" data-type="solution">💧 True Solution</div>
+                    <div class="chip" data-type="colloid">🥛 Colloid</div>
+                    <div class="chip" data-type="suspension">🌫️ Suspension</div>
+                </div>
+            </div>
+            <div class="card">
+                <button class="act" id="lightBtn" onclick="toggleLight()">🔦 Light ON karo</button>
+                <button class="act off" id="settleBtn" onclick="settleNow()">⏳ Thodi der rakho (settle)</button>
+            </div>
+            <div class="card">
+                <div class="props" id="props"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var T = {
+            solution:   { name: "True Solution", ex: "Namak-paani", liquid: "#7dd3fc", op: 0.35, size: "< 1 nm", settle: "Nahi", filter: "Nahi", tyndall: false, particles: 0 },
+            colloid:    { name: "Colloid", ex: "Doodh / starch solution", liquid: "#e0f2fe", op: 0.85, size: "1 - 1000 nm", settle: "Nahi", filter: "Nahi", tyndall: true, particles: 10 },
+            suspension: { name: "Suspension", ex: "Mitti-paani", liquid: "#a8a29e", op: 0.9, size: "> 1000 nm", settle: "Haan", filter: "Haan", tyndall: true, particles: 14 }
+        };
+        var cur = "solution", lightOn = false, settled = false, seeds = [];
+
+        function makeSeeds() { seeds = []; for (var i = 0; i < 16; i++) seeds.push({ x: 120 + Math.random() * 140, y: 70 + Math.random() * 110, r: 2 + Math.random() * 2 }); }
+        makeSeeds();
+
+        function draw() {
+            var d = T[cur], s = '';
+            // beaker
+            s += '<path d="M110 55 L110 195 Q110 210 125 210 L255 210 Q270 210 270 195 L270 55" fill="none" stroke="#cbd5e1" stroke-width="3"/>';
+            s += '<rect x="112" y="60" width="156" height="148" fill="' + d.liquid + '" opacity="' + d.op + '"/>';
+            // torch
+            s += '<text x="55" y="135" font-size="30">🔦</text>';
+            if (lightOn) {
+                if (d.tyndall) {
+                    // visible scattered beam through liquid
+                    s += '<rect x="112" y="120" width="156" height="18" fill="#fde047" opacity="0.55"/>';
+                    // scatter dots
+                    for (var k = 0; k < 10; k++) s += '<circle cx="' + (120 + k * 15) + '" cy="' + (129 + (k % 2 ? -4 : 5)) + '" r="2.5" fill="#fef9c3"/>';
+                    s += '<text x="190" y="45" text-anchor="middle" font-size="11" fill="#fde047">Beam ka path dikh raha hai! (Tyndall)</text>';
+                } else {
+                    // beam only up to beaker, invisible inside
+                    s += '<rect x="78" y="126" width="34" height="8" fill="#fde047" opacity="0.5"/>';
+                    s += '<text x="190" y="45" text-anchor="middle" font-size="11" fill="#94a3b8">Beam andar dikh nahi raha (no Tyndall)</text>';
+                }
+            }
+            // particles
+            if (d.particles > 0) {
+                for (var i = 0; i < d.particles && i < seeds.length; i++) {
+                    var p = seeds[i];
+                    var py = p.y, r = p.r;
+                    if (cur === 'suspension') { r = p.r + 1.5; if (settled) py = 185 + (i % 5) * 4; }
+                    var col = cur === 'suspension' ? '#78716c' : '#bae6fd';
+                    s += '<circle cx="' + p.x.toFixed(0) + '" cy="' + py.toFixed(0) + '" r="' + r.toFixed(1) + '" fill="' + col + '" opacity="0.9"/>';
+                }
+            }
+            if (cur === 'suspension' && settled) s += '<text x="190" y="230" text-anchor="middle" font-size="11" fill="#a8a29e">Particles neeche baith gaye (settled)</text>';
+            document.getElementById('scene').innerHTML = s;
+
+            // props
+            document.getElementById('props').innerHTML =
+                '<div class="row"><span>Type</span><b>' + d.name + '</b></div>' +
+                '<div class="row"><span>Example</span><b>' + d.ex + '</b></div>' +
+                '<div class="row"><span>Particle size</span><b>' + d.size + '</b></div>' +
+                '<div class="row"><span>Settle hote hain?</span><b>' + d.settle + '</b></div>' +
+                '<div class="row"><span>Filter se rukte?</span><b>' + d.filter + '</b></div>' +
+                '<div class="verdict ' + (d.tyndall ? 'v-yes' : 'v-no') + '">Tyndall effect: ' + (d.tyndall ? '✅ HAAN' : '❌ NAHI') + '</div>';
+        }
+        function toggleLight() {
+            lightOn = !lightOn;
+            document.getElementById('lightBtn').textContent = lightOn ? '🔦 Light OFF karo' : '🔦 Light ON karo';
+            document.getElementById('lightBtn').classList.toggle('off', lightOn);
+            draw();
+        }
+        function settleNow() { if (cur === 'suspension') { settled = true; draw(); } }
+        document.querySelectorAll('#type-chips .chip').forEach(function (c) {
+            c.onclick = function () {
+                document.querySelectorAll('#type-chips .chip').forEach(function (x) { x.classList.remove('active'); });
+                c.classList.add('active'); cur = c.getAttribute('data-type'); settled = false; makeSeeds(); draw();
+            };
+        });
+        draw();
+    </script>
+</body>
+
+</html>

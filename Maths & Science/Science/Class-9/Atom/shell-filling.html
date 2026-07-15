@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Electron Shell-Filling | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #042f2e, #0d9488); color: #ccfbf1; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #99f6e4; text-decoration: none; border: 1px solid rgba(153,246,228,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(153,246,228,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { display: flex; gap: 20px; padding: 20px; max-width: 1000px; margin: 0 auto; flex-wrap: wrap; }
+        .stage { flex: 1 1 320px; min-width: 300px; background: rgba(255,255,255,0.05); border-radius: 18px; padding: 16px; text-align: center; }
+        .stage svg { width: 100%; max-width: 320px; height: auto; }
+        .controls { flex: 1 1 320px; min-width: 300px; }
+        .card { background: rgba(255,255,255,0.06); border-radius: 16px; padding: 18px 20px; margin-bottom: 14px; }
+        .card h3 { color: #fff; font-size: 14px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .05em; }
+        input[type=range] { width: 100%; accent-color: #14b8a6; }
+        .elname { font-size: 30px; font-weight: 800; color: #fff; text-align: center; }
+        .elsub { text-align: center; color: #5eead4; margin-bottom: 6px; }
+        .shells { margin-top: 6px; }
+        .srow { display: flex; align-items: center; gap: 10px; margin: 6px 0; font-size: 14px; }
+        .srow .k { width: 74px; font-weight: 700; }
+        .srow .bar { flex: 1; height: 18px; background: rgba(255,255,255,0.1); border-radius: 6px; overflow: hidden; }
+        .srow .fill { height: 100%; background: linear-gradient(90deg,#2dd4bf,#14b8a6); }
+        .srow .cnt { width: 54px; text-align: right; color: #99f6e4; }
+        .facts { margin-top: 10px; font-size: 15px; line-height: 1.8; }
+        .facts b { color: #5eead4; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="electron-distribution.html">← Back to Lesson</a>
+        <div class="title">⚛️ Electron Shell-Filling</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="stage">
+            <svg id="scene" viewBox="0 0 320 300" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+        <div class="controls">
+            <div class="card">
+                <h3>Element chuno (Z = <span id="zlab">6</span>)</h3>
+                <input type="range" id="z" min="1" max="20" value="6" oninput="render()">
+            </div>
+            <div class="card">
+                <div class="elname" id="elname">Carbon</div>
+                <div class="elsub" id="elsub">Symbol: C &nbsp;|&nbsp; Z = 6</div>
+                <div class="shells" id="shells"></div>
+                <div class="facts" id="facts"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var EL = [["", ""], ["Hydrogen", "H"], ["Helium", "He"], ["Lithium", "Li"], ["Beryllium", "Be"], ["Boron", "B"],
+            ["Carbon", "C"], ["Nitrogen", "N"], ["Oxygen", "O"], ["Fluorine", "F"], ["Neon", "Ne"], ["Sodium", "Na"],
+            ["Magnesium", "Mg"], ["Aluminium", "Al"], ["Silicon", "Si"], ["Phosphorus", "P"], ["Sulphur", "S"],
+            ["Chlorine", "Cl"], ["Argon", "Ar"], ["Potassium", "K"], ["Calcium", "Ca"]];
+        var SHELL = ["K", "L", "M", "N"], CAP = [2, 8, 18, 32];
+        function config(z) { var order = [2, 8, 8, 2], rem = z, out = []; for (var i = 0; i < order.length && rem > 0; i++) { var c = Math.min(order[i], rem); out.push(c); rem -= c; } return out; }
+
+        function render() {
+            var z = +document.getElementById('z').value;
+            document.getElementById('zlab').textContent = z;
+            var cfg = config(z), el = EL[z];
+            document.getElementById('elname').textContent = el[0];
+            document.getElementById('elsub').innerHTML = 'Symbol: ' + el[1] + ' &nbsp;|&nbsp; Z = ' + z;
+            // Bohr diagram
+            var s = '', cx = 160, cy = 150;
+            s += '<circle cx="' + cx + '" cy="' + cy + '" r="18" fill="#dc2626"/>';
+            s += '<text x="' + cx + '" y="' + (cy + 5) + '" text-anchor="middle" font-size="14" fill="#fff" font-weight="700">' + el[1] + '</text>';
+            cfg.forEach(function (count, si) {
+                var r = 40 + si * 32;
+                s += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="#2dd4bf" stroke-width="1.3" opacity="0.6"/>';
+                for (var k = 0; k < count; k++) {
+                    var a = (k / count) * Math.PI * 2 - Math.PI / 2;
+                    s += '<circle cx="' + (cx + r * Math.cos(a)).toFixed(0) + '" cy="' + (cy + r * Math.sin(a)).toFixed(0) + '" r="5" fill="#5eead4"/>';
+                }
+                s += '<text x="' + cx + '" y="' + (cy - r - 4) + '" text-anchor="middle" font-size="10" fill="#99f6e4">' + SHELL[si] + '</text>';
+            });
+            document.getElementById('scene').innerHTML = s;
+            // shell bars
+            var sb = '';
+            cfg.forEach(function (count, si) {
+                sb += '<div class="srow"><span class="k">' + SHELL[si] + ' (max ' + CAP[si] + ')</span>' +
+                    '<span class="bar"><span class="fill" style="width:' + (count / CAP[si] * 100) + '%"></span></span>' +
+                    '<span class="cnt">' + count + ' e⁻</span></div>';
+            });
+            document.getElementById('shells').innerHTML = sb;
+            // facts
+            var ve = cfg[cfg.length - 1];
+            var valency = (z === 2 || ve === 8) ? 0 : (ve <= 4 ? ve : 8 - ve);
+            document.getElementById('facts').innerHTML =
+                'Electron config: <b>' + cfg.join(', ') + '</b><br>' +
+                'Valence electrons: <b>' + ve + '</b><br>' +
+                'Valency: <b>' + valency + '</b>' + (valency === 0 ? ' (stable / noble gas jaisa)' : '');
+        }
+        render();
+    </script>
+</body>
+
+</html>

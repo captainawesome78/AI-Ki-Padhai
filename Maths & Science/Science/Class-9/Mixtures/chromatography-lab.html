@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Paper Chromatography Lab | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #042f2e, #0d9488); color: #ccfbf1; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #99f6e4; text-decoration: none; border: 1px solid rgba(153,246,228,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(153,246,228,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { display: flex; gap: 20px; padding: 20px; max-width: 980px; margin: 0 auto; flex-wrap: wrap; }
+        .stage { flex: 1 1 300px; min-width: 280px; background: rgba(255,255,255,0.05); border-radius: 18px; padding: 16px; text-align: center; }
+        .stage svg { width: 100%; max-width: 280px; height: auto; }
+        .controls { flex: 1 1 320px; min-width: 300px; }
+        .card { background: rgba(255,255,255,0.06); border-radius: 16px; padding: 18px 20px; margin-bottom: 14px; }
+        button.run { width: 100%; background: #14b8a6; color: #04241c; border: none; padding: 13px; border-radius: 12px; font-size: 16px; font-weight: 800; cursor: pointer; }
+        button.run:hover { background: #2dd4bf; }
+        button.reset { width: 100%; background: transparent; color: #99f6e4; border: 1px solid rgba(153,246,228,0.4); padding: 9px; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 8px; }
+        .info { font-size: 15px; line-height: 1.6; }
+        .info h3 { color: #fff; margin-bottom: 8px; }
+        .obs { font-size: 13px; color: #5eead4; text-align: center; margin-top: 8px; min-height: 18px; }
+        .legend { margin-top: 10px; font-size: 13px; }
+        .legend div { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+        .legend .sw { width: 16px; height: 16px; border-radius: 4px; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="separation-liquids.html">← Back to Lesson</a>
+        <div class="title">🎨 Paper Chromatography Lab</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="stage">
+            <svg id="scene" viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg"></svg>
+            <div class="obs" id="obs">"Start" dabao - solvent upar chadhega aur ink ke rang alag honge.</div>
+        </div>
+        <div class="controls">
+            <div class="card">
+                <button class="run" onclick="run()">▶ Start Experiment</button>
+                <button class="reset" onclick="resetLab()">↺ Reset</button>
+            </div>
+            <div class="card">
+                <div class="info" id="info">
+                    <h3>🎨 Kaali ink asal mein kai rangon ka mixture hai!</h3>
+                    Filter paper ka nichla sira paani (solvent) mein hai. Solvent upar chadhega aur apne saath ink ke
+                    components ko le jaayega. Jo component <b>zyada soluble</b> hai wo <b>upar</b> tak jaayega, jo kam
+                    soluble hai wo <b>neeche</b> reh jaayega - saare rang alag dikhne lagenge!
+                    <div class="legend" id="legend"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ink components: color, name, Rf (kitna upar jaata hai; zyada = zyada soluble)
+        var COMP = [
+            { color: "#eab308", name: "Peela (Yellow)", rf: 0.92 },
+            { color: "#ec4899", name: "Gulaabi (Pink)", rf: 0.72 },
+            { color: "#3b82f6", name: "Neela (Blue)", rf: 0.48 },
+            { color: "#1e293b", name: "Kaala/Slate", rf: 0.22 }
+        ];
+        var dotY = 250, topY = 45, rise = dotY - topY;   // paper travel region
+        var animId = null;
+
+        function draw(p) {
+            var s = '';
+            // beaker
+            s += '<rect x="30" y="255" width="140" height="40" rx="6" fill="none" stroke="#99f6e4" stroke-width="3"/>';
+            s += '<rect x="33" y="262" width="134" height="30" fill="#5eead4" opacity="0.35"/>';
+            // paper strip
+            s += '<rect x="80" y="20" width="40" height="250" rx="4" fill="#f8fafc" opacity="0.9"/>';
+            // solvent front rising
+            var frontY = dotY - rise * p;
+            s += '<rect x="80" y="' + frontY.toFixed(0) + '" width="40" height="' + (dotY - frontY).toFixed(0) + '" fill="#a5f3fc" opacity="0.25"/>';
+            s += '<line x1="80" y1="' + frontY.toFixed(0) + '" x2="120" y2="' + frontY.toFixed(0) + '" stroke="#22d3ee" stroke-width="1.5" stroke-dasharray="3"/>';
+            if (p > 0.05) s += '<text x="126" y="' + (frontY + 4).toFixed(0) + '" font-size="8" fill="#22d3ee">solvent front</text>';
+            // ink components: each rises rf * (rise*p)
+            COMP.forEach(function (c) {
+                var y = dotY - c.rf * rise * p;
+                var h = p < 0.05 ? 8 : 7;
+                s += '<rect x="82" y="' + (y - h / 2).toFixed(0) + '" width="36" height="' + h + '" rx="3" fill="' + c.color + '" opacity="0.9"/>';
+            });
+            if (p < 0.05) s += '<text x="100" y="270" text-anchor="middle" font-size="8" fill="#334155">ink dot</text>';
+            document.getElementById('scene').innerHTML = s;
+        }
+
+        function run() {
+            if (animId) cancelAnimationFrame(animId);
+            document.getElementById('obs').textContent = 'Solvent upar chadh raha hai...';
+            var t0 = null, dur = 3200;
+            function step(ts) { if (!t0) t0 = ts; var p = Math.min((ts - t0) / dur, 1); draw(p); if (p < 1) animId = requestAnimationFrame(step); else finish(); }
+            animId = requestAnimationFrame(step);
+        }
+        function finish() {
+            document.getElementById('obs').textContent = '✅ Ho gaya! Kaali ink 4 rangon mein separate ho gayi.';
+            var lg = COMP.slice().sort(function (a, b) { return b.rf - a.rf; }).map(function (c) {
+                return '<div><span class="sw" style="background:' + c.color + '"></span>' + c.name + '</div>';
+            }).join('');
+            document.getElementById('legend').innerHTML = '<b>Separate hue rang (upar se neeche):</b>' + lg;
+        }
+        function resetLab() { if (animId) cancelAnimationFrame(animId); draw(0); document.getElementById('obs').textContent = '"Start" dabao - solvent upar chadhega aur ink ke rang alag honge.'; document.getElementById('legend').innerHTML = ''; }
+        resetLab();
+    </script>
+</body>
+
+</html>

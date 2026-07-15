@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Bohr Atom Model | AIkiPadhai</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="../sci-3d.js"></script>
+</head>
+
+<body>
+    <script>
+        // Z: [name, symbol, neutrons]
+        var EL = {
+            1: ["Hydrogen", "H", 0], 2: ["Helium", "He", 2], 3: ["Lithium", "Li", 4], 4: ["Beryllium", "Be", 5],
+            5: ["Boron", "B", 6], 6: ["Carbon", "C", 6], 7: ["Nitrogen", "N", 7], 8: ["Oxygen", "O", 8],
+            9: ["Fluorine", "F", 10], 10: ["Neon", "Ne", 10], 11: ["Sodium", "Na", 12], 12: ["Magnesium", "Mg", 12],
+            13: ["Aluminium", "Al", 14], 14: ["Silicon", "Si", 14], 15: ["Phosphorus", "P", 16], 16: ["Sulphur", "S", 16],
+            17: ["Chlorine", "Cl", 18], 18: ["Argon", "Ar", 22], 19: ["Potassium", "K", 20], 20: ["Calcium", "Ca", 20]
+        };
+        function configOf(z) { var order = [2, 8, 8, 2], rem = z, out = []; for (var i = 0; i < order.length && rem > 0; i++) { var c = Math.min(order[i], rem); out.push(c); rem -= c; } return out; }
+
+        function buildAtom(z, ctx) {
+            var T = ctx.THREE, M = ctx.model;
+            if (M.atomGroup) ctx.pivot.remove(M.atomGroup);
+            M.atomGroup = new T.Group(); ctx.pivot.add(M.atomGroup);
+            M.electrons = [];
+            var el = EL[z], neutrons = el[2], cfg = configOf(z);
+            // nucleus: clump of protons (red) + neutrons (grey)
+            var nuc = new T.Group();
+            var total = z + neutrons, R = 0.35 + Math.min(total, 40) * 0.02;
+            for (var i = 0; i < total; i++) {
+                var isP = i < z;
+                var s = new T.Mesh(new T.SphereGeometry(0.32, 10, 10), ctx.mat(isP ? 0xef4444 : 0x94a3b8));
+                var u = Math.random() * Math.PI * 2, v = Math.acos(2 * Math.random() - 1), rr = R * Math.cbrt(Math.random());
+                s.position.set(rr * Math.sin(v) * Math.cos(u), rr * Math.sin(v) * Math.sin(u), rr * Math.cos(v));
+                nuc.add(s);
+            }
+            ctx.addPart(nuc, 'nucleus'); M.atomGroup.add(nuc);
+            // shells + electrons
+            var baseR = R + 1.6;
+            cfg.forEach(function (count, si) {
+                var shellR = baseR + si * 1.7;
+                var ring = new T.Mesh(new T.TorusGeometry(shellR, 0.03, 8, 64), ctx.mat(0x94a3b8, { transparent: true, opacity: 0.5 }));
+                ring.rotation.x = Math.PI / 2; M.atomGroup.add(ring);
+                for (var e = 0; e < count; e++) {
+                    var em = new T.Mesh(new T.SphereGeometry(0.22, 12, 12), ctx.mat(0x3b82f6));
+                    var tilt = (e / count) * Math.PI; // spread orbits in 3D
+                    var elec = { mesh: em, r: shellR, a: (e / count) * Math.PI * 2, speed: 0.9 - si * 0.15, tilt: tilt };
+                    M.atomGroup.add(em);
+                    ctx.addPart(em, 'electron');
+                    M.electrons.push(elec);
+                }
+            });
+            // update panel with element info
+            var nm = document.getElementById('s3-name'), ds = document.getElementById('s3-desc'), nk = document.getElementById('s3-nick');
+            if (nm) { nm.textContent = el[0] + ' (' + el[1] + ')'; }
+            if (nk) { nk.textContent = 'Z = ' + z; nk.style.display = 'inline-block'; }
+            if (ds) { ds.classList.remove('ph'); ds.innerHTML = 'Protons: <b>' + z + '</b> &nbsp; Neutrons: <b>' + neutrons + '</b> &nbsp; Electrons: <b>' + z + '</b><br>Config (K,L,M,N): <b>' + cfg.join(', ') + '</b><br>Valence electrons: <b>' + cfg[cfg.length - 1] + '</b><br><span style="color:#94a3b8">Nucleus (laal=proton, grey=neutron) ya electron par tap karo.</span>'; }
+        }
+
+        Sci3D({
+            title: "🧊 3D Bohr Atom",
+            back: { href: "atomic-models.html", label: "Back to Lesson" },
+            intro: { name: "3D Bohr Atom", desc: "Neeche 'Element' slider se koi element chuno (H se Ca). Atom ko drag karke ghumao aur nucleus ya electrons par tap karo." },
+            camZ: 16, pickHint: true,
+            data: {
+                nucleus: { emoji: "☀️", name: "Nucleus", nick: "Center", desc: "Beech mein protons (laal, +) aur neutrons (grey, 0). Yahan atom ka poora mass hota hai. Ye bahut chhota par bhaari hai." },
+                electron: { emoji: "🔵", name: "Electron", nick: "Negative", desc: "Neel-e (blue) electrons shells (K, L, M...) mein nucleus ke charon taraf ghoomte hain. Inpar negative (−) charge hota hai." }
+            },
+            controls: [
+                { id: "z", label: "🔷 Element (atomic number Z)", min: 1, max: 20, step: 1, value: 6, on: function (v, ctx) { buildAtom(v, ctx); } }
+            ],
+            build: function (ctx) { ctx.model = {}; buildAtom(6, ctx); ctx.pivot.rotation.x = 0.3; },
+            onFrame: function (t, ctx) {
+                var M = ctx.model; if (!M.electrons) return;
+                var dt = Math.min(t - (M.lastT || t), 0.05); M.lastT = t;
+                M.electrons.forEach(function (e) {
+                    e.a += e.speed * dt;
+                    var x = e.r * Math.cos(e.a), y0 = e.r * Math.sin(e.a);
+                    e.mesh.position.set(x, y0 * Math.cos(e.tilt), y0 * Math.sin(e.tilt));
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

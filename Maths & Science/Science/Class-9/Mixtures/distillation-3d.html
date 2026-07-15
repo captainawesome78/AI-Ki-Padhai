@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Distillation Lab | AIkiPadhai</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="../sci-3d.js"></script>
+</head>
+
+<body>
+    <script>
+        function tube(T, A, B, r, hex, op) {
+            var dir = B.clone().sub(A); var len = dir.length();
+            var m = new T.Mesh(new T.CylinderGeometry(r, r, len, 20, 1, op != null),
+                new T.MeshPhongMaterial({ color: hex, shininess: 40, transparent: op != null, opacity: op == null ? 1 : op, side: T.DoubleSide }));
+            m.position.copy(A.clone().add(B).multiplyScalar(0.5));
+            m.quaternion.setFromUnitVectors(new T.Vector3(0, 1, 0), dir.clone().normalize());
+            return m;
+        }
+        function pathPoint(path, u) {
+            var n = path.length - 1, seg = Math.min(Math.floor(u * n), n - 1), lt = u * n - seg;
+            return path[seg].clone().lerp(path[seg + 1], lt);
+        }
+        Sci3D({
+            title: "🧊 3D Distillation Lab",
+            back: { href: "separation-liquids.html", label: "Back to Lesson" },
+            intro: { name: "3D Distillation Apparatus", desc: "Distillation setup! Drag karke ghumao, parts par tap karo, aur neeche 'Heat' slider se distillation chalao - vapour banega, condenser mein thanda hoga, aur shudh liquid beaker mein tapkega." },
+            camZ: 20,
+            data: {
+                flask: { emoji: "⚗️", name: "Round-bottom Flask", nick: "Mixture yahan", desc: "Isme mixture (jaise namak-paani) rakha jaata hai aur garam kiya jaata hai. Kam boiling point wala liquid pehle vapour banta hai." },
+                thermometer: { emoji: "🌡️", name: "Thermometer", nick: "Temperature", desc: "Vapour ka temperature naapta hai. Jab reading boiling point par sthir (constant) ho, tab shudh liquid nikal raha hota hai." },
+                condenser: { emoji: "❄️", name: "Condenser", nick: "Vapour → Liquid", desc: "Thandi naali jisme vapour thanda hokar wapas liquid (distillate) ban jaata hai. Bahar se thanda paani chalta hai." },
+                beaker: { emoji: "🥛", name: "Receiving Beaker", nick: "Shudh liquid", desc: "Yahan shudh (distilled) liquid ikattha hota hai. Mixture ki baaki cheez flask mein hi reh jaati hai." },
+                burner: { emoji: "🔥", name: "Burner", nick: "Heat source", desc: "Flask ko garam karta hai taaki liquid ubalkar vapour bane. 'Heat' slider se ise control karo!" }
+            },
+            controls: [
+                { id: "heat", label: "🔥 Heat (garmi badhao)", min: 0, max: 100, step: 1, value: 0, on: function (v, ctx) { ctx.model.heat = v / 100; } }
+            ],
+            build: function (ctx) {
+                var T = ctx.THREE, P = ctx.pivot, M = ctx.model;
+                // Flask + neck
+                var flask = new T.Mesh(new T.SphereGeometry(2.2, 28, 28), ctx.mat(0xe2e8f0, { transparent: true, opacity: 0.22 }));
+                flask.position.set(-5, -0.5, 0);
+                var neck = tube(T, new T.Vector3(-5, 1.4, 0), new T.Vector3(-5, 4, 0), 0.55, 0xe2e8f0, 0.22);
+                var flaskG = new T.Group(); flaskG.add(flask); flaskG.add(neck);
+                ctx.addPart(flaskG, 'flask'); P.add(flaskG);
+                var fl = new T.Mesh(new T.SphereGeometry(1.9, 24, 24), ctx.mat(0x3b82f6, { transparent: true, opacity: 0.7 }));
+                fl.position.copy(flask.position); P.add(fl); M.flaskLiquid = fl;
+                // Thermometer
+                var thermo = new T.Mesh(new T.CylinderGeometry(0.1, 0.1, 3.4, 10), ctx.mat(0xf8fafc));
+                thermo.position.set(-5, 5, 0);
+                var bulb = new T.Mesh(new T.SphereGeometry(0.2, 10, 10), ctx.mat(0xef4444)); bulb.position.set(-5, 3.3, 0);
+                var thermoG = new T.Group(); thermoG.add(thermo); thermoG.add(bulb);
+                ctx.addPart(thermoG, 'thermometer'); P.add(thermoG);
+                // Delivery arm + condenser
+                var arm = tube(T, new T.Vector3(-5, 4, 0), new T.Vector3(-3.2, 3.8, 0), 0.28, 0xe2e8f0, 0.4); P.add(arm);
+                var conA = new T.Vector3(-3.2, 3.8, 0), conB = new T.Vector3(4, -1.2, 0);
+                var conOuter = tube(T, conA, conB, 0.8, 0x93c5fd, 0.25);
+                var conInner = tube(T, conA, conB, 0.32, 0xe2e8f0, 0.4);
+                var conG = new T.Group(); conG.add(conOuter); conG.add(conInner);
+                ctx.addPart(conG, 'condenser'); P.add(conG);
+                // Receiving beaker
+                var beaker = new T.Mesh(new T.CylinderGeometry(1.2, 1.2, 2.6, 24, 1, true),
+                    new T.MeshPhongMaterial({ color: 0xe2e8f0, transparent: true, opacity: 0.3, side: T.DoubleSide }));
+                beaker.position.set(4.9, -3, 0);
+                ctx.addPart(beaker, 'beaker'); P.add(beaker);
+                var bl = new T.Mesh(new T.CylinderGeometry(1.1, 1.1, 1, 24), ctx.mat(0x3b82f6, { transparent: true, opacity: 0.7 }));
+                bl.position.set(4.9, -4.2, 0); bl.scale.y = 0.01; P.add(bl); M.beakerLiquid = bl;
+                // Burner + flame
+                var stand = new T.Mesh(new T.CylinderGeometry(0.35, 0.55, 1, 12), ctx.mat(0x475569)); stand.position.set(-5, -3.7, 0);
+                var flame = new T.Mesh(new T.ConeGeometry(0.45, 1.2, 12), ctx.mat(0xf59e0b, { transparent: true, opacity: 0.25 })); flame.position.set(-5, -2.7, 0);
+                var burnerG = new T.Group(); burnerG.add(stand); burnerG.add(flame);
+                ctx.addPart(burnerG, 'burner'); P.add(burnerG); M.flame = flame;
+                // Vapour particles + path
+                M.path = [new T.Vector3(-5, 1, 0), new T.Vector3(-5, 3.9, 0), new T.Vector3(-3.2, 3.8, 0), new T.Vector3(0.4, 1.3, 0), new T.Vector3(4, -1.2, 0), new T.Vector3(4.9, -2.3, 0)];
+                M.vapor = [];
+                for (var i = 0; i < 10; i++) {
+                    var vp = new T.Mesh(new T.SphereGeometry(0.16, 8, 8), ctx.mat(0xbfdbfe, { transparent: true, opacity: 0.85 }));
+                    vp.visible = false; vp.userData.u = i / 10; P.add(vp); M.vapor.push(vp);
+                }
+                M.heat = 0; M.progress = 0; M.lastT = 0;
+                P.position.set(0.5, 0.5, 0);
+            },
+            onFrame: function (t, ctx) {
+                var M = ctx.model; if (!M.path) return;
+                var dt = Math.min(t - M.lastT, 0.05); M.lastT = t;
+                if (M.flame) { M.flame.scale.y = 1 + Math.sin(t * 12) * 0.12; M.flame.material.opacity = M.heat > 0 ? 0.9 : 0.25; }
+                if (M.heat > 0 && M.progress < 1) M.progress = Math.min(1, M.progress + dt * M.heat * 0.06);
+                var k = Math.max(0.06, 1 - M.progress);
+                M.flaskLiquid.scale.set(k, k, k);
+                var bh = M.progress * 2.0;
+                M.beakerLiquid.scale.y = Math.max(0.01, bh);
+                M.beakerLiquid.position.y = -4.2 + bh / 2;
+                var flowing = M.heat > 0 && M.progress < 1;
+                M.vapor.forEach(function (vp) {
+                    if (!flowing) { vp.visible = false; return; }
+                    vp.visible = true;
+                    vp.userData.u += dt * (0.15 + M.heat * 0.25);
+                    if (vp.userData.u > 1) vp.userData.u -= 1;
+                    vp.position.copy(pathPoint(M.path, vp.userData.u));
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
