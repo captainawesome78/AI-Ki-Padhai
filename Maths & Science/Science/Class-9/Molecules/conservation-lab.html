@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Conservation of Mass Lab | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #083344, #0e7490); color: #e2e8f0; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #a5f3fc; text-decoration: none; border: 1px solid rgba(165,243,252,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(165,243,252,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { display: flex; gap: 20px; padding: 20px; max-width: 1000px; margin: 0 auto; flex-wrap: wrap; }
+        .stage { flex: 1 1 340px; min-width: 300px; background: rgba(255,255,255,0.05); border-radius: 18px; padding: 16px; text-align: center; }
+        .stage svg { width: 100%; max-width: 340px; height: auto; }
+        .controls { flex: 1 1 320px; min-width: 300px; }
+        .card { background: rgba(255,255,255,0.06); border-radius: 16px; padding: 16px 18px; margin-bottom: 14px; }
+        .card h3 { color: #fff; font-size: 14px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .05em; }
+        .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+        .chip { background: rgba(255,255,255,0.1); border: 2px solid transparent; color: #e2e8f0; padding: 9px 12px; border-radius: 10px; cursor: pointer; font-size: 13.5px; font-weight: 600; }
+        .chip.active { border-color: #22d3ee; background: rgba(34,211,238,0.15); }
+        button.run { width: 100%; background: #06b6d4; color: #04222b; border: none; padding: 13px; border-radius: 12px; font-size: 15px; font-weight: 800; cursor: pointer; }
+        button.run:hover { background: #22d3ee; }
+        button.reset { width: 100%; background: transparent; color: #a5f3fc; border: 1px solid rgba(165,243,252,0.4); padding: 9px; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 8px; }
+        .masses { display: flex; gap: 10px; margin-bottom: 10px; }
+        .mbox { flex: 1; background: rgba(0,0,0,0.25); border-radius: 12px; padding: 14px; text-align: center; }
+        .mbox .n { font-size: 26px; font-weight: 800; color: #fff; }
+        .mbox .l { font-size: 12px; color: #67e8f9; }
+        .verdict { padding: 12px; border-radius: 10px; font-weight: 800; text-align: center; background: #052e2b; color: #6ee7b7; }
+        .eq { background: rgba(0,0,0,0.2); border-radius: 10px; padding: 12px; font-size: 15px; text-align: center; margin-bottom: 10px; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="laws-of-combination.html">← Back to Lesson</a>
+        <div class="title">⚖️ Conservation of Mass Lab</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="stage">
+            <svg id="scene" viewBox="0 0 340 300" xmlns="http://www.w3.org/2000/svg"></svg>
+            <div style="font-size:13px;color:#94a3b8;margin-top:6px;" id="obs">Reaction chuno aur "React!" dabao.</div>
+        </div>
+        <div class="controls">
+            <div class="card">
+                <h3>Reaction chuno</h3>
+                <div class="chips" id="rx"></div>
+            </div>
+            <div class="card">
+                <div class="eq" id="eq"></div>
+                <div class="masses">
+                    <div class="mbox"><div class="n" id="before">0 g</div><div class="l">Reaction se PEHLE</div></div>
+                    <div class="mbox"><div class="n" id="after">0 g</div><div class="l">Reaction ke BAAD</div></div>
+                </div>
+                <div class="verdict" id="verdict">Mass barabar rehta hai ⚖️</div>
+            </div>
+            <div class="card">
+                <button class="run" onclick="react()">▶ React!</button>
+                <button class="reset" onclick="resetLab()">↺ Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var RX = [
+            { n: "C + O₂ → CO₂", r: [["Carbon", 12], ["Oxygen", 32]], p: [["Carbon dioxide", 44]] },
+            { n: "H₂ + O₂ → H₂O", r: [["Hydrogen", 4], ["Oxygen", 32]], p: [["Paani", 36]] },
+            { n: "CaCO₃ → CaO + CO₂", r: [["Calcium carbonate", 100]], p: [["Calcium oxide", 56], ["Carbon dioxide", 44]] }
+        ];
+        var ci = 0, animId = null, prog = 0;
+
+        function sumOf(list) { return list.reduce(function (a, b) { return a + b[1]; }, 0); }
+
+        function draw(p) {
+            var rx = RX[ci], s = '';
+            // closed jar
+            s += '<rect x="60" y="40" width="220" height="150" rx="10" fill="none" stroke="#a5f3fc" stroke-width="3"/>';
+            s += '<rect x="110" y="26" width="120" height="16" rx="6" fill="#a5f3fc" opacity="0.6"/>';
+            // contents: reactant blobs shrink, product blobs grow
+            var rN = rx.r.length, pN = rx.p.length;
+            rx.r.forEach(function (it, i) {
+                var size = 26 * (1 - p);
+                if (size > 0.5) {
+                    var x = 110 + i * 90, y = 110;
+                    s += '<circle cx="' + x + '" cy="' + y + '" r="' + size.toFixed(1) + '" fill="#38bdf8" opacity="0.85"/>';
+                    s += '<text x="' + x + '" y="' + (y + 48) + '" text-anchor="middle" font-size="9" fill="#7dd3fc">' + it[0] + '</text>';
+                }
+            });
+            rx.p.forEach(function (it, i) {
+                var size = 26 * p;
+                if (size > 0.5) {
+                    var x = 130 + i * 80, y = 110;
+                    s += '<circle cx="' + x + '" cy="' + y + '" r="' + size.toFixed(1) + '" fill="#34d399" opacity="0.85"/>';
+                    s += '<text x="' + x + '" y="' + (y - 40) + '" text-anchor="middle" font-size="9" fill="#6ee7b7">' + it[0] + '</text>';
+                }
+            });
+            // balance
+            s += '<line x1="60" y1="215" x2="280" y2="215" stroke="#94a3b8" stroke-width="4"/>';
+            s += '<polygon points="170,215 155,250 185,250" fill="#94a3b8"/>';
+            s += '<text x="170" y="275" text-anchor="middle" font-size="12" fill="#e2e8f0">Taraazu hamesha barabar!</text>';
+            document.getElementById('scene').innerHTML = s;
+        }
+
+        function react() {
+            if (animId) cancelAnimationFrame(animId);
+            var t0 = null, dur = 1800;
+            document.getElementById('obs').textContent = 'Reaction chal raha hai...';
+            function step(ts) { if (!t0) t0 = ts; prog = Math.min((ts - t0) / dur, 1); draw(prog); if (prog < 1) animId = requestAnimationFrame(step); else document.getElementById('obs').textContent = '✅ Reaction poora! Dono taraf mass same hai.'; }
+            animId = requestAnimationFrame(step);
+        }
+        function resetLab() { if (animId) cancelAnimationFrame(animId); prog = 0; draw(0); document.getElementById('obs').textContent = '"React!" dabao aur dekho.'; }
+
+        function refresh() {
+            var box = document.getElementById('rx'); box.innerHTML = '';
+            RX.forEach(function (r, i) {
+                var d = document.createElement('div'); d.className = 'chip' + (i === ci ? ' active' : '');
+                d.textContent = r.n; d.onclick = function () { ci = i; refresh(); }; box.appendChild(d);
+            });
+            var rx = RX[ci], b = sumOf(rx.r), a = sumOf(rx.p);
+            document.getElementById('eq').innerHTML = '<b>' + rx.n + '</b><br><span style="font-size:13px;color:#94a3b8">' +
+                rx.r.map(function (x) { return x[0] + ' (' + x[1] + ' g)'; }).join(' + ') + ' → ' +
+                rx.p.map(function (x) { return x[0] + ' (' + x[1] + ' g)'; }).join(' + ') + '</span>';
+            document.getElementById('before').textContent = b + ' g';
+            document.getElementById('after').textContent = a + ' g';
+            document.getElementById('verdict').textContent = (a === b) ? '✅ ' + b + ' g = ' + a + ' g — Mass conserve hua!' : '⚠️ mismatch';
+            resetLab();
+        }
+        refresh();
+    </script>
+</body>
+
+</html>

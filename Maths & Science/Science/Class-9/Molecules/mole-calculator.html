@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mole &amp; Molar-Mass Calculator | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #451a03, #b45309); color: #fef3c7; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #fde68a; text-decoration: none; border: 1px solid rgba(253,230,138,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(253,230,138,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 700px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,0.07); border-radius: 16px; padding: 20px; margin-bottom: 16px; }
+        .card h3 { color: #fff; font-size: 14px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: .05em; }
+        .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+        .chip { background: rgba(255,255,255,0.1); border: 2px solid transparent; color: #fef3c7; padding: 9px 13px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 700; }
+        .chip.active { border-color: #fbbf24; background: rgba(251,191,36,0.2); }
+        label { display: flex; justify-content: space-between; font-size: 15px; margin-bottom: 6px; }
+        label b { color: #fbbf24; font-size: 17px; }
+        input[type=range] { width: 100%; accent-color: #f59e0b; }
+        .out { display: flex; gap: 10px; flex-wrap: wrap; }
+        .obox { flex: 1 1 140px; background: rgba(0,0,0,0.25); border-radius: 12px; padding: 14px; text-align: center; }
+        .obox .big { font-size: 22px; font-weight: 800; color: #fff; word-break: break-word; }
+        .obox .l { font-size: 11px; color: #fcd34d; margin-top: 3px; }
+        .steps { background: rgba(0,0,0,0.22); border-radius: 12px; padding: 16px; font-size: 14.5px; line-height: 1.9; }
+        .steps b { color: #fde68a; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="mole-concept.html">← Back to Lesson</a>
+        <div class="title">🧮 Mole Calculator</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <h3>1. Substance chuno</h3>
+            <div class="chips" id="subs"></div>
+        </div>
+        <div class="card">
+            <h3>2. Kitne gram?</h3>
+            <label>Mass <b><span id="gV">36</span> g</b></label>
+            <input type="range" id="g" min="1" max="200" value="36" oninput="calc()">
+        </div>
+        <div class="card">
+            <h3>Result</h3>
+            <div class="out">
+                <div class="obox"><div class="big" id="mm">-</div><div class="l">Molar mass (g/mol)</div></div>
+                <div class="obox"><div class="big" id="mol">-</div><div class="l">Moles</div></div>
+                <div class="obox"><div class="big" id="par">-</div><div class="l">Particles</div></div>
+            </div>
+        </div>
+        <div class="card">
+            <h3>Steps</h3>
+            <div class="steps" id="steps"></div>
+        </div>
+    </div>
+
+    <script>
+        var NA = 6.022e23;
+        // formula, display, breakdown of molar mass
+        var SUBS = [
+            { f: "H₂O", n: "Paani", m: 18, parts: "(2×1) + 16 = 18" },
+            { f: "CO₂", n: "Carbon dioxide", m: 44, parts: "12 + (2×16) = 44" },
+            { f: "O₂", n: "Oxygen gas", m: 32, parts: "2×16 = 32" },
+            { f: "NaCl", n: "Namak", m: 58.5, parts: "23 + 35.5 = 58.5" },
+            { f: "C", n: "Carbon", m: 12, parts: "12" },
+            { f: "CaCO₃", n: "Calcium carbonate", m: 100, parts: "40 + 12 + (3×16) = 100" }
+        ];
+        var si = 0;
+
+        function fmtSci(x) {
+            if (x === 0) return "0";
+            var e = Math.floor(Math.log10(x)), m = x / Math.pow(10, e);
+            return m.toFixed(3) + " × 10" + String(e).replace(/[0-9]/g, function (d) { return "⁰¹²³⁴⁵⁶⁷⁸⁹"[+d]; });
+        }
+
+        function calc() {
+            var g = +document.getElementById('g').value;
+            document.getElementById('gV').textContent = g;
+            var s = SUBS[si], moles = g / s.m, particles = moles * NA;
+            document.getElementById('mm').textContent = s.m;
+            document.getElementById('mol').textContent = moles.toFixed(3);
+            document.getElementById('par').textContent = fmtSci(particles);
+            document.getElementById('steps').innerHTML =
+                '<b>Step 1 - Molar mass:</b> ' + s.f + ' = ' + s.parts + ' &rarr; <b>' + s.m + ' g/mol</b><br>' +
+                '<b>Step 2 - Moles:</b> n = mass ÷ molar mass = ' + g + ' ÷ ' + s.m + ' = <b>' + moles.toFixed(3) + ' mol</b><br>' +
+                '<b>Step 3 - Particles:</b> N = moles × 6.022 × 10²³ = ' + moles.toFixed(3) + ' × 6.022 × 10²³ = <b>' + fmtSci(particles) + '</b>';
+        }
+        function refresh() {
+            var box = document.getElementById('subs'); box.innerHTML = '';
+            SUBS.forEach(function (s, i) {
+                var d = document.createElement('div'); d.className = 'chip' + (i === si ? ' active' : '');
+                d.textContent = s.f; d.onclick = function () { si = i; refresh(); }; box.appendChild(d);
+            });
+            calc();
+        }
+        refresh();
+    </script>
+</body>
+
+</html>

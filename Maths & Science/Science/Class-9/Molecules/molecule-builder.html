@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Molecule Builder | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #2e1065, #6d28d9); color: #ede9fe; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #ddd6fe; text-decoration: none; border: 1px solid rgba(221,214,254,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(221,214,254,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 720px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,0.06); border-radius: 16px; padding: 18px 20px; margin-bottom: 16px; }
+        .card h3 { color: #fff; font-size: 14px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .05em; }
+        .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+        .chip { background: rgba(255,255,255,0.1); border: 2px solid transparent; color: #ede9fe; padding: 9px 13px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 700; }
+        .chip.active { border-color: #a78bfa; background: rgba(167,139,250,0.22); }
+        .chip small { display:block; font-weight:500; font-size:11px; color:#c4b5fd; }
+        .result { background: rgba(0,0,0,0.28); border-radius: 14px; padding: 20px; text-align: center; }
+        .formula { font-size: 44px; font-weight: 800; color: #fff; letter-spacing: 1px; }
+        .fname { color: #c4b5fd; margin-top: 4px; font-size: 16px; }
+        .steps { margin-top: 16px; text-align: left; font-size: 14.5px; line-height: 1.8; background: rgba(0,0,0,0.2); border-radius: 10px; padding: 14px; }
+        .steps b { color: #d8b4fe; }
+        .crisscross { display:flex; justify-content:center; gap:40px; margin:14px 0; font-size:26px; font-weight:800; }
+        .crisscross .it { text-align:center; }
+        .crisscross .v { color:#f87171; font-size:16px; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="chemical-formulae.html">← Back to Lesson</a>
+        <div class="title">🔧 Molecule Builder</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <h3>1. Positive part chuno (metal / cation)</h3>
+            <div class="chips" id="cats"></div>
+        </div>
+        <div class="card">
+            <h3>2. Negative part chuno (non-metal / anion)</h3>
+            <div class="chips" id="ans"></div>
+        </div>
+        <div class="card">
+            <div class="result">
+                <div class="crisscross" id="cc"></div>
+                <div class="formula" id="formula">-</div>
+                <div class="fname" id="fname"></div>
+                <div class="steps" id="steps"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var CAT = [
+            { s: "Na", n: "Sodium", v: 1 }, { s: "K", n: "Potassium", v: 1 }, { s: "NH4", n: "Ammonium", v: 1, poly: true },
+            { s: "Mg", n: "Magnesium", v: 2 }, { s: "Ca", n: "Calcium", v: 2 }, { s: "Al", n: "Aluminium", v: 3 }
+        ];
+        var AN = [
+            { s: "Cl", n: "Chloride", v: 1 }, { s: "OH", n: "Hydroxide", v: 1, poly: true }, { s: "NO3", n: "Nitrate", v: 1, poly: true },
+            { s: "O", n: "Oxide", v: 2 }, { s: "SO4", n: "Sulphate", v: 2, poly: true }, { s: "CO3", n: "Carbonate", v: 2, poly: true },
+            { s: "PO4", n: "Phosphate", v: 3, poly: true }
+        ];
+        var ci = 0, ai = 0;
+        var SUB = { 1: "", 2: "₂", 3: "₃", 4: "₄", 5: "₅", 6: "₆" };
+        function sub(str) { return str.replace(/([0-9])/g, function (d) { return SUB[d] || d; }); }
+        function gcd(a, b) { return b ? gcd(b, a % b) : a; }
+
+        function chips(list, boxId, sel, onPick) {
+            var box = document.getElementById(boxId); box.innerHTML = '';
+            list.forEach(function (it, i) {
+                var d = document.createElement('div');
+                d.className = 'chip' + (i === sel ? ' active' : '');
+                d.innerHTML = sub(it.s) + '<small>valency ' + it.v + '</small>';
+                d.onclick = function () { onPick(i); };
+                box.appendChild(d);
+            });
+        }
+
+        function build() {
+            var c = CAT[ci], a = AN[ai];
+            // criss-cross then simplify
+            var x = a.v, y = c.v, g = gcd(x, y);
+            x = x / g; y = y / g;
+            function part(item, cnt) {
+                var base = sub(item.s);
+                if (cnt === 1) return base;
+                return item.poly ? '(' + base + ')' + SUB[cnt] : base + SUB[cnt];
+            }
+            var formula = part(c, x) + part(a, y);
+            document.getElementById('formula').textContent = formula;
+            document.getElementById('fname').textContent = c.n + ' ' + a.n;
+            document.getElementById('cc').innerHTML =
+                '<div class="it">' + sub(c.s) + '<div class="v">valency ' + c.v + '</div></div>' +
+                '<div class="it" style="font-size:20px;color:#a78bfa;">✂️<br>criss-cross</div>' +
+                '<div class="it">' + sub(a.s) + '<div class="v">valency ' + a.v + '</div></div>';
+            var st = '<b>Step 1:</b> ' + sub(c.s) + ' ki valency = ' + c.v + ', ' + sub(a.s) + ' ki valency = ' + a.v + '<br>' +
+                '<b>Step 2 (criss-cross):</b> ' + sub(c.s) + ' ko ' + a.v + ' aur ' + sub(a.s) + ' ko ' + c.v + ' subscript milega<br>';
+            if (g > 1) st += '<b>Step 3 (simplify):</b> dono mein common factor ' + g + ' hai, isliye divide kiya &rarr; ' + x + ' aur ' + y + '<br>';
+            else st += '<b>Step 3:</b> koi common factor nahi, simplify ki zaroorat nahi<br>';
+            var brackets = ((c.poly && x > 1) || (a.poly && y > 1));
+            st += '<b>Step 4:</b> ' + (brackets ? 'Polyatomic ion ka subscript 1 se zyada hai, isliye <b>bracket</b> lagaya' : 'Subscript 1 ho toh likhte nahi') +
+                '<br><b>Final formula: ' + formula + '</b>';
+            document.getElementById('steps').innerHTML = st;
+        }
+        function refresh() {
+            chips(CAT, 'cats', ci, function (i) { ci = i; refresh(); });
+            chips(AN, 'ans', ai, function (i) { ai = i; refresh(); });
+            build();
+        }
+        refresh();
+    </script>
+</body>
+
+</html>
