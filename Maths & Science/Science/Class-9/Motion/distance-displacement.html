@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Distance vs Displacement Explorer | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #083344, #0e7490); color: #e2e8f0; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #a5f3fc; text-decoration: none; border: 1px solid rgba(165,243,252,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(165,243,252,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,0.06); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+        .card h3 { color: #fff; font-size: 14px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .05em; }
+        svg { width: 100%; height: auto; background: rgba(0,0,0,0.2); border-radius: 12px; }
+        .btns { display: flex; gap: 8px; flex-wrap: wrap; }
+        .btns button { flex: 1 1 110px; border: none; padding: 12px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 14px; background: #0e7490; color: #fff; }
+        .btns button:hover { background: #0891b2; }
+        .btns button.rst { background: transparent; color: #a5f3fc; border: 1px solid rgba(165,243,252,0.4); }
+        .out { display: flex; gap: 12px; flex-wrap: wrap; }
+        .obox { flex: 1 1 150px; background: rgba(0,0,0,0.25); border-radius: 12px; padding: 16px; text-align: center; }
+        .obox .n { font-size: 28px; font-weight: 800; }
+        .obox .l { font-size: 12px; margin-top: 3px; }
+        .d-col { color: #fbbf24; } .s-col { color: #34d399; }
+        .note { background: rgba(0,0,0,0.22); border-radius: 10px; padding: 14px; font-size: 14.5px; line-height: 1.6; margin-top: 10px; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="rest-motion-distance.html">← Back to Lesson</a>
+        <div class="title">📏 Distance vs Displacement</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <svg id="scene" viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+        <div class="card">
+            <h3>Object ko chalao</h3>
+            <div class="btns">
+                <button onclick="move(2)">→ 2 m East</button>
+                <button onclick="move(3)">→ 3 m East</button>
+                <button onclick="move(-2)">← 2 m West</button>
+                <button onclick="move(-3)">← 3 m West</button>
+                <button class="rst" onclick="resetAll()">↺ Reset</button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="out">
+                <div class="obox"><div class="n d-col" id="dist">0 m</div><div class="l d-col">DISTANCE (poora raasta)</div></div>
+                <div class="obox"><div class="n s-col" id="disp">0 m</div><div class="l s-col">DISPLACEMENT (seedhi doori)</div></div>
+            </div>
+            <div class="note" id="note">Buttons dabao aur dekho dono kaise alag-alag badalte hain. Wapas start par aao
+                toh displacement <b>0</b> ho jaayega, lekin distance nahi!</div>
+        </div>
+    </div>
+
+    <script>
+        var pos = 0, distance = 0, path = [0];
+        var MIN = -6, MAX = 6;
+
+        function move(d) {
+            var np = pos + d;
+            if (np < MIN || np > MAX) return;
+            pos = np; distance += Math.abs(d); path.push(pos); render();
+        }
+        function resetAll() { pos = 0; distance = 0; path = [0]; render(); }
+
+        function render() {
+            var W = 700, cy = 110, x0 = 60, scale = 48;
+            function X(m) { return 350 + m * scale; }
+            var s = '';
+            // number line
+            s += '<line x1="' + X(MIN) + '" y1="' + cy + '" x2="' + X(MAX) + '" y2="' + cy + '" stroke="#475569" stroke-width="3"/>';
+            for (var m = MIN; m <= MAX; m++) {
+                s += '<line x1="' + X(m) + '" y1="' + (cy - 7) + '" x2="' + X(m) + '" y2="' + (cy + 7) + '" stroke="#64748b" stroke-width="2"/>';
+                s += '<text x="' + X(m) + '" y="' + (cy + 26) + '" text-anchor="middle" font-size="11" fill="#94a3b8">' + m + '</text>';
+            }
+            // start marker
+            s += '<circle cx="' + X(0) + '" cy="' + cy + '" r="6" fill="#22c55e"/>';
+            s += '<text x="' + X(0) + '" y="' + (cy + 46) + '" text-anchor="middle" font-size="11" fill="#22c55e">START</text>';
+            // displacement arrow (green)
+            if (pos !== 0) {
+                s += '<line x1="' + X(0) + '" y1="' + (cy - 34) + '" x2="' + X(pos) + '" y2="' + (cy - 34) + '" stroke="#34d399" stroke-width="5" marker-end="url(#g)"/>';
+                s += '<text x="' + ((X(0) + X(pos)) / 2) + '" y="' + (cy - 44) + '" text-anchor="middle" font-size="12" fill="#34d399">displacement</text>';
+            }
+            // path trace (amber, zigzag above)
+            var py = cy - 70;
+            for (var i = 1; i < path.length; i++) {
+                s += '<line x1="' + X(path[i - 1]) + '" y1="' + py + '" x2="' + X(path[i]) + '" y2="' + py + '" stroke="#fbbf24" stroke-width="4"/>';
+                py -= 9;
+            }
+            if (path.length > 1) s += '<text x="120" y="30" font-size="12" fill="#fbbf24">path (distance)</text>';
+            // object
+            s += '<text x="' + (X(pos) - 12) + '" y="' + (cy - 8) + '" font-size="26">🚶</text>';
+            s += '<defs><marker id="g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#34d399"/></marker></defs>';
+            document.getElementById('scene').innerHTML = s;
+
+            document.getElementById('dist').textContent = distance + ' m';
+            document.getElementById('disp').textContent = Math.abs(pos) + ' m' + (pos > 0 ? ' East' : pos < 0 ? ' West' : '');
+            var note;
+            if (path.length === 1) note = 'Buttons dabao aur dekho dono kaise alag-alag badalte hain.';
+            else if (pos === 0) note = '🎯 Aap wapas START par aa gaye! <b>Displacement = 0</b> (start aur end same point), lekin <b>distance = ' + distance + ' m</b> hai. Yahi dono ka sabse bada farak hai!';
+            else if (distance === Math.abs(pos)) note = 'Aap ek hi direction mein seedhe chale - isliye <b>distance = displacement</b> (' + distance + ' m).';
+            else note = 'Aapne kul <b>' + distance + ' m</b> chala (distance), lekin start se seedhi doori sirf <b>' + Math.abs(pos) + ' m</b> hai (displacement). Distance hamesha displacement se bada ya barabar hota hai.';
+            document.getElementById('note').innerHTML = note;
+        }
+        render();
+    </script>
+</body>
+
+</html>

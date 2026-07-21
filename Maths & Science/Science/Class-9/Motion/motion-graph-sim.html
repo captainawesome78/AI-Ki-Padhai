@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Live Motion Graph Simulator | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #2e1065, #6d28d9); color: #ede9fe; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #ddd6fe; text-decoration: none; border: 1px solid rgba(221,214,254,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(221,214,254,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 860px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,0.06); border-radius: 16px; padding: 16px 18px; margin-bottom: 14px; }
+        .card h3 { color: #fff; font-size: 14px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .05em; }
+        canvas { width: 100%; height: auto; background: rgba(0,0,0,0.25); border-radius: 12px; display: block; }
+        .row { display: flex; gap: 14px; flex-wrap: wrap; }
+        .row > div { flex: 1 1 240px; }
+        label { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 5px; }
+        label b { color: #c4b5fd; }
+        input[type=range] { width: 100%; accent-color: #a78bfa; }
+        .btns { display: flex; gap: 10px; }
+        .btns button { flex: 1; border: none; padding: 12px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 15px; }
+        .play { background: #8b5cf6; color: #1e1046; } .play:hover { background: #a78bfa; }
+        .rst { background: transparent; color: #ddd6fe; border: 1px solid rgba(221,214,254,0.4); }
+        .stats { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+        .stat { flex: 1 1 100px; background: rgba(0,0,0,0.25); border-radius: 10px; padding: 10px; text-align: center; }
+        .stat .n { font-size: 20px; font-weight: 800; color: #fff; } .stat .l { font-size: 11px; color: #c4b5fd; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="graphs-of-motion.html">← Back to Lesson</a>
+        <div class="title">📈 Motion Graph Simulator</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <h3>Road (gaadi chal rahi hai)</h3>
+            <canvas id="road" width="800" height="120"></canvas>
+        </div>
+        <div class="card">
+            <div class="row">
+                <div>
+                    <label>Initial velocity (u) <b><span id="uV">0</span> m/s</b></label>
+                    <input type="range" id="u" min="0" max="20" value="0" step="1" oninput="sync()">
+                </div>
+                <div>
+                    <label>Acceleration (a) <b><span id="aV">2</span> m/s²</b></label>
+                    <input type="range" id="a" min="-4" max="6" value="2" step="0.5" oninput="sync()">
+                </div>
+            </div>
+            <div class="btns" style="margin-top:10px;">
+                <button class="play" onclick="play()">▶ Start</button>
+                <button class="rst" onclick="resetSim()">↺ Reset</button>
+            </div>
+            <div class="stats">
+                <div class="stat"><div class="n" id="tS">0.0</div><div class="l">Time (s)</div></div>
+                <div class="stat"><div class="n" id="vS">0.0</div><div class="l">Velocity (m/s)</div></div>
+                <div class="stat"><div class="n" id="sS">0.0</div><div class="l">Distance (m)</div></div>
+            </div>
+        </div>
+        <div class="card">
+            <h3>Distance - Time graph (slope = speed)</h3>
+            <canvas id="stG" width="800" height="200"></canvas>
+        </div>
+        <div class="card">
+            <h3>Velocity - Time graph (slope = acceleration, area = distance)</h3>
+            <canvas id="vtG" width="800" height="200"></canvas>
+        </div>
+    </div>
+
+    <script>
+        var road = document.getElementById('road').getContext('2d');
+        var stc = document.getElementById('stG').getContext('2d');
+        var vtc = document.getElementById('vtG').getContext('2d');
+        var u = 0, a = 2, t = 0, running = false, animId = null, TMAX = 10;
+        var pts = [];
+
+        function sync() {
+            u = +document.getElementById('u').value; a = +document.getElementById('a').value;
+            document.getElementById('uV').textContent = u; document.getElementById('aV').textContent = a;
+            resetSim();
+        }
+        function vAt(tt) { return Math.max(0, u + a * tt); }
+        function sAt(tt) {
+            // if velocity hits 0 (deceleration), motion stops
+            if (a < 0 && u > 0) { var tStop = -u / a; if (tt > tStop) tt = tStop; }
+            return u * tt + 0.5 * a * tt * tt;
+        }
+
+        function axes(ctx, W, H, xlab, ylab) {
+            ctx.clearRect(0, 0, W, H);
+            ctx.strokeStyle = '#64748b'; ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(46, 12); ctx.lineTo(46, H - 28); ctx.lineTo(W - 12, H - 28); ctx.stroke();
+            ctx.fillStyle = '#c4b5fd'; ctx.font = '12px sans-serif';
+            ctx.fillText(xlab, W - 70, H - 8); ctx.save(); ctx.translate(14, 70); ctx.rotate(-Math.PI / 2); ctx.fillText(ylab, 0, 0); ctx.restore();
+        }
+
+        function drawGraphs() {
+            var W = 800, H = 200;
+            // scales
+            var maxS = Math.max(20, sAt(TMAX)), maxV = Math.max(5, vAt(TMAX));
+            axes(stc, W, H, 'time (s)', 'distance (m)');
+            axes(vtc, W, H, 'time (s)', 'velocity (m/s)');
+            function X(tt) { return 46 + (tt / TMAX) * (W - 62); }
+            function Ys(ss) { return (H - 28) - (ss / maxS) * (H - 46); }
+            function Yv(vv) { return (H - 28) - (vv / maxV) * (H - 46); }
+            // v-t area fill
+            vtc.beginPath(); vtc.moveTo(X(0), Yv(0));
+            for (var q = 0; q <= t; q += 0.1) vtc.lineTo(X(q), Yv(vAt(q)));
+            vtc.lineTo(X(t), Yv(0)); vtc.closePath();
+            vtc.fillStyle = 'rgba(167,139,250,0.28)'; vtc.fill();
+            // curves
+            stc.beginPath(); vtc.beginPath();
+            for (var q2 = 0; q2 <= t; q2 += 0.05) {
+                var x = X(q2);
+                if (q2 === 0) { stc.moveTo(x, Ys(sAt(q2))); vtc.moveTo(x, Yv(vAt(q2))); }
+                else { stc.lineTo(x, Ys(sAt(q2))); vtc.lineTo(x, Yv(vAt(q2))); }
+            }
+            stc.strokeStyle = '#34d399'; stc.lineWidth = 3; stc.stroke();
+            vtc.strokeStyle = '#f472b6'; vtc.lineWidth = 3; vtc.stroke();
+            // markers
+            if (t > 0) {
+                stc.fillStyle = '#34d399'; stc.beginPath(); stc.arc(X(t), Ys(sAt(t)), 5, 0, 7); stc.fill();
+                vtc.fillStyle = '#f472b6'; vtc.beginPath(); vtc.arc(X(t), Yv(vAt(t)), 5, 0, 7); vtc.fill();
+            }
+        }
+
+        function drawRoad() {
+            var W = 800, H = 120;
+            road.clearRect(0, 0, W, H);
+            road.fillStyle = '#1e1b4b'; road.fillRect(0, 70, W, 30);
+            road.strokeStyle = '#a78bfa'; road.setLineDash([16, 14]); road.lineWidth = 3;
+            road.beginPath(); road.moveTo(0, 85); road.lineTo(W, 85); road.stroke(); road.setLineDash([]);
+            var maxS = Math.max(20, sAt(TMAX));
+            var x = 30 + (sAt(t) / maxS) * (W - 90);
+            road.font = '30px serif'; road.fillText('🚗', x, 78);
+            road.fillStyle = '#c4b5fd'; road.font = '12px sans-serif';
+            road.fillText('start', 24, 112);
+        }
+
+        function frame() {
+            if (running) {
+                t += 0.03;
+                if (t >= TMAX) { t = TMAX; running = false; }
+            }
+            document.getElementById('tS').textContent = t.toFixed(1);
+            document.getElementById('vS').textContent = vAt(t).toFixed(1);
+            document.getElementById('sS').textContent = sAt(t).toFixed(1);
+            drawRoad(); drawGraphs();
+            animId = requestAnimationFrame(frame);
+        }
+        function play() { if (t >= TMAX) t = 0; running = true; }
+        function resetSim() { running = false; t = 0; }
+        sync(); frame();
+    </script>
+</body>
+
+</html>

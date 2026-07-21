@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Equations of Motion Solver | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #451a03, #b45309); color: #fef3c7; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #fde68a; text-decoration: none; border: 1px solid rgba(253,230,138,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(253,230,138,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 700px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,0.07); border-radius: 16px; padding: 20px; margin-bottom: 16px; }
+        .card h3 { color: #fff; font-size: 14px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: .05em; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px,1fr)); gap: 12px; }
+        .fld label { display: block; font-size: 13px; color: #fcd34d; margin-bottom: 4px; font-weight: 700; }
+        .fld input { width: 100%; padding: 10px; border-radius: 8px; border: 1.5px solid rgba(253,230,138,0.3); background: rgba(0,0,0,0.25); color: #fff; font-size: 16px; }
+        .fld input:focus { outline: none; border-color: #fbbf24; }
+        .hint { font-size: 12.5px; color: #fcd34d; margin-top: 10px; }
+        .btns { display: flex; gap: 10px; margin-top: 14px; }
+        .btns button { flex: 1; border: none; padding: 13px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 15px; }
+        .go { background: #f59e0b; color: #451a03; } .go:hover { background: #fbbf24; }
+        .clr { background: transparent; color: #fde68a; border: 1px solid rgba(253,230,138,0.4); }
+        .res { background: rgba(0,0,0,0.25); border-radius: 12px; padding: 16px; font-size: 15px; line-height: 1.9; }
+        .res b { color: #fde68a; }
+        .ans { font-size: 20px; font-weight: 800; color: #fff; }
+        .warn { color: #fca5a5; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="equations-of-motion.html">← Back to Lesson</a>
+        <div class="title">🧮 Equations Solver</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <h3>Jo pata hai wo bharo (koi 3)</h3>
+            <div class="grid">
+                <div class="fld"><label>u (m/s)</label><input id="u" type="number" placeholder="?" /></div>
+                <div class="fld"><label>v (m/s)</label><input id="v" type="number" placeholder="?" /></div>
+                <div class="fld"><label>a (m/s²)</label><input id="a" type="number" placeholder="?" /></div>
+                <div class="fld"><label>s (m)</label><input id="s" type="number" placeholder="?" /></div>
+                <div class="fld"><label>t (s)</label><input id="t" type="number" placeholder="?" /></div>
+            </div>
+            <div class="hint">💡 Tip: "rest se shuru" matlab u = 0. "Ruk gayi" matlab v = 0. km/h ko m/s karo (× 5/18).</div>
+            <div class="btns">
+                <button class="go" onclick="solve()">🔍 Solve karo</button>
+                <button class="clr" onclick="clearAll()">↺ Clear</button>
+            </div>
+        </div>
+        <div class="card">
+            <h3>Result &amp; Steps</h3>
+            <div class="res" id="res">Koi teen values bharo aur "Solve karo" dabao.</div>
+        </div>
+    </div>
+
+    <script>
+        function g(id) { var el = document.getElementById(id); return el.value === '' ? null : parseFloat(el.value); }
+        function clearAll() { ['u', 'v', 'a', 's', 't'].forEach(function (k) { document.getElementById(k).value = ''; }); document.getElementById('res').textContent = 'Koi teen values bharo aur "Solve karo" dabao.'; }
+
+        function solve() {
+            var u = g('u'), v = g('v'), a = g('a'), s = g('s'), t = g('t');
+            var known = [u, v, a, s, t].filter(function (x) { return x !== null; }).length;
+            var out = '';
+            if (known < 3) { document.getElementById('res').innerHTML = '<span class="warn">⚠️ Kam se kam <b>3</b> values chahiye. Abhi sirf ' + known + ' bhari hain.</span>'; return; }
+            var steps = [];
+            // iterate to fill unknowns using the 3 equations
+            for (var pass = 0; pass < 4; pass++) {
+                if (v === null && u !== null && a !== null && t !== null) { v = u + a * t; steps.push('<b>v = u + at</b> = ' + u + ' + (' + a + ')(' + t + ') = <b>' + v.toFixed(2) + ' m/s</b>'); }
+                if (u === null && v !== null && a !== null && t !== null) { u = v - a * t; steps.push('<b>u = v − at</b> = ' + v + ' − (' + a + ')(' + t + ') = <b>' + u.toFixed(2) + ' m/s</b>'); }
+                if (a === null && v !== null && u !== null && t !== null && t !== 0) { a = (v - u) / t; steps.push('<b>a = (v − u) / t</b> = (' + v + ' − ' + u + ') / ' + t + ' = <b>' + a.toFixed(2) + ' m/s²</b>'); }
+                if (t === null && v !== null && u !== null && a !== null && a !== 0) { t = (v - u) / a; steps.push('<b>t = (v − u) / a</b> = (' + v + ' − ' + u + ') / ' + a + ' = <b>' + t.toFixed(2) + ' s</b>'); }
+                if (s === null && u !== null && t !== null && a !== null) { s = u * t + 0.5 * a * t * t; steps.push('<b>s = ut + ½at²</b> = (' + u + ')(' + t + ') + ½(' + a + ')(' + t + ')² = <b>' + s.toFixed(2) + ' m</b>'); }
+                if (s === null && u !== null && v !== null && a !== null && a !== 0) { s = (v * v - u * u) / (2 * a); steps.push('<b>s = (v² − u²) / 2a</b> = <b>' + s.toFixed(2) + ' m</b>'); }
+                if (v === null && u !== null && a !== null && s !== null) { var vv = u * u + 2 * a * s; if (vv >= 0) { v = Math.sqrt(vv); steps.push('<b>v² = u² + 2as</b> = ' + u + '² + 2(' + a + ')(' + s + ') = ' + vv.toFixed(2) + ' &rarr; v = <b>' + v.toFixed(2) + ' m/s</b>'); } }
+                if (a === null && u !== null && v !== null && s !== null && s !== 0) { a = (v * v - u * u) / (2 * s); steps.push('<b>a = (v² − u²) / 2s</b> = <b>' + a.toFixed(2) + ' m/s²</b>'); }
+                if (t === null && u !== null && v !== null && s !== null && (u + v) !== 0) { t = (2 * s) / (u + v); steps.push('<b>t = 2s / (u + v)</b> = <b>' + t.toFixed(2) + ' s</b>'); }
+            }
+            out += '<div class="ans">u = ' + fmt(u) + ' m/s &nbsp; v = ' + fmt(v) + ' m/s &nbsp; a = ' + fmt(a) + ' m/s² &nbsp; s = ' + fmt(s) + ' m &nbsp; t = ' + fmt(t) + ' s</div><hr style="border-color:rgba(255,255,255,0.15);margin:12px 0">';
+            out += steps.length ? steps.join('<br>') : 'Sab values pehle se bhari hui thi.';
+            if (a !== null && a < 0) out += '<br><br>💡 <b>a negative hai</b> - matlab retardation (velocity ghat rahi hai).';
+            document.getElementById('res').innerHTML = out;
+        }
+        function fmt(x) { return x === null ? '?' : (Math.round(x * 100) / 100); }
+    </script>
+</body>
+
+</html>

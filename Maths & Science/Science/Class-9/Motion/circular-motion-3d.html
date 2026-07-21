@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Circular Motion Lab | AIkiPadhai</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="../sci-3d.js"></script>
+</head>
+
+<body>
+    <script>
+        // ---- arrow helper: points +Y, updatable length ----
+        function makeArrow(T, ctx, hex) {
+            var g = new T.Group();
+            var shaft = new T.Mesh(new T.CylinderGeometry(0.07, 0.07, 1, 12), ctx.mat(hex));
+            var head = new T.Mesh(new T.ConeGeometry(0.2, 0.4, 14), ctx.mat(hex));
+            g.add(shaft); g.add(head);
+            g.userData.shaft = shaft; g.userData.head = head;
+            return g;
+        }
+        function setArrow(g, len) {
+            var sh = g.userData.shaft, hd = g.userData.head;
+            sh.scale.y = Math.max(0.01, len); sh.position.y = len / 2;
+            hd.position.y = len + 0.2;
+        }
+        function orient(T, obj, dir) {
+            obj.quaternion.setFromUnitVectors(new T.Vector3(0, 1, 0), dir.clone().normalize());
+        }
+
+        Sci3D({
+            title: "🧊 3D Circular Motion Lab",
+            back: { href: "circular-motion.html", label: "Back to Lesson" },
+            intro: { name: "3D Circular Motion Lab", desc: "Drag karke ghumao. Neeche sliders se speed aur radius badlo. 'Dori kaato' slider se object ko chhod kar dekho wo tangent mein udta hai! Kisi bhi part par tap karke jaano." },
+            camZ: 22,
+            data: {
+                path: { emoji: "⭕", name: "Circular Path", nick: "Gol raasta", desc: "Wo gol raasta jispar object ghoom raha hai. Ek poore chakkar ki doori = 2πr (circumference)." },
+                hub: { emoji: "🎯", name: "Centre (Axis)", nick: "Kendra", desc: "Circle ka kendra. Acceleration hamesha ISI ki taraf hoti hai (centripetal). Object isi ke charon taraf ghoomta hai." },
+                arm: { emoji: "📏", name: "Radius Arm", nick: "Dori / Rod", desc: "Centre se object tak ki dori (radius r). Yahi object ko andar ki taraf kheenchkar gol raaste par rakhti hai." },
+                ball: { emoji: "🔵", name: "Object (Main)", nick: "Ghoomta object", desc: "Ye constant SPEED se ghoom raha hai - lekin iski DIRECTION har pal badal rahi hai, isliye ye accelerated motion hai!" },
+                vel: { emoji: "🟢", name: "Velocity Vector", nick: "Tangential", desc: "Hari arrow = velocity. Ye hamesha TANGENT (circle ko chhoone wali line) ke saath hoti hai - kabhi centre ki taraf nahi. Radius bada karo toh ye lambi ho jaayegi (v = r × ω)." },
+                cent: { emoji: "🔴", name: "Centripetal Acceleration", nick: "Centre ki taraf", desc: "Laal arrow = acceleration, hamesha CENTRE ki taraf. Yahi object ki direction badalti rehti hai aur use gol raaste par rakhti hai." },
+                ball2: { emoji: "🟡", name: "Comparison Object", nick: "Chhota radius", desc: "Ye chhote radius par usi angular speed se ghoom raha hai. Dhyan do: iski velocity arrow CHHOTI hai - kyunki v = r × ω. Bada radius = zyada linear speed!" },
+                trail: { emoji: "✨", name: "Trail (Path traced)", nick: "Nishaan", desc: "Object ne abhi tak jo raasta tay kiya uske nishaan. Ek poora chakkar = distance 2πr, lekin displacement 0!" }
+            },
+            controls: [
+                { id: "spd", label: "⚡ Speed (angular velocity ω)", min: 0, max: 100, step: 1, value: 40, on: function (v, ctx) { ctx.model.omega = (v / 100) * 2.2; } },
+                { id: "rad", label: "📏 Radius (r)", min: 30, max: 100, step: 1, value: 70, on: function (v, ctx) { ctx.model.R = v / 10; if (ctx.model.rebuildRings) ctx.model.rebuildRings(); } },
+                { id: "cut", label: "✂️ Dori kaato (0 = judi, 1 = kaat do)", min: 0, max: 1, step: 1, value: 0, on: function (v, ctx) { ctx.model.wantCut = (v === 1); } }
+            ],
+            build: function (ctx) {
+                var T = ctx.THREE, P = ctx.pivot, M = ctx.model;
+                M.theta = 0; M.omega = 0.88; M.R = 7; M.wantCut = false; M.released = false; M.lastT = 0;
+
+                // reference grid floor
+                var grid = new T.GridHelper(26, 13, 0x475569, 0x334155);
+                grid.position.y = -0.02; P.add(grid);
+
+                // centre hub + vertical axis
+                var hub = new T.Mesh(new T.SphereGeometry(0.45, 20, 20), ctx.mat(0xf59e0b));
+                var axis = new T.Mesh(new T.CylinderGeometry(0.07, 0.07, 5, 10), ctx.mat(0x94a3b8, { transparent: true, opacity: 0.6 }));
+                var hubG = new T.Group(); hubG.add(hub); hubG.add(axis);
+                ctx.addPart(hubG, 'hub'); P.add(hubG);
+
+                // rings (rebuilt when radius changes)
+                M.ringG = new T.Group(); P.add(M.ringG);
+                M.rebuildRings = function () {
+                    while (M.ringG.children.length) M.ringG.remove(M.ringG.children[0]);
+                    var r1 = new T.Mesh(new T.TorusGeometry(M.R, 0.045, 8, 80), ctx.mat(0x64748b, { transparent: true, opacity: 0.75 }));
+                    r1.rotation.x = Math.PI / 2; M.ringG.add(r1);
+                    var r2 = new T.Mesh(new T.TorusGeometry(M.R * 0.55, 0.035, 8, 64), ctx.mat(0xca8a04, { transparent: true, opacity: 0.55 }));
+                    r2.rotation.x = Math.PI / 2; M.ringG.add(r2);
+                };
+                M.rebuildRings();
+                ctx.addPart(M.ringG, 'path');
+
+                // radius arm
+                M.arm = new T.Mesh(new T.CylinderGeometry(0.06, 0.06, 1, 10), ctx.mat(0xe2e8f0));
+                ctx.addPart(M.arm, 'arm'); P.add(M.arm);
+
+                // main object + comparison object
+                M.ball = new T.Mesh(new T.SphereGeometry(0.55, 24, 24), ctx.mat(0x3b82f6));
+                ctx.addPart(M.ball, 'ball'); P.add(M.ball);
+                M.ball2 = new T.Mesh(new T.SphereGeometry(0.4, 20, 20), ctx.mat(0xfacc15));
+                ctx.addPart(M.ball2, 'ball2'); P.add(M.ball2);
+
+                // vectors
+                M.vel = makeArrow(T, ctx, 0x22c55e); ctx.addPart(M.vel, 'vel'); P.add(M.vel);
+                M.cent = makeArrow(T, ctx, 0xef4444); ctx.addPart(M.cent, 'cent'); P.add(M.cent);
+                M.vel2 = makeArrow(T, ctx, 0xa16207); ctx.addPart(M.vel2, 'ball2'); P.add(M.vel2);
+
+                // trail
+                M.trailG = new T.Group(); ctx.addPart(M.trailG, 'trail'); P.add(M.trailG);
+                M.trail = [];
+                for (var i = 0; i < 26; i++) {
+                    var d = new T.Mesh(new T.SphereGeometry(0.12, 8, 8), ctx.mat(0x60a5fa, { transparent: true, opacity: 0.5 }));
+                    d.visible = false; M.trailG.add(d); M.trail.push(d);
+                }
+                M.trailI = 0; M.trailTick = 0;
+                P.rotation.x = 0.55;
+            },
+            onFrame: function (t, ctx) {
+                var T = ctx.THREE, M = ctx.model;
+                if (!M.ball) return;
+                var dt = Math.min(t - M.lastT, 0.05); M.lastT = t;
+
+                // handle cut / rejoin
+                if (M.wantCut && !M.released) {
+                    M.released = true;
+                    var th = M.theta;
+                    M.relPos = new T.Vector3(M.R * Math.cos(th), 0, M.R * Math.sin(th));
+                    M.relDir = new T.Vector3(-Math.sin(th), 0, Math.cos(th));
+                    M.relT = 0;
+                }
+                if (!M.wantCut && M.released) { M.released = false; }
+
+                var speed = M.R * M.omega;      // v = r * omega
+                var pos, tang;
+
+                if (!M.released) {
+                    M.theta += M.omega * dt;
+                    pos = new T.Vector3(M.R * Math.cos(M.theta), 0, M.R * Math.sin(M.theta));
+                    tang = new T.Vector3(-Math.sin(M.theta), 0, Math.cos(M.theta));
+                    // radius arm
+                    M.arm.visible = true; M.cent.visible = true;
+                    var mid = pos.clone().multiplyScalar(0.5);
+                    M.arm.position.copy(mid);
+                    M.arm.scale.y = M.R;
+                    orient(T, M.arm, pos.clone().normalize());
+                    // centripetal arrow (towards centre)
+                    M.cent.position.copy(pos);
+                    orient(T, M.cent, pos.clone().negate().normalize());
+                    setArrow(M.cent, 1.6);
+                    // trail
+                    M.trailTick += dt;
+                    if (M.trailTick > 0.09) {
+                        M.trailTick = 0;
+                        var d = M.trail[M.trailI % M.trail.length];
+                        d.position.copy(pos); d.visible = true;
+                        M.trailI++;
+                    }
+                } else {
+                    M.relT += dt;
+                    pos = M.relPos.clone().add(M.relDir.clone().multiplyScalar(speed * M.relT));
+                    tang = M.relDir.clone();
+                    M.arm.visible = false; M.cent.visible = false;
+                    if (pos.length() > 26) { M.relT = 0; }   // loop back so it stays visible
+                }
+
+                M.ball.position.copy(pos);
+                // velocity arrow (tangential), length scales with speed
+                M.vel.position.copy(pos);
+                orient(T, M.vel, tang);
+                setArrow(M.vel, Math.max(0.4, speed * 0.55));
+
+                // comparison object: smaller radius, SAME angular speed
+                var r2 = M.R * 0.55, th2 = M.theta;
+                var pos2 = new T.Vector3(r2 * Math.cos(th2), 0, r2 * Math.sin(th2));
+                M.ball2.position.copy(pos2);
+                M.vel2.position.copy(pos2);
+                orient(T, M.vel2, new T.Vector3(-Math.sin(th2), 0, Math.cos(th2)));
+                setArrow(M.vel2, Math.max(0.3, r2 * M.omega * 0.55));
+            }
+        });
+    </script>
+</body>
+
+</html>
