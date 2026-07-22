@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Force &amp; Acceleration Lab | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #2e1065, #6d28d9); color: #ede9fe; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #ddd6fe; text-decoration: none; border: 1px solid rgba(221,214,254,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(221,214,254,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 860px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,0.06); border-radius: 16px; padding: 16px 18px; margin-bottom: 14px; }
+        .card h3 { color: #fff; font-size: 14px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .05em; }
+        canvas { width: 100%; height: auto; background: rgba(0,0,0,0.25); border-radius: 12px; display: block; }
+        .row { display: flex; gap: 14px; flex-wrap: wrap; }
+        .row > div { flex: 1 1 240px; }
+        label { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 5px; }
+        label b { color: #c4b5fd; }
+        input[type=range] { width: 100%; accent-color: #a78bfa; }
+        .btns { display: flex; gap: 10px; margin-top: 10px; }
+        .btns button { flex: 1; border: none; padding: 12px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 15px; }
+        .play { background: #8b5cf6; color: #1e1046; } .play:hover { background: #a78bfa; }
+        .rst { background: transparent; color: #ddd6fe; border: 1px solid rgba(221,214,254,0.4); }
+        .stats { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+        .stat { flex: 1 1 110px; background: rgba(0,0,0,0.25); border-radius: 10px; padding: 12px; text-align: center; }
+        .stat .n { font-size: 22px; font-weight: 800; color: #fff; } .stat .l { font-size: 11px; color: #c4b5fd; }
+        .eq { background: rgba(0,0,0,0.22); border-radius: 10px; padding: 12px; font-size: 16px; text-align: center; margin-top: 10px; }
+        .eq b { color: #fbbf24; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="second-law.html">← Back to Lesson</a>
+        <div class="title">💪 Force &amp; Acceleration Lab</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <canvas id="cv" width="800" height="150"></canvas>
+        </div>
+        <div class="card">
+            <div class="row">
+                <div>
+                    <label>Applied Force (F) <b><span id="fV">20</span> N</b></label>
+                    <input type="range" id="f" min="0" max="60" value="20" step="2" oninput="sync()">
+                </div>
+                <div>
+                    <label>Mass (m) <b><span id="mV">4</span> kg</b></label>
+                    <input type="range" id="m" min="1" max="20" value="4" step="1" oninput="sync()">
+                </div>
+            </div>
+            <div class="eq" id="eq"></div>
+            <div class="btns">
+                <button class="play" onclick="play()">▶ Push!</button>
+                <button class="rst" onclick="resetSim()">↺ Reset</button>
+            </div>
+            <div class="stats">
+                <div class="stat"><div class="n" id="aS">5.0</div><div class="l">Acceleration (m/s²)</div></div>
+                <div class="stat"><div class="n" id="vS">0.0</div><div class="l">Velocity (m/s)</div></div>
+                <div class="stat"><div class="n" id="tS">0.0</div><div class="l">Time (s)</div></div>
+            </div>
+        </div>
+        <div class="card">
+            <div style="font-size:14.5px;line-height:1.6;color:#ddd6fe;" id="note"></div>
+        </div>
+    </div>
+
+    <script>
+        var cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+        var F = 20, m = 4, t = 0, v = 0, x = 0, running = false;
+
+        function sync() {
+            F = +document.getElementById('f').value; m = +document.getElementById('m').value;
+            document.getElementById('fV').textContent = F; document.getElementById('mV').textContent = m;
+            resetSim();
+        }
+        function accel() { return F / m; }
+
+        function draw() {
+            var W = 800, H = 150;
+            ctx.clearRect(0, 0, W, H);
+            // ground
+            ctx.fillStyle = '#1e1b4b'; ctx.fillRect(0, 105, W, 45);
+            // box (size scales with mass)
+            var boxW = 24 + m * 3.4, boxH = 24 + m * 2.6;
+            var bx = 40 + x;
+            if (bx > W - boxW - 10) bx = W - boxW - 10;
+            ctx.fillStyle = '#a78bfa'; ctx.fillRect(bx, 105 - boxH, boxW, boxH);
+            ctx.fillStyle = '#1e1046'; ctx.font = 'bold 13px sans-serif'; ctx.fillText(m + ' kg', bx + 6, 105 - boxH / 2 + 4);
+            // force arrow
+            if (F > 0) {
+                var aLen = 12 + F * 1.8;
+                ctx.strokeStyle = '#22c55e'; ctx.lineWidth = 5;
+                ctx.beginPath(); ctx.moveTo(bx - aLen, 105 - boxH / 2); ctx.lineTo(bx - 4, 105 - boxH / 2); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(bx - 4, 105 - boxH / 2); ctx.lineTo(bx - 14, 105 - boxH / 2 - 7); ctx.lineTo(bx - 14, 105 - boxH / 2 + 7); ctx.closePath();
+                ctx.fillStyle = '#22c55e'; ctx.fill();
+                ctx.fillStyle = '#86efac'; ctx.font = '12px sans-serif'; ctx.fillText(F + ' N', bx - aLen, 105 - boxH - 6);
+            }
+        }
+        function frame() {
+            if (running) {
+                var a = accel(); t += 0.03; v = a * t; x += v * 1.4 * 0.03 * 10;
+                if (x > 720) { running = false; }
+            }
+            document.getElementById('aS').textContent = accel().toFixed(2);
+            document.getElementById('vS').textContent = v.toFixed(1);
+            document.getElementById('tS').textContent = t.toFixed(1);
+            draw();
+            requestAnimationFrame(frame);
+        }
+        function play() { if (x > 700) resetSim(); running = true; }
+        function resetSim() { running = false; t = 0; v = 0; x = 0; updateEq(); }
+        function updateEq() {
+            document.getElementById('eq').innerHTML = 'a = F ÷ m = ' + F + ' ÷ ' + m + ' = <b>' + (F / m).toFixed(2) + ' m/s²</b>';
+            var note;
+            if (F === 0) note = '⚠️ Force 0 hai - object nahi hilega (Newton ka 1st law: bina force ke gati nahi badalti).';
+            else note = '💡 F = ma. Force badhaao toh acceleration badhega; mass badhaao toh acceleration ghatega. Abhi: ' + F + ' N force, ' + m + ' kg mass → ' + (F / m).toFixed(2) + ' m/s² acceleration.';
+            document.getElementById('note').innerHTML = note;
+        }
+        sync(); frame();
+    </script>
+</body>
+
+</html>

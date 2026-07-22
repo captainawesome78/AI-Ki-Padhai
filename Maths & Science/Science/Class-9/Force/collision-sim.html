@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Momentum Collision Sim | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #451a03, #b45309); color: #fef3c7; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #fde68a; text-decoration: none; border: 1px solid rgba(253,230,138,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(253,230,138,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 840px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,0.07); border-radius: 16px; padding: 16px 18px; margin-bottom: 14px; }
+        .card h3 { color: #fff; font-size: 14px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .05em; }
+        canvas { width: 100%; height: auto; background: rgba(0,0,0,0.25); border-radius: 12px; display: block; }
+        .row { display: flex; gap: 14px; flex-wrap: wrap; }
+        .col { flex: 1 1 300px; background: rgba(0,0,0,0.2); border-radius: 12px; padding: 14px; }
+        .col h4 { font-size: 13px; margin-bottom: 8px; }
+        .c1 h4 { color: #93c5fd; } .c2 h4 { color: #fca5a5; }
+        label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
+        label b { color: #fbbf24; }
+        input[type=range] { width: 100%; accent-color: #f59e0b; margin-bottom: 8px; }
+        .btns { display: flex; gap: 10px; margin-top: 12px; }
+        .btns button { flex: 1; border: none; padding: 13px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 15px; }
+        .go { background: #f59e0b; color: #451a03; } .rst { background: transparent; color: #fde68a; border: 1px solid rgba(253,230,138,0.4); }
+        .out { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+        .obox { flex: 1 1 150px; background: rgba(0,0,0,0.25); border-radius: 12px; padding: 14px; text-align: center; }
+        .obox .n { font-size: 22px; font-weight: 800; color: #fff; } .obox .l { font-size: 12px; color: #fcd34d; }
+        .verdict { padding: 10px; border-radius: 10px; font-weight: 800; text-align: center; margin-top: 10px; background: #422006; color: #fde68a; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="momentum.html">← Back to Lesson</a>
+        <div class="title">💥 Momentum Collision Sim</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card"><canvas id="cv" width="800" height="160"></canvas></div>
+        <div class="card">
+            <div class="row">
+                <div class="col c1">
+                    <h4>🔵 Cart 1 (left)</h4>
+                    <label>Mass <b><span id="m1V">2</span> kg</b></label>
+                    <input type="range" id="m1" min="1" max="6" value="2" oninput="sync()">
+                    <label>Velocity <b><span id="u1V">4</span> m/s →</b></label>
+                    <input type="range" id="u1" min="0" max="8" value="4" oninput="sync()">
+                </div>
+                <div class="col c2">
+                    <h4>🔴 Cart 2 (right)</h4>
+                    <label>Mass <b><span id="m2V">3</span> kg</b></label>
+                    <input type="range" id="m2" min="1" max="6" value="3" oninput="sync()">
+                    <label>Velocity <b><span id="u2V">0</span> m/s</b></label>
+                    <input type="range" id="u2" min="-6" max="0" value="0" oninput="sync()">
+                </div>
+            </div>
+            <div class="btns">
+                <button class="go" onclick="play()">▶ Collide! (chipak jaate hain)</button>
+                <button class="rst" onclick="resetSim()">↺ Reset</button>
+            </div>
+            <div class="out">
+                <div class="obox"><div class="n" id="pBefore">8</div><div class="l">Total momentum PEHLE</div></div>
+                <div class="obox"><div class="n" id="pAfter">8</div><div class="l">Total momentum BAAD</div></div>
+            </div>
+            <div class="verdict" id="verdict">Momentum conserve hota hai ⚖️</div>
+        </div>
+    </div>
+
+    <script>
+        var cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+        var m1 = 2, u1 = 4, m2 = 3, u2 = 0;
+        var x1 = 120, x2 = 560, phase = 'idle', vf = 0, animId = null;
+
+        function sync() {
+            m1 = +document.getElementById('m1').value; u1 = +document.getElementById('u1').value;
+            m2 = +document.getElementById('m2').value; u2 = +document.getElementById('u2').value;
+            document.getElementById('m1V').textContent = m1; document.getElementById('u1V').textContent = u1;
+            document.getElementById('m2V').textContent = m2; document.getElementById('u2V').textContent = u2;
+            resetSim();
+        }
+        function draw() {
+            var W = 800, H = 160;
+            ctx.clearRect(0, 0, W, H);
+            ctx.fillStyle = '#2a1505'; ctx.fillRect(0, 120, W, 40);
+            function cart(x, mass, color) {
+                var w = 30 + mass * 8, h = 26 + mass * 6;
+                ctx.fillStyle = color; ctx.fillRect(x - w / 2, 120 - h, w, h);
+                ctx.fillStyle = '#1a1005'; ctx.beginPath(); ctx.arc(x - w / 3, 120, 6, 0, 7); ctx.arc(x + w / 3, 120, 6, 0, 7); ctx.fill();
+                ctx.fillStyle = '#fff'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center'; ctx.fillText(mass + 'kg', x, 120 - h / 2 + 4);
+            }
+            if (phase === 'stuck') { cart((x1 + x2) / 2 - 10, m1, '#3b82f6'); cart((x1 + x2) / 2 + 20, m2, '#ef4444'); }
+            else { cart(x1, m1, '#3b82f6'); cart(x2, m2, '#ef4444'); }
+            ctx.textAlign = 'left';
+        }
+        function frame() {
+            if (phase === 'moving') {
+                x1 += u1 * 0.5; x2 += u2 * 0.5;
+                if (x2 - x1 < 70) { phase = 'stuck'; vf = (m1 * u1 + m2 * u2) / (m1 + m2); }
+            } else if (phase === 'stuck') {
+                x1 += vf * 0.5; x2 += vf * 0.5;
+                if (x1 > 820 || x1 < -60) phase = 'done';
+            }
+            draw(); animId = requestAnimationFrame(frame);
+        }
+        function play() { resetSim(); phase = 'moving'; }
+        function resetSim() { if (animId) cancelAnimationFrame(animId); x1 = 120; x2 = 560; phase = 'idle'; update(); draw(); animId = requestAnimationFrame(frame); }
+        function update() {
+            var pB = m1 * u1 + m2 * u2, vF = pB / (m1 + m2), pA = (m1 + m2) * vF;
+            document.getElementById('pBefore').textContent = pB + ' kg·m/s';
+            document.getElementById('pAfter').textContent = Math.round(pA) + ' kg·m/s';
+            document.getElementById('verdict').innerHTML = '✅ Pehle = ' + pB + ', Baad = ' + Math.round(pA) + ' kg·m/s — BARABAR! (combined velocity = ' + vF.toFixed(2) + ' m/s)';
+        }
+        sync();
+    </script>
+</body>
+
+</html>

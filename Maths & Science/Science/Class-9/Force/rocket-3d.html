@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Rocket - Action &amp; Reaction Lab | AIkiPadhai</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="../sci-3d.js"></script>
+</head>
+
+<body>
+    <script>
+        function makeArrow(T, ctx, hex) {
+            var g = new T.Group();
+            var shaft = new T.Mesh(new T.CylinderGeometry(0.09, 0.09, 1, 12), ctx.mat(hex));
+            var head = new T.Mesh(new T.ConeGeometry(0.24, 0.5, 14), ctx.mat(hex));
+            g.add(shaft); g.add(head); g.userData.shaft = shaft; g.userData.head = head; return g;
+        }
+        function setArrow(g, len) { g.userData.shaft.scale.y = Math.max(0.01, len); g.userData.shaft.position.y = len / 2; g.userData.head.position.y = len + 0.25; }
+        function orient(T, obj, dir) { obj.quaternion.setFromUnitVectors(new T.Vector3(0, 1, 0), dir.clone().normalize()); }
+
+        Sci3D({
+            title: "🧊 3D Rocket: Action &amp; Reaction",
+            back: { href: "third-law.html", label: "Back to Lesson" },
+            intro: { name: "3D Rocket Lab", desc: "Newton ka teesra niyam! Neeche 'Thrust' aur 'Mass' badlo, phir 'Launch' karo. Rocket gas neeche phenkta hai (action) aur upar udta hai (reaction). Parts par tap karke jaano." },
+            camZ: 24,
+            data: {
+                nose: { emoji: "🔺", name: "Nose Cone", nick: "Aage ka hissa", desc: "Rocket ka nukeela agla hissa - ye hawa ko cheerkar (aerodynamic) rocket ko upar jaane mein madad karta hai." },
+                body: { emoji: "🚀", name: "Rocket Body", nick: "Fuel tank", desc: "Isme fuel aur oxidizer bhare hote hain. Fuel jalkar tezi se gas banati hai jo neeche nikalti hai." },
+                fins: { emoji: "🔻", name: "Fins", nick: "Balance", desc: "Neeche ke pankh (fins) rocket ko seedha aur balance mein rakhte hain jab wo upar udta hai." },
+                nozzle: { emoji: "🔥", name: "Nozzle", nick: "Gas exit", desc: "Yahan se garam gas bahut tezi se NEECHE nikalti hai. Yahi 'action' force hai." },
+                exhaust: { emoji: "💨", name: "Exhaust Gas", nick: "Action (neeche)", desc: "Gas ko NEECHE phenkna = action force. Ye Newton ke 3rd law ka 'action' hissa hai." },
+                thrust: { emoji: "⬆️", name: "Thrust (Reaction)", nick: "Upar", desc: "Hari arrow = thrust. Gas neeche jaati hai toh reaction mein rocket ko UPAR dhakelti hai (barabar aur ulti force). Isi se rocket udta hai!" },
+                gas: { emoji: "⬇️", name: "Action Force", nick: "Neeche", desc: "Orange arrow = gas par force (neeche). Dekho: ye hari (thrust) arrow ke BARABAR aur ULTI hai - yahi action-reaction pair hai!" },
+                balloon: { emoji: "🎈", name: "Balloon (Comparison)", nick: "Wahi principle", desc: "Balloon bhi rocket jaisa hai! Hawa ek taraf nikalti hai (action), balloon doosri taraf udta hai (reaction)." }
+            },
+            controls: [
+                { id: "thrust", label: "🔥 Thrust (force)", min: 0, max: 100, step: 1, value: 60, on: function (v, ctx) { ctx.model.thrust = v; } },
+                { id: "mass", label: "⚖️ Rocket mass", min: 20, max: 100, step: 1, value: 45, on: function (v, ctx) { ctx.model.mass = v; } },
+                { id: "launch", label: "🚀 Launch (0 = pad par, 1 = udao)", min: 0, max: 1, step: 1, value: 0, on: function (v, ctx) { ctx.model.launched = (v === 1); if (v === 0) { ctx.model.ry = 0; ctx.model.vy = 0; ctx.model.bx = 0; } } }
+            ],
+            build: function (ctx) {
+                var T = ctx.THREE, P = ctx.pivot, M = ctx.model;
+                M.thrust = 60; M.mass = 45; M.launched = false; M.ry = 0; M.vy = 0; M.bx = 0; M.lastT = 0;
+
+                var grid = new T.GridHelper(30, 15, 0x475569, 0x334155); grid.position.y = -6; P.add(grid);
+                // launch pad
+                var pad = new T.Mesh(new T.CylinderGeometry(2.4, 2.8, 0.5, 20), ctx.mat(0x64748b)); pad.position.set(-5, -5.7, 0); P.add(pad);
+
+                // rocket group
+                M.rocket = new T.Group(); M.rocket.position.set(-5, 0, 0); P.add(M.rocket);
+                var body = new T.Mesh(new T.CylinderGeometry(0.9, 0.9, 5, 24), ctx.mat(0xe2e8f0));
+                ctx.addPart(body, 'body'); M.rocket.add(body);
+                var nose = new T.Mesh(new T.ConeGeometry(0.9, 2, 24), ctx.mat(0xef4444)); nose.position.y = 3.5;
+                ctx.addPart(nose, 'nose'); M.rocket.add(nose);
+                var nozzle = new T.Mesh(new T.CylinderGeometry(0.5, 0.9, 1, 20), ctx.mat(0x94a3b8)); nozzle.position.y = -3;
+                ctx.addPart(nozzle, 'nozzle'); M.rocket.add(nozzle);
+                var finsG = new T.Group();
+                for (var i = 0; i < 4; i++) {
+                    var fin = new T.Mesh(new T.BoxGeometry(0.12, 1.4, 1.1), ctx.mat(0xdc2626));
+                    var a = (i / 4) * Math.PI * 2;
+                    fin.position.set(Math.cos(a) * 0.9, -2, Math.sin(a) * 0.9); fin.rotation.y = -a;
+                    finsG.add(fin);
+                }
+                ctx.addPart(finsG, 'fins'); M.rocket.add(finsG);
+
+                // exhaust particles (world space, below rocket)
+                M.exG = new T.Group(); ctx.addPart(M.exG, 'exhaust'); P.add(M.exG);
+                M.ex = [];
+                for (var e = 0; e < 16; e++) {
+                    var pt = new T.Mesh(new T.SphereGeometry(0.28, 8, 8), ctx.mat(0xf59e0b, { transparent: true, opacity: 0.9 }));
+                    pt.visible = false; pt.userData.life = Math.random(); M.exG.add(pt); M.ex.push(pt);
+                }
+                // force vectors
+                M.thrustArr = makeArrow(T, ctx, 0x22c55e); ctx.addPart(M.thrustArr, 'thrust'); P.add(M.thrustArr);
+                M.gasArr = makeArrow(T, ctx, 0xf97316); ctx.addPart(M.gasArr, 'gas'); P.add(M.gasArr);
+
+                // balloon comparison (right side)
+                M.balloon = new T.Group();
+                var bb = new T.Mesh(new T.SphereGeometry(1.1, 20, 20), ctx.mat(0xa855f7)); bb.scale.set(1, 1.25, 1);
+                var knot = new T.Mesh(new T.ConeGeometry(0.3, 0.6, 8), ctx.mat(0x7c3aed)); knot.position.set(-1.1, 0, 0); knot.rotation.z = Math.PI / 2;
+                M.balloon.add(bb); M.balloon.add(knot); M.balloon.position.set(7, 0, 0);
+                ctx.addPart(M.balloon, 'balloon'); P.add(M.balloon);
+                M.puff = makeArrow(T, ctx, 0xf97316); M.puff.rotation.z = Math.PI / 2; P.add(M.puff);
+
+                P.rotation.x = 0.15;
+            },
+            onFrame: function (t, ctx) {
+                var T = ctx.THREE, M = ctx.model; if (!M.rocket) return;
+                var dt = Math.min(t - M.lastT, 0.05); M.lastT = t;
+                var g = 0.5, weight = M.mass * g * 0.02, thrustF = M.thrust * 0.05;
+                var lifting = M.launched && thrustF > weight;
+
+                // rocket motion
+                if (lifting) { M.vy += ((thrustF - weight) / (M.mass * 0.05)) * dt * 2; M.ry += M.vy * dt; }
+                if (M.ry > 20) { M.ry = -5.5; M.vy = 0; }   // loop back for continuous view
+                M.rocket.position.y = M.ry;
+
+                // exhaust flows whenever launched & thrust>0
+                var flowing = M.launched && M.thrust > 0;
+                var nozzleY = M.ry - 3.5;
+                M.ex.forEach(function (p) {
+                    if (!flowing) { p.visible = false; return; }
+                    p.visible = true; p.userData.life -= dt * 1.5;
+                    if (p.userData.life <= 0) { p.userData.life = 1; p.position.set(-5 + (Math.random() - 0.5) * 0.6, nozzleY, (Math.random() - 0.5) * 0.6); p.scale.setScalar(1); }
+                    p.position.y -= dt * 9; p.scale.multiplyScalar(1 + dt * 1.2);
+                    p.material.opacity = p.userData.life * 0.9;
+                });
+
+                // force vectors near nozzle
+                var vlen = Math.max(0.4, M.thrust * 0.035);
+                M.thrustArr.visible = M.gasArr.visible = (M.thrust > 0);
+                M.thrustArr.position.set(-3.0, M.ry - 1.5, 0); orient(T, M.thrustArr, new T.Vector3(0, 1, 0)); setArrow(M.thrustArr, vlen);
+                M.gasArr.position.set(-5, nozzleY - 0.3, 0); orient(T, M.gasArr, new T.Vector3(0, -1, 0)); setArrow(M.gasArr, vlen);
+
+                // balloon comparison: when launched, air out right, balloon moves left
+                if (M.launched && M.thrust > 0) { M.bx -= dt * 1.6; if (M.bx < -6) M.bx = 3; }
+                M.balloon.position.x = 7 + M.bx;
+                M.puff.visible = (M.launched && M.thrust > 0);
+                M.puff.position.set(8.2 + M.bx, 0, 0); setArrow(M.puff, 1.2);
+            }
+        });
+    </script>
+</body>
+
+</html>
