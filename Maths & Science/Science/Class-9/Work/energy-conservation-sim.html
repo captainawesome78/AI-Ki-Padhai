@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Energy Conservation Sim | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #083344, #0e7490); color: #e0f2fe; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #a5f3fc; text-decoration: none; border: 1px solid rgba(165,243,252,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(165,243,252,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 900px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,0.06); border-radius: 16px; padding: 16px 18px; margin-bottom: 14px; }
+        canvas { width: 100%; height: auto; background: rgba(0,0,0,0.22); border-radius: 12px; display: block; }
+        .modes { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+        .modes button { flex: 1; min-width: 120px; background: rgba(255,255,255,0.1); border: 2px solid transparent; color: #e0f2fe; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 15px; }
+        .modes button.active { border-color: #22d3ee; background: rgba(34,211,238,0.15); }
+        .bars { display: flex; gap: 12px; align-items: flex-end; height: 150px; margin: 10px 0; }
+        .bar { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; }
+        .bar .fill { width: 100%; border-radius: 8px 8px 0 0; transition: height .1s; }
+        .ke .fill { background: linear-gradient(#f97316,#fb923c); } .pe .fill { background: linear-gradient(#3b82f6,#60a5fa); } .tot .fill { background: linear-gradient(#22c55e,#4ade80); }
+        .bar .cap { font-size: 12px; margin-top: 6px; font-weight: 700; } .bar .val { font-size: 13px; color: #fff; font-weight: 800; }
+        .ctr { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+        .ctr button { flex: 1; min-width: 100px; border: none; padding: 13px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 15px; }
+        .go { background: #06b6d4; color: #04222b; } .rst { background: transparent; color: #a5f3fc; border: 1px solid rgba(165,243,252,0.4); }
+        label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
+        input[type=range] { width: 100%; accent-color: #22d3ee; }
+        .note { font-size: 13px; color: #a5f3fc; text-align: center; margin-top: 8px; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="conservation-of-energy.html">← Back to Lesson</a>
+        <div class="title">🎢 Energy Conservation Sim</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <div class="modes">
+                <button id="mSlope" class="active" onclick="setMode('slope')">⛰️ Ball on Slope</button>
+                <button id="mPend" onclick="setMode('pend')">🕰️ Pendulum</button>
+            </div>
+            <canvas id="cv" width="820" height="300"></canvas>
+            <div class="note" id="note">Ball ko chhodo aur dekho PE (neela) KE (orange) mein badalta hai - total (hara) constant rehta hai!</div>
+        </div>
+        <div class="card">
+            <div class="bars">
+                <div class="bar ke"><div class="val" id="keV">0 J</div><div class="fill" id="keB" style="height:0%"></div><div class="cap" style="color:#fb923c">KE (gati)</div></div>
+                <div class="bar pe"><div class="val" id="peV">0 J</div><div class="fill" id="peB" style="height:100%"></div><div class="cap" style="color:#60a5fa">PE (oonchai)</div></div>
+                <div class="bar tot"><div class="val" id="toV">0 J</div><div class="fill" id="toB" style="height:100%"></div><div class="cap" style="color:#4ade80">Total</div></div>
+            </div>
+            <label>Mass (m) <b><span id="mV">2</span> kg</b></label>
+            <input type="range" id="m" min="1" max="5" value="2" oninput="onMass()">
+            <div class="ctr">
+                <button class="go" onclick="play()">▶ Chhodo (Release)</button>
+                <button class="rst" onclick="resetSim()">↺ Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+        var g = 10, mass = 2, mode = 'slope';
+        var H0 = 5;               // start height in metres (top)
+        var animId = null, t = 0, running = false;
+        var W = 820, Hgt = 300, ground = 255;
+        // slope geometry (metres->pixels): 1 m = 40 px height
+        function setMode(m) {
+            mode = m;
+            document.getElementById('mSlope').classList.toggle('active', m === 'slope');
+            document.getElementById('mPend').classList.toggle('active', m === 'pend');
+            resetSim();
+        }
+        function onMass() { mass = +document.getElementById('m').value; document.getElementById('mV').textContent = mass; resetSim(); }
+
+        // SLOPE: ball rolls down a curved valley (like a U). Position param p in [-1,1], h = H0 * p^2
+        // PENDULUM: angle theta swings; h = L(1-cos theta)
+        var p = -1, vp = 0;       // slope param + rate
+        var L = 5, th = 0, thMax = 1.0, om = 0; // pendulum
+
+        function play() { running = true; if (!animId) loop(); }
+        function resetSim() {
+            running = false; if (animId) { cancelAnimationFrame(animId); animId = null; }
+            p = -1; vp = 0; th = -thMax; om = 0; t = 0;
+            drawFrame(); updateBars(peAt(), 0);
+        }
+        function peAt() {
+            var h = (mode === 'slope') ? H0 * p * p : L * (1 - Math.cos(th));
+            var hmax = (mode === 'slope') ? H0 : L * (1 - Math.cos(thMax));
+            return mass * g * h;
+        }
+        function totalE() {
+            var hmax = (mode === 'slope') ? H0 : L * (1 - Math.cos(thMax));
+            return mass * g * hmax;
+        }
+        function loop() {
+            animId = requestAnimationFrame(loop);
+            if (running) {
+                var dt = 0.016;
+                if (mode === 'slope') {
+                    // energy: total = m g H0. h = H0 p^2. KE = total - PE => v derived; simple SHM-like for U-valley
+                    var acc = -4 * g * p / 4;      // approximate restoring
+                    vp += acc * dt; p += vp * dt;
+                    if (p > 1) { p = 1; vp = -Math.abs(vp) * 0.999; }
+                    if (p < -1) { p = -1; vp = Math.abs(vp) * 0.999; }
+                } else {
+                    var accT = -(g / L) * Math.sin(th);
+                    om += accT * dt; th += om * dt;
+                }
+            }
+            var pe = peAt(), tot = totalE(), ke = Math.max(0, tot - pe);
+            updateBars(pe, ke);
+            drawFrame();
+        }
+        function updateBars(pe, ke) {
+            var tot = totalE() || 1;
+            document.getElementById('keV').textContent = Math.round(ke) + ' J';
+            document.getElementById('peV').textContent = Math.round(pe) + ' J';
+            document.getElementById('toV').textContent = Math.round(ke + pe) + ' J';
+            document.getElementById('keB').style.height = (ke / tot * 100) + '%';
+            document.getElementById('peB').style.height = (pe / tot * 100) + '%';
+            document.getElementById('toB').style.height = '100%';
+        }
+        function drawFrame() {
+            ctx.clearRect(0, 0, W, Hgt);
+            if (mode === 'slope') {
+                // draw U valley
+                ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 4; ctx.beginPath();
+                for (var i = 0; i <= 100; i++) {
+                    var pp = -1 + i / 50;
+                    var x = W / 2 + pp * 320;
+                    var yy = ground - H0 * pp * pp * 40;
+                    if (i === 0) ctx.moveTo(x, yy); else ctx.lineTo(x, yy);
+                }
+                ctx.stroke();
+                var bx = W / 2 + p * 320, by = ground - H0 * p * p * 40;
+                ctx.fillStyle = '#f97316'; ctx.beginPath(); ctx.arc(bx, by - 14, 14, 0, 7); ctx.fill();
+                ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+            } else {
+                var px = W / 2, py = 50;
+                var bob = { x: px + Math.sin(th) * L * 40, y: py + Math.cos(th) * L * 40 };
+                ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(bob.x, bob.y); ctx.stroke();
+                ctx.fillStyle = '#64748b'; ctx.fillRect(px - 40, py - 8, 80, 8);
+                ctx.fillStyle = '#3b82f6'; ctx.beginPath(); ctx.arc(bob.x, bob.y, 18, 0, 7); ctx.fill();
+                ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+            }
+        }
+        resetSim();
+    </script>
+</body>
+
+</html>

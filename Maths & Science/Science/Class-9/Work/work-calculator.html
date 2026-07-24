@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Work Calculator Lab | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #4a044e, #7e22ce); color: #f3e8ff; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #e9d5ff; text-decoration: none; border: 1px solid rgba(233,213,255,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(233,213,255,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { display: flex; gap: 20px; padding: 20px; max-width: 980px; margin: 0 auto; flex-wrap: wrap; }
+        .stage { flex: 1 1 380px; min-width: 300px; background: rgba(255,255,255,0.05); border-radius: 18px; padding: 16px; }
+        canvas { width: 100%; height: auto; background: rgba(0,0,0,0.2); border-radius: 12px; display: block; }
+        .controls { flex: 1 1 300px; min-width: 280px; }
+        .card { background: rgba(255,255,255,0.07); border-radius: 16px; padding: 16px 18px; margin-bottom: 14px; }
+        .card h3 { color: #fff; font-size: 13px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: .05em; }
+        label { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 5px; }
+        label b { color: #d8b4fe; }
+        input[type=range] { width: 100%; accent-color: #a855f7; margin-bottom: 14px; }
+        .result { background: rgba(0,0,0,0.28); border-radius: 12px; padding: 18px; text-align: center; }
+        .result .big { font-size: 34px; font-weight: 800; color: #fff; }
+        .result .lbl { font-size: 13px; color: #d8b4fe; }
+        .result .form { font-size: 15px; margin-top: 10px; color: #f0abfc; font-family: monospace; }
+        .badge { display: inline-block; padding: 5px 14px; border-radius: 999px; font-weight: 800; font-size: 14px; margin-top: 12px; }
+        .pos { background: #14532d; color: #86efac; } .neg { background: #7f1d1d; color: #fca5a5; } .zero { background: #334155; color: #cbd5e1; }
+        .note { font-size: 13px; line-height: 1.6; color: #e9d5ff; margin-top: 10px; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="work-concept.html">← Back to Lesson</a>
+        <div class="title">🧮 Work Calculator Lab</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="stage">
+            <canvas id="cv" width="480" height="300"></canvas>
+            <div class="note" id="obs">Slider ghumao - force, distance aur angle badalkar dekho work kaise change hota hai. Formula: W = F &times; s &times; cos&theta;</div>
+        </div>
+        <div class="controls">
+            <div class="card">
+                <label>Force (F) <b><span id="fV">50</span> N</b></label>
+                <input type="range" id="f" min="0" max="100" value="50" oninput="calc()">
+                <label>Distance (s) <b><span id="sV">10</span> m</b></label>
+                <input type="range" id="s" min="0" max="20" value="10" oninput="calc()">
+                <label>Angle (&theta;) <b><span id="aV">0</span>&deg;</b></label>
+                <input type="range" id="a" min="0" max="180" value="0" step="15" oninput="calc()">
+            </div>
+            <div class="card">
+                <div class="result">
+                    <div class="big" id="work">500 J</div>
+                    <div class="lbl">Work Done</div>
+                    <div class="form" id="formula">W = 50 &times; 10 &times; cos0&deg; = 500 J</div>
+                    <div class="badge pos" id="badge">Positive Work ➕</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+        function calc() {
+            var F = +document.getElementById('f').value, s = +document.getElementById('s').value, a = +document.getElementById('a').value;
+            document.getElementById('fV').textContent = F;
+            document.getElementById('sV').textContent = s;
+            document.getElementById('aV').textContent = a;
+            var rad = a * Math.PI / 180;
+            var W = Math.round(F * s * Math.cos(rad));
+            document.getElementById('work').textContent = W + ' J';
+            var cosTxt = Math.cos(rad).toFixed(2);
+            document.getElementById('formula').innerHTML = 'W = ' + F + ' &times; ' + s + ' &times; cos' + a + '&deg; (=' + cosTxt + ') = ' + W + ' J';
+            var b = document.getElementById('badge');
+            if (W > 0) { b.className = 'badge pos'; b.textContent = 'Positive Work ➕'; }
+            else if (W < 0) { b.className = 'badge neg'; b.textContent = 'Negative Work ➖'; }
+            else { b.className = 'badge zero'; b.textContent = 'Zero Work ⭕'; }
+            var obs = document.getElementById('obs');
+            if (s === 0) obs.innerHTML = 'Displacement = 0 → object hila hi nahi → <b>Work = 0</b>, chahe kitni bhi force ho!';
+            else if (a === 90) obs.innerHTML = 'Force displacement ke 90&deg; par hai (perpendicular) → cos90&deg; = 0 → <b>Work = 0</b>.';
+            else if (a > 90) obs.innerHTML = 'Force displacement ke ulti taraf jhuki hai → <b>Negative work</b> (jaise friction/brake).';
+            else obs.innerHTML = 'Force displacement ki taraf hai → <b>Positive work</b>. Angle badhao toh work ghatega.';
+            draw(F, s, a, W);
+        }
+        function draw(F, s, a, W) {
+            var Wd = 480, H = 300;
+            ctx.clearRect(0, 0, Wd, H);
+            ctx.fillStyle = 'rgba(255,255,255,0.15)'; ctx.fillRect(0, 220, Wd, 4);
+            var startX = 70, y = 200;
+            var endX = 70 + s * 17;
+            // displacement arrow
+            ctx.strokeStyle = '#f87171'; ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.moveTo(startX, y + 40); ctx.lineTo(endX, y + 40); ctx.stroke();
+            arrow(endX, y + 40, 0, '#f87171');
+            ctx.fillStyle = '#fca5a5'; ctx.font = '13px sans-serif';
+            ctx.fillText('displacement s = ' + s + ' m', (startX + endX) / 2 - 50, y + 62);
+            // box (moves to mid)
+            var bx = (startX + endX) / 2 - 20;
+            ctx.fillStyle = '#a855f7'; ctx.strokeStyle = '#e9d5ff'; ctx.lineWidth = 2;
+            ctx.fillRect(bx, y - 6, 44, 44); ctx.strokeRect(bx, y - 6, 44, 44);
+            ctx.fillStyle = '#fff'; ctx.font = 'bold 12px sans-serif'; ctx.fillText('box', bx + 9, y + 20);
+            // force arrow at angle
+            var cx = bx + 22, cy = y + 16;
+            var rad = -a * Math.PI / 180; // screen y is down; angle above horizontal
+            var len = 30 + F * 0.9;
+            var fx = cx + Math.cos(rad) * len, fy = cy + Math.sin(rad) * len;
+            ctx.strokeStyle = '#4ade80'; ctx.lineWidth = 4;
+            ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(fx, fy); ctx.stroke();
+            arrow(fx, fy, rad, '#4ade80');
+            ctx.fillStyle = '#86efac'; ctx.font = 'bold 13px sans-serif';
+            ctx.fillText('F = ' + F + ' N', fx + 6, fy - 4);
+            // angle arc
+            if (a > 0 && a < 180) {
+                ctx.strokeStyle = '#fde047'; ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.arc(cx, cy, 24, rad, 0); ctx.stroke();
+                ctx.fillStyle = '#fde047'; ctx.font = '12px sans-serif'; ctx.fillText(a + '°', cx + 28, cy - 6);
+            }
+        }
+        function arrow(x, y, ang, col) {
+            ctx.fillStyle = col; ctx.save(); ctx.translate(x, y); ctx.rotate(ang);
+            ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-10, -5); ctx.lineTo(-10, 5); ctx.closePath(); ctx.fill(); ctx.restore();
+        }
+        calc();
+    </script>
+</body>
+
+</html>

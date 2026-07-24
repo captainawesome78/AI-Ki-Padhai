@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Simple Machines Lab | AIkiPadhai</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="../sci-3d.js"></script>
+</head>
+
+<body>
+    <script>
+        Sci3D({
+            title: "🧊 3D Simple Machines Lab",
+            back: { href: "simple-machines.html", label: "Back to Lesson" },
+            intro: { name: "3D Simple Machines", desc: "Teen machines ek hi scene mein! Neeche 'Effort' aur 'Load' badlo aur dekho lever kaise balance karta hai, load kaise uthta hai. Har part par tap karke jaano." },
+            camZ: 26,
+            data: {
+                beam: { emoji: "➖", name: "Lever Beam", nick: "Utthak", desc: "Lever ki lambi rod jo fulcrum par ghoomti hai. Effort ko fulcrum se jitna door lagao, utna kam force mein load uthta hai." },
+                fulcrum: { emoji: "🔺", name: "Fulcrum", nick: "Aadhaar", desc: "Wo fixed point jispar lever ghoomta hai. Fulcrum, load aur effort ki position se lever ka type tay hota hai." },
+                load: { emoji: "📦", name: "Load", nick: "Bojh", desc: "Jise uthana hai. Machine ka kaam hai isko kam effort mein upar le jaana." },
+                effort: { emoji: "⬇️", name: "Effort", nick: "Lagayi force", desc: "Jo force hum lagate hain. Green arrow effort dikhata hai - Mechanical Advantage = Load / Effort." },
+                pulley: { emoji: "🛞", name: "Pulley", nick: "Charkhi", desc: "Rassi wala pahiya. Fixed pulley force ki direction badalta hai - neeche kheencho, load upar uthta hai." },
+                ramp: { emoji: "📐", name: "Inclined Plane", nick: "Dhalaan", desc: "Jhuki hui satah. Load ko seedhe uthane ki jagah ramp par khiskao - kam force, par zyada doori." },
+                box: { emoji: "🟦", name: "Ramp Box", nick: "Peti", desc: "Ramp par khiskti peti. Slope jitni kam-teekhi (gentle) ho, utni kam force chahiye - par distance zyada." }
+            },
+            controls: [
+                { id: "effort", label: "🟢 Effort arm (fulcrum se doori)", min: 1, max: 6, step: 1, value: 4, on: function (v, ctx) { ctx.model.effArm = v; } },
+                { id: "load", label: "📦 Load (bhaari-pan)", min: 1, max: 6, step: 1, value: 3, on: function (v, ctx) { ctx.model.load = v; } },
+                { id: "slope", label: "📐 Ramp slope (teekhaapan)", min: 1, max: 5, step: 1, value: 3, on: function (v, ctx) { ctx.model.slope = v; } }
+            ],
+            build: function (ctx) {
+                var T = ctx.THREE, P = ctx.pivot, M = ctx.model;
+                M.effArm = 4; M.load = 3; M.slope = 3; M.t0 = 0;
+
+                var grid = new T.GridHelper(40, 20, 0x475569, 0x334155); grid.position.y = -7; P.add(grid);
+
+                // ===== LEVER (left) =====
+                M.lever = new T.Group(); M.lever.position.set(-9, 0, 0); P.add(M.lever);
+                var fulcrum = new T.Mesh(new T.ConeGeometry(1.1, 2, 4), ctx.mat(0x64748b)); fulcrum.position.y = -2; fulcrum.rotation.y = Math.PI / 4;
+                ctx.addPart(fulcrum, 'fulcrum'); M.lever.add(fulcrum);
+                M.beam = new T.Group();
+                var beamMesh = new T.Mesh(new T.BoxGeometry(14, 0.5, 1.2), ctx.mat(0xa16207));
+                ctx.addPart(beamMesh, 'beam'); M.beam.add(beamMesh);
+                M.beam.position.y = -0.8; M.lever.add(M.beam);
+                // load on left end of beam
+                M.loadBox = new T.Mesh(new T.BoxGeometry(1.8, 1.8, 1.8), ctx.mat(0xdc2626)); M.loadBox.position.set(-6, 1.2, 0);
+                ctx.addPart(M.loadBox, 'load'); M.beam.add(M.loadBox);
+                // effort arrow on right
+                M.effArr = mkArrow(T, ctx, 0x22c55e); M.effArr.position.set(6, 3, 0); M.effArr.rotation.z = Math.PI; // pointing down
+                ctx.addPart(M.effArr, 'effort'); M.beam.add(M.effArr);
+
+                // ===== PULLEY (center) =====
+                M.pulleyG = new T.Group(); M.pulleyG.position.set(1, 3, 0); P.add(M.pulleyG);
+                var stand = new T.Mesh(new T.CylinderGeometry(0.2, 0.2, 9, 10), ctx.mat(0x475569)); stand.position.set(0, -1.5, -0.6); M.pulleyG.add(stand);
+                var wheel = new T.Mesh(new T.TorusGeometry(1.2, 0.35, 12, 28), ctx.mat(0x0ea5e9));
+                ctx.addPart(wheel, 'pulley'); M.pulleyG.add(wheel); M.wheel = wheel;
+                var hub = new T.Mesh(new T.CylinderGeometry(0.25, 0.25, 0.8, 12), ctx.mat(0x94a3b8)); hub.rotation.x = Math.PI / 2; M.pulleyG.add(hub);
+                // rope + hanging box
+                M.pBox = new T.Mesh(new T.BoxGeometry(1.4, 1.4, 1.4), ctx.mat(0xf59e0b)); M.pBox.position.set(-1.2, -3, 0);
+                M.pulleyG.add(M.pBox);
+                M.rope1 = new T.Mesh(new T.CylinderGeometry(0.06, 0.06, 3, 6), ctx.mat(0xe2e8f0)); M.rope1.position.set(-1.2, -1.5, 0); M.pulleyG.add(M.rope1);
+                M.rope2 = new T.Mesh(new T.CylinderGeometry(0.06, 0.06, 3, 6), ctx.mat(0xe2e8f0)); M.rope2.position.set(1.2, -1.5, 0); M.pulleyG.add(M.rope2);
+
+                // ===== INCLINED PLANE (right) =====
+                M.rampG = new T.Group(); M.rampG.position.set(10, -3, 0); P.add(M.rampG);
+                M.ramp = new T.Mesh(new T.BoxGeometry(9, 0.4, 3), ctx.mat(0x9ca3af));
+                ctx.addPart(M.ramp, 'ramp'); M.rampG.add(M.ramp);
+                M.rampBox = new T.Mesh(new T.BoxGeometry(1.4, 1.4, 1.4), ctx.mat(0x3b82f6));
+                ctx.addPart(M.rampBox, 'box'); M.rampG.add(M.rampBox);
+
+                P.rotation.x = 0.18;
+            },
+            onFrame: function (t, ctx) {
+                var T = ctx.THREE, M = ctx.model; if (!M.beam) return;
+                // lever tilt: balance when effArm ~ load. tilt angle proportional to (effort torque - load torque)
+                var loadTorque = M.load * 6;            // load at distance 6
+                var effortTorque = 1 * M.effArm;        // unit effort at effArm distance -> we visualize needed
+                // If effort arm big enough, beam lifts load (rotates so load side up)
+                var balance = (M.effArm * 1.4) - M.load; // >0 => lifts
+                var target = Math.max(-0.32, Math.min(0.32, balance * 0.12));
+                M.beam.rotation.z += (target - M.beam.rotation.z) * 0.08;
+                // effort arrow length ~ load/effArm (needed force)
+                var needed = M.load / M.effArm;
+                M.effArr.scale.y = 0.5 + needed;
+                // load box size ~ load
+                var ls = 0.7 + M.load * 0.22; M.loadBox.scale.set(ls, ls, ls);
+
+                // pulley: box bobs up/down, wheel spins
+                var s = (Math.sin(t * 1.2) * 0.5 + 0.5);
+                M.pBox.position.y = -4 + s * 3;
+                M.rope1.scale.y = (5 - s * 3) / 3; M.rope1.position.y = M.pBox.position.y + (5 - s * 3) / 2;
+                M.wheel.rotation.z = -t * 1.2;
+                var ps = 0.7 + M.load * 0.18; M.pBox.scale.set(ps, ps, ps);
+
+                // ramp: angle from slope, box slides up and down
+                var ang = 0.15 + M.slope * 0.13;
+                M.ramp.rotation.z = ang;
+                var travel = (Math.sin(t * 0.9) * 0.5 + 0.5);   // 0..1 along ramp
+                var along = (travel - 0.5) * 8;
+                M.rampBox.position.set(Math.cos(ang) * along, Math.sin(ang) * along + 1, 0);
+                M.rampBox.rotation.z = ang;
+            }
+        });
+        function mkArrow(T, ctx, hex) {
+            var g = new T.Group();
+            var shaft = new T.Mesh(new T.CylinderGeometry(0.12, 0.12, 2, 10), ctx.mat(hex));
+            var head = new T.Mesh(new T.ConeGeometry(0.32, 0.7, 12), ctx.mat(hex)); head.position.y = 1.35;
+            g.add(shaft); g.add(head); return g;
+        }
+    </script>
+</body>
+
+</html>

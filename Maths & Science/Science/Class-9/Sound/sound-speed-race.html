@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Speed-in-Media Race | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #451a03, #b45309); color: #fef3c7; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #fde68a; text-decoration: none; border: 1px solid rgba(253,230,138,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(253,230,138,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 820px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,0.07); border-radius: 16px; padding: 16px 18px; margin-bottom: 14px; }
+        canvas { width: 100%; height: auto; background: rgba(0,0,0,0.25); border-radius: 12px; display: block; }
+        .btns { display: flex; gap: 10px; margin-top: 14px; }
+        .btns button { flex: 1; border: none; padding: 14px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 15px; }
+        .go { background: #f59e0b; color: #451a03; } .rst { background: transparent; color: #fde68a; border: 1px solid rgba(253,230,138,0.4); }
+        .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 12px; font-size: 14px; }
+        .legend div { display: flex; align-items: center; gap: 6px; }
+        .dot { width: 14px; height: 14px; border-radius: 4px; }
+        .note { font-size: 13px; color: #fde68a; text-align: center; margin-top: 10px; line-height: 1.6; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="speed-of-sound.html">← Back to Lesson</a>
+        <div class="title">🏁 Speed-in-Media Race</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <canvas id="cv" width="820" height="280"></canvas>
+            <div class="legend">
+                <div><span class="dot" style="background:#38bdf8"></span> Hawa (343 m/s)</div>
+                <div><span class="dot" style="background:#22d3ee"></span> Paani (1480 m/s)</div>
+                <div><span class="dot" style="background:#f87171"></span> Loha/Steel (5100 m/s)</div>
+            </div>
+            <div class="btns">
+                <button class="go" onclick="race()">🏁 Start Race!</button>
+                <button class="rst" onclick="resetR()">↺ Reset</button>
+            </div>
+            <div class="note" id="note">Teen mediums mein ek saath sound bhejo - dekho kaun pehle 500 m tak pahunchta hai!</div>
+        </div>
+    </div>
+
+    <script>
+        var cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+        var lanes = [
+            { name: "Hawa (air)", v: 343, col: "#38bdf8", x: 0, done: 0 },
+            { name: "Paani (water)", v: 1480, col: "#22d3ee", x: 0, done: 0 },
+            { name: "Loha (steel)", v: 5100, col: "#f87171", x: 0, done: 0 }
+        ];
+        var DIST = 500, running = false, t0 = 0, order = [], anim = null;
+        function resetR() { if (anim) cancelAnimationFrame(anim); running = false; lanes.forEach(function (l) { l.x = 0; l.done = 0; }); order = []; document.getElementById('note').textContent = 'Teen mediums mein ek saath sound bhejo - dekho kaun pehle 500 m tak pahunchta hai!'; draw(); }
+        function race() { resetR(); running = true; t0 = performance.now(); loop(); }
+        function loop() {
+            anim = requestAnimationFrame(loop);
+            var el = (performance.now() - t0) / 1000 * 260;   // time scaled up so race is watchable
+            lanes.forEach(function (l) {
+                if (l.done) return;
+                l.x = l.v * el;
+                if (l.x >= DIST) { l.x = DIST; l.done = ((performance.now() - t0) / 1000); order.push(l.name); }
+            });
+            draw();
+            if (lanes.every(function (l) { return l.done; })) { running = false; cancelAnimationFrame(anim); showResult(); }
+        }
+        function draw() {
+            var W = 820, H = 280; ctx.clearRect(0, 0, W, H);
+            var pad = 130, trackW = W - pad - 40;
+            lanes.forEach(function (l, i) {
+                var y = 55 + i * 75;
+                ctx.fillStyle = '#fcd34d'; ctx.font = 'bold 13px sans-serif'; ctx.fillText(l.name, 12, y - 20);
+                ctx.fillStyle = '#fbbf24'; ctx.font = '11px sans-serif'; ctx.fillText(l.v + ' m/s', 12, y - 4);
+                // track
+                ctx.fillStyle = 'rgba(255,255,255,0.08)'; ctx.fillRect(pad, y - 14, trackW, 26);
+                // finish line
+                ctx.fillStyle = 'rgba(255,255,255,0.35)'; ctx.fillRect(pad + trackW - 3, y - 18, 3, 34);
+                // sound blip
+                var px = pad + (l.x / DIST) * trackW;
+                ctx.fillStyle = l.col; ctx.beginPath(); ctx.arc(px, y - 1, 11, 0, 7); ctx.fill();
+                for (var r = 1; r <= 2; r++) { ctx.strokeStyle = l.col; ctx.globalAlpha = 0.4 / r; ctx.beginPath(); ctx.arc(px, y - 1, 11 + r * 7, 0, 7); ctx.stroke(); ctx.globalAlpha = 1; }
+                if (l.done) { ctx.fillStyle = '#4ade80'; ctx.font = 'bold 12px sans-serif'; ctx.fillText('✓ ' + l.done.toFixed(3) + ' s', pad + trackW - 90, y - 20); }
+            });
+            ctx.fillStyle = '#fde68a'; ctx.font = '11px sans-serif'; ctx.fillText('0 m', pad, 265); ctx.fillText('500 m (finish)', W - 110, 265);
+        }
+        function showResult() {
+            document.getElementById('note').innerHTML = '🏆 Winner: <b>Loha (steel)</b>! Sound thos mein sabse tez chalti hai (particles paas-paas). Order: ' + order.join(' → ') + '. Loha, hawa se lagbhag 15 guna tez!';
+        }
+        draw();
+    </script>
+</body>
+
+</html>

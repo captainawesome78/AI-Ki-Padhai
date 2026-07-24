@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Echo &amp; SONAR Calculator | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #083344, #0e7490); color: #e0f2fe; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #a5f3fc; text-decoration: none; border: 1px solid rgba(165,243,252,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(165,243,252,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 820px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,0.06); border-radius: 16px; padding: 16px 18px; margin-bottom: 14px; }
+        canvas { width: 100%; height: auto; background: rgba(0,0,0,0.22); border-radius: 12px; display: block; }
+        .modes { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+        .modes button { flex: 1; min-width: 130px; background: rgba(255,255,255,0.1); border: 2px solid transparent; color: #e0f2fe; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 15px; }
+        .modes button.active { border-color: #22d3ee; background: rgba(34,211,238,0.15); }
+        label { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 5px; margin-top: 10px; }
+        label b { color: #7dd3fc; }
+        input[type=range] { width: 100%; accent-color: #22d3ee; }
+        .out { text-align: center; background: rgba(0,0,0,0.28); border-radius: 12px; padding: 18px; margin-top: 12px; }
+        .out .big { font-size: 32px; font-weight: 800; color: #4ade80; }
+        .out .form { font-size: 14px; color: #7dd3fc; margin-top: 8px; font-family: monospace; }
+        .ctr { margin-top: 12px; }
+        .ctr button { width: 100%; border: none; padding: 14px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 15px; background: #06b6d4; color: #04222b; }
+        .note { font-size: 13px; color: #a5f3fc; text-align: center; margin-top: 8px; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="reflection-echo-sonar.html">← Back to Lesson</a>
+        <div class="title">📡 Echo &amp; SONAR Calculator</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <div class="modes">
+                <button id="mEcho" class="active" onclick="setMode('echo')">🏔️ Echo (hawa, 340 m/s)</button>
+                <button id="mSonar" onclick="setMode('sonar')">🌊 SONAR (paani, 1500 m/s)</button>
+            </div>
+            <canvas id="cv" width="820" height="200"></canvas>
+            <div class="note" id="note">Taali bajao aur echo aane ka time do - deewar ki doori nikaal denge!</div>
+        </div>
+        <div class="card">
+            <label id="tLbl">Echo aane ka total time <b><span id="tV">0.6</span> s</b></label>
+            <input type="range" id="t" min="0.2" max="8" value="0.6" step="0.1" oninput="calc()">
+            <div class="out">
+                <div class="big" id="dist">102 m</div>
+                <div class="l" id="distLbl" style="font-size:13px;color:#7dd3fc">Deewar ki doori</div>
+                <div class="form" id="form">Doori = (340 × 0.6) / 2 = 102 m</div>
+            </div>
+            <div class="ctr"><button onclick="ping()">🔊 Send Pulse / Taali</button></div>
+        </div>
+    </div>
+
+    <script>
+        var cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+        var mode = 'echo', v = 340, tt = 0.6, anim = null, pulseX = 0, pulsing = false, back = false;
+        function setMode(m) {
+            mode = m; v = (m === 'echo') ? 340 : 1500;
+            document.getElementById('mEcho').classList.toggle('active', m === 'echo');
+            document.getElementById('mSonar').classList.toggle('active', m === 'sonar');
+            document.getElementById('tLbl').innerHTML = (m === 'echo' ? 'Echo aane ka total time' : 'Pulse aur echo ka total time') + ' <b><span id="tV">' + tt + '</span> s</b>';
+            document.getElementById('distLbl').textContent = (m === 'echo') ? 'Deewar ki doori' : 'Samundar ki gehrai';
+            calc();
+        }
+        function calc() {
+            tt = +document.getElementById('t').value;
+            var tvEl = document.getElementById('tV'); if (tvEl) tvEl.textContent = tt;
+            var d = Math.round(v * tt / 2);
+            document.getElementById('dist').textContent = d + ' m';
+            document.getElementById('form').textContent = 'Doori = (' + v + ' × ' + tt + ') / 2 = ' + d + ' m';
+            document.getElementById('note').innerHTML = (mode === 'echo')
+                ? 'Sound deewar tak jaati hai AUR wapas aati hai (2× doori) - isliye /2 karte hain.'
+                : 'Pulse samundar ke tal tak jaakar wapas aata hai (2× gehrai) - isliye /2 karte hain.';
+            draw();
+        }
+        function draw(px, ret) {
+            var W = 820, H = 200; ctx.clearRect(0, 0, W, H);
+            // source on left
+            ctx.fillStyle = '#22d3ee'; ctx.beginPath(); ctx.arc(50, H / 2, 16, 0, 7); ctx.fill();
+            ctx.fillStyle = '#e0f2fe'; ctx.font = '12px sans-serif'; ctx.textAlign = 'center';
+            ctx.fillText(mode === 'echo' ? 'You' : 'Ship', 50, H / 2 + 35);
+            // wall/seabed on right
+            if (mode === 'echo') { ctx.fillStyle = '#78716c'; ctx.fillRect(760, 20, 30, 160); ctx.fillText('Wall', 775, 195); }
+            else { ctx.fillStyle = '#a16207'; ctx.fillRect(60, 175, 720, 20); ctx.fillText('Seabed', 400, 170); }
+            // pulse
+            if (px !== undefined) {
+                ctx.strokeStyle = ret ? '#4ade80' : '#fbbf24'; ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.arc(px, H / 2, 12, 0, 7); ctx.stroke();
+            }
+            ctx.textAlign = 'left';
+        }
+        function ping() {
+            if (pulsing) return; pulsing = true; back = false; pulseX = 66;
+            function step() {
+                if (!back) { pulseX += 9; if (pulseX >= 754) back = true; }
+                else { pulseX -= 9; if (pulseX <= 66) { pulsing = false; draw(); return; } }
+                draw(pulseX, back); requestAnimationFrame(step);
+            }
+            step();
+        }
+        setMode('echo');
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Longitudinal Sound Wave | AIkiPadhai</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="../sci-3d.js"></script>
+</head>
+
+<body>
+    <script>
+        Sci3D({
+            title: "🧊 3D Longitudinal Sound Wave",
+            back: { href: "sound-propagation.html", label: "Back to Lesson" },
+            intro: { name: "3D Sound Wave", desc: "Ye hawa ke particles hain jinme se sound guzarti hai. Laal teer (🔻) COMPRESSION dikhata hai (particles ki bheed), neela teer RAREFACTION (khaali). Peela particle dhyaan se dekho - wo sirf apni ring ke aas-paas aage-peeche hilta hai, door nahi jaata! Frequency aur amplitude badlo, drag karke ghumao." },
+            camZ: 30,
+            data: {
+                particle: { emoji: "🔵", name: "Hawa Ka Particle", nick: "Air molecule", desc: "Hawa ke molecules. Sound wave in par se guzarti hai. Har particle sirf apni jagah par aage-peeche vibrate karta hai - poori doori khud tay nahi karta, sirf energy aage bhejta hai." },
+                tracer: { emoji: "🟡", name: "Tracer Particle", nick: "Nazar rakho ispar", desc: "Ye peela particle khaas hai! Iske neeche ek ring hai jo iski asli (rest) jagah dikhati hai. Dekho - ye us ring ke aas-paas hi aage-peeche jhoolta hai, kahin door nahi jaata. Yahi longitudinal wave ka raaz hai." },
+                compression: { emoji: "🔻", name: "Compression", nick: "Bheed (high pressure)", desc: "Laal teer jahan particles paas-paas ikatthe hain - yahan hawa ka pressure aur density ZYADA hai. Ye teer wave ke saath aage badhta hai." },
+                rarefaction: { emoji: "🔽", name: "Rarefaction", nick: "Khaali (low pressure)", desc: "Neela teer jahan particles door-door faile hain - yahan pressure aur density KAM hai. Do compressions ke beech ka khaali ilaaka." },
+                source: { emoji: "🔊", name: "Speaker (Source)", nick: "Yahan se shuru", desc: "Ye bada speaker vibrate karke hawa ko dhakka deta hai (aage-peeche). Isi se compressions aur rarefactions banti hain jo poore medium mein aage failti hain." }
+            },
+            controls: [
+                { id: "freq", label: "🎵 Frequency (kitni waves)", min: 1, max: 5, step: 1, value: 2, on: function (v, ctx) { ctx.model.freq = v; } },
+                { id: "amp", label: "🔊 Amplitude (kitna hilna)", min: 2, max: 10, step: 1, value: 7, on: function (v, ctx) { ctx.model.amp = v / 10; } },
+                { id: "speed", label: "⏩ Wave speed (dekhne ke liye)", min: 0, max: 10, step: 1, value: 5, on: function (v, ctx) { ctx.model.speed = v / 5; } }
+            ],
+            build: function (ctx) {
+                var T = ctx.THREE, P = ctx.pivot, M = ctx.model;
+                M.freq = 2; M.amp = 0.7; M.speed = 1;
+                M.cols = 30; M.rows = 3; M.layers = 3; M.spacing = 1.5;
+                M.totalW = (M.cols - 1) * M.spacing; M.half = M.totalW / 2;
+                M.particles = [];
+                var geo = new T.SphereGeometry(0.34, 12, 12);
+                M.matC = ctx.mat(0xef4444); M.matR = ctx.mat(0x60a5fa); M.matM = ctx.mat(0x93c5fd);
+                var tracerIdx = -1;
+                var mid = Math.floor(M.cols / 2);
+                for (var i = 0; i < M.cols; i++) {
+                    for (var j = 0; j < M.rows; j++) {
+                        for (var k = 0; k < M.layers; k++) {
+                            var mesh = new T.Mesh(geo, M.matM);
+                            mesh.userData.x0 = i * M.spacing - M.half;
+                            mesh.userData.y = (j - (M.rows - 1) / 2) * M.spacing;
+                            mesh.userData.z = (k - (M.layers - 1) / 2) * M.spacing;
+                            mesh.position.set(mesh.userData.x0, mesh.userData.y, mesh.userData.z);
+                            var isTracer = (i === mid && j === 1 && k === 1);
+                            if (isTracer) { mesh.userData.tracer = true; ctx.addPart(mesh, 'tracer'); M.tracer = mesh; }
+                            else ctx.addPart(mesh, 'particle');
+                            M.particles.push(mesh);
+                        }
+                    }
+                }
+                // tracer: bigger + yellow + rest-position ring
+                if (M.tracer) {
+                    M.tracer.scale.setScalar(1.6); M.tracer.material = ctx.mat(0xfacc15);
+                    var ring = new T.Mesh(new T.TorusGeometry(0.7, 0.09, 10, 24), ctx.mat(0xfde047, { transparent: true, opacity: 0.8 }));
+                    ring.position.set(M.tracer.userData.x0, M.tracer.userData.y, M.tracer.userData.z);
+                    ring.rotation.y = Math.PI / 2; P.add(ring);
+                }
+
+                // BIG speaker on the left
+                M.speaker = new T.Group();
+                var cabinet = new T.Mesh(new T.BoxGeometry(2.2, 7, 7), ctx.mat(0x1f2937)); M.speaker.add(cabinet);
+                M.cone = new T.Mesh(new T.ConeGeometry(2.6, 2.4, 28), ctx.mat(0x9ca3af)); M.cone.rotation.z = -Math.PI / 2; M.cone.position.x = 1.6; M.speaker.add(M.cone);
+                var dust = new T.Mesh(new T.SphereGeometry(0.7, 16, 16), ctx.mat(0x4b5563)); dust.position.x = 2.0; M.speaker.add(dust);
+                M.speaker.position.set(-M.half - 4, 0, 0);
+                ctx.addPart(M.speaker, 'source'); P.add(M.speaker);
+
+                // moving pointer markers (cones pointing down) above the beam
+                M.markC = new T.Group();
+                var cCone = new T.Mesh(new T.ConeGeometry(0.9, 1.8, 4), M.matC); cCone.rotation.x = Math.PI; cCone.position.y = 0;
+                var cStem = new T.Mesh(new T.CylinderGeometry(0.06, 0.06, 2, 6), M.matC); cStem.position.y = 1.4;
+                M.markC.add(cCone); M.markC.add(cStem); M.markC.position.y = 5.5;
+                ctx.addPart(M.markC, 'compression'); P.add(M.markC);
+
+                M.markR = new T.Group();
+                var rCone = new T.Mesh(new T.ConeGeometry(0.9, 1.8, 4), M.matR); rCone.rotation.x = Math.PI;
+                var rStem = new T.Mesh(new T.CylinderGeometry(0.06, 0.06, 2, 6), M.matR); rStem.position.y = 1.4;
+                M.markR.add(rCone); M.markR.add(rStem); M.markR.position.y = 5.5;
+                ctx.addPart(M.markR, 'rarefaction'); P.add(M.markR);
+
+                P.rotation.x = 0.16;
+            },
+            onFrame: function (t, ctx) {
+                var T = ctx.THREE, M = ctx.model; if (!M.particles) return;
+                var k = 2 * Math.PI * M.freq / M.totalW;   // exactly M.freq wavelengths across the beam
+                var phase = t * M.speed * 2.2;
+                var maxDisp = M.spacing * 0.95;
+                for (var n = 0; n < M.particles.length; n++) {
+                    var p = M.particles[n];
+                    var arg = k * (p.userData.x0 + M.half) - phase;
+                    var disp = M.amp * maxDisp * Math.sin(arg);
+                    p.position.x = p.userData.x0 + disp;
+                    if (p.userData.tracer) continue;   // keep tracer color yellow
+                    var c = Math.cos(arg);
+                    if (c < -0.4) p.material = M.matC;       // compression
+                    else if (c > 0.4) p.material = M.matR;   // rarefaction
+                    else p.material = M.matM;
+                }
+                // place markers at nearest compression (arg=π) and rarefaction (arg=0) inside beam
+                var lambda = M.totalW / M.freq;
+                function findX(targetArg) {
+                    // k*(x0+half) - phase = targetArg  =>  x0 = (targetArg+phase)/k - half
+                    var x = (targetArg + phase) / k - M.half;
+                    while (x < -M.half) x += lambda;
+                    while (x > M.half) x -= lambda;
+                    return x;
+                }
+                M.markC.position.x = findX(Math.PI);
+                M.markR.position.x = findX(0);
+                // speaker cone pushes in-out with the wave
+                if (M.cone) M.cone.position.x = 1.6 + M.amp * 0.8 * Math.sin(-phase);
+            }
+        });
+    </script>
+</body>
+
+</html>

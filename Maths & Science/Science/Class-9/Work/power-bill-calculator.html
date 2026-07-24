@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bijli Ka Bill Calculator | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #451a03, #b45309); color: #fef3c7; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #fde68a; text-decoration: none; border: 1px solid rgba(253,230,138,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(253,230,138,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 820px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,0.07); border-radius: 16px; padding: 16px 18px; margin-bottom: 14px; }
+        .card h3 { color: #fff; font-size: 13px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: .05em; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th, td { padding: 9px 8px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.12); }
+        th { color: #fcd34d; font-size: 12px; text-transform: uppercase; }
+        td .app { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+        td .em { font-size: 20px; }
+        input[type=checkbox] { width: 18px; height: 18px; accent-color: #f59e0b; }
+        input[type=number] { width: 60px; background: rgba(0,0,0,0.3); border: 1px solid rgba(253,230,138,0.3); color: #fff; padding: 6px; border-radius: 6px; font-size: 14px; }
+        .kwh { color: #fbbf24; font-weight: 800; }
+        .setrow { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+        .setrow label { font-size: 13px; }
+        .out { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+        .obox { flex: 1 1 160px; background: rgba(0,0,0,0.28); border-radius: 12px; padding: 16px; text-align: center; }
+        .obox .n { font-size: 26px; font-weight: 800; color: #fff; } .obox .l { font-size: 12px; color: #fcd34d; margin-top: 3px; }
+        .bill .n { color: #4ade80; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="power-and-electricity.html">← Back to Lesson</a>
+        <div class="title">💡 Bijli Ka Bill Calculator</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <h3>1. Appliances chuno &amp; roz ke ghante set karo</h3>
+            <table>
+                <thead><tr><th>Use?</th><th>Appliance</th><th>Power</th><th>Ghante/din</th><th>kWh/din</th></tr></thead>
+                <tbody id="rows"></tbody>
+            </table>
+        </div>
+        <div class="card">
+            <h3>2. Settings</h3>
+            <div class="setrow">
+                <label>Rate: ₹ <input type="number" id="rate" value="7" min="1" max="20" step="0.5" oninput="calc()"> / unit (kWh)</label>
+                <label>Din: <input type="number" id="days" value="30" min="1" max="31" oninput="calc()"> din</label>
+            </div>
+        </div>
+        <div class="card">
+            <div class="out">
+                <div class="obox"><div class="n" id="dayKwh">0</div><div class="l">kWh / din</div></div>
+                <div class="obox"><div class="n" id="monKwh">0</div><div class="l">Units (kWh) / mahina</div></div>
+                <div class="obox bill"><div class="n" id="bill">₹0</div><div class="l">Estimated Bill</div></div>
+            </div>
+            <p style="font-size:13px;color:#fcd34d;margin-top:12px;line-height:1.6" id="tip">Tip: appliance chuno aur dekho bill kaise badalta hai. LED bulb kitni bijli bachaata hai, khud dekho!</p>
+        </div>
+    </div>
+
+    <script>
+        var APPS = [
+            { em: "💡", name: "LED bulb (×4)", w: 40, h: 6, on: true },
+            { em: "🌀", name: "Ceiling fan (×2)", w: 150, h: 12, on: true },
+            { em: "📺", name: "LED TV", w: 120, h: 5, on: true },
+            { em: "❄️", name: "Fridge", w: 200, h: 24, on: true },
+            { em: "🧊", name: "Air Conditioner", w: 1500, h: 8, on: false },
+            { em: "👕", name: "Washing machine", w: 500, h: 1, on: false },
+            { em: "♨️", name: "Geyser (water heater)", w: 2000, h: 1, on: false },
+            { em: "🔌", name: "Iron (istri)", w: 1000, h: 0.5, on: false }
+        ];
+        var tb = document.getElementById('rows');
+        APPS.forEach(function (a, i) {
+            var tr = document.createElement('tr');
+            tr.innerHTML = '<td><input type="checkbox" ' + (a.on ? 'checked' : '') + ' onchange="calc()" id="c' + i + '"></td>' +
+                '<td><div class="app"><span class="em">' + a.em + '</span>' + a.name + '</div></td>' +
+                '<td>' + a.w + ' W</td>' +
+                '<td><input type="number" value="' + a.h + '" min="0" max="24" step="0.5" oninput="calc()" id="h' + i + '"></td>' +
+                '<td class="kwh" id="k' + i + '">0</td>';
+            tb.appendChild(tr);
+        });
+        function calc() {
+            var dayKwh = 0;
+            APPS.forEach(function (a, i) {
+                var on = document.getElementById('c' + i).checked;
+                var h = +document.getElementById('h' + i).value;
+                var k = on ? (a.w / 1000) * h : 0;
+                document.getElementById('k' + i).textContent = k.toFixed(2);
+                dayKwh += k;
+            });
+            var days = +document.getElementById('days').value, rate = +document.getElementById('rate').value;
+            var monKwh = dayKwh * days, bill = monKwh * rate;
+            document.getElementById('dayKwh').textContent = dayKwh.toFixed(1);
+            document.getElementById('monKwh').textContent = Math.round(monKwh);
+            document.getElementById('bill').textContent = '₹' + Math.round(bill);
+            var tip = document.getElementById('tip');
+            if (document.getElementById('c4').checked) tip.innerHTML = '❄️ AC sabse zyada bijli khaata hai! Ise 1 ghanta kam chalao toh 1.5 units (kWh) roz bachte hain.';
+            else if (monKwh > 300) tip.innerHTML = '⚡ 300+ units/mahina - kaafi zyada hai! Star-rated appliances aur LED se bill kam karo.';
+            else tip.innerHTML = 'Formula: Units = (Power kW) × (ghante) × (din), phir Bill = Units × Rate. Sab live calculate ho raha hai!';
+        }
+        calc();
+    </script>
+</body>
+
+</html>

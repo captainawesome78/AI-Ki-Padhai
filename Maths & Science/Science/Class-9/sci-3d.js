@@ -90,7 +90,7 @@
     }
     ctx.selectKey = selectKey;
 
-    var isDown = false, moved = false, lx = 0, ly = 0, vx = 0, vy = 0, autoRotate = cfg.autoRotate !== false, idle = null;
+    var isDown = false, moved = false, lx = 0, ly = 0, vx = 0, vy = 0, autoRotate = false, idle = null;
     var el = renderer.domElement;
     el.addEventListener('pointerdown', function (e) { isDown = true; moved = false; lx = e.clientX; ly = e.clientY; autoRotate = false; el.setPointerCapture(e.pointerId); });
     el.addEventListener('pointermove', function (e) {
@@ -114,8 +114,6 @@
           if (o && o.userData.key) selectKey(o.userData.key);
         }
       }
-      if (idle) clearTimeout(idle);
-      idle = setTimeout(function () { autoRotate = true; }, 3500);
     }
     el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
 
@@ -128,8 +126,7 @@
     (function loop() {
       requestAnimationFrame(loop);
       var t = clock.getElapsedTime();
-      if (autoRotate) pivot.rotation.y += 0.0035;
-      else if (!isDown) { pivot.rotation.y += vx; pivot.rotation.x += vy; vx *= 0.94; vy *= 0.94; pivot.rotation.x = Math.max(-1.3, Math.min(1.3, pivot.rotation.x)); }
+      if (!isDown) { pivot.rotation.y += vx; pivot.rotation.x += vy; vx *= 0.94; vy *= 0.94; pivot.rotation.x = Math.max(-1.3, Math.min(1.3, pivot.rotation.x)); }
       if (cfg.onFrame) cfg.onFrame(t, ctx);
       renderer.render(scene, camera);
     })();

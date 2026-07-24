@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wave Lab | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #4a044e, #7e22ce); color: #f3e8ff; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #e9d5ff; text-decoration: none; border: 1px solid rgba(233,213,255,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(233,213,255,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 860px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,0.07); border-radius: 16px; padding: 16px 18px; margin-bottom: 14px; }
+        canvas { width: 100%; height: auto; background: rgba(0,0,0,0.25); border-radius: 12px; display: block; }
+        label { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 5px; margin-top: 10px; }
+        label b { color: #d8b4fe; }
+        input[type=range] { width: 100%; accent-color: #a855f7; }
+        .btns { display: flex; gap: 10px; margin-top: 14px; }
+        .btns button { flex: 1; border: none; padding: 14px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 15px; }
+        .play { background: #a855f7; color: #fff; } .stop { background: transparent; color: #e9d5ff; border: 1px solid rgba(233,213,255,0.4); }
+        .read { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
+        .rbox { flex: 1 1 150px; background: rgba(0,0,0,0.28); border-radius: 12px; padding: 14px; text-align: center; }
+        .rbox .n { font-size: 20px; font-weight: 800; color: #fff; } .rbox .l { font-size: 12px; color: #d8b4fe; margin-top: 3px; }
+        .note { font-size: 13px; color: #e9d5ff; text-align: center; margin-top: 8px; line-height: 1.6; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="characteristics-of-sound.html">← Back to Lesson</a>
+        <div class="title">🎵 Wave Lab</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <canvas id="cv" width="820" height="240"></canvas>
+            <div class="note" id="obs">Frequency (pitch) aur amplitude (loudness) badlo. "Play Sound" dabakar aawaz suno!</div>
+        </div>
+        <div class="card">
+            <label>Frequency (pitch) <b><span id="fV">440</span> Hz</b></label>
+            <input type="range" id="f" min="80" max="2000" value="440" oninput="upd()">
+            <label>Amplitude (loudness) <b><span id="aV">50</span>%</b></label>
+            <input type="range" id="a" min="0" max="100" value="50" oninput="upd()">
+            <div class="read">
+                <div class="rbox"><div class="n" id="pitchTxt">Medium</div><div class="l">Pitch</div></div>
+                <div class="rbox"><div class="n" id="loudTxt">Medium</div><div class="l">Loudness</div></div>
+                <div class="rbox"><div class="n" id="wlTxt">0.77 m</div><div class="l">Wavelength (v=343)</div></div>
+            </div>
+            <div class="btns">
+                <button class="play" onclick="toggle()" id="pb">▶ Play Sound</button>
+                <button class="stop" onclick="stopS()">⏹ Stop</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+        var freq = 440, amp = 50, audioCtx = null, osc = null, gain = null, playing = false, phase = 0;
+        function upd() {
+            freq = +document.getElementById('f').value; amp = +document.getElementById('a').value;
+            document.getElementById('fV').textContent = freq;
+            document.getElementById('aV').textContent = amp;
+            document.getElementById('pitchTxt').textContent = freq < 300 ? 'Low (mothi)' : freq > 1000 ? 'High (patli)' : 'Medium';
+            document.getElementById('loudTxt').textContent = amp < 25 ? 'Soft (dheemi)' : amp > 70 ? 'Loud (tez)' : 'Medium';
+            document.getElementById('wlTxt').textContent = (343 / freq).toFixed(2) + ' m';
+            if (osc) osc.frequency.value = freq;
+            if (gain) gain.gain.value = playing ? amp / 100 * 0.25 : 0;
+            var obs = document.getElementById('obs');
+            if (amp === 0) obs.textContent = 'Amplitude 0 → flat line, koi sound nahi (silence).';
+            else obs.innerHTML = 'Zyada frequency = zyada waves (patli aawaz). Zyada amplitude = oonchi wave (tez aawaz). Wavelength = v / f.';
+        }
+        function draw() {
+            requestAnimationFrame(draw);
+            var W = 820, H = 240; ctx.clearRect(0, 0, W, H);
+            ctx.strokeStyle = 'rgba(255,255,255,0.15)'; ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(0, H / 2); ctx.lineTo(W, H / 2); ctx.stroke();
+            var A = amp / 100 * (H / 2 - 20);
+            var cycles = freq / 120;             // visual scaling
+            ctx.strokeStyle = '#c084fc'; ctx.lineWidth = 3; ctx.beginPath();
+            for (var x = 0; x <= W; x++) {
+                var y = H / 2 - A * Math.sin((x / W) * cycles * 2 * Math.PI + phase);
+                if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            phase += 0.08;
+        }
+        function ensureAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                osc = audioCtx.createOscillator(); gain = audioCtx.createGain();
+                osc.type = 'sine'; osc.frequency.value = freq; gain.gain.value = 0;
+                osc.connect(gain); gain.connect(audioCtx.destination); osc.start();
+            }
+        }
+        function toggle() {
+            ensureAudio();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            playing = !playing;
+            document.getElementById('pb').textContent = playing ? '⏸ Pause Sound' : '▶ Play Sound';
+            gain.gain.value = playing ? amp / 100 * 0.25 : 0;
+        }
+        function stopS() { playing = false; document.getElementById('pb').textContent = '▶ Play Sound'; if (gain) gain.gain.value = 0; }
+        upd(); draw();
+    </script>
+</body>
+
+</html>
