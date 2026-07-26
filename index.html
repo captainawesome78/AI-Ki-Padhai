@@ -4,67 +4,199 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="AIkiPadhai - Maths, Science, Python aur AI seekho easy Roman Hindi mein. NCERT lessons, diagrams, quizzes aur 3D interactive labs." />
   <!-- AdSense Verification Meta Tag -->
   <meta name="google-adsense-account" content="ca-pub-8049026984892277">
   <!-- Google AdSense Script -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8049026984892277"
     crossorigin="anonymous"></script>
-  <title>AIkiPadhai - Learn Python & AI in Roman Hindi</title>
+  <title>AIkiPadhai - Learn Maths, Science, Python &amp; AI in Roman Hindi</title>
 
-  <!-- Google Fonts -->
+  <!-- Fonts: Geist (hero/headings) + Inter (body) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap"
     rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Geist for the hero + headings, Inter stays for body copy */
+    .hero-screen, .hero-content h1, .hero-logo, .nav-pill, .btn-solid, .btn-glass, .hero-badge {
+      font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+  </style>
+  <!-- Enables scroll animations. If JS is off this never runs, so all content stays visible. -->
+  <script>
+    (function () {
+      var r = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!r && 'IntersectionObserver' in window) document.documentElement.className += ' js-anim';
+    })();
+  </script>
 </head>
 
 <body>
-  <header>
-    <div class="container header-content">
-      <a href="index.html" class="logo">
-        AIkiPadhai 🧠
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- ==================== FULL-SCREEN LIQUID-GLASS HERO ==================== -->
+  <section class="hero-screen">
+    <!-- animated colour field -->
+    <div class="hero-bg" aria-hidden="true">
+      <span class="blob blob-1"></span>
+      <span class="blob blob-2"></span>
+      <span class="blob blob-3"></span>
+      <span class="blob blob-4"></span>
+    </div>
+    <canvas class="hero-canvas" id="heroCanvas" aria-hidden="true"></canvas>
+    <div class="hero-veil" aria-hidden="true"></div>
+
+    <!-- ---------- glass navbar ---------- -->
+    <nav class="hero-nav">
+      <a href="index.html" class="hero-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/>
+          <path d="M22 10v6"/>
+          <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>
+        </svg>
+        <span>AIkiPadhai</span>
       </a>
-      <nav>
+
+      <div class="nav-pill liquid-glass">
         <a href="index.html" class="active">Home</a>
+        <a href="Maths & Science/index.html">
+          Maths &amp; Science
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            style="margin-top:1px" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </a>
         <a href="python/index.html">Python</a>
         <a href="genai/index.html">AI</a>
-        <a href="Maths & Science/index.html">Maths & Science</a>
+        <a href="about.html">About</a>
+      </div>
+
+      <div class="hero-cta">
+        <a href="about.html" class="btn-glass liquid-glass">Hamara Mission</a>
+        <a href="Maths & Science/index.html" class="btn-solid">Shuru Karo</a>
+      </div>
+
+      <button class="nav-toggle liquid-glass" id="navToggle" aria-label="Menu" aria-expanded="false"
+        aria-controls="mobileMenu">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="iconMenu"
+          aria-hidden="true"><path d="M4 12h16"/><path d="M4 6h16"/><path d="M4 18h16"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="iconClose"
+          style="display:none" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </nav>
+
+    <!-- ---------- mobile menu ---------- -->
+    <div class="mobile-menu liquid-glass" id="mobileMenu">
+      <a href="index.html" class="m-link active">Home</a>
+      <a href="Maths & Science/index.html" class="m-link">
+        Maths &amp; Science
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </a>
+      <a href="python/index.html" class="m-link">Python</a>
+      <a href="genai/index.html" class="m-link">AI</a>
+      <a href="about.html" class="m-link">About</a>
+      <div class="mobile-cta">
+        <a href="about.html" class="btn-glass liquid-glass">Mission</a>
+        <a href="Maths & Science/index.html" class="btn-solid">Shuru Karo</a>
+      </div>
+    </div>
+
+    <!-- ---------- hero copy ---------- -->
+    <div class="hero-content">
+      <span class="hero-badge liquid-glass">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
+        </svg>
+        Class 9 Science ab poora complete &mdash; 12 chapters
+      </span>
+
+      <h1>Seekho Asaan Language Mein, Badho Har Din</h1>
+
+      <p class="hero-sub">
+        Maths, Science, Python aur AI &mdash; sab kuch easy Roman Hindi mein. Detailed lessons, hand-drawn diagrams,
+        solved numericals, quizzes aur ghuma kar dekhne wale 3D labs, taaki har concept sach mein clear ho jaaye.
+      </p>
+
+      <div class="hero-actions">
+        <a href="Maths & Science/index.html" class="btn-solid">Abhi Shuru Karo</a>
+        <a href="#tracks" class="btn-glass liquid-glass">Dekho Kaise</a>
+      </div>
+    </div>
+
+    <a href="#tracks" class="scroll-cue" aria-label="Scroll down">
+      <span>Scroll</span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+    </a>
+  </section>
+
+  <!-- ==================== STICKY BAR (appears after hero) ==================== -->
+  <header class="sticky-bar" id="stickyBar">
+    <div class="container header-content">
+      <a href="index.html" class="logo">AIkiPadhai 🧠</a>
+      <nav>
+        <a href="index.html" class="active">Home</a>
+        <a href="Maths & Science/index.html">Maths &amp; Science</a>
+        <a href="python/index.html">Python</a>
+        <a href="genai/index.html">AI</a>
         <a href="about.html">About</a>
       </nav>
     </div>
   </header>
 
-  <section class="hero">
-    <div class="container">
-      <h1>Learn Tech in Your Language 🚀</h1>
-      <p>Python, AI, aur Maths seekho step-by-step — Roman Hindi mein, real examples ke sath.</p>
-    </div>
-  </section>
+  <!-- ==================== PAGE CONTENT ==================== -->
+  <div class="container" id="tracks" style="padding-top: 3rem;">
 
-  <div class="container">
-    <div class="section-header">
+    <!-- Featured: Maths & Science -->
+    <div class="featured-tile reveal reveal-zoom">
+      <span class="featured-badge">⭐ Most Popular</span>
+      <h2>🎓 Maths &amp; Science</h2>
+      <p>
+        School students ke liye poora NCERT-based course — Class 9 se 12 tak Maths, aur Class 9 Science ke
+        <strong>saare 12 chapters</strong>. Har chapter mein detailed lessons, hand-drawn diagrams, solved numericals,
+        quizzes, virtual labs aur <strong>immersive 3D models</strong> jinhe aap ghuma kar dekh sakte ho.
+      </p>
+      <div class="stat-row">
+        <div class="stat reveal" style="--d:.05s">
+          <div class="num" data-count="12">0</div>
+          <div class="lbl">Science chapters</div>
+        </div>
+        <div class="stat reveal" style="--d:.15s">
+          <div class="num" data-count="6">0</div>
+          <div class="lbl">Maths classes</div>
+        </div>
+        <div class="stat reveal" style="--d:.25s">
+          <div class="num" data-count="300" data-suffix="+">0</div>
+          <div class="lbl">Lessons &amp; labs</div>
+        </div>
+        <div class="stat reveal" style="--d:.35s">
+          <div class="num" data-count="12" data-suffix=" 🧊">0</div>
+          <div class="lbl">3D interactive labs</div>
+        </div>
+      </div>
+      <a href="Maths & Science/index.html" class="btn">Start Learning →</a>
+    </div>
+
+    <div class="section-header reveal">
       <h2>Explore Learning Tracks</h2>
       <p>
         AIkiPadhai ek modern learning platform hai jahan hum complex topics ko simple language me samjhate hain.
       </p>
     </div>
 
-    <!-- Featured Post Section -->
-    <div class="card" style="margin-bottom: 3rem; border-left: 5px solid var(--accent);">
-      <h3>✨ Featured Tutorial: LangGraph</h3>
-      <p>
-        Check out our latest guide on building powerful, stateful AI agents with LangChain's new library. This is the
-        future of creating complex AI systems.
-      </p>
-      <a href="genai/langchain/langgraph-tutorial.html" class="btn btn-outline">Read Tutorial →</a>
-    </div>
-
     <div class="grid grid-3">
-      <!-- Python Card -->
-      <div class="card">
+      <div class="card reveal" style="--d:.05s">
         <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python logo"
           class="card-icon" />
         <h3>🐍 Learn Python</h3>
@@ -73,8 +205,7 @@
         <a href="python/index.html" class="btn">Start Python</a>
       </div>
 
-      <!-- GenAI Card -->
-      <div class="card">
+      <div class="card reveal" style="--d:.15s">
         <img src="https://cdn-icons-png.flaticon.com/512/13749/13749712.png" alt="GenAI icon" class="card-icon" />
         <h3>🧬 Generative AI</h3>
         <p>Text, images, aur code generate karna seekho. LangChain, RAG, Fine-tuning, aur API integration cover karenge.
@@ -82,8 +213,7 @@
         <a href="genai/index.html" class="btn">Start Learning</a>
       </div>
 
-      <!-- Deep Learning Card -->
-      <div class="card">
+      <div class="card reveal" style="--d:.25s">
         <img src="https://cdn-icons-png.flaticon.com/512/11495/11495445.png" alt="Deep Learning icon"
           class="card-icon" />
         <h3>🧠 Deep Learning</h3>
@@ -91,32 +221,31 @@
           sath.</p>
         <a href="deep_learning/index.html" class="btn">Start Learning</a>
       </div>
-
-      <!-- School Card -->
-      <div class="card">
-        <img src="https://cdn-icons-png.flaticon.com/512/2232/2232688.png" alt="School icon" class="card-icon" />
-        <h3>🎓 Maths & Science</h3>
-        <p>School students ke liye Maths aur Science ke concepts. NCERT syllabus aur problem-solving tricks easy
-          language me.</p>
-        <a href="Maths & Science/index.html" class="btn">Start Learning</a>
-      </div>
     </div>
 
-    <!-- About Us Section -->
-    <div
+    <div class="card reveal reveal-left" style="margin-top: 3rem; border-left: 5px solid var(--accent);">
+      <h3>✨ Featured Tutorial: LangGraph</h3>
+      <p>
+        Check out our latest guide on building powerful, stateful AI agents with LangChain's new library. This is the
+        future of creating complex AI systems.
+      </p>
+      <a href="genai/langchain/langgraph-tutorial.html" class="btn btn-outline">Read Tutorial →</a>
+    </div>
+
+    <div class="reveal"
       style="margin-top: 4rem; background: var(--white); padding: 2rem; border-radius: var(--radius-lg); text-align: center;">
       <h2>Hamara Mission 🎯</h2>
       <p style="max-width: 800px; margin: 1rem auto; color: var(--gray);">
         <strong>AIkiPadhai</strong> ka mission technology education ko sabke liye accessible banana hai. Hum maante hain
-        ki bhasha (language) seekhne me rukawat nahi banani chahiye. Isliye, hum Python aur AI jaise complex topics ko
-        <strong>Roman Hindi</strong> me, simple aur practical tareeke se samjhate hain.
+        ki bhasha (language) seekhne me rukawat nahi banani chahiye. Isliye, hum Maths, Science, Python aur AI jaise
+        topics ko <strong>Roman Hindi</strong> me, simple aur practical tareeke se samjhate hain.
       </p>
       <a href="about.html" class="btn btn-outline">Read More About Us</a>
     </div>
   </div>
 
   <footer>
-    <p>© 2025 AIkiPadhai | Made with ❤️ to teach Python & AI in Roman Hindi</p>
+    <p>© 2025 AIkiPadhai | Made with ❤️ to teach in Roman Hindi</p>
     <div style="margin-top: 1rem;">
       <a href="about.html">About</a> | <a href="contact.html">Contact</a> | <a href="privacy-policy.html">Privacy
         Policy</a>

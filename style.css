@@ -285,3 +285,441 @@ footer a:hover {
 .text-center { text-align: center; }
 .mb-4 { margin-bottom: 1rem; }
 .mt-4 { margin-top: 1rem; }
+
+/* ============================================================
+   SCROLL ANIMATIONS  (opt-in only)
+   Nothing here activates unless an element has .reveal/.hero-anim
+   AND <html> has .js-anim (added by JS). So pages that don't use
+   these classes are completely unaffected.
+   ============================================================ */
+
+/* Reading-progress bar */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0;
+  background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+  z-index: 2000;
+  transition: width 0.08s linear;
+  pointer-events: none;
+}
+
+/* Base reveal: hidden until scrolled into view */
+.js-anim .reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.75s cubic-bezier(0.22, 0.9, 0.3, 1),
+              transform 0.75s cubic-bezier(0.22, 0.9, 0.3, 1);
+  transition-delay: var(--d, 0s);
+  will-change: opacity, transform;
+}
+.js-anim .reveal-left  { transform: translateX(-40px); }
+.js-anim .reveal-right { transform: translateX(40px); }
+.js-anim .reveal-zoom  { transform: scale(0.92); }
+.js-anim .reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Hero entrance on page load */
+.js-anim .hero-anim > * {
+  opacity: 0;
+  transform: translateY(24px);
+  animation: heroIn 0.9s cubic-bezier(0.22, 0.9, 0.3, 1) forwards;
+}
+.js-anim .hero-anim > *:nth-child(1) { animation-delay: 0.10s; }
+.js-anim .hero-anim > *:nth-child(2) { animation-delay: 0.25s; }
+.js-anim .hero-anim > *:nth-child(3) { animation-delay: 0.40s; }
+@keyframes heroIn { to { opacity: 1; transform: none; } }
+
+/* Header gains depth once you scroll */
+header.scrolled {
+  box-shadow: var(--shadow-md);
+  backdrop-filter: saturate(1.2);
+}
+
+/* ---- Featured track tile (home page hero card) ---- */
+.featured-tile {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #047857, #10b981 55%, #34d399);
+  color: var(--white);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl) var(--spacing-lg);
+  box-shadow: var(--shadow-lg);
+  margin-bottom: var(--spacing-xl);
+  border: none;
+}
+.featured-tile::after {
+  content: "";
+  position: absolute;
+  right: -70px;
+  top: -70px;
+  width: 260px;
+  height: 260px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+}
+.featured-tile > * { position: relative; z-index: 1; }
+.featured-tile h2 { color: var(--white); font-size: 2rem; margin-bottom: var(--spacing-xs); }
+.featured-tile p  { color: rgba(255, 255, 255, 0.92); max-width: 620px; }
+.featured-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--white);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 999px;
+  margin-bottom: var(--spacing-sm);
+}
+.featured-tile .btn {
+  background: var(--white);
+  color: #047857;
+  margin-top: var(--spacing-md);
+}
+.featured-tile .btn:hover { background: #ecfdf5; color: #065f46; }
+
+/* Stat strip */
+.stat-row {
+  display: flex;
+  gap: var(--spacing-lg);
+  flex-wrap: wrap;
+  margin-top: var(--spacing-lg);
+}
+.stat {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1.3rem;
+  min-width: 110px;
+}
+.stat .num { font-size: 1.75rem; font-weight: 800; line-height: 1; font-family: var(--font-heading); }
+.stat .lbl { font-size: 0.8rem; opacity: 0.9; margin-top: 3px; }
+
+/* Card lift is slightly richer on animated pages */
+.js-anim .card { transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s; }
+
+/* Accessibility: honour reduced-motion — show everything instantly */
+@media (prefers-reduced-motion: reduce) {
+  .js-anim .reveal,
+  .js-anim .hero-anim > * {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+  .scroll-progress { display: none; }
+}
+
+/* ============================================================
+   LIQUID GLASS HERO  (home page only — all classes opt-in)
+   ============================================================ */
+
+/* --- The core liquid-glass surface --- */
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.01);
+  background-blend-mode: luminosity;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  border: none;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Gradient border drawn with mask compositing */
+.liquid-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.4px;
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.45) 0%,
+      rgba(255, 255, 255, 0.15) 20%,
+      rgba(255, 255, 255, 0) 40%,
+      rgba(255, 255, 255, 0) 60%,
+      rgba(255, 255, 255, 0.15) 80%,
+      rgba(255, 255, 255, 0.45) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Fallback: browsers without backdrop-filter get a real tint so text stays readable */
+@supports not ((backdrop-filter: blur(4px)) or (-webkit-backdrop-filter: blur(4px))) {
+  .liquid-glass { background: rgba(255, 255, 255, 0.12); }
+}
+
+/* --- Full-screen hero shell --- */
+.hero-screen {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100svh; /* avoids mobile URL-bar jump; ignored by old browsers */
+  overflow: hidden;
+  background: #0b1220;
+  margin-bottom: 0;
+}
+
+.hero-bg,
+.hero-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Animated colour blobs (GPU-friendly: transform only) */
+.hero-bg { overflow: hidden; }
+.hero-bg .blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.55;
+  will-change: transform;
+}
+.blob-1 { width: 46vw; height: 46vw; background: #2563eb; top: -8%;  left: -6%;  animation: drift1 26s ease-in-out infinite; }
+.blob-2 { width: 40vw; height: 40vw; background: #10b981; bottom: -12%; right: -4%; animation: drift2 32s ease-in-out infinite; }
+.blob-3 { width: 34vw; height: 34vw; background: #7c3aed; top: 28%;  right: 18%; animation: drift3 38s ease-in-out infinite; }
+.blob-4 { width: 26vw; height: 26vw; background: #f59e0b; bottom: 12%; left: 22%; opacity: 0.32; animation: drift1 30s ease-in-out infinite reverse; }
+
+@keyframes drift1 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(8vw, 6vh) scale(1.15); } }
+@keyframes drift2 { 0%,100% { transform: translate(0,0) scale(1.1); } 50% { transform: translate(-7vw,-5vh) scale(1); } }
+@keyframes drift3 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-5vw, 7vh) scale(1.2); } }
+
+/* Vignette + bottom fade so text always has contrast */
+.hero-veil {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 90% at 70% 10%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.35) 60%, rgba(0,0,0,0.72) 100%),
+    linear-gradient(180deg, rgba(6,10,20,0.55) 0%, rgba(6,10,20,0.15) 35%, rgba(6,10,20,0.85) 100%);
+}
+
+/* --- Glass navbar --- */
+.hero-nav {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.25rem;
+}
+@media (min-width: 640px) { .hero-nav { padding: 1.25rem 2rem; } }
+
+.hero-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #fff;
+  font-weight: 500;
+  font-size: 1rem;
+  text-decoration: none;
+}
+.hero-logo:hover { color: #fff; }
+
+.nav-pill {
+  display: none;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: 0.75rem;
+  padding: 0.5rem;
+}
+@media (min-width: 900px) { .nav-pill { display: flex; } }
+
+.nav-pill a {
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  transition: color 0.2s, background-color 0.2s;
+  white-space: nowrap;
+}
+.nav-pill a:hover { color: #fff; }
+.nav-pill a.active { background: rgba(255, 255, 255, 0.15); color: #fff; }
+
+.hero-cta { display: none; align-items: center; gap: 0.75rem; }
+@media (min-width: 900px) { .hero-cta { display: flex; } }
+
+.btn-glass {
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.625rem 1rem;
+  border-radius: 999px;
+  transition: background-color 0.2s;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-glass:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
+
+.btn-solid {
+  background: #fff;
+  color: #000;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.625rem 1rem;
+  border-radius: 999px;
+  transition: background-color 0.2s;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-solid:hover { background: rgba(255, 255, 255, 0.9); color: #000; }
+
+.nav-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background: transparent;
+  cursor: pointer;
+}
+@media (min-width: 900px) { .nav-toggle { display: none; } }
+
+/* --- Mobile menu --- */
+.mobile-menu {
+  position: absolute;
+  top: 72px; left: 1rem; right: 1rem;
+  z-index: 30;
+  border-radius: 1rem;
+  padding: 1rem;
+  display: none;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.mobile-menu.open { display: flex; }
+@media (min-width: 900px) { .mobile-menu, .mobile-menu.open { display: none; } }
+
+.mobile-menu a.m-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.75);
+  transition: background-color 0.2s, color 0.2s;
+}
+.mobile-menu a.m-link:hover { color: #fff; background: rgba(255,255,255,0.08); }
+.mobile-menu a.m-link.active { background: rgba(255, 255, 255, 0.15); color: #fff; }
+.mobile-cta {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+.mobile-cta > * { flex: 1; }
+
+/* --- Hero content (bottom-left) --- */
+.hero-content {
+  position: absolute;
+  bottom: 0; left: 0;
+  z-index: 20;
+  padding: 0 1.5rem 2.5rem;
+  max-width: 46rem;
+}
+@media (min-width: 640px) { .hero-content { padding: 0 3rem 4rem; } }
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 1.1rem;
+}
+
+.hero-content h1 {
+  color: #fff;
+  font-size: 2.25rem;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+@media (min-width: 640px) { .hero-content h1 { font-size: 3rem; } }
+@media (min-width: 1024px) { .hero-content h1 { font-size: 3.75rem; } }
+
+.hero-content .hero-sub {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.875rem;
+  line-height: 1.7;
+  margin-bottom: 1.75rem;
+  max-width: 30rem;
+}
+
+.hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+.hero-actions .btn-solid,
+.hero-actions .btn-glass {
+  font-size: 0.875rem;
+  padding: 0.75rem 1.5rem;
+}
+@media (min-width: 640px) {
+  .hero-actions .btn-solid,
+  .hero-actions .btn-glass { font-size: 1rem; padding: 0.75rem 1.75rem; }
+}
+
+/* Scroll cue */
+.scroll-cue {
+  position: absolute;
+  bottom: 1.75rem; left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  color: rgba(255, 255, 255, 0.55);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  animation: bobble 2.4s ease-in-out infinite;
+}
+@media (min-width: 900px) { .scroll-cue { display: flex; } }
+.scroll-cue:hover { color: #fff; }
+@keyframes bobble { 0%,100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, 7px); } }
+
+/* Sticky glass bar that appears after you scroll past the hero */
+.sticky-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 900;
+  background: rgba(255, 255, 255, 0.82);
+  -webkit-backdrop-filter: blur(14px) saturate(1.6);
+  backdrop-filter: blur(14px) saturate(1.6);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-100%);
+  transition: transform 0.35s cubic-bezier(0.22, 0.9, 0.3, 1);
+}
+.sticky-bar.show { transform: translateY(0); }
+.sticky-bar .header-content { padding: 0.6rem 0; }
+.sticky-bar nav a { font-size: 0.9rem; }
+
+/* Reduced motion: stop the drifting/bobbing */
+@media (prefers-reduced-motion: reduce) {
+  .hero-bg .blob { animation: none; }
+  .scroll-cue { animation: none; }
+  .sticky-bar { transition: none; }
+}
