@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Atmosphere Layers Explorer | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #2e1065, #7e22ce); color: #f3e8ff; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #e9d5ff; text-decoration: none; border: 1px solid rgba(233,213,255,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(233,213,255,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { display: flex; gap: 18px; max-width: 1000px; margin: 0 auto; padding: 20px; flex-wrap: wrap; }
+        .stage { flex: 1 1 320px; min-width: 290px; }
+        .side { flex: 1 1 320px; min-width: 290px; }
+        .card { background: rgba(255,255,255,0.07); border-radius: 16px; padding: 16px 18px; margin-bottom: 14px; }
+        canvas { width: 100%; height: auto; border-radius: 12px; display: block; }
+        label { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 6px; }
+        label b { color: #d8b4fe; }
+        input[type=range] { width: 100%; accent-color: #a855f7; }
+        .lname { font-size: 22px; font-weight: 800; color: #fff; }
+        .lalt { font-size: 13px; color: #d8b4fe; margin-bottom: 10px; }
+        .fact { font-size: 14px; line-height: 1.7; }
+        .stats { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+        .sbox { flex: 1 1 120px; background: rgba(0,0,0,0.28); border-radius: 10px; padding: 12px; text-align: center; }
+        .sbox .n { font-size: 18px; font-weight: 800; color: #fff; } .sbox .l { font-size: 11px; color: #d8b4fe; }
+        .seen { margin-top: 12px; font-size: 14px; background: rgba(0,0,0,0.22); border-radius: 10px; padding: 12px; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="atmosphere.html">← Back to Lesson</a>
+        <div class="title">🎈 Atmosphere Layers Explorer</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="stage">
+            <div class="card"><canvas id="cv" width="340" height="520"></canvas></div>
+        </div>
+        <div class="side">
+            <div class="card">
+                <label>🎈 Gubbare ki oonchai <b><span id="aV">5</span> km</b></label>
+                <input type="range" id="alt" min="0" max="700" value="5" oninput="upd()">
+                <div style="font-size:12px;color:#c4b5fd">Slider ghumakar upar udo - zameen se antariksh tak!</div>
+            </div>
+            <div class="card">
+                <div class="lname" id="lname">Troposphere</div>
+                <div class="lalt" id="lalt">0 - 12 km</div>
+                <div class="fact" id="fact"></div>
+                <div class="stats">
+                    <div class="sbox"><div class="n" id="temp">15°C</div><div class="l">Temperature</div></div>
+                    <div class="sbox"><div class="n" id="press">100%</div><div class="l">Hawa ka dabaav</div></div>
+                </div>
+                <div class="seen" id="seen"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var LAYERS = [
+            { n: "Troposphere", lo: 0, hi: 12, col: "#7dd3fc", f: "Yahan hum rehte hain! Poora mausam - badal, baarish, toofan - sab isi layer mein banta hai. Upar jaane par temperature GHATTA hai (har km par ~6.5°C).", see: "☁️ Badal, 🕊️ parinde, 🏔️ Mount Everest (8.8 km) - sab yahin!" },
+            { n: "Stratosphere", lo: 12, hi: 50, col: "#818cf8", f: "Shaant aur saaf layer - isiliye jet planes yahan udte hain. Yahin hai OZONE LAYER jo suraj ki khatarnaak UV kirnon ko rok leti hai. Yahan upar jaane par temperature BADHTA hai (ozone garmi soakti hai).", see: "✈️ Jet planes, 🛡️ Ozone layer (~15-35 km), 🎈 weather balloons" },
+            { n: "Mesosphere", lo: 50, hi: 85, col: "#6366f1", f: "Atmosphere ki SABSE THANDI layer (-90°C tak!). Yahan antariksh se aane wale ulka pind (meteors) hawa se ragad khaakar jal jaate hain - wahi 'toota hua taara' dikhta hai.", see: "☄️ Jalte hue ulka pind (shooting stars)" },
+            { n: "Thermosphere", lo: 85, hi: 600, col: "#4338ca", f: "Bahut garam (2000°C tak!) - par hawa itni patli hai ki aapko garmi mehsoos nahi hogi. Yahan International Space Station aur kai satellites ghoomte hain. Auroras (dhruvi jyoti) bhi yahin dikhte hain.", see: "🛰️ Satellites, 🚀 ISS (~400 km), 🌌 Aurora" },
+            { n: "Exosphere", lo: 600, hi: 700, col: "#312e81", f: "Sabse bahri parat - hawa ke kuch hi anu bache hote hain. Yahan atmosphere dheere-dheere khatam hokar ANTARIKSH (space) mein mil jaata hai. Koi saaf 'seema' nahi hai.", see: "🌍 Prithvi ka poora nazara, 🛰️ door ke satellites, 🌑 kaala antariksh" }
+        ];
+        var cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+        var alt = 5;
+        function layerOf(a) { for (var i = 0; i < LAYERS.length; i++) if (a < LAYERS[i].hi) return LAYERS[i]; return LAYERS[4]; }
+        function tempAt(a) {
+            if (a < 12) return (15 - a * 6.5).toFixed(0);
+            if (a < 50) return (-56 + (a - 12) * 1.5).toFixed(0);
+            if (a < 85) return (0 - (a - 50) * 2.5).toFixed(0);
+            if (a < 600) return (-88 + (a - 85) * 3.6).toFixed(0);
+            return "~1500";
+        }
+        function pressAt(a) {
+            var p = 100 * Math.exp(-a / 8.5);
+            return p > 1 ? p.toFixed(0) + '%' : p > 0.001 ? p.toFixed(3) + '%' : '~0%';
+        }
+        function upd() {
+            alt = +document.getElementById('alt').value;
+            document.getElementById('aV').textContent = alt;
+            var L = layerOf(alt);
+            document.getElementById('lname').textContent = L.n;
+            document.getElementById('lalt').textContent = L.lo + ' - ' + (L.n === 'Exosphere' ? '10,000+' : L.hi) + ' km';
+            document.getElementById('fact').textContent = L.f;
+            document.getElementById('temp').textContent = tempAt(alt) + '°C';
+            document.getElementById('press').textContent = pressAt(alt);
+            document.getElementById('seen').innerHTML = '<b>Yahan kya dikhega:</b><br>' + L.see;
+            draw();
+        }
+        function y4alt(a) {   // log-ish scale so low layers are visible
+            var f = Math.pow(a / 700, 0.42);
+            return 490 - f * 460;
+        }
+        function draw() {
+            var W = 340, H = 520; ctx.clearRect(0, 0, W, H);
+            LAYERS.forEach(function (L) {
+                var yTop = y4alt(L.hi), yBot = y4alt(L.lo);
+                ctx.fillStyle = L.col; ctx.globalAlpha = 0.75;
+                ctx.fillRect(0, yTop, W, yBot - yTop); ctx.globalAlpha = 1;
+                ctx.fillStyle = 'rgba(255,255,255,0.9)'; ctx.font = 'bold 11px sans-serif';
+                if (yBot - yTop > 16) ctx.fillText(L.n, 8, yTop + 14);
+            });
+            // ground
+            ctx.fillStyle = '#4d7c0f'; ctx.fillRect(0, 490, W, 30);
+            ctx.font = '16px sans-serif'; ctx.fillText('🌳', 20, 512); ctx.fillText('🏠', 60, 512); ctx.fillText('🏔️', 270, 512);
+            // balloon
+            var by = y4alt(alt);
+            ctx.font = '30px sans-serif'; ctx.fillText('🎈', 150, by + 8);
+            // altitude marker line
+            ctx.strokeStyle = '#fde047'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]);
+            ctx.beginPath(); ctx.moveTo(0, by); ctx.lineTo(W, by); ctx.stroke(); ctx.setLineDash([]);
+            ctx.fillStyle = '#fde047'; ctx.font = 'bold 12px sans-serif'; ctx.fillText(alt + ' km', 285, by - 6);
+        }
+        upd();
+    </script>
+</body>
+
+</html>

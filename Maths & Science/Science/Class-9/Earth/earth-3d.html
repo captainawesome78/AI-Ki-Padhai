@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Earth Layers &amp; Spheres | AIkiPadhai</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="../sci-3d.js"></script>
+</head>
+
+<body>
+    <script>
+        Sci3D({
+            title: "🧊 3D Earth: Layers &amp; Spheres",
+            back: { href: "earth-system.html", label: "Back to Lesson" },
+            intro: { name: "3D Earth Lab", desc: "Prithvi ko andar se dekho! 'Cut open' slider se Prithvi ko kaatkar crust, mantle aur core dekho. 'Spheres' slider se atmosphere, hydrosphere aur biosphere ko on/off karo. Kisi bhi hisse par tap karke jaano - aur drag karke ghumao." },
+            camZ: 26,
+            data: {
+                crust: { emoji: "🪨", name: "Crust", nick: "0-70 km", desc: "Prithvi ki sabse upari, patli parat - jispar hum rehte hain. Prithvi ke size ke hisaab se ye seb ke chhilke jitni patli hai! Isi mein mitti, chattan aur pahaad hain." },
+                mantle: { emoji: "🟠", name: "Mantle", nick: "70-2900 km", desc: "Sabse mota hissa (2900 km). Yahan chattan itni garam hai ki dheere-dheere behti hai (gaadhe shahad jaisi). Isi ke behne se plates khiskti hain, bhukamp aur jwalamukhi aate hain." },
+                outer: { emoji: "🟡", name: "Outer Core", nick: "Pighla loha", desc: "Pighla hua (liquid) loha aur nickel. Iske ghoomne se Prithvi ka MAGNETIC FIELD banta hai - isi se compass north dikhata hai aur hum suraj ki radiation se bache rehte hain!" },
+                inner: { emoji: "⚪", name: "Inner Core", nick: "~5500°C", desc: "Thos loha ka gola, lagbhag 5500°C garam - suraj ki satah jitna! Itni garmi ke bawajood ye pighalta nahi, kyunki upar ka pressure bahut zyada hai." },
+                atmosphere: { emoji: "🌬️", name: "Atmosphere", nick: "Hawa ka kambal", desc: "Gaison ki parat (78% nitrogen, 21% oxygen). Ye hume saans deti hai, UV kirnon se bachati hai, aur temperature ko rehne layak rakhti hai. Neela halka gola." },
+                hydrosphere: { emoji: "💧", name: "Hydrosphere", nick: "71% satah", desc: "Prithvi ka saara paani - samundar, nadi, barf, badal. Prithvi ki 71% satah paani se dhaki hai, isiliye ise 'Blue Planet' kehte hain. Neele patch dekho." },
+                biosphere: { emoji: "🌿", name: "Biosphere", nick: "Zindagi", desc: "Jahan-jahan jeevan hai. Ye geosphere, hydrosphere aur atmosphere ke milne par bani ek bahut patli parat hai - football par lagi paint jitni patli! Hare patch dekho." },
+                moon: { emoji: "🌙", name: "Chandrama", nick: "Saathi", desc: "Prithvi ka ek matra upgrah. Iski gravity samundar mein jwaar-bhaata (tides) laati hai aur Prithvi ke jhukav (tilt) ko sthir rakhti hai - jisse mausam niyamit rehte hain." }
+            },
+            controls: [
+                { id: "cut", label: "🔪 Cut open (andar dekho)", min: 0, max: 100, step: 1, value: 0, on: function (v, ctx) { ctx.model.cut = v / 100; } },
+                { id: "spheres", label: "🌍 Spheres dikhao (0=sirf layers)", min: 0, max: 1, step: 1, value: 1, on: function (v, ctx) { ctx.model.showSph = (v === 1); } },
+                { id: "spin", label: "🔄 Prithvi ka ghoomna (rotation)", min: 0, max: 10, step: 1, value: 3, on: function (v, ctx) { ctx.model.spin = v / 10; } }
+            ],
+            build: function (ctx) {
+                var T = ctx.THREE, P = ctx.pivot, M = ctx.model;
+                M.cut = 0; M.showSph = true; M.spin = 0.3;
+
+                M.globe = new T.Group(); P.add(M.globe);
+
+                // ---- interior layers: hemispheres so a cut reveals them ----
+                function shell(radius, hex, key, opacity) {
+                    var g = new T.Group();
+                    // full sphere (right half visible when closed)
+                    var full = new T.Mesh(new T.SphereGeometry(radius, 40, 28), ctx.mat(hex, opacity != null ? { transparent: true, opacity: opacity } : undefined));
+                    g.add(full); g.userData.full = full;
+                    // half sphere used when cut open
+                    var half = new T.Mesh(new T.SphereGeometry(radius, 40, 28, 0, Math.PI), ctx.mat(hex, opacity != null ? { transparent: true, opacity: opacity } : undefined));
+                    half.visible = false; g.add(half); g.userData.half = half;
+                    ctx.addPart(g, key); M.globe.add(g);
+                    return g;
+                }
+                M.inner = shell(1.6, 0xfef3c7, 'inner');
+                M.outer = shell(3.4, 0xfbbf24, 'outer');
+                M.mantle = shell(6.2, 0xea580c, 'mantle');
+                M.crustG = shell(7.0, 0x15803d, 'crust');
+
+                // ---- hydrosphere: blue ocean patches on the crust ----
+                M.hydro = new T.Group(); ctx.addPart(M.hydro, 'hydrosphere'); M.globe.add(M.hydro);
+                var oceanGeo = new T.SphereGeometry(7.06, 24, 16);
+                var oceanBase = new T.Mesh(oceanGeo, ctx.mat(0x0284c7, { transparent: true, opacity: 0.72 }));
+                M.hydro.add(oceanBase);
+                // green land patches sit slightly above the ocean shell
+                M.bio = new T.Group(); ctx.addPart(M.bio, 'biosphere'); M.globe.add(M.bio);
+                var landSpots = [[0.6, 0.4], [-0.5, 1.1], [1.6, -0.5], [2.6, 0.7], [-1.9, -0.9], [3.4, -0.2], [0.2, -1.2]];
+                landSpots.forEach(function (s, i) {
+                    var lat = s[1], lon = s[0];
+                    var r = 7.12, size = 1.5 + (i % 3) * 0.7;
+                    var patch = new T.Mesh(new T.SphereGeometry(size, 14, 10), ctx.mat(0x22c55e));
+                    patch.position.set(r * Math.cos(lat) * Math.cos(lon), r * Math.sin(lat), r * Math.cos(lat) * Math.sin(lon));
+                    patch.scale.set(1, 0.55, 1);
+                    patch.lookAt(0, 0, 0);
+                    M.bio.add(patch);
+                });
+                // a few trees/life markers
+                [[0.7, 0.5], [2.5, 0.8], [-1.8, -0.8]].forEach(function (s) {
+                    var r = 7.6, lat = s[1], lon = s[0];
+                    var tree = new T.Mesh(new T.ConeGeometry(0.45, 1.2, 8), ctx.mat(0x14532d));
+                    tree.position.set(r * Math.cos(lat) * Math.cos(lon), r * Math.sin(lat), r * Math.cos(lat) * Math.sin(lon));
+                    tree.lookAt(0, 0, 0); tree.rotateX(Math.PI / 2);
+                    M.bio.add(tree);
+                });
+
+                // ---- atmosphere: translucent outer shell + clouds ----
+                M.atmos = new T.Group(); ctx.addPart(M.atmos, 'atmosphere'); M.globe.add(M.atmos);
+                var air = new T.Mesh(new T.SphereGeometry(8.2, 32, 22), ctx.mat(0x7dd3fc, { transparent: true, opacity: 0.22 }));
+                M.atmos.add(air);
+                M.clouds = new T.Group(); M.atmos.add(M.clouds);
+                for (var c = 0; c < 14; c++) {
+                    var cl = new T.Mesh(new T.SphereGeometry(0.5 + Math.random() * 0.6, 10, 8), ctx.mat(0xffffff, { transparent: true, opacity: 0.75 }));
+                    var la = (Math.random() - 0.5) * 2.2, lo = Math.random() * Math.PI * 2, rr = 7.9;
+                    cl.position.set(rr * Math.cos(la) * Math.cos(lo), rr * Math.sin(la), rr * Math.cos(la) * Math.sin(lo));
+                    cl.scale.set(1.7, 0.5, 1);
+                    M.clouds.add(cl);
+                }
+
+                // ---- moon orbiting ----
+                M.moonPivot = new T.Group(); P.add(M.moonPivot);
+                M.moon = new T.Mesh(new T.SphereGeometry(1.1, 18, 14), ctx.mat(0x9ca3af));
+                M.moon.position.set(15, 2.5, 0);
+                ctx.addPart(M.moon, 'moon'); M.moonPivot.add(M.moon);
+
+                // sun light direction hint
+                var starGeo = new T.SphereGeometry(0.09, 6, 6), starMat = ctx.mat(0xffffff);
+                for (var s2 = 0; s2 < 60; s2++) {
+                    var st = new T.Mesh(starGeo, starMat);
+                    var rad = 40 + Math.random() * 25, th = Math.random() * Math.PI * 2, ph = Math.acos(2 * Math.random() - 1);
+                    st.position.set(rad * Math.sin(ph) * Math.cos(th), rad * Math.cos(ph), rad * Math.sin(ph) * Math.sin(th));
+                    P.add(st);
+                }
+                P.rotation.x = 0.25;
+            },
+            onFrame: function (t, ctx) {
+                var M = ctx.model; if (!M.globe) return;
+                // cut open: swap full spheres for half spheres and slide them apart
+                var open = M.cut > 0.02;
+                [M.inner, M.outer, M.mantle, M.crustG].forEach(function (g) {
+                    g.userData.full.visible = !open;
+                    g.userData.half.visible = open;
+                    g.rotation.y = -Math.PI / 2;   // face the cut toward camera
+                });
+                // spheres visibility + fade as we cut
+                var sphOn = M.showSph && M.cut < 0.5;
+                M.atmos.visible = sphOn; M.hydro.visible = sphOn; M.bio.visible = sphOn;
+                // rotation
+                M.globe.rotation.y += M.spin * 0.004;
+                if (M.clouds) M.clouds.rotation.y += M.spin * 0.0016;
+                M.moonPivot.rotation.y += 0.0035;
+            }
+        });
+    </script>
+</body>
+
+</html>

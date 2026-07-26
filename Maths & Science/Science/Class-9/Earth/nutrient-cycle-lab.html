@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Carbon &amp; Nitrogen Cycle Lab | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #052e16, #15803d); color: #dcfce7; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #bbf7d0; text-decoration: none; border: 1px solid rgba(187,247,208,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(187,247,208,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 900px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,0.07); border-radius: 16px; padding: 16px 18px; margin-bottom: 14px; }
+        canvas { width: 100%; height: auto; background: rgba(0,0,0,0.22); border-radius: 12px; display: block; }
+        .modes { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+        .modes button { flex: 1; min-width: 150px; background: rgba(255,255,255,0.1); border: 2px solid transparent; color: #dcfce7; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 15px; }
+        .modes button.active { border-color: #4ade80; background: rgba(74,222,128,0.15); }
+        .ctr { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+        .ctr button { flex: 1; min-width: 120px; border: none; padding: 13px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 15px; }
+        .go { background: #22c55e; color: #052e16; } .rst { background: transparent; color: #bbf7d0; border: 1px solid rgba(187,247,208,0.4); }
+        .step { background: rgba(0,0,0,0.28); border-radius: 12px; padding: 16px; margin-top: 12px; }
+        .step .h { font-size: 17px; font-weight: 800; color: #fff; margin-bottom: 6px; }
+        .step .d { font-size: 14px; line-height: 1.65; }
+        .prog { display: flex; gap: 6px; margin-top: 12px; }
+        .prog div { flex: 1; height: 7px; background: rgba(255,255,255,0.15); border-radius: 4px; }
+        .prog div.on { background: #4ade80; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="biosphere-cycles.html">← Back to Lesson</a>
+        <div class="title">♻️ Carbon &amp; Nitrogen Cycle Lab</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <div class="modes">
+                <button id="mC" class="active" onclick="setMode('carbon')">🌳 Carbon Cycle</button>
+                <button id="mN" onclick="setMode('nitrogen')">🌾 Nitrogen Cycle</button>
+            </div>
+            <canvas id="cv" width="840" height="330"></canvas>
+            <div class="ctr">
+                <button class="go" onclick="next()" id="nb">▶ Agla Step</button>
+                <button class="rst" onclick="reset()">↺ Shuru Se</button>
+            </div>
+            <div class="prog" id="prog"></div>
+            <div class="step">
+                <div class="h" id="sh">Shuruaat</div>
+                <div class="d" id="sd">"Agla Step" dabao aur ek atom ka poora safar follow karo!</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var CYCLES = {
+            carbon: {
+                label: "Carbon atom",
+                col: "#f97316",
+                nodes: [
+                    { x: 420, y: 45, r: 62, label: "Hawa (CO₂)", emoji: "🌫️", c: "#0ea5e9" },
+                    { x: 150, y: 200, r: 60, label: "Paudhe", emoji: "🌳", c: "#22c55e" },
+                    { x: 430, y: 235, r: 58, label: "Jaanwar", emoji: "🐄", c: "#eab308" },
+                    { x: 700, y: 210, r: 58, label: "Mitti", emoji: "🪱", c: "#a16207" }
+                ],
+                steps: [
+                    { at: 0, h: "1. Hawa mein CO₂", d: "Carbon atom hawa mein carbon dioxide (CO₂) ke roop mein ghoom raha hai. Hawa ka sirf 0.04% CO₂ hai, par saari zindagi isi par tiki hai." },
+                    { at: 1, h: "2. Photosynthesis 🌳", d: "Paudha suraj ki roshni se CO₂ aur paani ko milakar glucose (khaana) banata hai - carbon ab paudhe ke shareer ka hissa ban gaya! Saath mein oxygen bahar chhodta hai." },
+                    { at: 2, h: "3. Khaana khaya gaya 🐄", d: "Ek gaay paudha khaati hai. Carbon atom ab jaanwar ke shareer (protein, fat) mein pahunch gaya. Yahi carbon aage food chain mein badhta hai." },
+                    { at: 0, h: "4. Respiration (saans) 💨", d: "Jaanwar saans lete waqt glucose ko toadkar energy banata hai, aur carbon wapas CO₂ bankar hawa mein chala jaata hai. Cycle ka aadha safar poora!" },
+                    { at: 3, h: "5. Decomposition 🪱", d: "Jab jeev marte hain, decomposers (bacteria, fungi, kenchua) unhe sadaate hain aur carbon mitti mein chala jaata hai. Kuch carbon karodon saal mein coal/petrol ban jaata hai." },
+                    { at: 0, h: "6. Wapas hawa mein ♻️", d: "Mitti ke jeev aur jalne (coal/petrol) se carbon phir hawa mein CO₂ bankar laut aata hai. CYCLE POORA! Yaad rakho - carbon kabhi khatm nahi hota, bas ghoomta rehta hai." }
+                ]
+            },
+            nitrogen: {
+                label: "Nitrogen atom",
+                col: "#a855f7",
+                nodes: [
+                    { x: 420, y: 45, r: 62, label: "Hawa (N₂ 78%)", emoji: "🌫️", c: "#6366f1" },
+                    { x: 700, y: 200, r: 60, label: "Mitti (nitrates)", emoji: "🦠", c: "#a16207" },
+                    { x: 150, y: 200, r: 60, label: "Paudhe", emoji: "🌾", c: "#22c55e" },
+                    { x: 430, y: 245, r: 56, label: "Jaanwar", emoji: "🐄", c: "#eab308" }
+                ],
+                steps: [
+                    { at: 0, h: "1. Hawa mein N₂", d: "Hawa ka 78% nitrogen hai! Par ye N₂ gas itni majboot (stable) hai ki na paudhe na hum ise seedhe istemal kar sakte hain. Ise pehle 'fix' karna padta hai." },
+                    { at: 1, h: "2. Nitrogen Fixation 🦠", d: "Daalon (chana, moong) ki jadon mein rehne wale RHIZOBIUM bacteria hawa ke N₂ ko nitrates mein badal dete hain. Bijli (lightning) bhi thoda nitrogen fix karti hai!" },
+                    { at: 2, h: "3. Paudhe absorb karte hain 🌾", d: "Paudhe apni jadon se mitti se nitrates kheenchte hain aur unse PROTEIN aur DNA banate hain. Isiliye khaad mein nitrogen daala jaata hai." },
+                    { at: 3, h: "4. Jaanwar khaate hain 🐄", d: "Jaanwar (aur hum) paudhe khaakar protein paate hain. Aapke shareer ki har muscle aur DNA mein wahi nitrogen hai jo kabhi hawa mein tha!" },
+                    { at: 1, h: "5. Decomposition 🪱", d: "Mal-mutra aur mrit shareer ko bacteria sadaate hain, jisse nitrogen wapas mitti mein ammonia/nitrates ke roop mein aa jaata hai." },
+                    { at: 0, h: "6. Denitrification ♻️", d: "Kuch khaas bacteria nitrates ko todkar wapas N₂ gas bana dete hain jo hawa mein chali jaati hai. CYCLE POORA! Prakriti ne ye santulan khud banaya hai." }
+                ]
+            }
+        };
+        var cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+        var mode = 'carbon', idx = -1, tok = { x: 420, y: 45 }, target = { x: 420, y: 45 };
+        function setMode(m) { mode = m; document.getElementById('mC').classList.toggle('active', m === 'carbon'); document.getElementById('mN').classList.toggle('active', m === 'nitrogen'); reset(); }
+        function reset() {
+            idx = -1; var C = CYCLES[mode]; tok = { x: C.nodes[0].x, y: C.nodes[0].y }; target = { x: tok.x, y: tok.y };
+            document.getElementById('sh').textContent = 'Shuruaat';
+            document.getElementById('sd').textContent = '"Agla Step" dabao aur ek ' + C.label + ' ka poora safar follow karo!';
+            document.getElementById('nb').textContent = '▶ Agla Step';
+            buildProg(); draw();
+        }
+        function buildProg() {
+            var C = CYCLES[mode], p = document.getElementById('prog'); p.innerHTML = '';
+            C.steps.forEach(function (s, i) { var d = document.createElement('div'); if (i <= idx) d.className = 'on'; p.appendChild(d); });
+        }
+        function next() {
+            var C = CYCLES[mode];
+            idx++;
+            if (idx >= C.steps.length) { reset(); return; }
+            var s = C.steps[idx];
+            target = { x: C.nodes[s.at].x, y: C.nodes[s.at].y };
+            document.getElementById('sh').textContent = s.h;
+            document.getElementById('sd').textContent = s.d;
+            document.getElementById('nb').textContent = (idx === C.steps.length - 1) ? '↺ Phir Se Shuru' : '▶ Agla Step';
+            buildProg();
+        }
+        function loop() {
+            requestAnimationFrame(loop);
+            tok.x += (target.x - tok.x) * 0.09; tok.y += (target.y - tok.y) * 0.09;
+            draw();
+        }
+        function draw() {
+            var C = CYCLES[mode], W = 840, H = 330; ctx.clearRect(0, 0, W, H);
+            // connections
+            ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 2; ctx.setLineDash([6, 5]);
+            for (var i = 0; i < C.nodes.length; i++) {
+                var a = C.nodes[i], b = C.nodes[(i + 1) % C.nodes.length];
+                ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+            }
+            ctx.setLineDash([]);
+            // nodes
+            C.nodes.forEach(function (n) {
+                ctx.fillStyle = n.c; ctx.globalAlpha = 0.28;
+                ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
+                ctx.strokeStyle = n.c; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, 7); ctx.stroke();
+                ctx.textAlign = 'center'; ctx.font = '26px sans-serif'; ctx.fillText(n.emoji, n.x, n.y + 2);
+                ctx.fillStyle = '#fff'; ctx.font = 'bold 13px sans-serif'; ctx.fillText(n.label, n.x, n.y + 28);
+            });
+            // token (the atom)
+            ctx.fillStyle = C.col;
+            ctx.beginPath(); ctx.arc(tok.x, tok.y - 22, 15, 0, 7); ctx.fill();
+            ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; ctx.stroke();
+            ctx.fillStyle = '#fff'; ctx.font = 'bold 12px sans-serif';
+            ctx.fillText(mode === 'carbon' ? 'C' : 'N', tok.x, tok.y - 17);
+            ctx.textAlign = 'left';
+        }
+        reset(); loop();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Water Cycle Simulator | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #083344, #0e7490); color: #e0f2fe; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #a5f3fc; text-decoration: none; border: 1px solid rgba(165,243,252,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(165,243,252,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 880px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,0.06); border-radius: 16px; padding: 16px 18px; margin-bottom: 14px; }
+        canvas { width: 100%; height: auto; background: linear-gradient(#7dd3fc22, #0c4a6e33); border-radius: 12px; display: block; }
+        label { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 5px; margin-top: 10px; }
+        label b { color: #7dd3fc; }
+        input[type=range] { width: 100%; accent-color: #22d3ee; }
+        .stages { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+        .st { flex: 1 1 130px; background: rgba(0,0,0,0.25); border-radius: 10px; padding: 10px; text-align: center; border: 2px solid transparent; font-size: 13px; }
+        .st.on { border-color: #22d3ee; background: rgba(34,211,238,0.15); }
+        .st .e { font-size: 20px; display: block; }
+        .note { font-size: 13px; color: #a5f3fc; text-align: center; margin-top: 10px; line-height: 1.6; min-height: 40px; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="hydrosphere.html">← Back to Lesson</a>
+        <div class="title">💧 Water Cycle Simulator</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <canvas id="cv" width="840" height="380"></canvas>
+            <div class="note" id="note">Suraj ki garmi badhao aur dekho paani upar uthkar badal banata hai, phir baarish hoti hai!</div>
+        </div>
+        <div class="card">
+            <label>☀️ Suraj ki garmi (temperature) <b><span id="hV">50</span>%</b></label>
+            <input type="range" id="heat" min="0" max="100" value="50" oninput="upd()">
+            <div class="stages">
+                <div class="st" id="s1"><span class="e">💨</span>Evaporation</div>
+                <div class="st" id="s2"><span class="e">☁️</span>Condensation</div>
+                <div class="st" id="s3"><span class="e">🌧️</span>Precipitation</div>
+                <div class="st" id="s4"><span class="e">🏞️</span>Collection</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+        var W = 840, H = 380, SEA = 310;
+        var heat = 50, cloudMass = 0, raining = false, vapors = [], drops = [], t = 0;
+        function upd() {
+            heat = +document.getElementById('heat').value;
+            document.getElementById('hV').textContent = heat;
+        }
+        function spawnVapor() {
+            vapors.push({ x: 60 + Math.random() * 380, y: SEA - 5, s: 0.4 + Math.random() * 0.5, a: 1 });
+        }
+        function loop() {
+            requestAnimationFrame(loop); t += 0.016;
+            // evaporation rate from heat
+            if (heat > 5 && Math.random() < heat / 260) spawnVapor();
+            vapors.forEach(function (v) { v.y -= (0.5 + heat / 60) * v.s; v.x += Math.sin(t + v.y * 0.02) * 0.5; });
+            // vapor reaching cloud height becomes cloud mass
+            for (var i = vapors.length - 1; i >= 0; i--) {
+                if (vapors[i].y < 110) { cloudMass = Math.min(100, cloudMass + 1.4); vapors.splice(i, 1); }
+            }
+            // cloud saturates -> rain
+            if (cloudMass >= 78) raining = true;
+            if (raining) {
+                cloudMass -= 0.55;
+                if (Math.random() < 0.5) drops.push({ x: 470 + Math.random() * 300, y: 150, v: 3 + Math.random() * 2 });
+                if (cloudMass <= 22) raining = false;
+            }
+            drops.forEach(function (d) { d.y += d.v + 1.5; });
+            drops = drops.filter(function (d) { return d.y < SEA + 30; });
+            draw(); updStages();
+        }
+        function updStages() {
+            document.getElementById('s1').className = 'st' + (heat > 5 && vapors.length ? ' on' : '');
+            document.getElementById('s2').className = 'st' + (cloudMass > 15 ? ' on' : '');
+            document.getElementById('s3').className = 'st' + (raining ? ' on' : '');
+            document.getElementById('s4').className = 'st' + (drops.length ? ' on' : '');
+            var n = document.getElementById('note');
+            if (heat <= 5) n.innerHTML = '❄️ Garmi bahut kam! Evaporation ruk gaya - bina suraj ki energy ke water cycle chalta hi nahi.';
+            else if (raining) n.innerHTML = '🌧️ <b>Precipitation!</b> Badal bhaari ho gaya, boondein bhaari hokar gir rahi hain. Paani wapas nadi-samundar mein jaayega (collection).';
+            else if (cloudMass > 45) n.innerHTML = '☁️ <b>Condensation</b> - vaashp thandak mein boondein bankar badal bana rahi hai. Badal bhaari ho raha hai...';
+            else n.innerHTML = '💨 <b>Evaporation</b> - suraj ki garmi se samundar ka paani vaashp bankar upar uth raha hai. Garmi badhao toh aur tez hoga!';
+        }
+        function draw() {
+            ctx.clearRect(0, 0, W, H);
+            // sun (brightness from heat)
+            var r = 26 + heat * 0.18;
+            ctx.fillStyle = 'rgba(253,224,71,' + (0.35 + heat / 150) + ')';
+            ctx.beginPath(); ctx.arc(80, 60, r + 14, 0, 7); ctx.fill();
+            ctx.fillStyle = '#fde047'; ctx.beginPath(); ctx.arc(80, 60, r, 0, 7); ctx.fill();
+            ctx.fillStyle = '#78350f'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
+            ctx.fillText(heat + '%', 80, 65);
+            // sea
+            ctx.fillStyle = '#0284c7'; ctx.fillRect(0, SEA, W, H - SEA);
+            ctx.fillStyle = '#38bdf8';
+            for (var x = 0; x < W; x += 20) { ctx.beginPath(); ctx.arc(x + 10, SEA, 10, Math.PI, 0); ctx.fill(); }
+            // land + tree on right
+            ctx.fillStyle = '#65a30d'; ctx.beginPath(); ctx.moveTo(620, SEA); ctx.lineTo(700, 250); ctx.lineTo(840, 250); ctx.lineTo(840, SEA); ctx.closePath(); ctx.fill();
+            ctx.font = '28px sans-serif'; ctx.fillText('🌳', 760, 248);
+            // vapor particles
+            vapors.forEach(function (v) {
+                ctx.fillStyle = 'rgba(224,242,254,0.75)';
+                ctx.beginPath(); ctx.arc(v.x, v.y, 4 + v.s * 3, 0, 7); ctx.fill();
+            });
+            // cloud sized by mass
+            if (cloudMass > 6) {
+                var cw = 40 + cloudMass * 1.5, ch = 20 + cloudMass * 0.42;
+                var grey = raining ? 130 : 235 - cloudMass * 0.7;
+                ctx.fillStyle = 'rgb(' + grey + ',' + grey + ',' + (grey + 12) + ')';
+                ctx.beginPath();
+                ctx.ellipse(600, 110, cw * 0.55, ch, 0, 0, 7); ctx.fill();
+                ctx.beginPath(); ctx.ellipse(660, 100, cw * 0.42, ch * 0.85, 0, 0, 7); ctx.fill();
+                ctx.beginPath(); ctx.ellipse(545, 118, cw * 0.35, ch * 0.7, 0, 0, 7); ctx.fill();
+                ctx.fillStyle = '#0c4a6e'; ctx.font = 'bold 12px sans-serif';
+                ctx.fillText(Math.round(cloudMass) + '%', 610, 114);
+            }
+            // rain drops
+            ctx.strokeStyle = '#7dd3fc'; ctx.lineWidth = 2;
+            drops.forEach(function (d) { ctx.beginPath(); ctx.moveTo(d.x, d.y); ctx.lineTo(d.x - 2, d.y + 9); ctx.stroke(); });
+            // labels
+            ctx.fillStyle = '#bae6fd'; ctx.font = '12px sans-serif'; ctx.textAlign = 'left';
+            ctx.fillText('Samundar', 30, 345); ctx.fillText('Zameen', 740, 300);
+            ctx.textAlign = 'center';
+        }
+        upd(); loop();
+    </script>
+</body>
+
+</html>
