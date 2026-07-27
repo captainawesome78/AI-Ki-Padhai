@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neutralisation Titration Sim | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #083344, #0e7490); color: #e0f2fe; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #a5f3fc; text-decoration: none; border: 1px solid rgba(165,243,252,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(165,243,252,.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { display: flex; gap: 18px; max-width: 960px; margin: 0 auto; padding: 20px; flex-wrap: wrap; }
+        .stage { flex: 1 1 320px; min-width: 290px; }
+        .side { flex: 1 1 330px; min-width: 290px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+        .card h3 { color: #fff; font-size: 13px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: .05em; }
+        canvas { width: 100%; height: auto; background: rgba(0,0,0,.22); border-radius: 12px; display: block; }
+        .btns { display: flex; gap: 9px; margin-top: 12px; flex-wrap: wrap; }
+        .btns button { flex: 1; min-width: 100px; border: none; padding: 12px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 14px; }
+        .drop { background: #06b6d4; color: #04222b; } .auto { background: #0ea5e9; color: #04222b; } .rst { background: transparent; color: #a5f3fc; border: 1px solid rgba(165,243,252,.4); }
+        .read { display: flex; gap: 10px; flex-wrap: wrap; }
+        .rb { flex: 1 1 100px; background: rgba(0,0,0,.28); border-radius: 12px; padding: 13px; text-align: center; }
+        .rb .n { font-size: 22px; font-weight: 800; color: #fff; } .rb .l { font-size: 11px; color: #7dd3fc; margin-top: 3px; }
+        .status { padding: 13px; border-radius: 12px; text-align: center; font-weight: 800; font-size: 15px; margin-top: 12px; }
+        .s-acid { background: #7f1d1d; color: #fecaca; } .s-neu { background: #14532d; color: #bbf7d0; } .s-base { background: #1e3a8a; color: #bfdbfe; }
+        .note { font-size: 13px; color: #a5f3fc; margin-top: 10px; line-height: 1.65; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="neutralisation-salts.html">← Back to Lesson</a>
+        <div class="title">⚗️ Neutralisation Titration</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="stage">
+            <div class="card"><canvas id="cv" width="360" height="420"></canvas></div>
+        </div>
+        <div class="side">
+            <div class="card">
+                <h3>Beaker mein: 25 mL HCl (acid) + phenolphthalein</h3>
+                <div class="read">
+                    <div class="rb"><div class="n" id="vol">0</div><div class="l">NaOH daala (mL)</div></div>
+                    <div class="rb"><div class="n" id="ph">1.0</div><div class="l">pH</div></div>
+                </div>
+                <div class="status s-acid" id="status">Abhi ACIDIC hai</div>
+                <div class="btns">
+                    <button class="drop" onclick="addDrop(1)">💧 1 mL daalo</button>
+                    <button class="auto" onclick="auto()">▶ Auto</button>
+                    <button class="rst" onclick="resetT()">↺ Reset</button>
+                </div>
+                <div class="note" id="note"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+        var ACID_VOL = 25;      // mL of acid, equal concentration => neutral at 25 mL base
+        var added = 0, timer = null;
+
+        /* Simple titration curve for strong acid + strong base of equal concentration.
+           Before equivalence: excess acid. After: excess base. Sharp jump at 25 mL. */
+        function phAt(v) {
+            var C = 0.1;                                   // mol/L both
+            if (v < ACID_VOL) {
+                var molH = C * (ACID_VOL - v) / 1000;
+                var conc = molH / ((ACID_VOL + v) / 1000);
+                return Math.max(1, -Math.log10(conc));
+            } else if (v > ACID_VOL) {
+                var molOH = C * (v - ACID_VOL) / 1000;
+                var cOH = molOH / ((ACID_VOL + v) / 1000);
+                return Math.min(13, 14 + Math.log10(cOH));
+            }
+            return 7;
+        }
+        function colorFor(p) {
+            // phenolphthalein: colourless below ~8.2, pink above
+            return p >= 8.2 ? 'rgba(236,72,153,0.75)' : 'rgba(226,232,240,0.28)';
+        }
+        function draw() {
+            var W = 360, H = 420; ctx.clearRect(0, 0, W, H);
+            var p = phAt(added);
+            // burette
+            ctx.strokeStyle = '#7dd3fc'; ctx.lineWidth = 3;
+            ctx.strokeRect(150, 12, 46, 150);
+            var left = Math.max(0, 50 - added) / 50;
+            ctx.fillStyle = 'rgba(125,211,252,.5)';
+            ctx.fillRect(153, 15 + 144 * (1 - left), 40, 144 * left);
+            ctx.fillStyle = '#bae6fd'; ctx.font = '11px sans-serif'; ctx.textAlign = 'center';
+            ctx.fillText('NaOH', 173, 178);
+            // nozzle
+            ctx.strokeStyle = '#7dd3fc'; ctx.beginPath(); ctx.moveTo(173, 162); ctx.lineTo(173, 196); ctx.stroke();
+            // falling drop
+            if (timer) { ctx.fillStyle = '#7dd3fc'; ctx.beginPath(); ctx.arc(173, 205 + (Date.now() / 6 % 40), 4, 0, 7); ctx.fill(); }
+            // beaker
+            ctx.strokeStyle = '#e0f2fe'; ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.moveTo(95, 258); ctx.lineTo(95, 390); ctx.lineTo(265, 390); ctx.lineTo(265, 258); ctx.stroke();
+            // liquid
+            var lvl = 96 + Math.min(added, 50) * 0.5;
+            ctx.fillStyle = colorFor(p);
+            ctx.fillRect(98, 390 - lvl, 164, lvl);
+            ctx.fillStyle = '#e0f2fe'; ctx.font = 'bold 12px sans-serif';
+            ctx.fillText('HCl + phenolphthalein', 180, 410);
+            ctx.textAlign = 'left';
+        }
+        function upd() {
+            var p = phAt(added);
+            document.getElementById('vol').textContent = added;
+            document.getElementById('ph').textContent = p.toFixed(1);
+            var st = document.getElementById('status'), nt = document.getElementById('note');
+            if (Math.abs(added - ACID_VOL) < 0.5) {
+                st.className = 'status s-neu';
+                st.textContent = '🎯 NEUTRAL! pH = 7 — equivalence point';
+                nt.innerHTML = 'Yahan acid ke saare H⁺ base ke OH⁻ se mil chuke hain: <b>H⁺ + OH⁻ → H₂O</b>. Beaker mein ab sirf <b>NaCl + paani</b> bacha hai. Phenolphthalein abhi bhi rangheen hai — ek boond aur daalo toh gulaabi ho jaayega!';
+            } else if (added < ACID_VOL) {
+                st.className = 'status s-acid';
+                st.textContent = '🔴 Abhi ACIDIC hai (pH ' + p.toFixed(1) + ')';
+                nt.innerHTML = 'Acid abhi bacha hua hai (H⁺ zyada). Phenolphthalein acid mein <b>rangheen</b> rehta hai. Aur NaOH daalo — ' + (ACID_VOL - added) + ' mL aur chahiye.';
+            } else {
+                st.className = 'status s-base';
+                st.textContent = '🔵 Ab BASIC ho gaya (pH ' + p.toFixed(1) + ')';
+                nt.innerHTML = 'Ab base zyada ho gaya (OH⁻ extra). Phenolphthalein <b>gulaabi</b> ho gaya — yahi "end point" hai jise dekhkar titration roka jaata hai.';
+            }
+            draw();
+        }
+        function addDrop(n) { added = Math.min(50, added + n); upd(); }
+        function auto() {
+            if (timer) { clearInterval(timer); timer = null; return; }
+            timer = setInterval(function () {
+                if (added >= 50) { clearInterval(timer); timer = null; upd(); return; }
+                added += 1; upd();
+            }, 260);
+        }
+        function resetT() { if (timer) { clearInterval(timer); timer = null; } added = 0; upd(); }
+        upd();
+        setInterval(function () { if (timer) draw(); }, 60);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pH Scale Explorer | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #451a03, #b45309); color: #fef3c7; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #fde68a; text-decoration: none; border: 1px solid rgba(253,230,138,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(253,230,138,.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 900px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+        .scale { display: flex; height: 46px; border-radius: 10px; overflow: hidden; margin-bottom: 4px; }
+        .scale div { flex: 1; }
+        .nums { display: flex; font-size: 11px; color: #fcd34d; margin-bottom: 14px; }
+        .nums span { flex: 1; text-align: center; }
+        input[type=range] { width: 100%; accent-color: #f59e0b; }
+        .big { text-align: center; margin: 16px 0 8px; }
+        .big .v { font-size: 56px; font-weight: 800; line-height: 1; }
+        .big .l { font-size: 15px; font-weight: 700; margin-top: 4px; }
+        .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-top: 14px; }
+        .box { background: rgba(0,0,0,.26); border-radius: 12px; padding: 14px; }
+        .box .h { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: #fcd34d; font-weight: 800; margin-bottom: 6px; }
+        .box .b { font-size: 14px; line-height: 1.6; color: #fff; }
+        .strength { font-size: 13px; color: #fde68a; text-align: center; margin-top: 10px; line-height: 1.6; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="ph-scale.html">← Back to Lesson</a>
+        <div class="title">📊 pH Scale Explorer</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <div class="scale" id="scale"></div>
+            <div class="nums" id="nums"></div>
+            <input type="range" id="ph" min="0" max="14" step="1" value="7" oninput="upd()">
+            <div class="big">
+                <div class="v" id="pv">7</div>
+                <div class="l" id="pl">Neutral</div>
+            </div>
+            <div class="strength" id="strength"></div>
+        </div>
+        <div class="card">
+            <div class="row">
+                <div class="box"><div class="h">🧪 Is pH par kya milta hai</div><div class="b" id="ex"></div></div>
+                <div class="box"><div class="h">🎨 Universal indicator</div><div class="b" id="ui"></div></div>
+                <div class="box"><div class="h">🫀 Shareer / rozmarra</div><div class="b" id="life"></div></div>
+                <div class="box"><div class="h">🌾 Kheti / paryavaran</div><div class="b" id="env"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var COLORS = ['#c81e1e', '#e02424', '#f05252', '#ff8a4c', '#ff9f43', '#fcd34d', '#d9f99d',
+            '#86efac', '#4ade80', '#34d399', '#2dd4bf', '#38bdf8', '#3b82f6', '#6366f1', '#7c3aed'];
+        var DATA = {
+            0: { ex: "Bahut strong acid (lab ka concentrated HCl)", ui: "Gehra laal", life: "Khatarnaak — khaal jala de.", env: "Kisi bhi jeev ke liye jaanleva." },
+            1: { ex: "Pet ka acid (gastric juice), battery acid", ui: "Laal", life: "Pet mein khana pachaane ke liye zaroori HCl.", env: "Aise paani mein koi jeev zinda nahi reh sakta." },
+            2: { ex: "Nimbu ka ras", ui: "Laal", life: "Khatta swaad. Zyada peene se daant ka enamel ghis sakta hai.", env: "Bahut acidic — mitti ke liye theek nahi." },
+            3: { ex: "Sirka, cold drink, santara", ui: "Narangi-laal", life: "Cold drink daanton ke liye nuksaandeh (pH 5.5 se kam).", env: "Acid rain se bhi kam pH — bahut khatarnaak." },
+            4: { ex: "Tomato ka ras, sharaab", ui: "Narangi", life: "Halka khatta.", env: "Acid rain (pH 5.6 se kam) — machhliyan marne lagti hain." },
+            5: { ex: "Coffee, kela", ui: "Narangi-peela", life: "pH 5.5 se neeche daant sadne lagte hain!", env: "Acidic mitti — chuna daalkar theek karo." },
+            6: { ex: "Doodh, saaf baarish ka paani", ui: "Peela-hara", life: "Halka acidic, par surakshit.", env: "Zyadatar fasalon ke liye achhi mitti (pH 6-7.5)." },
+            7: { ex: "Shuddh paani, khoon ka namak (NaCl)", ui: "Hara", life: "Neutral — na acidic na basic.", env: "Adarsh (ideal) paani ka pH." },
+            8: { ex: "Samundar ka paani, ande ka safed hissa", ui: "Hara-neela", life: "Khoon ka pH 7.4 hota hai — halka basic.", env: "Samundar ka pH — coral reefs ke liye zaroori." },
+            9: { ex: "Baking soda ka ghol", ui: "Neela", life: "Antacid — pet ka acid neutralise karta hai.", env: "Halki alkaline mitti." },
+            10: { ex: "Milk of magnesia, sabun ka paani", ui: "Neela", life: "Antacid aur safai ke kaam mein.", env: "Alkaline mitti — fasal ki paidavaar girti hai." },
+            11: { ex: "Ammonia ka ghol (cleaner)", ui: "Gehra neela", life: "Chhoone par chikna. Aankhon ke liye khatarnaak.", env: "Bahut alkaline — paudhon ke liye harmful." },
+            12: { ex: "Chuna paani, Ca(OH)₂", ui: "Baingani-neela", life: "Khaal jala sakta hai.", env: "Acidic mitti ko theek karne ke liye daala jaata hai." },
+            13: { ex: "Oven cleaner", ui: "Baingani", life: "Bahut khatarnaak — dastane pehno.", env: "Jeevon ke liye jaanleva." },
+            14: { ex: "Concentrated NaOH (caustic soda)", ui: "Gehra baingani", life: "Sabse strong base — turant jala de.", env: "Kisi bhi jeev ke liye jaanleva." }
+        };
+        function upd() {
+            var p = +document.getElementById('ph').value, d = DATA[p];
+            document.getElementById('pv').textContent = p;
+            document.getElementById('pv').style.color = COLORS[p];
+            var lbl = p < 7 ? 'ACIDIC' : p > 7 ? 'BASIC (Alkaline)' : 'NEUTRAL';
+            document.getElementById('pl').textContent = lbl;
+            document.getElementById('pl').style.color = COLORS[p];
+            document.getElementById('ex').textContent = d.ex;
+            document.getElementById('ui').textContent = d.ui;
+            document.getElementById('life').textContent = d.life;
+            document.getElementById('env').textContent = d.env;
+            var s = document.getElementById('strength');
+            if (p === 7) s.innerHTML = 'Yahan H⁺ aur OH⁻ ions <b>barabar</b> hain — isiliye neutral.';
+            else if (p < 7) {
+                var t = Math.pow(10, 7 - p);
+                s.innerHTML = 'Ye shuddh paani se <b>' + t.toLocaleString('en-IN') + ' guna zyada acidic</b> hai (har pH = 10 guna farak). H⁺ ions zyada hain.';
+            } else {
+                var t2 = Math.pow(10, p - 7);
+                s.innerHTML = 'Ye shuddh paani se <b>' + t2.toLocaleString('en-IN') + ' guna zyada basic</b> hai (har pH = 10 guna farak). OH⁻ ions zyada hain.';
+            }
+        }
+        (function build() {
+            var sc = document.getElementById('scale'), nm = document.getElementById('nums');
+            for (var i = 0; i <= 14; i++) {
+                var d = document.createElement('div'); d.style.background = COLORS[i]; sc.appendChild(d);
+                var s = document.createElement('span'); s.textContent = i; nm.appendChild(s);
+            }
+        })();
+        upd();
+    </script>
+</body>
+
+</html>

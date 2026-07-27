@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Virtual Indicator Lab | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #2e1065, #7e22ce); color: #f3e8ff; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #e9d5ff; text-decoration: none; border: 1px solid rgba(233,213,255,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(233,213,255,.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 940px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+        .card h3 { color: #fff; font-size: 13px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: .05em; }
+        .subs { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 9px; }
+        .subs button { background: rgba(255,255,255,.1); border: 2px solid transparent; color: #e9d5ff; padding: 12px 8px; border-radius: 12px; cursor: pointer; font-size: 13px; font-weight: 600; font-family: inherit; }
+        .subs button.on { border-color: #a855f7; background: rgba(168,85,247,.22); color: #fff; }
+        .subs button .e { display: block; font-size: 22px; margin-bottom: 4px; }
+        .tubes { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
+        .tube { background: rgba(0,0,0,.25); border-radius: 14px; padding: 14px; text-align: center; }
+        .tube svg { width: 100%; max-width: 74px; height: auto; }
+        .tube .n { font-size: 13px; font-weight: 700; color: #fff; margin-top: 8px; }
+        .tube .r { font-size: 12px; margin-top: 5px; font-weight: 700; min-height: 32px; }
+        .verdict { padding: 15px; border-radius: 12px; text-align: center; font-weight: 800; font-size: 17px; margin-top: 6px; }
+        .v-acid { background: #7f1d1d; color: #fecaca; }
+        .v-base { background: #14532d; color: #bbf7d0; }
+        .v-neu { background: #334155; color: #e2e8f0; }
+        .note { font-size: 13.5px; color: #e9d5ff; margin-top: 10px; line-height: 1.65; text-align: center; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="indicators.html">← Back to Lesson</a>
+        <div class="title">🧪 Virtual Indicator Lab</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <h3>1. Koi cheez chuno</h3>
+            <div class="subs" id="subs"></div>
+        </div>
+        <div class="card">
+            <h3>2. Indicators ka nateeja</h3>
+            <div class="tubes" id="tubes"></div>
+            <div class="verdict" id="verdict"></div>
+            <div class="note" id="note"></div>
+        </div>
+    </div>
+
+    <script>
+        /* nature: 'acid' | 'base' | 'neutral' */
+        var SUBS = [
+            { e: "🍋", n: "Nimbu ka ras", nat: "acid", ph: 2.3, why: "Isme citric acid hota hai." },
+            { e: "🍶", n: "Sirka", nat: "acid", ph: 3.0, why: "Isme acetic acid hota hai." },
+            { e: "🥤", n: "Cold drink", nat: "acid", ph: 3.0, why: "Isme carbonic aur phosphoric acid hote hain." },
+            { e: "💧", n: "Shuddh paani", nat: "neutral", ph: 7.0, why: "Isme H⁺ aur OH⁻ barabar hote hain." },
+            { e: "🥛", n: "Doodh", nat: "acid", ph: 6.4, why: "Halka acidic - isme lactic acid hota hai." },
+            { e: "🧁", n: "Baking soda ghol", nat: "base", ph: 9.0, why: "Sodium bicarbonate ek halka base hai." },
+            { e: "🧼", n: "Sabun ka paani", nat: "base", ph: 10.0, why: "Sabun mein NaOH se bana salt hota hai." },
+            { e: "🧴", n: "Milk of magnesia", nat: "base", ph: 10.0, why: "Mg(OH)₂ - isiliye antacid ka kaam karta hai." }
+        ];
+        /* real indicator behaviour */
+        var IND = [
+            {
+                n: "Blue litmus",
+                acid: ["Laal ho gaya", "#ef4444"], base: ["Neela hi raha", "#3b82f6"], neutral: ["Neela hi raha", "#3b82f6"]
+            },
+            {
+                n: "Red litmus",
+                acid: ["Laal hi raha", "#ef4444"], base: ["Neela ho gaya", "#3b82f6"], neutral: ["Laal hi raha", "#ef4444"]
+            },
+            {
+                n: "Methyl orange",
+                acid: ["Laal / gulaabi", "#e11d48"], base: ["Peela", "#facc15"], neutral: ["Narangi (orange)", "#f97316"]
+            },
+            {
+                n: "Phenolphthalein",
+                acid: ["Rangheen", "#e5e7eb"], base: ["Gulaabi (pink)", "#ec4899"], neutral: ["Rangheen", "#e5e7eb"]
+            }
+        ];
+        var cur = 0;
+
+        function tube(color, empty) {
+            return '<svg viewBox="0 0 60 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="test tube">' +
+                '<path d="M16 8 L16 92 Q16 110 30 110 Q44 110 44 92 L44 8" fill="' + (empty ? 'none' : color) +
+                '" fill-opacity="' + (empty ? 0 : .85) + '" stroke="#e9d5ff" stroke-width="3"/>' +
+                '<line x1="12" y1="8" x2="48" y2="8" stroke="#e9d5ff" stroke-width="3"/></svg>';
+        }
+        function buildSubs() {
+            var b = document.getElementById('subs'); b.innerHTML = '';
+            SUBS.forEach(function (s, i) {
+                var el = document.createElement('button');
+                el.className = (i === cur ? 'on' : '');
+                el.innerHTML = '<span class="e">' + s.e + '</span>' + s.n;
+                el.onclick = function () { cur = i; buildSubs(); show(); };
+                b.appendChild(el);
+            });
+        }
+        function show() {
+            var s = SUBS[cur], box = document.getElementById('tubes'); box.innerHTML = '';
+            IND.forEach(function (ind) {
+                var res = ind[s.nat];
+                var d = document.createElement('div'); d.className = 'tube';
+                d.innerHTML = tube(res[1]) + '<div class="n">' + ind.n + '</div>' +
+                    '<div class="r" style="color:' + res[1] + '">' + res[0] + '</div>';
+                box.appendChild(d);
+            });
+            var v = document.getElementById('verdict');
+            if (s.nat === 'acid') { v.className = 'verdict v-acid'; v.textContent = '🔴 ' + s.n + ' ACIDIC hai (pH ≈ ' + s.ph + ')'; }
+            else if (s.nat === 'base') { v.className = 'verdict v-base'; v.textContent = '🔵 ' + s.n + ' BASIC hai (pH ≈ ' + s.ph + ')'; }
+            else { v.className = 'verdict v-neu'; v.textContent = '⚪ ' + s.n + ' NEUTRAL hai (pH = ' + s.ph + ')'; }
+            document.getElementById('note').innerHTML = s.why +
+                '<br><br><b>Yaad rakho:</b> Blue litmus sirf ACID mein laal hota hai. Phenolphthalein sirf BASE mein gulaabi hota hai — ye do baatein board mein bahut poochi jaati hain.';
+        }
+        buildSubs(); show();
+    </script>
+</body>
+
+</html>
