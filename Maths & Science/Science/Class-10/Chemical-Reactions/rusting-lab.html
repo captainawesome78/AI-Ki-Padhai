@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rusting &amp; Redox Lab | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #451a03, #b45309); color: #fef3c7; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #fde68a; text-decoration: none; border: 1px solid rgba(253,230,138,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(253,230,138,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 900px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,0.07); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+        .card h3 { color: #fff; font-size: 13px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: .05em; }
+        .tubes { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
+        .tube { background: rgba(0,0,0,0.25); border-radius: 14px; padding: 14px; text-align: center; border: 2px solid transparent; }
+        .tube.rust { border-color: #f87171; }
+        .tube.safe { border-color: #4ade80; }
+        .tube svg { width: 100%; max-width: 90px; height: auto; }
+        .tube .nm { font-size: 13px; font-weight: 700; color: #fff; margin-top: 8px; }
+        .tube .cond { font-size: 11px; color: #fcd34d; margin-top: 3px; line-height: 1.4; }
+        .tube .res { font-size: 12px; font-weight: 800; margin-top: 8px; min-height: 16px; }
+        .r-yes { color: #f87171; } .r-no { color: #4ade80; }
+        .ctr { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+        .ctr button { flex: 1; min-width: 130px; border: none; padding: 13px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 15px; }
+        .go { background: #f59e0b; color: #451a03; } .rst { background: transparent; color: #fde68a; border: 1px solid rgba(253,230,138,0.4); }
+        label { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 6px; }
+        label b { color: #fbbf24; }
+        input[type=range] { width: 100%; accent-color: #f59e0b; }
+        .concl { background: rgba(0,0,0,0.28); border-radius: 12px; padding: 16px; margin-top: 12px; font-size: 14px; line-height: 1.7; }
+        .concl b { color: #fff; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="oxidation-reduction.html">← Back to Lesson</a>
+        <div class="title">🔬 Rusting &amp; Redox Lab</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <h3>Prayog: 4 test tubes, 4 alag conditions</h3>
+            <div class="tubes" id="tubes"></div>
+            <label style="margin-top:18px">⏳ Kitne din beet gaye <b><span id="dV">0</span> din</b></label>
+            <input type="range" id="days" min="0" max="30" value="0" oninput="upd()">
+            <div class="ctr">
+                <button class="go" onclick="run()">▶ 30 din tak chalao</button>
+                <button class="rst" onclick="resetLab()">↺ Reset</button>
+            </div>
+        </div>
+        <div class="card">
+            <h3>Nateeja (conclusion)</h3>
+            <div class="concl" id="concl"></div>
+        </div>
+    </div>
+
+    <script>
+        // Rust needs BOTH oxygen (air) and water. Remove either one -> no rust.
+        var TUBES = [
+            { nm: "Tube A", cond: "Nal ka paani + hawa", water: true, air: true },
+            { nm: "Tube B", cond: "Ubla paani + tel ki parat (hawa nahi)", water: true, air: false },
+            { nm: "Tube C", cond: "Sookhi hawa + calcium chloride (paani nahi)", water: false, air: true },
+            { nm: "Tube D", cond: "Paint ki hui keel, paani + hawa", water: true, air: true, painted: true }
+        ];
+        var days = 0;
+
+        function rustLevel(t) {
+            if (t.painted) return 0;                 // paint blocks contact
+            if (!(t.water && t.air)) return 0;       // needs BOTH
+            return Math.min(1, days / 22);
+        }
+        function nailSVG(level) {
+            // colour goes from steel grey -> rusty brown as level rises
+            var r = Math.round(148 + (146 - 148) * 0 + level * (146 - 148) + level * 40);
+            var col = level <= 0 ? '#cbd5e1'
+                : 'rgb(' + Math.round(203 - level * 60) + ',' + Math.round(213 - level * 130) + ',' + Math.round(225 - level * 190) + ')';
+            var flakes = '';
+            if (level > 0.35) flakes += '<circle cx="45" cy="60" r="3" fill="#7c2d12" opacity="' + level + '"/>';
+            if (level > 0.6) flakes += '<circle cx="52" cy="86" r="2.5" fill="#7c2d12" opacity="' + level + '"/>';
+            if (level > 0.8) flakes += '<circle cx="41" cy="103" r="3" fill="#7c2d12" opacity="' + level + '"/>';
+            return '<svg viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="nail">' +
+                '<rect x="18" y="14" width="64" height="126" rx="8" fill="rgba(255,255,255,0.07)" stroke="#fcd34d" stroke-width="2"/>' +
+                '<polygon points="38,34 62,34 54,120 46,120" fill="' + col + '"/>' +
+                '<rect x="34" y="28" width="32" height="8" rx="3" fill="' + col + '"/>' +
+                flakes + '</svg>';
+        }
+        function build() {
+            var box = document.getElementById('tubes'); box.innerHTML = '';
+            TUBES.forEach(function (t, i) {
+                var lv = rustLevel(t);
+                var d = document.createElement('div');
+                d.className = 'tube ' + (lv > 0.05 ? 'rust' : (days > 0 ? 'safe' : ''));
+                d.innerHTML = nailSVG(lv) +
+                    '<div class="nm">' + t.nm + '</div>' +
+                    '<div class="cond">' + t.cond + '</div>' +
+                    '<div class="res ' + (lv > 0.05 ? 'r-yes' : 'r-no') + '">' +
+                    (days === 0 ? '' : (lv > 0.05 ? '🔴 Zang lag gaya' : '🟢 Zang nahi laga')) + '</div>';
+                box.appendChild(d);
+            });
+        }
+        function upd() {
+            days = +document.getElementById('days').value;
+            document.getElementById('dV').textContent = days;
+            build(); conclude();
+        }
+        function conclude() {
+            var c = document.getElementById('concl');
+            if (days === 0) {
+                c.innerHTML = 'Slider ghumao ya "30 din tak chalao" dabao — aur dekho kaunsi keel par zang lagta hai.<br><br>' +
+                    '<b>Socho:</b> Tube A mein paani aur hawa dono hain. B mein hawa nahi. C mein paani nahi. D par paint hai. Kya farak padega?';
+                return;
+            }
+            c.innerHTML =
+                '<b>Tube A</b> — paani + hawa dono maujood → <span class="r-yes">zang laga</span> ✅<br>' +
+                '<b>Tube B</b> — tel ki parat ne hawa (oxygen) rok di → <span class="r-no">zang nahi</span><br>' +
+                '<b>Tube C</b> — calcium chloride ne nami (paani) soakh li → <span class="r-no">zang nahi</span><br>' +
+                '<b>Tube D</b> — paint ne keel ko hawa-paani se alag kar diya → <span class="r-no">zang nahi</span><br><br>' +
+                '🧪 <b>Nateeja:</b> Zang lagne ke liye <b>oxygen (hawa) AUR paani — dono</b> chahiye. In dono mein se koi ek bhi hata do, toh zang ruk jaata hai.<br><br>' +
+                '🛡️ <b>Isiliye</b> hum lohe par paint karte hain, grease lagate hain, ya galvanisation (zinc ki parat) karte hain — sabka ek hi maqsad hai: lohe ko hawa aur paani se door rakhna.';
+        }
+        function run() {
+            var d = 0;
+            var iv = setInterval(function () {
+                d += 1;
+                document.getElementById('days').value = d;
+                upd();
+                if (d >= 30) clearInterval(iv);
+            }, 70);
+        }
+        function resetLab() { document.getElementById('days').value = 0; upd(); }
+        upd();
+    </script>
+</body>
+
+</html>

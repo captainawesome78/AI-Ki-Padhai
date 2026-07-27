@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reaction Type Classifier | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #083344, #0e7490); color: #e0f2fe; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #a5f3fc; text-decoration: none; border: 1px solid rgba(165,243,252,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(165,243,252,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,0.07); border-radius: 16px; padding: 20px; margin-bottom: 14px; }
+        .bar { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 12px; color: #7dd3fc; font-weight: 600; }
+        .prog { height: 7px; background: rgba(255,255,255,0.15); border-radius: 4px; overflow: hidden; margin-bottom: 18px; }
+        .prog span { display: block; height: 100%; background: #22d3ee; transition: width .3s; }
+        .eqbox { text-align: center; font-size: 22px; font-weight: 700; color: #fff; padding: 22px 10px; background: rgba(0,0,0,0.3); border-radius: 12px; margin-bottom: 8px; line-height: 1.5; }
+        sub { font-size: .62em; }
+        .clue { text-align: center; font-size: 13px; color: #7dd3fc; margin-bottom: 16px; min-height: 20px; }
+        .opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+        .opts button { background: rgba(255,255,255,0.1); border: 2px solid transparent; color: #e0f2fe; padding: 15px 12px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 14px; text-align: left; transition: all .15s; }
+        .opts button:hover:not(:disabled) { border-color: #22d3ee; }
+        .opts button.correct { background: #14532d; border-color: #4ade80; color: #bbf7d0; }
+        .opts button.wrong { background: #7f1d1d; border-color: #f87171; color: #fecaca; }
+        .opts button:disabled { cursor: default; }
+        .fb { margin-top: 14px; padding: 14px; border-radius: 12px; font-size: 14px; line-height: 1.65; display: none; }
+        .fb.show { display: block; }
+        .fb.good { background: #14532d; color: #bbf7d0; } .fb.bad { background: #422006; color: #fde68a; }
+        .next { width: 100%; margin-top: 12px; border: none; padding: 14px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 15px; background: #06b6d4; color: #04222b; display: none; }
+        .next.show { display: block; }
+        .done { text-align: center; }
+        .done .big { font-size: 46px; font-weight: 800; color: #fff; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="chemical-reactions.html">← Back to Chapter</a>
+        <div class="title">🎯 Reaction Type Classifier</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card" id="game">
+            <div class="bar"><span id="qn">Sawaal 1 / 8</span><span id="sc">Score: 0</span></div>
+            <div class="prog"><span id="pb" style="width:0%"></span></div>
+            <div class="eqbox" id="eq"></div>
+            <div class="clue" id="clue"></div>
+            <div class="opts" id="opts"></div>
+            <div class="fb" id="fb"></div>
+            <button class="next" id="next" onclick="nextQ()">Agla Sawaal →</button>
+        </div>
+    </div>
+
+    <script>
+        var TYPES = ["Combination", "Decomposition", "Displacement", "Double Displacement"];
+        var Q = [
+            { eq: "2Mg + O<sub>2</sub> → 2MgO", t: 0, why: "Do reactants (Mg aur O₂) milkar ek hi product (MgO) bane — yahi Combination hai." },
+            { eq: "CaCO<sub>3</sub> → CaO + CO<sub>2</sub>", t: 1, why: "Ek reactant (CaCO₃) toot kar do products bana — Decomposition. Garmi se hua, isliye thermal decomposition." },
+            { eq: "Fe + CuSO<sub>4</sub> → FeSO<sub>4</sub> + Cu", t: 2, why: "Ek tatva (Fe) ne compound se doosre tatva (Cu) ko hata diya — Displacement. Fe, Cu se zyada reactive hai." },
+            { eq: "Pb(NO<sub>3</sub>)<sub>2</sub> + 2KI → PbI<sub>2</sub>↓ + 2KNO<sub>3</sub>", t: 3, why: "Do compounds ne apne ions ki adla-badli ki — Double Displacement. Peela PbI₂ precipitate bana, isliye ye precipitation bhi hai." },
+            { eq: "2H<sub>2</sub>O → 2H<sub>2</sub> + O<sub>2</sub>", t: 1, why: "Ek reactant (paani) bijli se toot kar do gases bana — Decomposition (electrolytic)." },
+            { eq: "CaO + H<sub>2</sub>O → Ca(OH)<sub>2</sub>", t: 0, why: "Quicklime aur paani milkar ek product (bujha chuna) bane — Combination. Ye exothermic bhi hai." },
+            { eq: "Na<sub>2</sub>SO<sub>4</sub> + BaCl<sub>2</sub> → BaSO<sub>4</sub>↓ + 2NaCl", t: 3, why: "Ions ki adla-badli hui aur safed BaSO₄ precipitate bana — Double Displacement (precipitation)." },
+            { eq: "Zn + 2HCl → ZnCl<sub>2</sub> + H<sub>2</sub>", t: 2, why: "Zinc ne acid se hydrogen ko hata diya — Displacement. Isiliye bubbles (H₂ gas) nikalte hain." }
+        ];
+        var i = 0, score = 0, answered = false;
+
+        function render() {
+            answered = false;
+            var q = Q[i];
+            document.getElementById('qn').textContent = 'Sawaal ' + (i + 1) + ' / ' + Q.length;
+            document.getElementById('sc').textContent = 'Score: ' + score;
+            document.getElementById('pb').style.width = (i / Q.length * 100) + '%';
+            document.getElementById('eq').innerHTML = q.eq;
+            document.getElementById('clue').textContent = 'Ye kaunsi type ki reaction hai?';
+            var o = document.getElementById('opts'); o.innerHTML = '';
+            TYPES.forEach(function (t, k) {
+                var b = document.createElement('button');
+                b.textContent = t;
+                b.onclick = function () { pick(k, b); };
+                o.appendChild(b);
+            });
+            var f = document.getElementById('fb'); f.className = 'fb'; f.innerHTML = '';
+            document.getElementById('next').className = 'next';
+        }
+        function pick(k, btn) {
+            if (answered) return;
+            answered = true;
+            var q = Q[i], ok = (k === q.t);
+            if (ok) score++;
+            document.getElementById('sc').textContent = 'Score: ' + score;
+            var buttons = document.getElementById('opts').children;
+            for (var j = 0; j < buttons.length; j++) {
+                buttons[j].disabled = true;
+                if (j === q.t) buttons[j].className = 'correct';
+            }
+            if (!ok) btn.className = 'wrong';
+            var f = document.getElementById('fb');
+            f.className = 'fb show ' + (ok ? 'good' : 'bad');
+            f.innerHTML = (ok ? '✅ <b>Sahi!</b> ' : '❌ <b>Sahi jawaab: ' + TYPES[q.t] + '.</b> ') + q.why;
+            document.getElementById('next').className = 'next show';
+            document.getElementById('next').textContent = (i === Q.length - 1) ? 'Result Dekho →' : 'Agla Sawaal →';
+        }
+        function nextQ() {
+            i++;
+            if (i >= Q.length) return finish();
+            render();
+        }
+        function finish() {
+            var pct = Math.round(score / Q.length * 100);
+            var msg = pct === 100 ? 'Perfect! Aap master ho 🏆' : pct >= 75 ? 'Bahut badhiya! 👏' : pct >= 50 ? 'Theek hai — thodi practice aur karo.' : 'Lesson dobara padho, phir try karo!';
+            document.getElementById('game').innerHTML =
+                '<div class="done"><div class="big">' + score + ' / ' + Q.length + '</div>' +
+                '<p style="color:#7dd3fc;margin:10px 0 4px">' + pct + '% sahi</p>' +
+                '<p style="margin-bottom:18px">' + msg + '</p>' +
+                '<button class="next show" onclick="location.reload()">↺ Phir Se Khelo</button>' +
+                '<p style="margin-top:14px"><a href="chemical-reactions.html" style="color:#a5f3fc">← Chapter par wapas jao</a></p></div>';
+        }
+        render();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Equation Balancer Lab | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #2e1065, #7e22ce); color: #f3e8ff; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #e9d5ff; text-decoration: none; border: 1px solid rgba(233,213,255,0.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .topbar a.back:hover { background: rgba(233,213,255,0.12); }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 900px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,0.07); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+        .card h3 { color: #fff; font-size: 13px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: .05em; }
+        .picker { display: flex; gap: 8px; flex-wrap: wrap; }
+        .picker button { background: rgba(255,255,255,0.1); border: 2px solid transparent; color: #e9d5ff; padding: 9px 13px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 13px; }
+        .picker button.active { border-color: #a855f7; background: rgba(168,85,247,0.2); color: #fff; }
+        .eq { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; font-size: 22px; padding: 18px 0; }
+        .term { display: flex; align-items: center; gap: 3px; }
+        .coef { width: 46px; height: 42px; text-align: center; font-size: 19px; font-weight: 800; border-radius: 8px; border: 2px solid rgba(168,85,247,0.5); background: rgba(0,0,0,0.35); color: #fde047; }
+        .coef:focus { outline: none; border-color: #a855f7; }
+        .formula { color: #fff; font-weight: 600; }
+        .plus, .arrow { color: #c4b5fd; padding: 0 4px; }
+        sub { font-size: 0.62em; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 6px; }
+        th, td { padding: 9px 8px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.12); }
+        th { color: #d8b4fe; font-size: 12px; text-transform: uppercase; }
+        td.el { text-align: left; font-weight: 700; color: #fff; }
+        .ok { color: #4ade80; font-weight: 800; }
+        .no { color: #fca5a5; font-weight: 800; }
+        .verdict { padding: 14px; border-radius: 12px; font-weight: 800; text-align: center; font-size: 16px; margin-top: 12px; }
+        .v-ok { background: #14532d; color: #86efac; }
+        .v-no { background: #422006; color: #fcd34d; }
+        .btns { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+        .btns button { flex: 1; min-width: 120px; border: none; padding: 12px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 14px; }
+        .hint { background: #a855f7; color: #fff; } .reset { background: transparent; color: #e9d5ff; border: 1px solid rgba(233,213,255,0.4); }
+        .note { font-size: 13px; color: #d8b4fe; margin-top: 10px; line-height: 1.6; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="equations-and-balancing.html">← Back to Lesson</a>
+        <div class="title">⚖️ Equation Balancer Lab</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <h3>1. Equation chuno</h3>
+            <div class="picker" id="picker"></div>
+        </div>
+
+        <div class="card">
+            <h3>2. Coefficients badlo (subscript nahi!)</h3>
+            <div class="eq" id="eq"></div>
+            <div class="btns">
+                <button class="hint" onclick="solve()">💡 Answer Dikhao</button>
+                <button class="reset" onclick="resetEq()">↺ Reset (sab 1)</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>3. Atoms ki ginti — dono taraf barabar honi chahiye</h3>
+            <table>
+                <thead><tr><th style="text-align:left">Element</th><th>Baayein (LHS)</th><th>Daayein (RHS)</th><th>Barabar?</th></tr></thead>
+                <tbody id="counts"></tbody>
+            </table>
+            <div class="verdict v-no" id="verdict">Balance karo!</div>
+            <div class="note" id="note"></div>
+        </div>
+    </div>
+
+    <script>
+        var EQS = [
+            { name: "Mg + O₂ → MgO", l: ["Mg", "O2"], r: ["MgO"], ans: [2, 1, 2] },
+            { name: "H₂ + O₂ → H₂O", l: ["H2", "O2"], r: ["H2O"], ans: [2, 1, 2] },
+            { name: "Fe + H₂O → Fe₃O₄ + H₂", l: ["Fe", "H2O"], r: ["Fe3O4", "H2"], ans: [3, 4, 1, 4] },
+            { name: "CH₄ + O₂ → CO₂ + H₂O", l: ["CH4", "O2"], r: ["CO2", "H2O"], ans: [1, 2, 1, 2] },
+            { name: "Al + CuCl₂ → AlCl₃ + Cu", l: ["Al", "CuCl2"], r: ["AlCl3", "Cu"], ans: [2, 3, 2, 3] },
+            { name: "Pb(NO₃)₂ + KI → PbI₂ + KNO₃", l: ["Pb(NO3)2", "KI"], r: ["PbI2", "KNO3"], ans: [1, 2, 1, 2] },
+            { name: "NaOH + H₂SO₄ → Na₂SO₄ + H₂O", l: ["NaOH", "H2SO4"], r: ["Na2SO4", "H2O"], ans: [2, 1, 1, 2] }
+        ];
+        var cur = 0, coefs = [];
+
+        function parseFormula(f) {
+            // expand bracket groups e.g. Pb(NO3)2
+            f = f.replace(/\(([^)]*)\)(\d*)/g, function (_, inner, mult) {
+                mult = parseInt(mult || 1); var out = '';
+                inner.replace(/([A-Z][a-z]?)(\d*)/g, function (_, el, n) {
+                    if (el) out += el + (parseInt(n || 1) * mult); return '';
+                });
+                return out;
+            });
+            var counts = {};
+            f.replace(/([A-Z][a-z]?)(\d*)/g, function (_, el, n) {
+                if (el) counts[el] = (counts[el] || 0) + parseInt(n || 1);
+                return '';
+            });
+            return counts;
+        }
+        function pretty(f) {
+            return f.replace(/(\d+)/g, '<sub>$1</sub>');
+        }
+        function buildPicker() {
+            var p = document.getElementById('picker'); p.innerHTML = '';
+            EQS.forEach(function (e, i) {
+                var b = document.createElement('button');
+                b.innerHTML = e.name; b.className = (i === cur ? 'active' : '');
+                b.onclick = function () { cur = i; resetEq(); buildPicker(); };
+                p.appendChild(b);
+            });
+        }
+        function buildEq() {
+            var e = EQS[cur], box = document.getElementById('eq'); box.innerHTML = '';
+            var idx = 0;
+            function addTerm(f) {
+                var t = document.createElement('span'); t.className = 'term';
+                var inp = document.createElement('input');
+                inp.type = 'number'; inp.min = '1'; inp.max = '20'; inp.className = 'coef';
+                inp.value = coefs[idx]; inp.dataset.i = idx;
+                inp.oninput = function () {
+                    var v = parseInt(this.value); if (isNaN(v) || v < 1) v = 1;
+                    coefs[this.dataset.i] = v; update();
+                };
+                var fm = document.createElement('span'); fm.className = 'formula'; fm.innerHTML = pretty(f);
+                t.appendChild(inp); t.appendChild(fm); box.appendChild(t); idx++;
+            }
+            e.l.forEach(function (f, i) {
+                if (i) { var p = document.createElement('span'); p.className = 'plus'; p.textContent = '+'; box.appendChild(p); }
+                addTerm(f);
+            });
+            var a = document.createElement('span'); a.className = 'arrow'; a.textContent = '→'; box.appendChild(a);
+            e.r.forEach(function (f, i) {
+                if (i) { var p = document.createElement('span'); p.className = 'plus'; p.textContent = '+'; box.appendChild(p); }
+                addTerm(f);
+            });
+        }
+        function tally() {
+            var e = EQS[cur], L = {}, R = {}, i = 0;
+            e.l.forEach(function (f) {
+                var c = parseFormula(f);
+                for (var el in c) L[el] = (L[el] || 0) + c[el] * coefs[i];
+                i++;
+            });
+            e.r.forEach(function (f) {
+                var c = parseFormula(f);
+                for (var el in c) R[el] = (R[el] || 0) + c[el] * coefs[i];
+                i++;
+            });
+            return { L: L, R: R };
+        }
+        function update() {
+            var t = tally(), els = {}, k;
+            for (k in t.L) els[k] = 1;
+            for (k in t.R) els[k] = 1;
+            var tb = document.getElementById('counts'); tb.innerHTML = '';
+            var balanced = true;
+            Object.keys(els).forEach(function (el) {
+                var a = t.L[el] || 0, b = t.R[el] || 0, ok = a === b;
+                if (!ok) balanced = false;
+                var tr = document.createElement('tr');
+                tr.innerHTML = '<td class="el">' + el + '</td><td>' + a + '</td><td>' + b + '</td>' +
+                    '<td class="' + (ok ? 'ok' : 'no') + '">' + (ok ? '✓' : '✗') + '</td>';
+                tb.appendChild(tr);
+            });
+            var v = document.getElementById('verdict'), n = document.getElementById('note');
+            if (balanced) {
+                v.className = 'verdict v-ok';
+                v.textContent = '🎉 BALANCED! Dono taraf har element ke atoms barabar hain.';
+                n.innerHTML = 'Yahi Law of Conservation of Mass hai — reaction mein ek bhi atom na bana, na khoya.';
+            } else {
+                v.className = 'verdict v-no';
+                v.textContent = '⚖️ Abhi balance nahi hua — ✗ wale elements theek karo.';
+                n.innerHTML = 'Tip: sabse zyada atoms wale compound se shuru karo. Sirf <b>coefficient</b> (aage ka number) badlo — formula ka subscript kabhi mat chhedo!';
+            }
+        }
+        function resetEq() {
+            var e = EQS[cur];
+            coefs = new Array(e.l.length + e.r.length).fill(1);
+            buildEq(); update();
+        }
+        function solve() {
+            coefs = EQS[cur].ans.slice();
+            buildEq(); update();
+        }
+        buildPicker(); resetEq();
+    </script>
+</body>
+
+</html>

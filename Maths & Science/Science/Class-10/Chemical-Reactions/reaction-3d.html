@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Reaction &amp; Conservation of Mass | AIkiPadhai</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="../sci-3d.js"></script>
+</head>
+
+<body>
+    <script>
+        var COL = { C: 0x334155, H: 0xf1f5f9, O: 0xef4444, Mg: 0x22c55e };
+        var RAD = { C: 0.62, H: 0.38, O: 0.55, Mg: 0.68 };
+
+        // Each reaction: atoms listed with start (reactant) and end (product) positions
+        var RX = {
+            methane: {
+                label: "CH4 + 2O2 -> CO2 + 2H2O",
+                atoms: [
+                    { el: 'C', a: [-8, 0, 0], b: [4, 0, 0] },
+                    { el: 'H', a: [-9.1, 1.1, 0.5], b: [8.4, 1.4, 0] },
+                    { el: 'H', a: [-6.9, 1.1, -0.5], b: [9.6, 0.4, 0] },
+                    { el: 'H', a: [-9.1, -1.1, -0.5], b: [8.4, -2.6, 0] },
+                    { el: 'H', a: [-6.9, -1.1, 0.5], b: [9.6, -3.6, 0] },
+                    { el: 'O', a: [-2.6, 1.6, 0], b: [2.6, 0, 0] },
+                    { el: 'O', a: [-1.2, 1.6, 0], b: [5.4, 0, 0] },
+                    { el: 'O', a: [-2.6, -1.6, 0], b: [9.0, 1.0, 0] },
+                    { el: 'O', a: [-1.2, -1.6, 0], b: [9.0, -3.0, 0] }
+                ]
+            },
+            magnesium: {
+                label: "2Mg + O2 -> 2MgO",
+                atoms: [
+                    { el: 'Mg', a: [-8, 1.6, 0], b: [3.2, 1.6, 0] },
+                    { el: 'Mg', a: [-8, -1.6, 0], b: [3.2, -1.6, 0] },
+                    { el: 'O', a: [-2.0, 0.9, 0], b: [5.0, 1.6, 0] },
+                    { el: 'O', a: [-2.0, -0.9, 0], b: [5.0, -1.6, 0] }
+                ]
+            },
+            water: {
+                label: "2H2 + O2 -> 2H2O",
+                atoms: [
+                    { el: 'H', a: [-8, 1.8, 0], b: [3.0, 2.4, 0] },
+                    { el: 'H', a: [-6.9, 1.8, 0], b: [4.2, 1.4, 0] },
+                    { el: 'H', a: [-8, -1.8, 0], b: [3.0, -1.4, 0] },
+                    { el: 'H', a: [-6.9, -1.8, 0], b: [4.2, -2.4, 0] },
+                    { el: 'O', a: [-2.0, 0.9, 0], b: [4.6, 3.0, 0] },
+                    { el: 'O', a: [-2.0, -0.9, 0], b: [4.6, -0.8, 0] }
+                ]
+            }
+        };
+
+        Sci3D({
+            title: "🧊 3D Reaction &amp; Conservation of Mass",
+            back: { href: "displacement-reactions.html", label: "Back to Lesson" },
+            intro: { name: "3D Reaction Lab", desc: "Neeche 'Reaction' slider se reaction chuno, phir 'Progress' slider ko dheere-dheere ghumao — atoms reactants se products mein rearrange honge. Dhyan se dekho: koi bhi atom na banta hai, na gayab hota hai! Right panel mein atom ki ginti live check karo. Drag karke ghumao." },
+            camZ: 30,
+            data: {
+                carbon: { emoji: "⚫", name: "Carbon (C)", nick: "Kaala", desc: "Carbon atom. CH₄ (methane) mein ye 4 hydrogen se juda hota hai, aur reaction ke baad CO₂ mein 2 oxygen se jud jaata hai. Atom wahi rehta hai — sirf partner badalte hain!" },
+                hydrogen: { emoji: "⚪", name: "Hydrogen (H)", nick: "Safed, sabse chhota", desc: "Sabse halka atom. Reaction se pehle methane ka hissa tha, baad mein paani (H₂O) ka hissa ban jaata hai. Ginti pehle bhi 4, baad mein bhi 4." },
+                oxygen: { emoji: "🔴", name: "Oxygen (O)", nick: "Laal", desc: "Oxygen. Shuru mein O₂ molecules ke roop mein jodi banakar rehta hai, phir alag hokar CO₂ aur H₂O dono mein baant jaata hai." },
+                magnesium: { emoji: "🟢", name: "Magnesium (Mg)", nick: "Hara, dhaatu", desc: "Magnesium dhaatu. Jalne par oxygen se judkar safed MgO (magnesium oxide) banata hai — yahi wo tez safed roshni wali reaction hai." }
+            },
+            controls: [
+                { id: "rx", label: "⚗️ Reaction (0=Methane, 1=Magnesium, 2=Paani)", min: 0, max: 2, step: 1, value: 0, on: function (v, ctx) { ctx.model.setRx(v); } },
+                { id: "prog", label: "▶️ Reaction progress (reactants → products)", min: 0, max: 100, step: 1, value: 0, on: function (v, ctx) { ctx.model.p = v / 100; } },
+                { id: "auto", label: "🔁 Auto-play (0=off, 1=on)", min: 0, max: 1, step: 1, value: 0, on: function (v, ctx) { ctx.model.auto = (v === 1); } }
+            ],
+            build: function (ctx) {
+                var T = ctx.THREE, P = ctx.pivot, M = ctx.model;
+                M.p = 0; M.auto = false; M.keys = ['methane', 'magnesium', 'water']; M.cur = 'methane';
+                M.group = new T.Group(); P.add(M.group);
+
+                var grid = new T.GridHelper(44, 22, 0x475569, 0x334155); grid.position.y = -8; P.add(grid);
+
+                M.keyFor = function (el) {
+                    return el === 'C' ? 'carbon' : el === 'H' ? 'hydrogen' : el === 'O' ? 'oxygen' : 'magnesium';
+                };
+
+                M.setRx = function (v) {
+                    M.cur = M.keys[v];
+                    while (M.group.children.length) M.group.remove(M.group.children[0]);
+                    M.spheres = [];
+                    var rx = RX[M.cur];
+                    rx.atoms.forEach(function (at) {
+                        var mesh = new T.Mesh(new T.SphereGeometry(RAD[at.el], 20, 16), ctx.mat(COL[at.el]));
+                        mesh.userData.a = at.a; mesh.userData.b = at.b; mesh.userData.el = at.el;
+                        ctx.addPart(mesh, M.keyFor(at.el));
+                        M.group.add(mesh); M.spheres.push(mesh);
+                    });
+                };
+                M.setRx(0);
+                P.rotation.x = 0.15;
+            },
+            onFrame: function (t, ctx) {
+                var M = ctx.model; if (!M.spheres) return;
+                if (M.auto) {
+                    M.p += 0.006;
+                    if (M.p > 1.25) M.p = -0.25;
+                }
+                var p = Math.max(0, Math.min(1, M.p));
+                // ease so atoms pause at both ends
+                var e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+                M.spheres.forEach(function (s, i) {
+                    var a = s.userData.a, b = s.userData.b;
+                    s.position.x = a[0] + (b[0] - a[0]) * e;
+                    s.position.y = a[1] + (b[1] - a[1]) * e;
+                    s.position.z = a[2] + (b[2] - a[2]) * e;
+                    // gentle arc so the rearrangement is visible, plus a slow spin
+                    s.position.y += Math.sin(e * Math.PI) * (i % 2 ? 1.4 : -1.4);
+                    s.rotation.y = t * 0.4;
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
