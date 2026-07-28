@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Metallurgy Extraction Flow | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #451a03, #b45309); color: #fef3c7; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #fde68a; text-decoration: none; border: 1px solid rgba(253,230,138,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 880px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+        .card h3 { color: #fff; font-size: 13px; margin-bottom: 11px; text-transform: uppercase; letter-spacing: .05em; }
+        .pick { display: flex; gap: 8px; flex-wrap: wrap; }
+        .pick button { background: rgba(255,255,255,.1); border: 2px solid transparent; color: #fde68a; padding: 12px 14px; border-radius: 11px; cursor: pointer; font-weight: 700; font-family: inherit; font-size: 13.5px; text-align: left; }
+        .pick button.on { border-color: #f59e0b; background: rgba(245,158,11,.2); color: #fff; }
+        .pick button small { display: block; font-weight: 500; opacity: .75; font-size: 11.5px; }
+        .steps { display: flex; flex-direction: column; gap: 10px; }
+        .step { background: rgba(0,0,0,.26); border-left: 4px solid #f59e0b; border-radius: 0 12px 12px 0; padding: 14px 16px; opacity: .35; transition: opacity .3s; }
+        .step.on { opacity: 1; }
+        .step .t { font-weight: 800; color: #fff; font-size: 15px; }
+        .step .d { font-size: 13.5px; margin-top: 5px; line-height: 1.6; }
+        .step .eq { font-family: monospace; font-size: 13.5px; margin-top: 7px; color: #fbbf24; background: rgba(0,0,0,.3); padding: 7px 10px; border-radius: 7px; }
+        .btns { display: flex; gap: 10px; margin-top: 14px; }
+        .btns button { flex: 1; border: none; padding: 13px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 15px; }
+        .go { background: #f59e0b; color: #451a03; } .rst { background: transparent; color: #fde68a; border: 1px solid rgba(253,230,138,.4); }
+        .badge { display: inline-block; background: rgba(0,0,0,.35); padding: 4px 11px; border-radius: 999px; font-size: 12px; font-weight: 700; margin-bottom: 8px; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="metallurgy.html">← Back to Lesson</a>
+        <div class="title">🏭 Metallurgy Extraction Flow</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <h3>Dhaatu chuno</h3>
+            <div class="pick" id="pick"></div>
+        </div>
+        <div class="card">
+            <div class="badge" id="badge"></div>
+            <div class="steps" id="steps"></div>
+            <div class="btns">
+                <button class="go" onclick="play()">▶ Steps chalao</button>
+                <button class="rst" onclick="reset()">↺ Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var METALS = [
+            {
+                n: "Sodium (Na)", ore: "Rock salt (NaCl)", cls: "Sabse zyada reactive",
+                steps: [
+                    ["1. Concentration", "Ore ko saaf karke gangue (mitti-patthar) hataya jaata hai.", ""],
+                    ["2. Oxide mein badalna", "Zaroorat nahi — NaCl pehle se hi shuddh salt hai, seedhe pighlaya jaata hai.", ""],
+                    ["3. Reduction — ELECTROLYSIS", "Na itna reactive hai ki carbon se reduce nahi hota. Pighle hue NaCl mein bijli guzaari jaati hai (Down's process).", "2NaCl —bijli→ 2Na + Cl₂"],
+                    ["4. Refining", "Electrolysis se hi kaafi shuddh Na milta hai.", ""]
+                ]
+            },
+            {
+                n: "Aluminium (Al)", ore: "Bauxite (Al₂O₃·2H₂O)", cls: "Zyada reactive",
+                steps: [
+                    ["1. Concentration", "Bauxite ko NaOH se saaf kiya jaata hai (Bayer process) — shuddh Al₂O₃ milta hai.", ""],
+                    ["2. Oxide mein badalna", "Bauxite pehle se oxide ore hai — bas paani hataya jaata hai.", ""],
+                    ["3. Reduction — ELECTROLYSIS", "Al bhi bahut reactive hai. Pighle Al₂O₃ (cryolite ke saath) mein bijli guzaari jaati hai (Hall-Heroult process).", "2Al₂O₃ —bijli→ 4Al + 3O₂"],
+                    ["4. Refining", "Electrolytic refining se 99.9% shuddh aluminium.", ""]
+                ]
+            },
+            {
+                n: "Zinc (Zn)", ore: "Zinc blende (ZnS)", cls: "Madhyam reactive",
+                steps: [
+                    ["1. Concentration", "Froth flotation — sulphide ore jhaag ke saath upar aa jaata hai, mitti neeche baith jaati hai.", ""],
+                    ["2. ROASTING (sulphide hai)", "Hawa ki maujoodgi mein tez garam karke sulphide ko oxide banaya jaata hai.", "2ZnS + 3O₂ → 2ZnO + 2SO₂"],
+                    ["3. Reduction — CARBON se", "Madhyam reactive hai, isliye coke (carbon) se reduce ho jaata hai.", "ZnO + C → Zn + CO"],
+                    ["4. Refining", "Electrolytic refining se shuddh zinc milta hai.", ""]
+                ]
+            },
+            {
+                n: "Iron (Fe)", ore: "Haematite (Fe₂O₃)", cls: "Madhyam reactive",
+                steps: [
+                    ["1. Concentration", "Magnetic separation aur washing se gangue hataya jaata hai.", ""],
+                    ["2. Oxide mein badalna", "Haematite pehle se oxide hai — CALCINATION se nami aur volatile cheezein nikaali jaati hain.", ""],
+                    ["3. Reduction — CARBON se (Blast Furnace)", "Bade blast furnace mein coke se reduce kiya jaata hai.", "Fe₂O₃ + 3CO → 2Fe + 3CO₂"],
+                    ["4. Refining", "Pig iron ko steel banane ke liye carbon kam kiya jaata hai.", ""]
+                ]
+            },
+            {
+                n: "Mercury (Hg)", ore: "Cinnabar (HgS)", cls: "Sabse kam reactive",
+                steps: [
+                    ["1. Concentration", "Ore ko saaf kiya jaata hai.", ""],
+                    ["2. ROASTING (sulphide hai)", "Hawa mein garam karne par oxide banta hai.", "2HgS + 3O₂ → 2HgO + 2SO₂"],
+                    ["3. Reduction — SIRF GARAM KARKE", "Hg itna kam reactive hai ki oxide ko bas aur garam karne se hi dhaatu alag ho jaati hai! Koi reducing agent nahi chahiye.", "2HgO —Δ→ 2Hg + O₂"],
+                    ["4. Refining", "Distillation se shuddh mercury.", ""]
+                ]
+            }
+        ];
+        var cur = 0, shown = 0, timer = null;
+        function build() {
+            var p = document.getElementById('pick'); p.innerHTML = '';
+            METALS.forEach(function (m, i) {
+                var b = document.createElement('button');
+                b.className = i === cur ? 'on' : '';
+                b.innerHTML = m.n + '<small>' + m.ore + '</small>';
+                b.onclick = function () { cur = i; shown = 0; build(); render(); };
+                p.appendChild(b);
+            });
+        }
+        function render() {
+            var m = METALS[cur];
+            document.getElementById('badge').textContent = m.cls + '  •  Ore: ' + m.ore;
+            var s = document.getElementById('steps'); s.innerHTML = '';
+            m.steps.forEach(function (st, i) {
+                var d = document.createElement('div');
+                d.className = 'step' + (i < shown ? ' on' : '');
+                d.innerHTML = '<div class="t">' + st[0] + '</div><div class="d">' + st[1] + '</div>' +
+                    (st[2] ? '<div class="eq">' + st[2] + '</div>' : '');
+                s.appendChild(d);
+            });
+        }
+        function play() {
+            if (timer) { clearInterval(timer); timer = null; }
+            shown = 0; render();
+            timer = setInterval(function () {
+                shown++; render();
+                if (shown >= METALS[cur].steps.length) { clearInterval(timer); timer = null; }
+            }, 900);
+        }
+        function reset() { if (timer) { clearInterval(timer); timer = null; } shown = 0; render(); }
+        build(); shown = METALS[0].steps.length; render();
+    </script>
+</body>
+
+</html>

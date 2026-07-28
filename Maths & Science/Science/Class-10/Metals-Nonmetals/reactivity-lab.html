@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reactivity Series Lab | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #083344, #0e7490); color: #e0f2fe; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #a5f3fc; text-decoration: none; border: 1px solid rgba(165,243,252,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 940px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+        .card h3 { color: #fff; font-size: 13px; margin-bottom: 11px; text-transform: uppercase; letter-spacing: .05em; }
+        .pick { display: flex; gap: 8px; flex-wrap: wrap; }
+        .pick button { background: rgba(255,255,255,.1); border: 2px solid transparent; color: #e0f2fe; padding: 11px 15px; border-radius: 10px; cursor: pointer; font-weight: 700; font-family: inherit; font-size: 14px; }
+        .pick button.on { border-color: #22d3ee; background: rgba(34,211,238,.2); color: #fff; }
+        .series { display: flex; gap: 3px; flex-wrap: wrap; margin-top: 6px; }
+        .series span { background: rgba(255,255,255,.08); padding: 5px 8px; border-radius: 6px; font-size: 12px; font-weight: 700; }
+        .series span.hi { background: #22d3ee; color: #04222b; }
+        .series span.h { background: #f59e0b; color: #422006; }
+        canvas { width: 100%; height: auto; background: rgba(0,0,0,.22); border-radius: 12px; display: block; margin-top: 4px; }
+        .verdict { padding: 15px; border-radius: 12px; text-align: center; font-weight: 800; font-size: 16px; margin-top: 12px; }
+        .yes { background: #14532d; color: #bbf7d0; } .no { background: #7f1d1d; color: #fecaca; }
+        .eq { font-family: monospace; font-size: 15px; margin-top: 8px; color: #fff; }
+        .note { font-size: 13.5px; color: #a5f3fc; margin-top: 10px; line-height: 1.65; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="reactivity-series.html">← Back to Lesson</a>
+        <div class="title">⚗️ Reactivity Series Lab</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <h3>Reactivity Series (upar = zyada reactive)</h3>
+            <div class="series" id="series"></div>
+        </div>
+        <div class="card">
+            <h3>1. Dhaatu chuno (jo daalni hai)</h3>
+            <div class="pick" id="metals"></div>
+        </div>
+        <div class="card">
+            <h3>2. Salt ka ghol chuno</h3>
+            <div class="pick" id="salts"></div>
+        </div>
+        <div class="card">
+            <canvas id="cv" width="820" height="200"></canvas>
+            <div class="verdict" id="verdict"></div>
+            <div class="eq" id="eq"></div>
+            <div class="note" id="note"></div>
+        </div>
+    </div>
+
+    <script>
+        /* index 0 = most reactive */
+        var SERIES = ["K", "Na", "Ca", "Mg", "Al", "Zn", "Fe", "Pb", "H", "Cu", "Hg", "Ag", "Au"];
+        var METALS = [
+            { s: "Mg", n: "Magnesium" }, { s: "Al", n: "Aluminium" }, { s: "Zn", n: "Zinc" },
+            { s: "Fe", n: "Iron" }, { s: "Cu", n: "Copper" }, { s: "Ag", n: "Silver" }
+        ];
+        var SALTS = [
+            { s: "ZnSO4", m: "Zn", n: "Zinc sulphate", col: "#e2e8f0" },
+            { s: "FeSO4", m: "Fe", n: "Iron sulphate", col: "#86efac" },
+            { s: "CuSO4", m: "Cu", n: "Copper sulphate", col: "#38bdf8" },
+            { s: "AgNO3", m: "Ag", n: "Silver nitrate", col: "#e2e8f0" }
+        ];
+        var mi = 0, si = 2;
+        var VAL = { Mg: 2, Al: 3, Zn: 2, Fe: 2, Cu: 2, Ag: 1 };
+        var ANION = { ZnSO4: "SO4", FeSO4: "SO4", CuSO4: "SO4", AgNO3: "NO3" };
+
+        function rank(x) { return SERIES.indexOf(x); }
+
+        function balancedEq(M, salt) {
+            // M + salt -> Msalt + displacedMetal   (balance charges)
+            var dm = salt.m, an = ANION[salt.s];
+            var vM = VAL[M], vD = VAL[dm];
+            var anCharge = (an === "SO4") ? 2 : 1;
+            // salt formula: dm_(anCharge) (an)_(vD)  -- simplified using lcm
+            function lcm(a, b) { function g(x, y) { return y ? g(y, x % y) : x; } return a * b / g(a, b); }
+            var L1 = lcm(vM, anCharge), aM = L1 / vM, aAn = L1 / anCharge;
+            var L2 = lcm(vD, anCharge), aD = L2 / vD, aAn2 = L2 / anCharge;
+            // moles: need same number of anions on both sides
+            var A = lcm(aAn, aAn2);
+            var kNew = A / aAn, kOld = A / aAn2;
+            function f(metal, v) {
+                var l = lcm(v, anCharge), mm = l / v, nn = l / anCharge;
+                var anStr = (an === "SO4") ? "SO₄" : "NO₃";
+                return metal + (mm > 1 ? sub(mm) : "") + (nn > 1 ? "(" + anStr + ")" + sub(nn) : anStr);
+            }
+            function sub(n) { return String(n).replace(/[0-9]/g, function (d) { return "₀₁₂₃₄₅₆₇₈₉"[+d]; }); }
+            var lhsM = (kNew * aM) > 1 ? (kNew * aM) : "";
+            var lhsS = kOld > 1 ? kOld : "";
+            var rhsS = kNew > 1 ? kNew : "";
+            var rhsM = (kOld * aD) > 1 ? (kOld * aD) : "";
+            return lhsM + M + " + " + lhsS + f(dm, vD) + " → " + rhsS + f(M, vM) + " + " + rhsM + dm;
+        }
+
+        function draw(react) {
+            var cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+            var W = 820, H = 200; ctx.clearRect(0, 0, W, H);
+            var salt = SALTS[si], M = METALS[mi];
+            // beaker
+            ctx.strokeStyle = '#e0f2fe'; ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.moveTo(300, 40); ctx.lineTo(300, 170); ctx.lineTo(520, 170); ctx.lineTo(520, 40); ctx.stroke();
+            // solution colour (changes if reaction)
+            var col = salt.col;
+            if (react) col = (M.s === 'Fe') ? '#86efac' : (M.s === 'Cu' ? '#38bdf8' : '#cbd5e1');
+            ctx.fillStyle = col; ctx.globalAlpha = .55;
+            ctx.fillRect(303, 70, 214, 98); ctx.globalAlpha = 1;
+            // metal strip
+            ctx.fillStyle = react ? '#b45309' : '#94a3b8';
+            ctx.fillRect(395, 60, 26, 95);
+            ctx.fillStyle = '#fff'; ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'center';
+            ctx.fillText(M.s, 408, 112);
+            ctx.fillStyle = '#bae6fd'; ctx.font = '13px sans-serif';
+            ctx.fillText(salt.n + ' ka ghol', 410, 190);
+            if (react) {
+                // deposit specks
+                ctx.fillStyle = '#7c2d12';
+                for (var i = 0; i < 14; i++) {
+                    ctx.beginPath();
+                    ctx.arc(392 + Math.random() * 32, 62 + Math.random() * 90, 2.5, 0, 7); ctx.fill();
+                }
+                ctx.fillStyle = '#4ade80'; ctx.font = 'bold 15px sans-serif';
+                ctx.fillText('✓ Reaction ho rahi hai!', 660, 100);
+            } else {
+                ctx.fillStyle = '#f87171'; ctx.font = 'bold 15px sans-serif';
+                ctx.fillText('✗ Kuch nahi hua', 660, 100);
+            }
+            ctx.textAlign = 'left';
+        }
+
+        function upd() {
+            var M = METALS[mi], salt = SALTS[si];
+            var react = rank(M.s) < rank(salt.m);
+            var sameMetal = (M.s === salt.m);
+            var v = document.getElementById('verdict'), e = document.getElementById('eq'), n = document.getElementById('note');
+            // series highlight
+            var sr = document.getElementById('series'); sr.innerHTML = '';
+            SERIES.forEach(function (x) {
+                var sp = document.createElement('span');
+                sp.textContent = x;
+                if (x === 'H') sp.className = 'h';
+                if (x === M.s || x === salt.m) sp.className = 'hi';
+                sr.appendChild(sp);
+            });
+            if (sameMetal) {
+                v.className = 'verdict no'; v.textContent = '✗ Koi reaction nahi';
+                e.textContent = M.s + ' + ' + salt.n + ' → koi reaction nahi';
+                n.innerHTML = 'Dhaatu aur ghol ki dhaatu <b>ek hi</b> hai — displacement ka sawaal hi nahi uthta.';
+            } else if (react) {
+                v.className = 'verdict yes'; v.textContent = '✓ Haan! Displacement reaction hogi';
+                e.textContent = balancedEq(M.s, salt);
+                n.innerHTML = '<b>' + M.s + '</b> series mein <b>' + salt.m + '</b> se <b>upar</b> hai (zyada reactive), isliye wo ' +
+                    salt.m + ' ko uske salt se hata deta hai. ' + salt.m + ' dhaatu ban kar jam jaayegi aur ghol ka rang badal jaayega.';
+            } else {
+                v.className = 'verdict no'; v.textContent = '✗ Koi reaction nahi hogi';
+                e.textContent = M.s + ' + ' + salt.s.replace(/(\d)/g, function (d) { return "₀₁₂₃₄₅₆₇₈₉"[+d]; }) + ' → koi reaction nahi';
+                n.innerHTML = '<b>' + M.s + '</b> series mein <b>' + salt.m + '</b> se <b>neeche</b> hai (kam reactive) — kam reactive dhaatu zyada reactive ko hata <b>nahi</b> sakti.';
+            }
+            draw(react && !sameMetal);
+        }
+        (function build() {
+            var mb = document.getElementById('metals'), sb = document.getElementById('salts');
+            METALS.forEach(function (m, i) {
+                var b = document.createElement('button'); b.textContent = m.n + ' (' + m.s + ')';
+                b.className = i === mi ? 'on' : '';
+                b.onclick = function () { mi = i; build(); upd(); }; mb.appendChild(b);
+            });
+            SALTS.forEach(function (s, i) {
+                var b = document.createElement('button'); b.textContent = s.n;
+                b.className = i === si ? 'on' : '';
+                b.onclick = function () { si = i; build(); upd(); }; sb.appendChild(b);
+            });
+            function build() {
+                mb.innerHTML = ''; sb.innerHTML = '';
+                METALS.forEach(function (m, i) {
+                    var b = document.createElement('button'); b.textContent = m.n + ' (' + m.s + ')';
+                    b.className = i === mi ? 'on' : '';
+                    b.onclick = function () { mi = i; build(); upd(); }; mb.appendChild(b);
+                });
+                SALTS.forEach(function (s, i) {
+                    var b = document.createElement('button'); b.textContent = s.n;
+                    b.className = i === si ? 'on' : '';
+                    b.onclick = function () { si = i; build(); upd(); }; sb.appendChild(b);
+                });
+            }
+        })();
+        upd();
+    </script>
+</body>
+
+</html>

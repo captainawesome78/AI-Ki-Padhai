@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Metal vs Non-metal Sorter | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #2e1065, #7e22ce); color: #f3e8ff; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #e9d5ff; text-decoration: none; border: 1px solid rgba(233,213,255,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 760px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 22px; }
+        .bar { display: flex; justify-content: space-between; font-size: 14px; color: #d8b4fe; font-weight: 600; margin-bottom: 10px; }
+        .prog { height: 7px; background: rgba(255,255,255,.15); border-radius: 4px; overflow: hidden; margin-bottom: 20px; }
+        .prog span { display: block; height: 100%; background: #a855f7; transition: width .3s; }
+        .item { text-align: center; padding: 22px 12px; background: rgba(0,0,0,.28); border-radius: 14px; }
+        .item .e { font-size: 42px; }
+        .item .n { font-size: 22px; font-weight: 800; color: #fff; margin-top: 6px; }
+        .item .c { font-size: 14px; color: #d8b4fe; margin-top: 6px; }
+        .opts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 18px; }
+        .opts button { padding: 18px; border: 2px solid transparent; border-radius: 14px; font-size: 16px; font-weight: 800; cursor: pointer; font-family: inherit; }
+        .m { background: rgba(56,189,248,.16); color: #bae6fd; } .nm { background: rgba(74,222,128,.16); color: #bbf7d0; }
+        .opts button.correct { background: #14532d; border-color: #4ade80; color: #bbf7d0; }
+        .opts button.wrong { background: #7f1d1d; border-color: #f87171; color: #fecaca; }
+        .fb { margin-top: 16px; padding: 15px; border-radius: 12px; font-size: 14px; line-height: 1.65; display: none; }
+        .fb.show { display: block; } .fb.good { background: #14532d; color: #bbf7d0; } .fb.bad { background: #422006; color: #fde68a; }
+        .next { width: 100%; margin-top: 12px; border: none; padding: 14px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 15px; background: #a855f7; color: #fff; display: none; }
+        .next.show { display: block; }
+        .done { text-align: center; } .done .big { font-size: 46px; font-weight: 800; color: #fff; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="physical-properties.html">← Back to Lesson</a>
+        <div class="title">🎯 Metal vs Non-metal Sorter</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card" id="game">
+            <div class="bar"><span id="qn"></span><span id="sc"></span></div>
+            <div class="prog"><span id="pb" style="width:0%"></span></div>
+            <div class="item">
+                <div class="e" id="e"></div>
+                <div class="n" id="n"></div>
+                <div class="c" id="c"></div>
+            </div>
+            <div class="opts">
+                <button class="m" onclick="pick('metal',this)">🔩 METAL</button>
+                <button class="nm" onclick="pick('nonmetal',this)">🪨 NON-METAL</button>
+            </div>
+            <div class="fb" id="fb"></div>
+            <button class="next" id="next" onclick="nextQ()">Agla →</button>
+        </div>
+    </div>
+
+    <script>
+        var Q = [
+            { e: "🔩", n: "Iron (Fe)", c: "Kada, chamakdaar, bijli conduct karta hai", a: "metal", w: "Classic metal — malleable, ductile aur sonorous bhi." },
+            { e: "🌡️", n: "Mercury (Hg)", c: "Kamre ke taapmaan par DRAV (liquid) hai", a: "metal", w: "APWAAD! Ye ek dhaatu hai jo liquid hai — bijli bhi conduct karti hai. Thermometer mein isi liye use hoti thi." },
+            { e: "✏️", n: "Graphite", c: "Chamakdaar hai aur bijli CONDUCT karta hai", a: "nonmetal", w: "APWAAD! Ye carbon (adhaatu) ka roop hai — par bijli conduct karta hai. Isiliye electrodes graphite ke bante hain." },
+            { e: "💎", n: "Diamond", c: "Duniya ka sabse KADA padarth", a: "nonmetal", w: "APWAAD! Kadapan dhaatuon ki pehchaan lagti hai, par diamond carbon (adhaatu) hai. Bijli conduct NAHI karta." },
+            { e: "🟡", n: "Sulphur (S)", c: "Peela, bhurbhura, madham", a: "nonmetal", w: "Sahi — brittle aur dull, insulator bhi. Classic non-metal." },
+            { e: "🔪", n: "Sodium (Na)", c: "Itna NARAM ki chaaku se kat jaata hai", a: "metal", w: "APWAAD! Dhaatuein aksar kadi hoti hain, par Na aur K itne naram hain ki kat jaate hain. Kerosene mein rakhe jaate hain." },
+            { e: "🟣", n: "Iodine (I)", c: "CHAMAKDAAR (lustrous) thos", a: "nonmetal", w: "APWAAD! Chamak dhaatu ki pehchaan hai, par iodine ek chamakdaar ADHAATU hai." },
+            { e: "🥫", n: "Aluminium (Al)", c: "Halka, foil ban jaata hai, zang nahi lagta", a: "metal", w: "Sahi — bahut malleable (foil!). Al₂O₃ ki parat use zang se bachati hai." },
+            { e: "🎈", n: "Bromine (Br)", c: "Kamre ke taapmaan par DRAV, bhoora-laal", a: "nonmetal", w: "APWAAD! Ye ek adhaatu hai jo liquid hai — mercury ka ulta apwaad." },
+            { e: "🔔", n: "Copper (Cu)", c: "Taar banti hai, bajane par tan-tan aawaz", a: "metal", w: "Sahi — ductile aur sonorous. Bijli ke taar isi ke bante hain." }
+        ];
+        var i = 0, score = 0, answered = false;
+        function render() {
+            answered = false; var q = Q[i];
+            document.getElementById('qn').textContent = 'Sawaal ' + (i + 1) + ' / ' + Q.length;
+            document.getElementById('sc').textContent = 'Score: ' + score;
+            document.getElementById('pb').style.width = (i / Q.length * 100) + '%';
+            document.getElementById('e').textContent = q.e;
+            document.getElementById('n').textContent = q.n;
+            document.getElementById('c').textContent = q.c;
+            var bs = document.querySelectorAll('.opts button');
+            bs[0].className = 'm'; bs[1].className = 'nm';
+            bs[0].disabled = bs[1].disabled = false;
+            var f = document.getElementById('fb'); f.className = 'fb';
+            document.getElementById('next').className = 'next';
+        }
+        function pick(ans, btn) {
+            if (answered) return; answered = true;
+            var q = Q[i], ok = (ans === q.a);
+            if (ok) score++;
+            document.getElementById('sc').textContent = 'Score: ' + score;
+            var bs = document.querySelectorAll('.opts button');
+            bs[0].disabled = bs[1].disabled = true;
+            (q.a === 'metal' ? bs[0] : bs[1]).className = 'correct';
+            if (!ok) btn.className = 'wrong';
+            var f = document.getElementById('fb');
+            f.className = 'fb show ' + (ok ? 'good' : 'bad');
+            f.innerHTML = (ok ? '✅ <b>Sahi!</b> ' : '❌ <b>Sahi jawaab: ' + (q.a === 'metal' ? 'METAL' : 'NON-METAL') + '.</b> ') + q.w;
+            var nx = document.getElementById('next');
+            nx.className = 'next show';
+            nx.textContent = (i === Q.length - 1) ? 'Result dekho →' : 'Agla →';
+        }
+        function nextQ() { i++; if (i >= Q.length) return finish(); render(); }
+        function finish() {
+            var pct = Math.round(score / Q.length * 100);
+            var msg = pct === 100 ? 'Perfect! Saare apwaad bhi pata hain 🏆' : pct >= 70 ? 'Badhiya! Apwaad dobara dekh lo 👏' : 'Lesson dobara padho — khaas kar APWAAD wale.';
+            document.getElementById('game').innerHTML =
+                '<div class="done"><div class="big">' + score + ' / ' + Q.length + '</div>' +
+                '<p style="color:#d8b4fe;margin:8px 0">' + pct + '% sahi</p><p style="margin-bottom:16px">' + msg + '</p>' +
+                '<button class="next show" onclick="location.reload()">↺ Phir se khelo</button>' +
+                '<p style="margin-top:14px"><a href="metals-nonmetals.html" style="color:#e9d5ff">← Chapter par wapas</a></p></div>';
+        }
+        render();
+    </script>
+</body>
+
+</html>
