@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Soap &amp; Micelle Lab | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #451a03, #b45309); color: #fef3c7; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #fde68a; text-decoration: none; border: 1px solid rgba(253,230,138,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 900px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+        .card h3 { color: #fff; font-size: 13px; margin-bottom: 11px; text-transform: uppercase; letter-spacing: .05em; }
+        canvas { width: 100%; height: auto; background: rgba(0,0,0,.24); border-radius: 12px; display: block; }
+        .modes { display: flex; gap: 9px; flex-wrap: wrap; margin-bottom: 12px; }
+        .modes button { flex: 1; min-width: 140px; background: rgba(255,255,255,.1); border: 2px solid transparent; color: #fde68a; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 700; font-family: inherit; font-size: 14px; }
+        .modes button.on { border-color: #f59e0b; background: rgba(245,158,11,.2); color: #fff; }
+        label { display: flex; justify-content: space-between; font-size: 14px; margin: 12px 0 5px; }
+        label b { color: #fbbf24; }
+        input[type=range] { width: 100%; accent-color: #f59e0b; }
+        .stage { font-size: 14px; line-height: 1.75; background: rgba(0,0,0,.28); border-radius: 12px; padding: 15px; margin-top: 12px; }
+        .stage b { color: #fff; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="ethanol-soaps.html">← Back to Lesson</a>
+        <div class="title">🧼 Soap &amp; Micelle Lab</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <div class="modes">
+                <button id="mSoft" class="on" onclick="setW(0)">💧 Naram paani (soft water)</button>
+                <button id="mHard" onclick="setW(1)">🪨 Kada paani (hard water)</button>
+            </div>
+            <canvas id="cv" width="840" height="330"></canvas>
+            <label>🧼 Sabun daalo / dhulai <b><span id="pV">0</span>%</b></label>
+            <input type="range" id="p" min="0" max="100" value="0" oninput="upd()">
+            <div class="stage" id="stage"></div>
+        </div>
+    </div>
+
+    <script>
+        var cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+        var hard = false, p = 0;
+        var W = 840, H = 330;
+
+        function setW(v) {
+            hard = (v === 1);
+            document.getElementById('mSoft').className = hard ? '' : 'on';
+            document.getElementById('mHard').className = hard ? 'on' : '';
+            upd();
+        }
+        function soapMol(x, y, ang, scale) {
+            ctx.save(); ctx.translate(x, y); ctx.rotate(ang); ctx.scale(scale, scale);
+            // hydrophobic tail (wavy line)
+            ctx.strokeStyle = '#fbbf24'; ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.moveTo(0, 0);
+            for (var i = 0; i <= 22; i++) ctx.lineTo(i, Math.sin(i / 2.2) * 2.6);
+            ctx.stroke();
+            // hydrophilic head
+            ctx.fillStyle = '#38bdf8';
+            ctx.beginPath(); ctx.arc(-4, 0, 6, 0, 7); ctx.fill();
+            ctx.restore();
+        }
+        function draw() {
+            ctx.clearRect(0, 0, W, H);
+            // water
+            ctx.fillStyle = 'rgba(56,189,248,0.13)'; ctx.fillRect(0, 0, W, H);
+            ctx.fillStyle = '#bae6fd'; ctx.font = '13px sans-serif';
+            ctx.fillText(hard ? '🪨 Kada paani (Ca²⁺ / Mg²⁺ ions)' : '💧 Naram paani', 14, 24);
+
+            var cx = 300, cy = 175, R = 52;
+            if (!hard) {
+                // ---- SOFT WATER: micelle forms and lifts dirt ----
+                var lift = p / 100;
+                var oy = cy - lift * 95;   // grease rises as it is carried away
+                // grease drop
+                ctx.fillStyle = '#78350f';
+                ctx.beginPath(); ctx.arc(cx, oy, R * (1 - lift * 0.18), 0, 7); ctx.fill();
+                ctx.fillStyle = '#fed7aa'; ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'center';
+                ctx.fillText('MAIL (tel)', cx, oy + 5);
+                ctx.textAlign = 'left';
+                // soap molecules around it
+                var n = Math.round(4 + lift * 14);
+                for (var i = 0; i < n; i++) {
+                    var a = (i / n) * Math.PI * 2 + p / 300;
+                    var rr = R * (1 - lift * 0.18) + 4;
+                    soapMol(cx + Math.cos(a) * (rr + 22), oy + Math.sin(a) * (rr + 22), a + Math.PI, 1);
+                }
+                if (lift > 0.55) {
+                    ctx.fillStyle = '#4ade80'; ctx.font = 'bold 15px sans-serif';
+                    ctx.fillText('✓ Micelle ban gaya — mail paani mein tair raha hai!', 470, 90);
+                }
+                // free soap molecules floating
+                for (var k = 0; k < 6; k++) soapMol(560 + (k % 3) * 70, 200 + Math.floor(k / 3) * 55, 0.4 * k, 1);
+            } else {
+                // ---- HARD WATER: scum forms, no micelle ----
+                ctx.fillStyle = '#78350f';
+                ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.fill();
+                ctx.fillStyle = '#fed7aa'; ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'center';
+                ctx.fillText('MAIL (tel)', cx, cy + 5);
+                ctx.textAlign = 'left';
+                // Ca/Mg ions
+                for (var j = 0; j < 8; j++) {
+                    var ix = 120 + (j % 4) * 150, iy = 60 + Math.floor(j / 4) * 210;
+                    ctx.fillStyle = '#a855f7';
+                    ctx.beginPath(); ctx.arc(ix, iy, 11, 0, 7); ctx.fill();
+                    ctx.fillStyle = '#fff'; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center';
+                    ctx.fillText(j % 2 ? 'Mg²⁺' : 'Ca²⁺', ix, iy + 3); ctx.textAlign = 'left';
+                }
+                // soap sticking to ions as scum (grey clumps)
+                var m = Math.round(p / 100 * 8);
+                for (var q = 0; q < m; q++) {
+                    var sx = 120 + (q % 4) * 150, sy = 60 + Math.floor(q / 4) * 210;
+                    ctx.fillStyle = 'rgba(203,213,225,0.85)';
+                    ctx.beginPath(); ctx.arc(sx, sy, 20, 0, 7); ctx.fill();
+                    ctx.fillStyle = '#475569'; ctx.font = 'bold 9px sans-serif'; ctx.textAlign = 'center';
+                    ctx.fillText('SCUM', sx, sy + 3); ctx.textAlign = 'left';
+                }
+                if (p > 55) {
+                    ctx.fillStyle = '#f87171'; ctx.font = 'bold 15px sans-serif';
+                    ctx.fillText('✗ Sabun scum ban gaya — mail waise ka waisa!', 470, 90);
+                }
+            }
+        }
+        function upd() {
+            p = +document.getElementById('p').value;
+            document.getElementById('pV').textContent = p;
+            var s = document.getElementById('stage');
+            if (!hard) {
+                if (p < 15) s.innerHTML = 'Sirf paani se tel nahi jaata — kyunki tel paani mein <b>ghulta nahi</b>. Ab sabun daalo (slider ghumao).';
+                else if (p < 55) s.innerHTML = 'Sabun ke anu aa rahe hain. Har anu ki <b style="color:#fbbf24">peeli poonch (hydrophobic)</b> tel mein ghus rahi hai, aur <b style="color:#38bdf8">neela sir (hydrophilic)</b> paani ki taraf hai.';
+                else s.innerHTML = '<b>MICELLE ban gaya!</b> Sainkdon sabun anu ne tel ki boond ko gher liya — poonch andar, sir bahar. Ab gole ka bahar wala hissa "paani-dost" hai, isliye poori boond paani mein <b>tair</b> gayi aur dhulai ke saath <b>bah</b> jaayegi. Yahi sabun ka asli jaadu hai!';
+            } else {
+                if (p < 15) s.innerHTML = 'Kade paani mein <b>Ca²⁺ aur Mg²⁺</b> ions ghule hue hain. Ab sabun daalkar dekho kya hota hai...';
+                else if (p < 55) s.innerHTML = 'Sabun ke anu tel ki taraf jaane ki jagah <b>Ca²⁺/Mg²⁺ ions</b> se chipak rahe hain!';
+                else s.innerHTML = '<b>SCUM ban gaya ✗</b> — sabun ne calcium/magnesium ke saath ek <b>na-ghulne wala safed padarth</b> bana diya. Ab na jhaag banta hai, na mail saaf hota hai — sabun barbaad ho gaya. <br><br>💡 Isiliye kade paani mein <b>detergent</b> istemal karte hain — wo Ca/Mg ke saath scum nahi banata aur kaam karta rehta hai.';
+            }
+            draw();
+        }
+        upd();
+    </script>
+</body>
+
+</html>

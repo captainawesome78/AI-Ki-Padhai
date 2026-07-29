@@ -150,6 +150,7 @@
       clickable.push(obj);
     }
     var ctx = { THREE: THREE, scene: scene, pivot: pivot, mat: mat, addPart: addPart, model: {} };
+    ctx.selectKey = function (k) { selectKey(k); };   // available inside build() too
     cfg.build(ctx);
 
     (cfg.controls || []).forEach(function (c) {
@@ -190,7 +191,6 @@
       });
       if (isolated) applyIsolate();
     }
-    ctx.selectKey = selectKey;
 
     Array.prototype.forEach.call(document.querySelectorAll('.s3-part'), function (b) {
       b.addEventListener('click', function () {

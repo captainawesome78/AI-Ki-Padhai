@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IUPAC Naming Trainer | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #2e1065, #7e22ce); color: #f3e8ff; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #e9d5ff; text-decoration: none; border: 1px solid rgba(233,213,255,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 780px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 22px; }
+        .bar { display: flex; justify-content: space-between; font-size: 14px; color: #d8b4fe; font-weight: 600; margin-bottom: 10px; }
+        .prog { height: 7px; background: rgba(255,255,255,.15); border-radius: 4px; overflow: hidden; margin-bottom: 20px; }
+        .prog span { display: block; height: 100%; background: #a855f7; transition: width .3s; }
+        .struct { text-align: center; background: rgba(0,0,0,.3); border-radius: 14px; padding: 26px 14px; font-family: 'Courier New', monospace; font-size: 24px; font-weight: 700; color: #fff; letter-spacing: 1px; }
+        .ask { text-align: center; font-size: 14px; color: #d8b4fe; margin: 14px 0 4px; }
+        .opts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+        .opts button { padding: 15px; border: 2px solid transparent; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; background: rgba(255,255,255,.1); color: #e9d5ff; }
+        .opts button:hover:not(:disabled) { border-color: #a855f7; }
+        .opts button.correct { background: #14532d; border-color: #4ade80; color: #bbf7d0; }
+        .opts button.wrong { background: #7f1d1d; border-color: #f87171; color: #fecaca; }
+        .hintbtn { width: 100%; margin-top: 12px; background: transparent; border: 1px dashed rgba(233,213,255,.5); color: #e9d5ff; padding: 10px; border-radius: 10px; cursor: pointer; font-family: inherit; font-size: 13px; }
+        .steps { margin-top: 12px; background: rgba(0,0,0,.28); border-radius: 12px; padding: 14px; font-size: 13.5px; line-height: 1.8; display: none; }
+        .steps.show { display: block; }
+        .fb { margin-top: 14px; padding: 15px; border-radius: 12px; font-size: 14px; line-height: 1.7; display: none; }
+        .fb.show { display: block; } .fb.good { background: #14532d; color: #bbf7d0; } .fb.bad { background: #422006; color: #fde68a; }
+        .next { width: 100%; margin-top: 12px; border: none; padding: 14px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 15px; background: #a855f7; color: #fff; display: none; }
+        .next.show { display: block; }
+        .done { text-align: center; } .done .big { font-size: 46px; font-weight: 800; color: #fff; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="nomenclature.html">← Back to Lesson</a>
+        <div class="title">🏷️ IUPAC Naming Trainer</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card" id="game">
+            <div class="bar"><span id="qn"></span><span id="sc"></span></div>
+            <div class="prog"><span id="pb" style="width:0%"></span></div>
+            <div class="struct" id="st"></div>
+            <div class="ask">Iska sahi IUPAC naam kya hai?</div>
+            <div class="opts" id="opts"></div>
+            <button class="hintbtn" onclick="hint()">💡 Step-by-step hint dikhao</button>
+            <div class="steps" id="steps"></div>
+            <div class="fb" id="fb"></div>
+            <button class="next" id="next" onclick="nextQ()">Agla →</button>
+        </div>
+    </div>
+
+    <script>
+        var Q = [
+            {
+                s: "CH₃ — CH₃", a: "Ethane", o: ["Methane", "Ethane", "Ethene", "Ethanol"],
+                c: 2, bond: "single", fg: "koi nahi",
+                w: "2 carbon = Eth, sirf single bond = -ane → Ethane."
+            },
+            {
+                s: "CH₃ — CH₂ — OH", a: "Ethanol", o: ["Methanol", "Ethanal", "Ethanol", "Ethanoic acid"],
+                c: 2, bond: "single", fg: "—OH (alcohol) → -ol",
+                w: "2 carbon = Eth, single = -an, —OH = -ol → Ethanol."
+            },
+            {
+                s: "CH₂ = CH₂", a: "Ethene", o: ["Ethane", "Ethene", "Ethyne", "Propene"],
+                c: 2, bond: "double", fg: "koi nahi",
+                w: "2 carbon = Eth, double bond = -ene → Ethene."
+            },
+            {
+                s: "CH ≡ CH", a: "Ethyne", o: ["Ethene", "Ethane", "Ethyne", "Propyne"],
+                c: 2, bond: "triple", fg: "koi nahi",
+                w: "2 carbon = Eth, triple bond = -yne → Ethyne."
+            },
+            {
+                s: "CH₃ — COOH", a: "Ethanoic acid", o: ["Methanoic acid", "Ethanoic acid", "Ethanol", "Propanoic acid"],
+                c: 2, bond: "single", fg: "—COOH (acid) → -oic acid",
+                w: "DHYAN DO: —COOH ka carbon bhi ginte hain! Isliye 2 carbon = Eth, —COOH = -oic acid → Ethanoic acid (Methanoic nahi!)."
+            },
+            {
+                s: "CH₃ — CH₂ — CHO", a: "Propanal", o: ["Ethanal", "Propanal", "Propanol", "Propanone"],
+                c: 3, bond: "single", fg: "—CHO (aldehyde) → -al",
+                w: "—CHO ka carbon bhi gino → 3 carbon = Prop, —CHO = -al → Propanal."
+            },
+            {
+                s: "CH₃ — CO — CH₃", a: "Propanone", o: ["Propanal", "Propanol", "Propanone", "Propanoic acid"],
+                c: 3, bond: "single", fg: "—CO— (ketone) → -one",
+                w: "3 carbon = Prop, beech mein —CO— (ketone) = -one → Propanone (acetone)."
+            },
+            {
+                s: "CH₃ — CH₂ — CH₂ — CH₃", a: "Butane", o: ["Propane", "Butane", "Butene", "Butanol"],
+                c: 4, bond: "single", fg: "koi nahi",
+                w: "4 carbon = But, sirf single = -ane → Butane (LPG mein hota hai)."
+            },
+            {
+                s: "CH₃ — CH₂ — Cl", a: "Chloroethane", o: ["Chloromethane", "Chloroethane", "Ethanol", "Ethanal"],
+                c: 2, bond: "single", fg: "—Cl (halogen) → prefix chloro-",
+                w: "Halogen prefix mein aata hai, suffix mein nahi → 2 carbon = eth + ane, Cl = chloro- → Chloroethane."
+            },
+            {
+                s: "CH₃ — OH", a: "Methanol", o: ["Methanol", "Ethanol", "Methanal", "Methane"],
+                c: 1, bond: "single", fg: "—OH (alcohol) → -ol",
+                w: "1 carbon = Meth, single = -an, —OH = -ol → Methanol. (Ye zehreela hota hai — peene se andhapan!)"
+            }
+        ];
+        var i = 0, score = 0, answered = false;
+        function render() {
+            answered = false; var q = Q[i];
+            document.getElementById('qn').textContent = 'Sawaal ' + (i + 1) + ' / ' + Q.length;
+            document.getElementById('sc').textContent = 'Score: ' + score;
+            document.getElementById('pb').style.width = (i / Q.length * 100) + '%';
+            document.getElementById('st').textContent = q.s;
+            var o = document.getElementById('opts'); o.innerHTML = '';
+            q.o.forEach(function (opt) {
+                var b = document.createElement('button');
+                b.textContent = opt;
+                b.onclick = function () { pick(opt, b); };
+                o.appendChild(b);
+            });
+            document.getElementById('steps').className = 'steps';
+            document.getElementById('fb').className = 'fb';
+            document.getElementById('next').className = 'next';
+        }
+        function hint() {
+            var q = Q[i], s = document.getElementById('steps');
+            s.className = 'steps show';
+            s.innerHTML = '<b>Step 1 — Carbon gino:</b> ' + q.c + ' carbon → <b>' +
+                ['', 'Meth', 'Eth', 'Prop', 'But', 'Pent', 'Hex'][q.c] + '</b><br>' +
+                '<b>Step 2 — Bond dekho:</b> ' + q.bond + ' → <b>' +
+                (q.bond === 'single' ? '-an' : q.bond === 'double' ? '-ene' : '-yne') + '</b><br>' +
+                '<b>Step 3 — Functional group:</b> ' + q.fg;
+        }
+        function pick(ans, btn) {
+            if (answered) return; answered = true;
+            var q = Q[i], ok = (ans === q.a);
+            if (ok) score++;
+            document.getElementById('sc').textContent = 'Score: ' + score;
+            var bs = document.getElementById('opts').children;
+            for (var j = 0; j < bs.length; j++) {
+                bs[j].disabled = true;
+                if (bs[j].textContent === q.a) bs[j].className = 'correct';
+            }
+            if (!ok) btn.className = 'wrong';
+            var f = document.getElementById('fb');
+            f.className = 'fb show ' + (ok ? 'good' : 'bad');
+            f.innerHTML = (ok ? '✅ <b>Sahi!</b> ' : '❌ <b>Sahi jawaab: ' + q.a + '.</b> ') + q.w;
+            var nx = document.getElementById('next');
+            nx.className = 'next show';
+            nx.textContent = (i === Q.length - 1) ? 'Result dekho →' : 'Agla →';
+        }
+        function nextQ() { i++; if (i >= Q.length) return finish(); render(); }
+        function finish() {
+            var pct = Math.round(score / Q.length * 100);
+            var msg = pct === 100 ? 'Perfect! IUPAC naming aa gayi 🏆' : pct >= 70 ? 'Badhiya! Thodi practice aur 👏' : 'Lesson dobara padho — khaas kar —COOH aur —CHO wale.';
+            document.getElementById('game').innerHTML =
+                '<div class="done"><div class="big">' + score + ' / ' + Q.length + '</div>' +
+                '<p style="color:#d8b4fe;margin:8px 0">' + pct + '% sahi</p><p style="margin-bottom:16px">' + msg + '</p>' +
+                '<button class="next show" onclick="location.reload()">↺ Phir se</button>' +
+                '<p style="margin-top:14px"><a href="carbon-compounds.html" style="color:#e9d5ff">← Chapter par wapas</a></p></div>';
+        }
+        render();
+    </script>
+</body>
+
+</html>

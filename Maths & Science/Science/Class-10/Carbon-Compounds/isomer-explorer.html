@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Isomer Explorer | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #083344, #0e7490); color: #e0f2fe; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #a5f3fc; text-decoration: none; border: 1px solid rgba(165,243,252,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 900px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+        .card h3 { color: #fff; font-size: 13px; margin-bottom: 11px; text-transform: uppercase; letter-spacing: .05em; }
+        .pick { display: flex; gap: 9px; flex-wrap: wrap; }
+        .pick button { background: rgba(255,255,255,.1); border: 2px solid transparent; color: #e0f2fe; padding: 12px 16px; border-radius: 11px; cursor: pointer; font-weight: 700; font-family: inherit; font-size: 14px; }
+        .pick button.on { border-color: #22d3ee; background: rgba(34,211,238,.2); color: #fff; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+        .iso { background: rgba(0,0,0,.26); border-radius: 14px; padding: 16px; }
+        .iso .n { font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+        .iso .t { font-size: 12px; color: #7dd3fc; margin-bottom: 10px; }
+        .iso svg { width: 100%; height: auto; background: rgba(0,0,0,.2); border-radius: 8px; }
+        .iso .bp { font-size: 12.5px; color: #bae6fd; margin-top: 9px; }
+        .banner { background: rgba(0,0,0,.28); border-radius: 12px; padding: 15px; text-align: center; font-size: 15px; }
+        .banner b { color: #fff; font-size: 17px; }
+        .note { font-size: 13.5px; color: #a5f3fc; margin-top: 12px; line-height: 1.7; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="hydrocarbons.html">← Back to Lesson</a>
+        <div class="title">🔀 Isomer Explorer</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <h3>Compound chuno</h3>
+            <div class="pick" id="pick"></div>
+        </div>
+        <div class="card">
+            <div class="banner" id="banner"></div>
+        </div>
+        <div class="card">
+            <div class="grid" id="grid"></div>
+            <div class="note" id="note"></div>
+        </div>
+    </div>
+
+    <script>
+        /* chains: array of carbon columns; branch = index where a CH3 hangs below */
+        var DATA = [
+            {
+                nm: "Propane", f: "C₃H₈", n: 3, isos: [
+                    { n: "Propane", t: "Seedhi chain", chain: 3, br: [], bp: "−42 °C" }
+                ],
+                why: "3 ya usse kam carbon ko sajaane ka doosra tareeka hai hi nahi — isliye <b>koi isomer nahi</b>. Isomerism 4 carbon se shuru hoti hai."
+            },
+            {
+                nm: "Butane", f: "C₄H₁₀", n: 4, isos: [
+                    { n: "n-Butane", t: "Seedhi chain", chain: 4, br: [], bp: "−0.5 °C" },
+                    { n: "Isobutane", t: "Shakha wali (2-methylpropane)", chain: 3, br: [1], bp: "−11.7 °C" }
+                ],
+                why: "Butane ke <b>2 isomers</b> hain. Dono ka formula C₄H₁₀ — par structure alag, isliye boiling point bhi alag! Shakha wali ka B.P. hamesha kam hota hai."
+            },
+            {
+                nm: "Pentane", f: "C₅H₁₂", n: 5, isos: [
+                    { n: "n-Pentane", t: "Seedhi chain", chain: 5, br: [], bp: "36 °C" },
+                    { n: "Isopentane", t: "2-methylbutane", chain: 4, br: [1], bp: "28 °C" },
+                    { n: "Neopentane", t: "2,2-dimethylpropane", chain: 3, br: [1, 1], bp: "9.5 °C" }
+                ],
+                why: "Pentane ke <b>3 isomers</b> hain. Dhyan do: jitni zyada shakhaein, utna kam boiling point — kyunki anu gol ho jaata hai aur aapas mein kam chipakta hai."
+            },
+            {
+                nm: "Hexane", f: "C₆H₁₄", n: 6, isos: [
+                    { n: "n-Hexane", t: "Seedhi chain", chain: 6, br: [], bp: "69 °C" },
+                    { n: "2-methylpentane", t: "1 shakha", chain: 5, br: [1], bp: "60 °C" },
+                    { n: "3-methylpentane", t: "1 shakha (beech mein)", chain: 5, br: [2], bp: "63 °C" },
+                    { n: "2,2-dimethylbutane", t: "2 shakha ek hi carbon par", chain: 4, br: [1, 1], bp: "50 °C" },
+                    { n: "2,3-dimethylbutane", t: "2 shakha alag carbon par", chain: 4, br: [1, 2], bp: "58 °C" }
+                ],
+                why: "Hexane ke poore <b>5 isomers</b> hain! Carbon badhne ke saath isomers tezi se badhte hain — decane (C₁₀) ke toh 75 isomers hote hain."
+            }
+        ];
+        var cur = 1;
+
+        function drawIso(iso) {
+            var W = 260, H = 110, sp = 42, x0 = (W - (iso.chain - 1) * sp) / 2, y = 46;
+            var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="' + iso.n + '">';
+            // main chain bonds
+            for (var i = 0; i < iso.chain - 1; i++)
+                s += '<line x1="' + (x0 + i * sp) + '" y1="' + y + '" x2="' + (x0 + (i + 1) * sp) + '" y2="' + y + '" stroke="#94a3b8" stroke-width="3"/>';
+            // branches
+            var used = {};
+            iso.br.forEach(function (bi) {
+                used[bi] = (used[bi] || 0) + 1;
+                var bx = x0 + bi * sp, by = used[bi] === 1 ? y + 34 : y - 34;
+                s += '<line x1="' + bx + '" y1="' + y + '" x2="' + bx + '" y2="' + by + '" stroke="#94a3b8" stroke-width="3"/>';
+                s += '<circle cx="' + bx + '" cy="' + by + '" r="12" fill="#334155" stroke="#e2e8f0" stroke-width="2"/>';
+                s += '<text x="' + bx + '" y="' + (by + 4) + '" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">C</text>';
+            });
+            // main chain atoms
+            for (var j = 0; j < iso.chain; j++) {
+                var cx = x0 + j * sp;
+                s += '<circle cx="' + cx + '" cy="' + y + '" r="13" fill="#334155" stroke="#e2e8f0" stroke-width="2"/>';
+                s += '<text x="' + cx + '" y="' + (y + 4) + '" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">C</text>';
+            }
+            return s + '</svg>';
+        }
+        function render() {
+            var d = DATA[cur];
+            document.getElementById('banner').innerHTML =
+                '<b>' + d.nm + ' — ' + d.f + '</b><br>' + d.isos.length +
+                ' isomer' + (d.isos.length > 1 ? 's' : '') + ' (sabka formula ' + d.f + ' hi hai!)';
+            var g = document.getElementById('grid'); g.innerHTML = '';
+            d.isos.forEach(function (iso) {
+                var el = document.createElement('div'); el.className = 'iso';
+                el.innerHTML = '<div class="n">' + iso.n + '</div><div class="t">' + iso.t + '</div>' +
+                    drawIso(iso) + '<div class="bp">🌡️ Boiling point: <b>' + iso.bp + '</b></div>';
+                g.appendChild(el);
+            });
+            document.getElementById('note').innerHTML = d.why +
+                '<br><br>💡 <b>Yaad rakho:</b> Isomers ka molecular formula ek hota hai, par structure alag — isliye unke <b>bhautik gun (B.P., M.P.)</b> alag hote hain.';
+        }
+        (function () {
+            var p = document.getElementById('pick');
+            DATA.forEach(function (d, i) {
+                var b = document.createElement('button');
+                b.textContent = d.nm + ' (' + d.f + ')';
+                b.className = i === cur ? 'on' : '';
+                b.onclick = function () {
+                    cur = i;
+                    Array.prototype.forEach.call(p.children, function (c, k) { c.className = k === i ? 'on' : ''; });
+                    render();
+                };
+                p.appendChild(b);
+            });
+        })();
+        render();
+    </script>
+</body>
+
+</html>
