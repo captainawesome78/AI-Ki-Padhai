@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Beating Heart Lab | AIkiPadhai</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="../sci-3d.js"></script>
+</head>
+
+<body>
+    <script>
+        var MYO = 0x9f1239,      // myocardium (heart muscle)
+            MYO_L = 0x7f1d3a,    // thicker LV muscle (darker)
+            CAV_R = 0x1d4ed8,    // deoxygenated cavity
+            CAV_L = 0xdc2626,    // oxygenated cavity
+            ART = 0xb91c1c, VEIN = 0x1e40af,
+            CORONARY = 0xdc2626, FAT = 0xfbbf24;
+
+        Sci3D({
+            title: "🧊 3D Dhadakta Hua Dil",
+            back: { href: "transportation.html", label: "Back to Lesson" },
+            intro: {
+                name: "3D Heart Lab",
+                desc: "Asli shakal ka dhadakta hua dil. Upar aorta ka arch, aage pulmonary trunk, aur satah par coronary arteries. 'Cut-away' slider se dil ko KAAT kar andar ke chaaron chamber dekho — aur khud dekho ki left ventricle ki deewar kitni MOTI hai! Neela = deoxygenated, Laal = oxygenated."
+            },
+            camZ: 24,
+            data: {
+                rv: {
+                    emoji: "🔷", name: "Right Ventricle", nick: "Patli deewar",
+                    desc: "Deoxygenated khoon ko PHEPHDON mein pump karta hai. Iski deewar patli hai kyunki phephde paas hi hain — zyada dabaav ki zaroorat nahi. Cut-away mein saaf dikhega.",
+                    stats: [["Khoon", "Deoxygenated"], ["Bhejta hai", "Phephdon ko"], ["Deewar", "Patli (~3-5 mm)"], ["Nikalti hai", "Pulmonary artery"]]
+                },
+                lv: {
+                    emoji: "💪", name: "Left Ventricle", nick: "Sabse moti deewar",
+                    desc: "Dil ka sabse taakatvar chamber. Oxygenated khoon ko POORE SHAREER mein pump karta hai — sar se pair tak. Isiliye iski deewar right ventricle se lagbhag 3 GUNA moti hai.",
+                    stats: [["Khoon", "Oxygenated"], ["Bhejta hai", "Poore shareer ko"], ["Deewar", "SABSE MOTI (~12-15 mm)"], ["RV se kitni moti", "~3 guna"], ["Nikalti hai", "Aorta"]]
+                },
+                ra: {
+                    emoji: "🔵", name: "Right Atrium", nick: "Daayan alind",
+                    desc: "Poore shareer se deoxygenated khoon yahan aata hai — upar se SVC aur neeche se IVC ke through. Yahan se right ventricle mein jaata hai.",
+                    stats: [["Khoon", "Deoxygenated"], ["Kahan se", "SVC + IVC"], ["Aage", "Right ventricle"], ["Deewar", "Patli"]]
+                },
+                la: {
+                    emoji: "🔴", name: "Left Atrium", nick: "Baayan alind",
+                    desc: "Phephdon se oxygenated khoon yahan aata hai — 4 pulmonary veins ke through. Ye dil ka sabse PEECHE (posterior) wala chamber hai.",
+                    stats: [["Khoon", "Oxygenated"], ["Kahan se", "4 pulmonary veins"], ["Aage", "Left ventricle"], ["Position", "Sabse peeche"]]
+                },
+                septum: {
+                    emoji: "🧱", name: "Septum", nick: "Beech ki deewar",
+                    desc: "Ye moti maanspeshi ki deewar dil ko daayen aur baayen mein baant deti hai. Isi wajah se oxygenated aur deoxygenated khoon KABHI NAHI milte — yahi double circulation ki jaan hai.",
+                    stats: [["Kaam", "Khoon alag rakhna"], ["Bana", "Moti maanspeshi"], ["Agar chhed ho", "Hole in heart (bimari)"]]
+                },
+                aorta: {
+                    emoji: "🌈", name: "Aorta", nick: "Sabse badi dhamani",
+                    desc: "Shareer ki sabse badi rakt vahini. Left ventricle se nikalkar ek KHOOBSURAT ARCH (mehraab) banati hai aur poore shareer mein oxygenated khoon baantti hai. Isi arch se dil ki pehchaan hoti hai!",
+                    stats: [["Type", "Artery"], ["Khoon", "Oxygenated"], ["Vyaas", "~2.5 cm"], ["Shakal", "Arch (mehraab)"]]
+                },
+                pulmArtery: {
+                    emoji: "⚠️", name: "Pulmonary Artery", nick: "Apwaad!",
+                    desc: "BOARD KA FAVOURITE APWAAD! Ye ARTERY hai par DEOXYGENATED khoon le jaati hai. Right ventricle se nikalkar aage se aorta ko CROSS karti hai, phir do shakhaon mein bat jaati hai.",
+                    stats: [["Type", "Artery"], ["Khoon", "DEOXYGENATED ⚠️"], ["Kahan se", "Right ventricle"], ["Kahan tak", "Dono phephde"]]
+                },
+                pulmVein: {
+                    emoji: "⚠️", name: "Pulmonary Veins", nick: "Doosra apwaad!",
+                    desc: "Doosra APWAAD! Ye VEINS hain par OXYGENATED khoon laati hain. Chaar veins phephdon se left atrium mein khoon laati hain.",
+                    stats: [["Type", "Vein"], ["Khoon", "OXYGENATED ⚠️"], ["Kitni", "4"], ["Kahan tak", "Left atrium"]]
+                },
+                vena: {
+                    emoji: "🔵", name: "Vena Cava", nick: "SVC + IVC",
+                    desc: "Do sabse badi shiraayein. SVC (upar wali) sar aur haathon se, aur IVC (neeche wali) pet aur pairon se deoxygenated khoon right atrium mein laati hain.",
+                    stats: [["Type", "Vein"], ["Khoon", "Deoxygenated"], ["SVC", "Sar + haath se"], ["IVC", "Pet + pair se"]]
+                },
+                coronary: {
+                    emoji: "🩸", name: "Coronary Arteries", nick: "Dil ki apni supply",
+                    desc: "Dil khud bhi ek maanspeshi hai — use bhi oxygen chahiye! Ye patli laal naliyan dil ki satah par failkar usi ko khoon pahunchati hain. Agar ye BLOCK ho jaayein toh HEART ATTACK hota hai.",
+                    stats: [["Kaam", "Dil ko khud khoon dena"], ["Block hone par", "Heart attack"], ["Kahan se", "Aorta ki jad se"], ["Bachav", "Vyayam, kam charbi"]]
+                }
+            },
+            controls: [
+                { id: "rate", label: "💓 Heart rate (dhadkan/minute)", min: 50, max: 160, step: 5, value: 72, on: function (v, ctx) { ctx.model.bpm = v; } },
+                { id: "cut", label: "🔪 Cut-away (andar dekho)", min: 0, max: 100, step: 1, value: 0, on: function (v, ctx) { ctx.model.setCut(v / 100); } },
+                { id: "flow", label: "🩸 Blood flow (0=off, 1=on)", min: 0, max: 1, step: 1, value: 1, on: function (v, ctx) { ctx.model.flow = (v === 1); } },
+                { id: "vessels", label: "🌈 Vessels dikhao (0=chhupao)", min: 0, max: 1, step: 1, value: 1, on: function (v, ctx) { ctx.model.showV = (v === 1); } }
+            ],
+
+            build: function (ctx) {
+                var T = ctx.THREE, P = ctx.pivot, M = ctx.model;
+                M.bpm = 72; M.flow = true; M.showV = true;
+
+                /* ---------- better lighting for flesh ---------- */
+                var rim = new T.DirectionalLight(0xff9aa2, 0.55); rim.position.set(-9, 3, -8); ctx.scene.add(rim);
+                var fill = new T.DirectionalLight(0xffe4e6, 0.4); fill.position.set(4, -6, 7); ctx.scene.add(fill);
+
+                /* ---------- clipping plane for the cut-away ---------- */
+                ctx.renderer.localClippingEnabled = true;
+                M.plane = new T.Plane(new T.Vector3(0, 0, -1), 30);   // starts far away = nothing cut
+                M.clipMats = [];
+
+                function flesh(hex, opts) {
+                    var m = ctx.mat(hex, opts);
+                    m.shininess = 28;
+                    m.specular = new T.Color(0x552233);
+                    m.side = T.DoubleSide;               // so cut faces still render
+                    m.clippingPlanes = [M.plane];
+                    M.clipMats.push(m);
+                    return m;
+                }
+
+                /* ---------- organic surface: displace vertices ---------- */
+                function roughen(geo, amt) {
+                    var pos = geo.attributes.position;
+                    for (var i = 0; i < pos.count; i++) {
+                        var x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
+                        var n = Math.sin(x * 2.3 + y * 1.7) * Math.cos(z * 2.1 - y * 1.3);
+                        pos.setXYZ(i, x + n * amt, y + n * amt * 0.6, z + n * amt);
+                    }
+                    pos.needsUpdate = true;
+                    geo.computeVertexNormals();
+                    return geo;
+                }
+
+                /* ---------- ventricular mass: lathe profile (blunt cone) ---------- */
+                function ventricleProfile(scale, squash) {
+                    var pts = [];
+                    var prof = [[0.06, -6.4], [0.95, -5.8], [1.75, -4.8], [2.45, -3.4],
+                    [2.95, -1.8], [3.18, -0.2], [3.16, 1.1], [2.85, 2.1], [2.25, 2.7]];
+                    prof.forEach(function (p) { pts.push(new T.Vector2(p[0] * scale, p[1] * squash + 1.2)); });
+                    return pts;
+                }
+
+                M.heart = new T.Group(); P.add(M.heart);
+
+                // LEFT ventricle — the big cone, thick wall
+                var lvGeo = roughen(new T.LatheGeometry(ventricleProfile(1.0, 1.0), 44), 0.09);
+                M.lv = new T.Mesh(lvGeo, flesh(MYO_L));
+                M.lv.position.set(0.7, 0, -0.2);
+                M.lv.rotation.z = 0.12;
+                ctx.addPart(M.lv, 'lv'); M.heart.add(M.lv);
+
+                // RIGHT ventricle — smaller, wraps the front-left, thin wall
+                var rvGeo = roughen(new T.LatheGeometry(ventricleProfile(0.78, 0.88), 40), 0.08);
+                M.rv = new T.Mesh(rvGeo, flesh(MYO));
+                M.rv.position.set(-2.0, 0.5, 0.95);
+                M.rv.rotation.z = 0.2; M.rv.scale.z = 0.82;
+                ctx.addPart(M.rv, 'rv'); M.heart.add(M.rv);
+
+                // ---- hollow cavities (visible only when cut) ----
+                // LV cavity is SMALL inside a big cone => thick wall
+                M.lvCav = new T.Mesh(roughen(new T.SphereGeometry(1.32, 24, 18), 0.05), flesh(CAV_L));
+                M.lvCav.scale.set(1, 2.3, 1); M.lvCav.position.set(0.7, -0.9, -0.2);
+                ctx.addPart(M.lvCav, 'lv'); M.heart.add(M.lvCav);
+                // RV cavity is LARGE inside a small cone => thin wall
+                M.rvCav = new T.Mesh(roughen(new T.SphereGeometry(1.95, 22, 16), 0.05), flesh(CAV_R));
+                M.rvCav.scale.set(1, 1.28, 0.62); M.rvCav.position.set(-2.0, -0.4, 0.95);
+                ctx.addPart(M.rvCav, 'rv'); M.heart.add(M.rvCav);
+
+                /* ---------- atria: rounded pouches on top ---------- */
+                M.ra = new T.Mesh(roughen(new T.SphereGeometry(1.95, 26, 20), 0.11), flesh(MYO));
+                M.ra.scale.set(1, 0.82, 0.9); M.ra.position.set(-2.9, 3.6, 0.35);
+                ctx.addPart(M.ra, 'ra'); M.heart.add(M.ra);
+
+                M.la = new T.Mesh(roughen(new T.SphereGeometry(1.85, 26, 20), 0.11), flesh(MYO));
+                M.la.scale.set(1, 0.8, 0.88); M.la.position.set(2.4, 3.7, -0.8);
+                ctx.addPart(M.la, 'la'); M.heart.add(M.la);
+
+                M.raCav = new T.Mesh(new T.SphereGeometry(1.5, 20, 14), flesh(CAV_R));
+                M.raCav.scale.set(1, 0.8, 0.9); M.raCav.position.copy(M.ra.position);
+                ctx.addPart(M.raCav, 'ra'); M.heart.add(M.raCav);
+                M.laCav = new T.Mesh(new T.SphereGeometry(1.42, 20, 14), flesh(CAV_L));
+                M.laCav.scale.set(1, 0.8, 0.88); M.laCav.position.copy(M.la.position);
+                ctx.addPart(M.laCav, 'la'); M.heart.add(M.laCav);
+
+                /* ---------- septum ---------- */
+                M.sept = new T.Mesh(new T.BoxGeometry(0.5, 8.2, 3.6), flesh(0x6b1230));
+                M.sept.position.set(-0.75, -0.6, 0.35); M.sept.rotation.z = 0.16;
+                ctx.addPart(M.sept, 'septum'); M.heart.add(M.sept);
+
+                /* ---------- great vessels: curved tubes ---------- */
+                function tube(points, r, hex, key, seg) {
+                    var curve = new T.CatmullRomCurve3(points.map(function (p) { return new T.Vector3(p[0], p[1], p[2]); }));
+                    var g = new T.Mesh(new T.TubeGeometry(curve, seg || 40, r, 14, false), flesh(hex));
+                    ctx.addPart(g, key); M.heart.add(g);
+                    return g;
+                }
+                M.vessels = [];
+
+                // AORTA — rises from LV, arches over to the right, descends. The signature shape.
+                M.vessels.push(tube([[1.0, 2.4, -0.3], [1.3, 4.6, -0.5], [1.2, 6.6, -0.6],
+                [0.2, 8.0, -0.7], [-1.8, 8.3, -0.8], [-3.4, 7.4, -0.9],
+                [-3.9, 5.6, -1.0], [-4.0, 3.4, -1.0]], 0.62, ART, 'aorta', 56));
+                // aortic root bulge
+                var root = new T.Mesh(new T.SphereGeometry(0.85, 18, 14), flesh(ART));
+                root.position.set(1.0, 2.5, -0.35); ctx.addPart(root, 'aorta'); M.heart.add(root); M.vessels.push(root);
+
+                // PULMONARY TRUNK — from RV, crosses in FRONT of the aorta, then splits
+                M.vessels.push(tube([[-1.7, 2.7, 1.0], [-1.2, 4.5, 0.9], [-0.4, 6.0, 0.5]], 0.55, VEIN, 'pulmArtery', 30));
+                M.vessels.push(tube([[-0.4, 6.0, 0.5], [-2.6, 6.6, 0.2], [-4.6, 6.3, 0.0]], 0.36, VEIN, 'pulmArtery', 26));
+                M.vessels.push(tube([[-0.4, 6.0, 0.5], [1.8, 6.5, 0.1], [3.9, 6.2, -0.2]], 0.36, VEIN, 'pulmArtery', 26));
+
+                // VENA CAVAE — SVC from top, IVC from bottom, into right atrium
+                M.vessels.push(tube([[-3.3, 8.6, 0.4], [-3.1, 6.6, 0.4], [-3.0, 4.9, 0.4]], 0.52, VEIN, 'vena', 24));
+                M.vessels.push(tube([[-3.0, 2.6, 0.5], [-3.3, 0.9, 0.6], [-3.5, -0.9, 0.6]], 0.46, VEIN, 'vena', 24));
+
+                // PULMONARY VEINS — 4 small tubes into left atrium
+                [[5.6, 4.8, -1.6], [5.4, 3.2, -1.5], [-0.4, 5.0, -2.4], [-0.2, 3.4, -2.3]].forEach(function (p) {
+                    M.vessels.push(tube([[p[0], p[1], p[2]], [(p[0] + 2.4) / 2, (p[1] + 3.7) / 2, (p[2] - 0.8) / 2], [2.4, 3.7, -0.8]], 0.24, ART, 'pulmVein', 18));
+                });
+
+                /* ---------- coronary arteries on the surface ---------- */
+                M.cor = new T.Group(); ctx.addPart(M.cor, 'coronary'); M.heart.add(M.cor);
+                function coronary(pts, r) {
+                    var c = new T.CatmullRomCurve3(pts.map(function (p) { return new T.Vector3(p[0], p[1], p[2]); }));
+                    var m = new T.Mesh(new T.TubeGeometry(c, 40, r, 8, false), flesh(CORONARY));
+                    M.cor.add(m);
+                }
+                // left anterior descending — runs down the front groove
+                coronary([[0.2, 2.5, 1.6], [-0.4, 1.0, 2.0], [-0.7, -1.0, 1.8], [-0.9, -3.0, 1.3], [-1.0, -4.6, 0.7]], 0.16);
+                // circumflex — wraps around
+                coronary([[0.4, 2.4, 1.4], [2.4, 1.9, 0.9], [3.3, 0.9, -0.5], [3.2, -0.4, -1.6]], 0.14);
+                // right coronary
+                coronary([[-1.9, 2.6, 1.3], [-3.2, 1.6, 1.1], [-3.6, 0.0, 0.5], [-3.2, -1.8, 0.2]], 0.14);
+                // small branches
+                coronary([[-0.7, -1.0, 1.8], [-2.0, -1.6, 1.4]], 0.09);
+                coronary([[-0.9, -3.0, 1.3], [0.6, -3.4, 1.1]], 0.09);
+
+                /* ---------- fat/epicardium fleck for realism ---------- */
+                for (var f = 0; f < 8; f++) {
+                    var fm = new T.Mesh(new T.SphereGeometry(0.22 + Math.random() * 0.15, 8, 6), flesh(FAT, { transparent: true, opacity: 0.5 }));
+                    var a = Math.random() * Math.PI * 2;
+                    fm.position.set(Math.cos(a) * 2.6, 1.6 - Math.random() * 3.4, Math.sin(a) * 1.7 + 0.6);
+                    fm.scale.set(1, 0.5, 1); M.heart.add(fm);
+                }
+
+                /* ---------- blood cells ---------- */
+                M.cells = [];
+                for (var i = 0; i < 24; i++) {
+                    var c = new T.Mesh(new T.SphereGeometry(0.19, 8, 8), ctx.mat(CAV_R));
+                    c.userData.t = i / 24;
+                    M.heart.add(c); M.cells.push(c);
+                }
+
+                /* ---------- cut-away control ---------- */
+                M.setCut = function (v) {
+                    M.cutAmt = v;
+                    // move the clipping plane from far away (nothing cut) to through the middle
+                    M.plane.constant = 30 - v * 32.5;
+                    // cavities only make sense once we're cutting
+                    [M.lvCav, M.rvCav, M.raCav, M.laCav].forEach(function (m) { m.visible = v > 0.04; });
+                };
+                M.setCut(0);
+
+                M.heart.rotation.z = -0.06;
+                P.rotation.x = 0.1;
+                P.rotation.y = 0.15;
+            },
+
+            onFrame: function (t, ctx) {
+                var M = ctx.model; if (!M.lv) return;
+                var beat = M.bpm / 60;
+                var ph = t * Math.PI * beat;
+                var systole = Math.pow(Math.max(0, Math.sin(ph)), 5);          // ventricles squeeze
+                var atrial = Math.pow(Math.max(0, Math.sin(ph - 0.9)), 5);     // atria squeeze just before
+
+                // ventricles contract along their long axis + slight twist (real hearts wring)
+                M.lv.scale.set(1 - systole * 0.07, 1 - systole * 0.13, 1 - systole * 0.07);
+                M.lv.rotation.y = systole * 0.16;
+                M.rv.scale.set(0.98 - systole * 0.06, 1 - systole * 0.11, 0.82 - systole * 0.05);
+                M.rv.rotation.y = -systole * 0.12;
+                if (M.lvCav) { M.lvCav.scale.set(1 - systole * 0.32, 2.3 - systole * 0.55, 1 - systole * 0.32); }
+                if (M.rvCav) { M.rvCav.scale.set(1 - systole * 0.30, 1.28 - systole * 0.34, 0.62 - systole * 0.16); }
+
+                // atria fill then squeeze
+                M.ra.scale.set(1 + atrial * 0.05 - systole * 0.02, 0.82 - atrial * 0.09, 0.9 + atrial * 0.05);
+                M.la.scale.set(1 + atrial * 0.05 - systole * 0.02, 0.8 - atrial * 0.09, 0.88 + atrial * 0.05);
+
+                // whole-heart nudge on each beat
+                M.heart.position.y = systole * 0.14;
+
+                if (M.vessels) M.vessels.forEach(function (v) { v.visible = M.showV; });
+                if (M.cor) M.cor.visible = M.showV;
+
+                /* blood cells around the double circuit */
+                M.cells.forEach(function (c) {
+                    c.visible = M.flow;
+                    if (!M.flow) return;
+                    c.userData.t += 0.0017 * (M.bpm / 72);
+                    if (c.userData.t > 1) c.userData.t -= 1;
+                    var u = c.userData.t, x, y, z, deoxy = true;
+                    if (u < 0.14) {                     // body -> RA (down the SVC)
+                        var k = u / 0.14; x = -3.3 + k * 0.3; y = 8.6 - k * 5.0; z = 0.4;
+                    } else if (u < 0.26) {              // RA -> RV
+                        var k2 = (u - 0.14) / 0.12; x = -2.9 - k2 * 0.2; y = 3.6 - k2 * 3.4; z = 0.35 + k2 * 0.6;
+                    } else if (u < 0.42) {              // RV -> pulmonary trunk -> lungs
+                        var k3 = (u - 0.26) / 0.16; x = -1.7 - k3 * 2.9; y = 2.7 + k3 * 3.6; z = 1.0 - k3 * 1.0;
+                    } else if (u < 0.52) {              // in the lungs: turns red
+                        var k4 = (u - 0.42) / 0.10; x = -4.6 + k4 * 10.2; y = 6.3 + Math.sin(k4 * Math.PI) * 1.2; z = 0 - k4 * 1.6;
+                        deoxy = (k4 < 0.5);
+                    } else if (u < 0.66) {              // pulmonary veins -> LA
+                        var k5 = (u - 0.52) / 0.14; x = 5.6 - k5 * 3.2; y = 4.8 - k5 * 1.1; z = -1.6 + k5 * 0.8; deoxy = false;
+                    } else if (u < 0.78) {              // LA -> LV
+                        var k6 = (u - 0.66) / 0.12; x = 2.4 - k6 * 1.7; y = 3.7 - k6 * 4.3; z = -0.8 + k6 * 0.6; deoxy = false;
+                    } else {                            // LV -> aortic arch -> body
+                        var k7 = (u - 0.78) / 0.22, a = k7 * Math.PI;
+                        x = 1.0 + Math.sin(a) * 0.6 - k7 * 5.0;
+                        y = 2.4 + Math.sin(k7 * Math.PI * 0.9) * 5.9;
+                        z = -0.4; deoxy = false;
+                    }
+                    c.position.set(x, y, z);
+                    c.material.color.setHex(deoxy ? CAV_R : CAV_L);
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -150,6 +150,7 @@
       clickable.push(obj);
     }
     var ctx = { THREE: THREE, scene: scene, pivot: pivot, mat: mat, addPart: addPart, model: {} };
+    ctx.renderer = renderer; ctx.camera = camera;   // for clipping planes / advanced labs
     ctx.selectKey = function (k) { selectKey(k); };   // available inside build() too
     cfg.build(ctx);
 

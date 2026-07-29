@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Respiration Comparison Lab | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #083344, #0e7490); color: #e0f2fe; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #a5f3fc; text-decoration: none; border: 1px solid rgba(165,243,252,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 900px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+        .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+        .col { background: rgba(0,0,0,.26); border-radius: 14px; padding: 16px; border-top: 4px solid; }
+        .aer { border-color: #4ade80; } .ana { border-color: #f59e0b; }
+        .col h4 { font-size: 16px; color: #fff; margin-bottom: 3px; }
+        .col .w { font-size: 12px; margin-bottom: 12px; }
+        .aer .w { color: #86efac; } .ana .w { color: #fcd34d; }
+        .step { font-size: 13.5px; padding: 9px 11px; background: rgba(255,255,255,.06); border-radius: 9px; margin-bottom: 7px; opacity: .3; transition: opacity .3s; line-height: 1.5; }
+        .step.on { opacity: 1; }
+        .atp { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 10px; min-height: 26px; }
+        .atp span { width: 11px; height: 18px; border-radius: 2px; background: #fde047; }
+        .en { font-size: 13px; margin-top: 7px; font-weight: 700; }
+        .aer .en { color: #4ade80; } .ana .en { color: #fbbf24; }
+        label { display: flex; justify-content: space-between; font-size: 14px; margin: 14px 0 5px; }
+        label b { color: #7dd3fc; }
+        input[type=range] { width: 100%; accent-color: #22d3ee; }
+        .btns { display: flex; gap: 10px; margin-top: 12px; }
+        .btns button { flex: 1; border: none; padding: 13px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 15px; }
+        .go { background: #06b6d4; color: #04222b; } .rst { background: transparent; color: #a5f3fc; border: 1px solid rgba(165,243,252,.4); }
+        .note { font-size: 13.5px; color: #a5f3fc; margin-top: 12px; line-height: 1.7; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="respiration.html">← Back to Lesson</a>
+        <div class="title">💨 Respiration Comparison</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <label>🫁 Oxygen ki maatra <b><span id="oV">100</span>%</b></label>
+            <input type="range" id="o2" min="0" max="100" value="100" oninput="upd()">
+            <div class="btns">
+                <button class="go" onclick="play()">▶ Respiration chalao</button>
+                <button class="rst" onclick="reset()">↺ Reset</button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="two">
+                <div class="col aer">
+                    <h4>🫁 Aerobic Respiration</h4>
+                    <div class="w">Oxygen ke saath • Mitochondria mein</div>
+                    <div id="aerSteps"></div>
+                    <div class="atp" id="aerATP"></div>
+                    <div class="en" id="aerEn"></div>
+                </div>
+                <div class="col ana">
+                    <h4>💪 Anaerobic Respiration</h4>
+                    <div class="w">Bina oxygen • Cytoplasm mein</div>
+                    <div id="anaSteps"></div>
+                    <div class="atp" id="anaATP"></div>
+                    <div class="en" id="anaEn"></div>
+                </div>
+            </div>
+            <div class="note" id="note"></div>
+        </div>
+    </div>
+
+    <script>
+        var AER = [
+            "1️⃣ Glucose (6C) → Pyruvate (3C) — cytoplasm mein",
+            "2️⃣ Pyruvate MITOCHONDRIA mein jaata hai",
+            "3️⃣ Oxygen ke saath poori tarah tootta hai",
+            "4️⃣ Products: CO₂ + H₂O",
+            "5️⃣ BAHUT ZYADA energy (ATP) milti hai"
+        ];
+        var ANA = [
+            "1️⃣ Glucose (6C) → Pyruvate (3C) — cytoplasm mein",
+            "2️⃣ Oxygen nahi hai — pyruvate cytoplasm mein hi rehta hai",
+            "3️⃣ Adhura tootta hai",
+            "4️⃣ Products: Lactic acid (muscles) YA Ethanol + CO₂ (yeast)",
+            "5️⃣ BAHUT KAM energy milti hai"
+        ];
+        var shown = 0, timer = null, o2 = 100;
+
+        function upd() {
+            o2 = +document.getElementById('o2').value;
+            document.getElementById('oV').textContent = o2;
+            render();
+        }
+        function render() {
+            var aerOn = o2 > 30;
+            function fill(id, arr, active) {
+                var box = document.getElementById(id); box.innerHTML = '';
+                arr.forEach(function (s, k) {
+                    var d = document.createElement('div');
+                    d.className = 'step' + (active && k < shown ? ' on' : '');
+                    d.textContent = s; box.appendChild(d);
+                });
+            }
+            fill('aerSteps', AER, aerOn);
+            fill('anaSteps', ANA, !aerOn);
+
+            // ATP bars — aerobic yields far more
+            function atp(id, n) {
+                var b = document.getElementById(id); b.innerHTML = '';
+                for (var i = 0; i < n; i++) b.appendChild(document.createElement('span'));
+            }
+            var done = (shown >= 5);
+            atp('aerATP', aerOn && done ? 19 : 0);
+            atp('anaATP', !aerOn && done ? 2 : 0);
+            document.getElementById('aerEn').textContent = (aerOn && done) ? 'Energy: BAHUT ZYADA ✅' : (aerOn ? '' : '⛔ Oxygen kam — ye nahi chalega');
+            document.getElementById('anaEn').textContent = (!aerOn && done) ? 'Energy: BAHUT KAM ⚠️' : (!aerOn ? '' : '💤 Oxygen kaafi hai — iski zaroorat nahi');
+
+            var n = document.getElementById('note');
+            if (o2 > 30) {
+                n.innerHTML = '🫁 <b>Oxygen kaafi hai</b> — isliye shareer AEROBIC respiration karta hai. Glucose poori tarah tootta hai (CO₂ + H₂O) aur bahut zyada energy milti hai. Yahi normal haalat hai.';
+            } else {
+                n.innerHTML = '💪 <b>Oxygen kam hai!</b> — jaise tez daudte waqt. Ab muscles majboori mein ANAEROBIC respiration karti hain. Product hai <b>lactic acid</b>, jo jamne par muscles mein <b>dard aur cramps</b> deta hai. Aaram aur gehri saans lene par oxygen milti hai aur lactic acid toot jaata hai.<br><br>🍞 Yeast bina oxygen ke <b>ethanol + CO₂</b> banata hai — isi CO₂ se <b>double roti (bread)</b> phoolti hai!';
+            }
+        }
+        function play() {
+            if (timer) clearInterval(timer);
+            shown = 0; render();
+            timer = setInterval(function () {
+                shown++; render();
+                if (shown >= 5) { clearInterval(timer); timer = null; }
+            }, 750);
+        }
+        function reset() { if (timer) { clearInterval(timer); timer = null; } shown = 0; render(); }
+        upd();
+    </script>
+</body>
+
+</html>

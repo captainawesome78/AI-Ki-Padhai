@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Digestion Journey | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #451a03, #b45309); color: #fef3c7; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #fde68a; text-decoration: none; border: 1px solid rgba(253,230,138,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { display: flex; gap: 18px; max-width: 980px; margin: 0 auto; padding: 20px; flex-wrap: wrap; }
+        .stage { flex: 1 1 300px; min-width: 280px; }
+        .side { flex: 1 1 340px; min-width: 300px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+        canvas { width: 100%; height: auto; background: rgba(0,0,0,.24); border-radius: 12px; display: block; }
+        .org { font-size: 22px; font-weight: 800; color: #fff; }
+        .sub { font-size: 13px; color: #fcd34d; margin-bottom: 12px; }
+        .row { background: rgba(0,0,0,.26); border-radius: 10px; padding: 12px; margin-bottom: 9px; font-size: 14px; line-height: 1.6; }
+        .row b { color: #fff; }
+        .btns { display: flex; gap: 10px; margin-top: 12px; }
+        .btns button { flex: 1; border: none; padding: 13px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 15px; }
+        .go { background: #f59e0b; color: #451a03; } .rst { background: transparent; color: #fde68a; border: 1px solid rgba(253,230,138,.4); }
+        .prog { display: flex; gap: 4px; margin-top: 12px; }
+        .prog div { flex: 1; height: 6px; background: rgba(255,255,255,.15); border-radius: 3px; }
+        .prog div.on { background: #f59e0b; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="human-digestion.html">← Back to Lesson</a>
+        <div class="title">🍽️ Digestion Journey</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="stage"><div class="card"><canvas id="cv" width="320" height="460"></canvas></div></div>
+        <div class="side">
+            <div class="card">
+                <div class="org" id="org"></div>
+                <div class="sub" id="sub"></div>
+                <div id="rows"></div>
+                <div class="btns">
+                    <button class="go" onclick="next()" id="nb">▶ Aage badho</button>
+                    <button class="rst" onclick="reset()">↺ Shuru se</button>
+                </div>
+                <div class="prog" id="prog"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var STEPS = [
+            {
+                o: "Muh (Mouth)", s: "Safar shuru — chabana aur laar", y: 40,
+                rows: [["Bhautik pachan", "Daant khaane ko chabakar chhota karte hain"],
+                ["Enzyme", "Salivary amylase (ptyalin)"],
+                ["Kya tootta hai", "Starch → Maltose (sugar)"],
+                ["Mazedaar", "Roti der tak chabao toh MEETHI lagegi — yahi wajah hai!"]]
+            },
+            {
+                o: "Grasnali (Oesophagus)", s: "Peristalsis se dhakela jaata hai", y: 110,
+                rows: [["Kaam", "Khaane ko pet tak pahunchana"],
+                ["Kaise", "Maanspeshiyan laharon mein sikudti-failti hain (peristalsis)"],
+                ["Pachan", "Yahan koi pachan NAHI hota — sirf raasta hai"],
+                ["Mazedaar", "Ulta latak kar bhi paani pet tak pahunch jaata hai!"]]
+            },
+            {
+                o: "Aamashay (Stomach)", s: "Acid ki duniya — 3 ghante", y: 190,
+                rows: [["Gastric juice", "HCl + Pepsin + Mucus"],
+                ["HCl ka kaam", "Bacteria maarna + pepsin ke liye acidic medium"],
+                ["Pepsin", "Protein todta hai"],
+                ["Mucus", "Pet ki apni deewar ko acid se bachata hai"]]
+            },
+            {
+                o: "Chhoti Aant (Small Intestine)", s: "Asli kaam yahan — ~6 metre", y: 290,
+                rows: [["Bile (liver se)", "Acid ko alkaline banata hai + charbi ka emulsification"],
+                ["Pancreas se", "Trypsin (protein), Lipase (fat), Amylase (starch)"],
+                ["Pachan poora", "Carb→Glucose, Protein→Amino acid, Fat→Fatty acid+Glycerol"],
+                ["Absorption", "VILLI se khoon mein soakha jaata hai — area ek tennis court jitna!"]]
+            },
+            {
+                o: "Badi Aant (Large Intestine)", s: "Paani wapas soakha jaata hai", y: 380,
+                rows: [["Kaam", "Bacha hua PAANI soakhna"],
+                ["Bacha kya", "Bina pacha resha (fibre) aur kachra"],
+                ["Fibre", "Khud nahi pachta, par khaane ko aage badhata hai"],
+                ["Kami se", "Fibre kam khane se kabz (constipation)"]]
+            },
+            {
+                o: "Mal Dwar (Anus)", s: "Safar khatam!", y: 435,
+                rows: [["Kaam", "Bina pacha kachra bahar nikalna"],
+                ["Poora safar", "Lagbhag 9 metre lambi nali"],
+                ["Kitna time", "Lagbhag 24-72 ghante"],
+                ["Yaad rakho", "Pachan = bade anu → chhote ghulnsheel anu"]]
+            }
+        ];
+        var i = 0;
+        var cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+
+        function draw() {
+            var W = 320, H = 460; ctx.clearRect(0, 0, W, H);
+            // body outline
+            ctx.strokeStyle = 'rgba(253,230,138,.3)'; ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.ellipse(160, 230, 105, 215, 0, 0, 7); ctx.stroke();
+            // organs
+            var parts = [
+                { y: 40, w: 58, h: 26, l: 'Muh' },
+                { y: 110, w: 20, h: 66, l: 'Grasnali' },
+                { y: 190, w: 74, h: 46, l: 'Pet' },
+                { y: 290, w: 96, h: 74, l: 'Chhoti aant' },
+                { y: 380, w: 104, h: 40, l: 'Badi aant' },
+                { y: 435, w: 26, h: 18, l: 'Anus' }
+            ];
+            parts.forEach(function (p, k) {
+                var on = (k <= i);
+                ctx.fillStyle = on ? (k === i ? '#f59e0b' : 'rgba(245,158,11,.42)') : 'rgba(255,255,255,.12)';
+                ctx.strokeStyle = k === i ? '#fff' : 'rgba(255,255,255,.25)';
+                ctx.lineWidth = k === i ? 3 : 1.5;
+                ctx.beginPath(); ctx.ellipse(160, p.y, p.w / 2, p.h / 2, 0, 0, 7); ctx.fill(); ctx.stroke();
+                ctx.fillStyle = k === i ? '#451a03' : 'rgba(254,243,199,.75)';
+                ctx.font = (k === i ? 'bold ' : '') + '11px sans-serif'; ctx.textAlign = 'center';
+                ctx.fillText(p.l, 160, p.y + 4);
+            });
+            // food bolus
+            var cur = parts[i];
+            ctx.fillStyle = '#fde047';
+            ctx.beginPath(); ctx.arc(160, cur.y, 7, 0, 7); ctx.fill();
+            ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+            ctx.textAlign = 'left';
+        }
+        function render() {
+            var s = STEPS[i];
+            document.getElementById('org').textContent = s.o;
+            document.getElementById('sub').textContent = s.s;
+            var r = document.getElementById('rows'); r.innerHTML = '';
+            s.rows.forEach(function (row) {
+                var d = document.createElement('div'); d.className = 'row';
+                d.innerHTML = '<b>' + row[0] + ':</b> ' + row[1];
+                r.appendChild(d);
+            });
+            var p = document.getElementById('prog'); p.innerHTML = '';
+            STEPS.forEach(function (_, k) {
+                var d = document.createElement('div'); if (k <= i) d.className = 'on'; p.appendChild(d);
+            });
+            document.getElementById('nb').textContent = (i === STEPS.length - 1) ? '↺ Phir se shuru' : '▶ Aage badho';
+            draw();
+        }
+        function next() { i = (i + 1) % STEPS.length; render(); }
+        function reset() { i = 0; render(); }
+        render();
+    </script>
+</body>
+
+</html>

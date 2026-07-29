@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Photosynthesis Rate Lab | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #052e16, #15803d); color: #dcfce7; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #bbf7d0; text-decoration: none; border: 1px solid rgba(187,247,208,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 900px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+        canvas { width: 100%; height: auto; background: rgba(0,0,0,.22); border-radius: 12px; display: block; }
+        label { display: flex; justify-content: space-between; font-size: 14px; margin: 12px 0 5px; }
+        label b { color: #4ade80; }
+        input[type=range] { width: 100%; accent-color: #22c55e; }
+        .out { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+        .ob { flex: 1 1 130px; background: rgba(0,0,0,.28); border-radius: 12px; padding: 14px; text-align: center; }
+        .ob .n { font-size: 24px; font-weight: 800; color: #fff; } .ob .l { font-size: 11px; color: #86efac; margin-top: 3px; }
+        .verdict { padding: 14px; border-radius: 12px; text-align: center; font-weight: 800; font-size: 15px; margin-top: 12px; background: #14532d; color: #bbf7d0; }
+        .note { font-size: 13.5px; color: #bbf7d0; margin-top: 10px; line-height: 1.7; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="photosynthesis.html">← Back to Lesson</a>
+        <div class="title">🌿 Photosynthesis Rate Lab</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <canvas id="cv" width="820" height="230"></canvas>
+        </div>
+        <div class="card">
+            <label>☀️ Suraj ki roshni <b><span id="lV">60</span>%</b></label>
+            <input type="range" id="light" min="0" max="100" value="60" oninput="upd()">
+            <label>🌫️ CO₂ ki maatra <b><span id="cV">60</span>%</b></label>
+            <input type="range" id="co2" min="0" max="100" value="60" oninput="upd()">
+            <label>💧 Paani <b><span id="wV">80</span>%</b></label>
+            <input type="range" id="water" min="0" max="100" value="80" oninput="upd()">
+            <label>🌡️ Taapmaan <b><span id="tV">25</span>°C</b></label>
+            <input type="range" id="temp" min="0" max="50" value="25" oninput="upd()">
+            <div class="out">
+                <div class="ob"><div class="n" id="rate">0</div><div class="l">Photosynthesis rate</div></div>
+                <div class="ob"><div class="n" id="glu">0</div><div class="l">Glucose banaya</div></div>
+                <div class="ob"><div class="n" id="oxy">0</div><div class="l">O₂ nikla</div></div>
+            </div>
+            <div class="verdict" id="verdict"></div>
+            <div class="note" id="note"></div>
+        </div>
+    </div>
+
+    <script>
+        var cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+        function tempFactor(t) {
+            // enzymes: best around 25-35, drop off either side, dead above ~45
+            if (t < 5) return 0.05;
+            if (t <= 30) return 0.2 + (t - 5) / 25 * 0.8;
+            if (t <= 40) return 1 - (t - 30) / 10 * 0.5;
+            return Math.max(0, 0.5 - (t - 40) / 10 * 0.5);
+        }
+        function upd() {
+            var L = +document.getElementById('light').value,
+                C = +document.getElementById('co2').value,
+                W = +document.getElementById('water').value,
+                T = +document.getElementById('temp').value;
+            document.getElementById('lV').textContent = L;
+            document.getElementById('cV').textContent = C;
+            document.getElementById('wV').textContent = W;
+            document.getElementById('tV').textContent = T;
+
+            // Liebig's law of the minimum: the SMALLEST factor limits the rate
+            var f = { 'Roshni': L / 100, 'CO₂': C / 100, 'Paani': W / 100 };
+            var limName = 'Roshni', limVal = 2;
+            for (var k in f) { if (f[k] < limVal) { limVal = f[k]; limName = k; } }
+            var tf = tempFactor(T);
+            if (tf < limVal) { limVal = tf; limName = 'Taapmaan'; }
+
+            var rate = Math.round(limVal * 100);
+            document.getElementById('rate').textContent = rate + '%';
+            document.getElementById('glu').textContent = Math.round(rate * 0.6) + ' u';
+            document.getElementById('oxy').textContent = Math.round(rate * 0.6) + ' u';
+
+            var v = document.getElementById('verdict'), n = document.getElementById('note');
+            if (rate < 8) {
+                v.textContent = '🛑 Photosynthesis lagbhag ruk gayi!';
+                v.style.background = '#7f1d1d'; v.style.color = '#fecaca';
+            } else {
+                v.textContent = '🚦 Limiting factor: ' + limName + ' (sabse kam)';
+                v.style.background = '#14532d'; v.style.color = '#bbf7d0';
+            }
+            var tips = {
+                'Roshni': 'Roshni sabse kam hai — isliye wahi rate ko rok rahi hai. CO₂ ya paani badhane se koi fayda nahi hoga jab tak roshni na badhe!',
+                'CO₂': 'CO₂ sabse kam hai. Isiliye greenhouse mein kisan jaan-boojh kar CO₂ badhate hain — paidavaar badh jaati hai.',
+                'Paani': 'Paani kam hai — aur paani kam hone par paudha stomata BAND kar deta hai, jisse CO₂ bhi andar nahi aati. Doosra nuksaan!',
+                'Taapmaan': (T > 40 ? 'Taapmaan bahut ZYADA hai — enzymes nasht (denature) ho rahe hain, isliye rate gir gayi.' : 'Taapmaan bahut KAM hai — enzymes dheeme kaam kar rahe hain.')
+            };
+            n.innerHTML = '<b>Liebig ka niyam:</b> photosynthesis ki raftaar hamesha us factor se tay hoti hai jo <b>sabse kam</b> ho — baaki chahe kitne bhi zyada hon.<br><br>' + tips[limName];
+            draw(rate, L, C, W);
+        }
+        function draw(rate, L, C, W) {
+            var Wd = 820, H = 230; ctx.clearRect(0, 0, Wd, H);
+            // sun
+            ctx.fillStyle = 'rgba(253,224,71,' + (0.25 + L / 200) + ')';
+            ctx.beginPath(); ctx.arc(80, 55, 30 + L * 0.2, 0, 7); ctx.fill();
+            ctx.fillStyle = '#fde047'; ctx.beginPath(); ctx.arc(80, 55, 24, 0, 7); ctx.fill();
+            ctx.fillStyle = '#422006'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
+            ctx.fillText(L + '%', 80, 59);
+            // soil + plant
+            ctx.fillStyle = '#78350f'; ctx.fillRect(0, 195, Wd, 35);
+            ctx.strokeStyle = '#65a30d'; ctx.lineWidth = 7;
+            ctx.beginPath(); ctx.moveTo(400, 195); ctx.lineTo(400, 110); ctx.stroke();
+            // leaves size depends on rate
+            var lf = 0.5 + rate / 100;
+            ctx.fillStyle = '#22c55e';
+            [[-1, 0], [1, -22]].forEach(function (d) {
+                ctx.beginPath();
+                ctx.ellipse(400 + d[0] * 45 * lf, 120 + d[1], 46 * lf, 20 * lf, d[0] * 0.4, 0, 7);
+                ctx.fill();
+            });
+            // CO2 in
+            ctx.fillStyle = 'rgba(148,163,184,' + (0.3 + C / 160) + ')';
+            for (var i = 0; i < Math.round(C / 14); i++) {
+                ctx.beginPath(); ctx.arc(200 + i * 26, 140 + Math.sin(i) * 14, 7, 0, 7); ctx.fill();
+            }
+            ctx.fillStyle = '#cbd5e1'; ctx.font = '12px sans-serif'; ctx.textAlign = 'left';
+            ctx.fillText('CO₂ →', 205, 175);
+            // water up from roots
+            ctx.strokeStyle = 'rgba(56,189,248,' + (0.3 + W / 160) + ')'; ctx.lineWidth = 4;
+            ctx.beginPath(); ctx.moveTo(400, 225); ctx.lineTo(400, 195); ctx.stroke();
+            ctx.fillStyle = '#7dd3fc'; ctx.fillText('💧 paani', 350, 220);
+            // O2 out
+            ctx.fillStyle = 'rgba(74,222,128,' + (0.25 + rate / 150) + ')';
+            for (var j = 0; j < Math.round(rate / 14); j++) {
+                ctx.beginPath(); ctx.arc(560 + j * 26, 120 - Math.sin(j) * 16, 7, 0, 7); ctx.fill();
+            }
+            ctx.fillStyle = '#86efac'; ctx.fillText('→ O₂ + glucose', 560, 165);
+        }
+        upd();
+    </script>
+</body>
+
+</html>
