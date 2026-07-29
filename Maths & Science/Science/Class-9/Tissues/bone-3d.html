@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>3D Bone Model | AIkiPadhai</title>
+    <title>3D Bone (Haversian System) | AIkiPadhai</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="../sci-3d.js"></script>
 </head>
@@ -12,51 +12,165 @@
 <body>
     <script>
         Sci3D({
-            title: "🦴 3D Bone (Osteon)",
+            title: "🦴 3D Bone: Haversian System",
             back: { href: "epithelial-and-connective.html", label: "Back to Lesson" },
-            intro: { name: "3D Bone - Osteon", desc: "Bone ek connective tissue hai. Ye ek 'osteon' (bone ki basic unit) hai. Drag karke ghumao aur parts par tap karo." },
-            camZ: 16,
-            data: {
-                canal: { emoji: "🩸", name: "Haversian Canal", nick: "Beech ki Naali", desc: "Osteon ke center mein naali jisme blood vessel aur nerve chalte hain - bone cells ko khaana aur oxygen pahunchate hain." },
-                lamellae: { emoji: "⭕", name: "Lamellae", nick: "Concentric Rings", desc: "Calcium wali matrix ki gol-gol layered rings (chhalle) jo bone ko bahut mazboot banati hain." },
-                lacunae: { emoji: "🔵", name: "Lacunae", nick: "Cell ke Ghar", desc: "Chhote khaali khaane (spaces) jinme bone cells (osteocytes) rehti hain aur bone ko zinda rakhti hain." },
-                matrix: { emoji: "🦴", name: "Bone Matrix", nick: "Hard Base", desc: "Calcium aur phosphorus ka hard padarth jo bone ko body ka framework banane layak strong banata hai." }
+            intro: {
+                name: "3D Bone Lab",
+                desc: "Haddi andar se KHOKHLI nahi — usme laakhon chhote 'stambh' (osteons) hote hain. 'Zoom in' slider se poori haddi se ek osteon ke andar tak jao, aur 'Cut' se use kaat kar Haversian canal, lamellae aur bone cells dekho."
             },
+            camZ: 20,
+            data: {
+                bone: { emoji: "🦴", name: "Poori Haddi", nick: "Compact + spongy", desc: "Haddi ki bahri parat COMPACT (thos aur mazboot) hoti hai, aur andar SPONGY (jaali jaisi, halki). Ye design haddi ko bahut mazboot par HALKA banata hai — jaise pul ki jaali.", stats: [["Bahar", "Compact bone (thos)"], ["Andar", "Spongy bone (jaali)"], ["Faayda", "Mazboot par halki"], ["Beech mein", "Bone marrow"]] },
+                osteon: { emoji: "🏛️", name: "Osteon", nick: "Haddi ka stambh", desc: "Compact bone ki ikai. Har osteon ek lambe STAMBH (pillar) jaisa hai jo haddi ki lambai mein khada hota hai — isiliye haddi lambai mein sabse zyada zor sah leti hai.", stats: [["Aakar", "Lamba stambh"], ["Disha", "Haddi ki lambai mein"], ["Doosra naam", "Haversian system"], ["Kitne", "Laakhon"]] },
+                canal: { emoji: "🩸", name: "Haversian Canal", nick: "Beech ki naali", desc: "Har osteon ke THEEK BEECH mein ek naali, jisme KHOON KI NALI aur NERVE chalti hai. Isi se haddi ki zinda cells tak khaana aur oxygen pahunchta hai — haddi zinda hai, patthar nahi!", stats: [["Kahan", "Osteon ke beech"], ["Andar", "Blood vessel + nerve"], ["Kaam", "Cells ko khaana-oxygen"]] },
+                volkmann: { emoji: "↔️", name: "Volkmann's Canal", nick: "Jodne wali naali", desc: "AADI (horizontal) naaliyan jo alag-alag Haversian canals ko aapas mein jodti hain — taaki khoon poori haddi mein pahunch sake. Ye ek poora network hai.", stats: [["Disha", "Aadi (horizontal)"], ["Kaam", "Canals ko jodna"], ["Nateeja", "Poore network"]] },
+                lamellae: { emoji: "⭕", name: "Lamellae", nick: "Gol chhalle", desc: "Canal ke charon taraf calcium wali matrix ki GOL-GOL parte — bilkul ped ke tane ke chhallon jaisi. Har parat ke reshe alag disha mein hote hain, isliye haddi har disha se mazboot ban jaati hai (plywood ki tarah!).", stats: [["Shape", "Gol chhalle"], ["Bana", "Calcium matrix"], ["Khaas", "Har parat ke reshe alag disha"], ["Tulna", "Plywood"]] },
+                lacunae: { emoji: "🔵", name: "Lacunae", nick: "Cell ke ghar", desc: "Chhote khaali khaane jinme ZINDA bone cells (osteocytes) rehti hain. Ye cells hi haddi ki marammat karti hain — isiliye tooti haddi apne aap jud jaati hai!", stats: [["Andar", "Osteocyte (zinda cell)"], ["Kaam", "Haddi ki marammat"], ["Isliye", "Tooti haddi jud jaati hai"]] },
+                canaliculi: { emoji: "🕸️", name: "Canaliculi", nick: "Chhoti nalikaein", desc: "Bahut patli nalikaein jo har lacuna ko canal se aur ek doosre se jodti hain. Inhi se poshan har cell tak pahunchta hai — bilkul gaon tak jaati pagdandiyon jaisi.", stats: [["Motai", "Bahut patli"], ["Jodti hai", "Lacunae ↔ canal"], ["Kaam", "Poshan pahunchana"]] },
+                marrow: { emoji: "🩸", name: "Bone Marrow", nick: "Khoon ki factory", desc: "Haddi ke beech ka naram hissa. LAAL marrow yahin par khoon ki koshikaayein (RBC, WBC) banata hai — har second lakhon! Peela marrow charbi jama karta hai.", stats: [["Laal marrow", "Khoon banata hai"], ["Peela marrow", "Charbi jama"], ["Banata hai", "RBC + WBC"]] }
+            },
+            controls: [
+                { id: "zoom", label: "🔬 Zoom: 0=poori haddi, 100=osteon ke andar", min: 0, max: 100, step: 1, value: 0, on: function (v, ctx) { ctx.model.z = v / 100; } },
+                { id: "cut", label: "✂️ Osteon ko kaato (andar dekho)", min: 0, max: 100, step: 1, value: 0, on: function (v, ctx) { ctx.model.cut = v / 100; } },
+                { id: "flow", label: "🩸 Khoon ka bahav dikhao", min: 0, max: 1, step: 1, value: 1, on: function (v, ctx) { ctx.model.flow = (v === 1); } }
+            ],
+
             build: function (ctx) {
-                var T = ctx.THREE, P = ctx.pivot, H = 8;
-                function tube(r, hex, op) {
-                    var m = new T.Mesh(new T.CylinderGeometry(r, r, H, 48, 1, true),
-                        new T.MeshPhongMaterial({ color: hex, shininess: 40, transparent: true, opacity: op, side: T.DoubleSide }));
-                    return m;
+                var T = ctx.THREE, P = ctx.pivot, M = ctx.model;
+                M.z = 0; M.cut = 0; M.flow = true;
+
+                var rim = new T.DirectionalLight(0xfff7ed, 0.5); rim.position.set(-7, 5, -5); ctx.scene.add(rim);
+                function mat(hex, o) { var m = ctx.mat(hex, o); m.shininess = 20; m.side = T.DoubleSide; return m; }
+                function roughen(g, amt) {
+                    var p = g.attributes.position;
+                    for (var i = 0; i < p.count; i++) {
+                        var x = p.getX(i), y = p.getY(i), z = p.getZ(i);
+                        var n = Math.sin(x * 2.4 + y * 1.8) * Math.cos(z * 2.6);
+                        p.setXYZ(i, x + n * amt, y + n * amt * 0.5, z + n * amt);
+                    }
+                    p.needsUpdate = true; g.computeVertexNormals(); return g;
                 }
-                // Haversian canal (central)
-                var canal = new T.Mesh(new T.CylinderGeometry(0.55, 0.55, H + 0.2, 24), ctx.mat(0xb91c1c));
-                ctx.addPart(canal, 'canal'); P.add(canal);
-                // Lamellae (concentric ring walls)
-                var lamG = new T.Group();
-                [1.5, 2.4, 3.3].forEach(function (r, i) {
-                    var wall = tube(r, i % 2 ? 0xfef3c7 : 0xfde68a, 0.5);
-                    lamG.add(wall);
+
+                /* ================= VIEW 1: whole bone ================= */
+                M.whole = new T.Group(); P.add(M.whole);
+                var pr = [[0.02, -8], [1.6, -7.6], [2.2, -6.8], [1.25, -5], [1.05, 0],
+                [1.25, 5], [2.2, 6.8], [1.6, 7.6], [0.02, 8]];
+                var shaft = new T.Mesh(roughen(new T.LatheGeometry(pr.map(function (p) { return new T.Vector2(p[0] * 1.6, p[1] * 0.85); }), 30), 0.06), mat(0xf5f5f4));
+                ctx.addPart(shaft, 'bone'); M.whole.add(shaft);
+                // cut-open half showing spongy interior + marrow
+                M.spongy = new T.Group();
+                for (var s = 0; s < 26; s++) {
+                    var sp = new T.Mesh(new T.BoxGeometry(0.16, 0.9 + Math.random() * 0.7, 0.16), mat(0xe7e5e4));
+                    var aa = Math.random() * Math.PI * 2, rr = Math.random() * 1.2;
+                    sp.position.set(Math.cos(aa) * rr, 5.2 + Math.random() * 1.4, Math.sin(aa) * rr);
+                    sp.rotation.set(Math.random(), Math.random(), Math.random());
+                    M.spongy.add(sp);
+                    var sp2 = sp.clone(); sp2.position.y = -5.2 - Math.random() * 1.4; M.spongy.add(sp2);
+                }
+                ctx.addPart(M.spongy, 'bone'); M.whole.add(M.spongy);
+                M.marrow = new T.Mesh(new T.CylinderGeometry(0.85, 0.85, 8.5, 20), mat(0xdc2626, { transparent: true, opacity: 0.8 }));
+                ctx.addPart(M.marrow, 'marrow'); M.whole.add(M.marrow);
+
+                /* ================= VIEW 2: one osteon ================= */
+                M.osteon = new T.Group(); P.add(M.osteon);
+
+                // concentric lamellae (open cylinders so the cut reveals rings)
+                M.lamG = new T.Group(); ctx.addPart(M.lamG, 'lamellae'); M.osteon.add(M.lamG);
+                M.lams = [];
+                [1.3, 2.1, 2.9, 3.7, 4.5].forEach(function (r, i) {
+                    var lam = new T.Mesh(new T.CylinderGeometry(r, r, 11, 40, 1, true),
+                        mat(i % 2 ? 0xfef3c7 : 0xfde68a, { transparent: true, opacity: 0.92 }));
+                    lam.userData.r = r; M.lamG.add(lam); M.lams.push(lam);
                 });
-                ctx.addPart(lamG, 'lamellae'); P.add(lamG);
-                // Outer matrix (faint boundary)
-                var outer = tube(3.9, 0xe7e5e4, 0.18);
-                ctx.addPart(outer, 'matrix'); P.add(outer);
-                // Lacunae (bone cells between rings)
-                var lacG = new T.Group();
-                var rings = [2.0, 2.9], count = 8;
-                rings.forEach(function (r) {
-                    for (var k = 0; k < count; k++) {
-                        var a = (k / count) * Math.PI * 2 + (r === 2.9 ? 0.4 : 0);
-                        var lac = new T.Mesh(new T.SphereGeometry(0.22, 12, 12), ctx.mat(0x2563eb));
-                        lac.scale.set(1.8, 0.8, 0.8);
-                        lac.position.set(Math.cos(a) * r, (Math.random() - 0.5) * 5.5, Math.sin(a) * r);
-                        lac.lookAt(0, lac.position.y, 0);
-                        lacG.add(lac);
+
+                // Haversian canal down the middle + blood vessel inside
+                M.canal = new T.Mesh(new T.CylinderGeometry(0.72, 0.72, 11.4, 24, 1, true), mat(0x7f1d1d));
+                ctx.addPart(M.canal, 'canal'); M.osteon.add(M.canal);
+                M.vessel = new T.Mesh(new T.CylinderGeometry(0.4, 0.4, 11, 16), mat(0xef4444));
+                ctx.addPart(M.vessel, 'canal'); M.osteon.add(M.vessel);
+                var nerve = new T.Mesh(new T.CylinderGeometry(0.11, 0.11, 11, 10), mat(0xfacc15));
+                nerve.position.set(0.45, 0, 0.2);
+                ctx.addPart(nerve, 'canal'); M.osteon.add(nerve);
+
+                // Volkmann's canals — horizontal connectors
+                M.volk = new T.Group(); ctx.addPart(M.volk, 'volkmann'); M.osteon.add(M.volk);
+                [[3.2, 0], [-2.4, 2.1], [1.0, -3.4]].forEach(function (v) {
+                    var c = new T.CatmullRomCurve3([new T.Vector3(0, v[0], 0), new T.Vector3(3.5, v[0] + v[1] * 0.2, 1.2), new T.Vector3(6.6, v[0] + v[1], 2.0)]);
+                    var tb = new T.Mesh(new T.TubeGeometry(c, 20, 0.3, 10, false), mat(0x991b1b));
+                    M.volk.add(tb);
+                });
+
+                // lacunae (cell homes) between the lamellae + canaliculi threads
+                M.lacG = new T.Group(); ctx.addPart(M.lacG, 'lacunae'); M.osteon.add(M.lacG);
+                M.canG = new T.Group(); ctx.addPart(M.canG, 'canaliculi'); M.osteon.add(M.canG);
+                [1.7, 2.5, 3.3, 4.1].forEach(function (r, ring) {
+                    var n = 6 + ring * 2;
+                    for (var i = 0; i < n; i++) {
+                        var a = (i / n) * Math.PI * 2 + ring * 0.4;
+                        var y = -4.4 + ((i * 3 + ring * 2) % 9) * 1.05;
+                        var lx = Math.cos(a) * r, lz = Math.sin(a) * r;
+                        var lac = new T.Mesh(new T.SphereGeometry(0.24, 10, 8), mat(0x2563eb));
+                        lac.scale.set(1.5, 0.7, 0.7);
+                        lac.position.set(lx, y, lz);
+                        lac.lookAt(0, y, 0);
+                        M.lacG.add(lac);
+                        // canaliculi: thin threads reaching toward the canal
+                        var c2 = new T.CatmullRomCurve3([
+                            new T.Vector3(lx, y, lz),
+                            new T.Vector3(lx * 0.55, y + 0.15, lz * 0.55),
+                            new T.Vector3(Math.cos(a) * 0.75, y, Math.sin(a) * 0.75)]);
+                        var th = new T.Mesh(new T.TubeGeometry(c2, 8, 0.045, 5, false), mat(0x93c5fd));
+                        M.canG.add(th);
                     }
                 });
-                ctx.addPart(lacG, 'lacunae'); P.add(lacG);
-                P.rotation.x = 0.35;
+
+                // blood cells flowing up the Haversian canal
+                M.cells = [];
+                for (var b = 0; b < 12; b++) {
+                    var bc = new T.Mesh(new T.SphereGeometry(0.17, 8, 6), mat(0xfca5a5));
+                    bc.userData.t = b / 12;
+                    M.osteon.add(bc); M.cells.push(bc);
+                }
+
+                P.rotation.x = 0.1;
+            },
+
+            onFrame: function (t, ctx) {
+                var M = ctx.model; if (!M.osteon) return;
+                var z = M.z;
+
+                // cross-fade between whole bone and single osteon
+                M.whole.visible = z < 0.55;
+                M.osteon.visible = z > 0.45;
+                M.whole.scale.setScalar(1 + z * 1.6);
+                M.osteon.scale.setScalar(0.35 + z * 0.8);
+
+                // spongy + marrow only make sense once you've "opened" the bone
+                M.spongy.visible = z > 0.12 && z < 0.55;
+                M.marrow.visible = z > 0.12 && z < 0.55;
+
+                // cut: peel back the outer lamellae one by one so rings are visible
+                var c = M.cut;
+                M.lams.forEach(function (lam, i) {
+                    var threshold = 1 - (i / M.lams.length);
+                    lam.material.opacity = c > threshold * 0.9 ? 0.18 : 0.92;
+                    lam.material.transparent = true;
+                });
+                M.lacG.visible = c > 0.25;
+                M.canG.visible = c > 0.45;
+                M.volk.visible = c > 0.1;
+
+                // blood flowing along the canal
+                M.cells.forEach(function (bc) {
+                    bc.visible = M.flow && M.osteon.visible;
+                    if (!bc.visible) return;
+                    bc.userData.t += 0.004;
+                    if (bc.userData.t > 1) bc.userData.t -= 1;
+                    var a = bc.userData.t * Math.PI * 2;
+                    bc.position.set(Math.cos(a * 3) * 0.22, -5.5 + bc.userData.t * 11, Math.sin(a * 3) * 0.22);
+                });
+
+                M.osteon.rotation.y = t * 0.12;
             }
         });
     </script>

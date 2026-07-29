@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>3D Flower Model | AIkiPadhai</title>
+    <title>3D Flower | AIkiPadhai</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="../sci-3d.js"></script>
 </head>
@@ -14,64 +14,185 @@
         Sci3D({
             title: "🌸 3D Flower",
             back: { href: "flowering-plants.html", label: "Back to Lesson" },
-            intro: { name: "3D Flower", desc: "Phool ko drag karke ghumao aur kisi bhi part par tap karke uska kaam jaano - petals, stamen aur carpel." },
-            camZ: 13,
-            data: {
-                sepal: { emoji: "🍃", name: "Sepal", nick: "Protector", desc: "Baahri hare parts jo kali (bud) ko surakshit rakhte hain." },
-                petal: { emoji: "🌸", name: "Petal", nick: "Attraction", desc: "Rangeen pankhudiyan jo keedon ko attract karti hain (pollination ke liye)." },
-                stamen: { emoji: "♂️", name: "Stamen", nick: "Male Part", desc: "Anther (pollen banata hai) + filament. Ye phool ka male part hai." },
-                stigma: { emoji: "🎯", name: "Stigma", nick: "Landing Pad", desc: "Carpel ka chipchipa top jo pollen pakadta hai." },
-                style: { emoji: "🛣️", name: "Style", nick: "The Path", desc: "Naali jisse pollen tube ovary tak jaata hai." },
-                ovary: { emoji: "🥚", name: "Ovary", nick: "Future Fruit", desc: "Isme ovules (eggs) hote hain. Fertilisation ke baad ye Fruit ban jaati hai." }
+            intro: {
+                name: "3D Flower",
+                desc: "Asli shakal ka phool. Drag karke ghumao, aur kisi bhi part par tap karke uska kaam jaano. 'Cut-away' slider se aage ki pankhudiyan hata kar andar ka carpel dekho — aur 'Bloom' se kali (bud) ko khilte hue dekho!"
             },
+            camZ: 15,
+            data: {
+                sepal: { emoji: "🍃", name: "Sepal", nick: "Rakshak", desc: "Sabse baahri hare hisse. Jab phool kali (bud) hota hai, tab ye use dhak kar surakshit rakhte hain. Inke samuh ko CALYX kehte hain.", stats: [["Rang", "Hara"], ["Kaam", "Kali ki suraksha"], ["Samuh ka naam", "Calyx"], ["Kitne", "5 (is phool mein)"]] },
+                petal: { emoji: "🌸", name: "Petal", nick: "Aakarshan", desc: "Rangeen pankhudiyan jo keedon aur pakshiyon ko aakarshit karti hain — taaki pollination ho sake. Inke samuh ko COROLLA kehte hain. Kai phoolon mein inme khushboo aur meetha ras (nectar) bhi hota hai.", stats: [["Rang", "Rangeen"], ["Kaam", "Keedon ko bulana"], ["Samuh ka naam", "Corolla"], ["Kitne", "5"]] },
+                filament: { emoji: "🧵", name: "Filament", nick: "Danthal", desc: "Patli danthal jo anther ko upar thaame rakhti hai — taaki pollen aasani se keedon tak pahunche.", stats: [["Kaam", "Anther ko thaamna"], ["Hissa", "Stamen ka"], ["Bhaag", "Male (nar)"]] },
+                anther: { emoji: "🟡", name: "Anther", nick: "Pollen ghar", desc: "Peela hissa jo PARAAG (pollen) banata hai. Ye phool ka NAR (male) hissa hai. Filament + Anther = STAMEN, aur sab stamens ka samuh = ANDROECIUM.", stats: [["Banata hai", "Pollen (paraag)"], ["Bhaag", "Male (nar)"], ["Poora naam", "Stamen = filament + anther"], ["Samuh", "Androecium"]] },
+                stigma: { emoji: "🎯", name: "Stigma", nick: "Landing pad", desc: "Carpel ka sabse upari, CHIPCHIPA hissa. Ye chipchipahat isliye hai taaki keede ya hawa se aaya pollen yahan CHIPAK jaaye aur girey nahi.", stats: [["Satah", "Chipchipi"], ["Kaam", "Pollen pakadna"], ["Bhaag", "Female (maada)"]] },
+                style: { emoji: "🛣️", name: "Style", nick: "Raasta", desc: "Lambi naali jo stigma ko ovary se jodti hai. Pollen yahin se POLLEN TUBE banakar neeche ovary tak pahunchta hai.", stats: [["Kaam", "Pollen tube ka raasta"], ["Jodta hai", "Stigma se ovary"], ["Bhaag", "Female (maada)"]] },
+                ovary: { emoji: "🥚", name: "Ovary", nick: "Bhavishya ka phal", desc: "Sabse neeche ka phoola hua hissa. Iske andar OVULES (ande) hote hain. Fertilisation ke baad — ovary PHAL (fruit) ban jaati hai aur ovules BEEJ (seeds)! Stigma+Style+Ovary = CARPEL.", stats: [["Andar", "Ovules (ande)"], ["Baad mein banta", "PHAL (fruit)"], ["Ovule banta", "BEEJ (seed)"], ["Poora naam", "Carpel/Pistil"]] },
+                ovule: { emoji: "⚪", name: "Ovules", nick: "Bhavishya ke beej", desc: "Ovary ke andar chhote ande. Har ovule fertilise hone ke baad ek BEEJ ban jaata hai. Isiliye jis phal mein zyada beej hote hain, uski ovary mein zyada ovules the!", stats: [["Kahan", "Ovary ke andar"], ["Banta hai", "Beej (seed)"], ["Kitne", "Phool par nirbhar"]] },
+                nectar: { emoji: "🍯", name: "Nectar", nick: "Meetha inaam", desc: "Phool ki jad mein bana meetha ras. Keede isi ke lalach mein aate hain — aur beech mein unke shareer par pollen chipak jaata hai, jo wo agle phool tak le jaate hain. Ye phool ki chaal hai!", stats: [["Swaad", "Meetha"], ["Kaam", "Keedon ko lubhana"], ["Faayda", "Pollination"]] }
+            },
+            controls: [
+                { id: "bloom", label: "🌱 Bloom (kali se phool tak)", min: 0, max: 100, step: 1, value: 100, on: function (v, ctx) { ctx.model.bloom = v / 100; } },
+                { id: "cut", label: "✂️ Aage ki pankhudiyan hatao", min: 0, max: 100, step: 1, value: 0, on: function (v, ctx) { ctx.model.cut = v / 100; } },
+                { id: "sway", label: "🍃 Hawa mein hilna", min: 0, max: 10, step: 1, value: 3, on: function (v, ctx) { ctx.model.sway = v / 10; } }
+            ],
+
             build: function (ctx) {
-                var T = ctx.THREE, P = ctx.pivot;
-                // Sepals (green, below, radius 2.4)
-                var sepG = new T.Group();
-                for (var i = 0; i < 5; i++) {
-                    var a = (i / 5) * Math.PI * 2 + 0.3;
-                    var sp = new T.Mesh(new T.SphereGeometry(1, 16, 12), ctx.mat(0x4d7c0f));
-                    sp.scale.set(1.5, 0.22, 0.7);
-                    sp.position.set(Math.cos(a) * 2.3, -0.5, Math.sin(a) * 2.3);
-                    sp.rotation.y = -a; sp.rotation.z = -0.4;
-                    sepG.add(sp);
+                var T = ctx.THREE, P = ctx.pivot, M = ctx.model;
+                M.bloom = 1; M.cut = 0; M.sway = 0.3;
+
+                var warm = new T.DirectionalLight(0xfff0f5, 0.5); warm.position.set(-6, 8, 5); ctx.scene.add(warm);
+
+                function soft(hex, o) { var m = ctx.mat(hex, o); m.shininess = 18; m.side = T.DoubleSide; return m; }
+
+                /* ---- a real petal: bezier outline, extruded, then curled ---- */
+                function petalGeo(w, h, curl) {
+                    var s = new T.Shape();
+                    s.moveTo(0, 0);
+                    s.bezierCurveTo(w * 0.9, h * 0.18, w * 1.05, h * 0.62, w * 0.22, h);
+                    s.bezierCurveTo(w * 0.06, h * 1.06, -w * 0.06, h * 1.06, -w * 0.22, h);
+                    s.bezierCurveTo(-w * 1.05, h * 0.62, -w * 0.9, h * 0.18, 0, 0);
+                    var g = new T.ExtrudeGeometry(s, {
+                        depth: 0.07, bevelEnabled: true, bevelSize: 0.05,
+                        bevelThickness: 0.04, bevelSegments: 2, curveSegments: 20
+                    });
+                    // cup the petal: bend it along its length + slight twist
+                    var pos = g.attributes.position;
+                    for (var i = 0; i < pos.count; i++) {
+                        var x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
+                        var t = y / h;
+                        z += -curl * (x * x) * 0.55 - curl * t * t * 0.9;      // cup inward + tip lift
+                        x *= (1 - t * 0.12);
+                        pos.setXYZ(i, x, y, z);
+                    }
+                    pos.needsUpdate = true; g.computeVertexNormals();
+                    return g;
                 }
-                ctx.addPart(sepG, 'sepal'); P.add(sepG);
-                // Petals (pink, radius 2.7, tilted up)
-                var petG = new T.Group();
+
+                /* ---- PETALS (corolla) ---- */
+                M.petals = [];
+                var petG = new T.Group(); ctx.addPart(petG, 'petal'); P.add(petG);
                 for (var j = 0; j < 5; j++) {
-                    var pa = (j / 5) * Math.PI * 2;
-                    var pt = new T.Mesh(new T.SphereGeometry(1, 20, 16), ctx.mat(0xf472b6));
-                    pt.scale.set(1.9, 0.28, 1.05);
-                    pt.position.set(Math.cos(pa) * 2.7, 0.5, Math.sin(pa) * 2.7);
-                    pt.rotation.y = -pa; pt.rotation.z = 0.5;
-                    petG.add(pt);
+                    var a = (j / 5) * Math.PI * 2;
+                    var pm = new T.Mesh(petalGeo(1.35, 3.6, 1), soft(j % 2 ? 0xf472b6 : 0xec4899));
+                    var holder = new T.Group();
+                    holder.add(pm);
+                    holder.rotation.y = a;
+                    holder.userData.baseA = a;
+                    holder.userData.idx = j;
+                    petG.add(holder);
+                    M.petals.push(holder);
                 }
-                ctx.addPart(petG, 'petal'); P.add(petG);
-                // Stamens (filaments + anthers)
-                var stG = new T.Group();
-                for (var k = 0; k < 6; k++) {
-                    var ka = (k / 6) * Math.PI * 2;
-                    var fil = new T.Mesh(new T.CylinderGeometry(0.06, 0.06, 1.8, 10), ctx.mat(0xfbbf24));
-                    fil.position.set(Math.cos(ka) * 0.75, 1.0, Math.sin(ka) * 0.75);
-                    fil.rotation.z = -Math.cos(ka) * 0.35; fil.rotation.x = Math.sin(ka) * 0.35;
-                    stG.add(fil);
-                    var anther = new T.Mesh(new T.SphereGeometry(0.22, 12, 12), ctx.mat(0xf59e0b));
-                    anther.position.set(Math.cos(ka) * 1.05, 1.85, Math.sin(ka) * 1.05);
-                    stG.add(anther);
+
+                /* ---- SEPALS (calyx) — same shape, green, smaller, folded down ---- */
+                M.sepals = [];
+                var sepG = new T.Group(); ctx.addPart(sepG, 'sepal'); P.add(sepG);
+                for (var k = 0; k < 5; k++) {
+                    var sa = (k / 5) * Math.PI * 2 + 0.62;
+                    var sm = new T.Mesh(petalGeo(0.8, 2.5, 0.7), soft(0x4d7c0f));
+                    var sh = new T.Group(); sh.add(sm); sh.rotation.y = sa;
+                    sh.userData.baseA = sa;
+                    sepG.add(sh); M.sepals.push(sh);
                 }
-                ctx.addPart(stG, 'stamen'); P.add(stG);
-                // Carpel: ovary, style, stigma
-                var ovary = new T.Mesh(new T.SphereGeometry(0.7, 20, 16), ctx.mat(0x34d399));
-                ovary.scale.set(0.85, 1.1, 0.85); ovary.position.set(0, 0.1, 0);
-                ctx.addPart(ovary, 'ovary'); P.add(ovary);
-                var style = new T.Mesh(new T.CylinderGeometry(0.12, 0.14, 1.9, 12), ctx.mat(0x059669));
-                style.position.set(0, 1.2, 0);
-                ctx.addPart(style, 'style'); P.add(style);
-                var stigma = new T.Mesh(new T.SphereGeometry(0.34, 16, 12), ctx.mat(0x065f46));
-                stigma.scale.set(1, 0.6, 1); stigma.position.set(0, 2.2, 0);
-                ctx.addPart(stigma, 'stigma'); P.add(stigma);
-                P.rotation.x = 0.5;
+
+                /* ---- RECEPTACLE + STEM ---- */
+                var recProf = [[0.05, -3.4], [0.5, -3.2], [0.72, -2.4], [0.85, -1.5], [0.9, -0.7], [0.75, -0.15]];
+                var rec = new T.Mesh(new T.LatheGeometry(recProf.map(function (p) { return new T.Vector2(p[0], p[1]); }), 26), soft(0x65a30d));
+                P.add(rec);
+                var stem = new T.Mesh(new T.CylinderGeometry(0.26, 0.32, 5, 18), soft(0x4d7c0f));
+                stem.position.y = -5.6; P.add(stem);
+
+                /* ---- CARPEL: ovary (lathe, pear) + style (tube) + stigma ---- */
+                var ovProf = [[0.02, -0.25], [0.42, -0.1], [0.72, 0.35], [0.8, 0.95], [0.62, 1.5], [0.3, 1.75], [0.14, 1.85]];
+                M.ovary = new T.Mesh(new T.LatheGeometry(ovProf.map(function (p) { return new T.Vector2(p[0], p[1]); }), 28), soft(0x86efac));
+                ctx.addPart(M.ovary, 'ovary'); P.add(M.ovary);
+
+                // ovules inside (visible when cut)
+                M.ovules = new T.Group(); ctx.addPart(M.ovules, 'ovule'); P.add(M.ovules);
+                for (var o = 0; o < 6; o++) {
+                    var oa = (o / 6) * Math.PI * 2;
+                    var ov = new T.Mesh(new T.SphereGeometry(0.17, 12, 10), soft(0xfef9c3));
+                    ov.position.set(Math.cos(oa) * 0.34, 0.55 + (o % 2) * 0.42, Math.sin(oa) * 0.34);
+                    M.ovules.add(ov);
+                }
+
+                var styleCurve = new T.CatmullRomCurve3([
+                    new T.Vector3(0, 1.8, 0), new T.Vector3(0.06, 2.9, 0.04),
+                    new T.Vector3(0.02, 3.9, 0), new T.Vector3(0, 4.7, -0.03)]);
+                M.style = new T.Mesh(new T.TubeGeometry(styleCurve, 26, 0.12, 12, false), soft(0xa3e635));
+                ctx.addPart(M.style, 'style'); P.add(M.style);
+
+                var stigG = new T.Group();
+                var stigProf = [[0.02, 0], [0.3, 0.12], [0.42, 0.34], [0.3, 0.55], [0.1, 0.62]];
+                var stig = new T.Mesh(new T.LatheGeometry(stigProf.map(function (p) { return new T.Vector2(p[0], p[1]); }), 20), soft(0xfacc15));
+                stigG.add(stig);
+                for (var b = 0; b < 7; b++) {          // sticky bumps
+                    var ba = (b / 7) * Math.PI * 2;
+                    var bump = new T.Mesh(new T.SphereGeometry(0.09, 8, 6), soft(0xfde047));
+                    bump.position.set(Math.cos(ba) * 0.26, 0.42, Math.sin(ba) * 0.26);
+                    stigG.add(bump);
+                }
+                stigG.position.y = 4.7;
+                ctx.addPart(stigG, 'stigma'); P.add(stigG);
+
+                /* ---- STAMENS: curved filament tubes + anthers + pollen ---- */
+                M.stamens = [];
+                var filG = new T.Group(); ctx.addPart(filG, 'filament'); P.add(filG);
+                var antG = new T.Group(); ctx.addPart(antG, 'anther'); P.add(antG);
+                for (var s2 = 0; s2 < 8; s2++) {
+                    var sa2 = (s2 / 8) * Math.PI * 2 + 0.2;
+                    var out = 1.15, top = 3.5 + (s2 % 2) * 0.5;
+                    var c = new T.CatmullRomCurve3([
+                        new T.Vector3(Math.cos(sa2) * 0.3, 0.5, Math.sin(sa2) * 0.3),
+                        new T.Vector3(Math.cos(sa2) * out * 0.6, top * 0.55, Math.sin(sa2) * out * 0.6),
+                        new T.Vector3(Math.cos(sa2) * out, top, Math.sin(sa2) * out)]);
+                    var fil = new T.Mesh(new T.TubeGeometry(c, 20, 0.055, 8, false), soft(0xfcd34d));
+                    filG.add(fil);
+                    // anther: small lathe capsule, tilted outward
+                    var antProf = [[0.02, 0], [0.15, 0.08], [0.19, 0.3], [0.15, 0.52], [0.02, 0.6]];
+                    var ant = new T.Mesh(new T.LatheGeometry(antProf.map(function (p) { return new T.Vector2(p[0], p[1]); }), 14), soft(0xf59e0b));
+                    ant.position.set(Math.cos(sa2) * out, top, Math.sin(sa2) * out);
+                    ant.rotation.z = -Math.cos(sa2) * 0.5; ant.rotation.x = Math.sin(sa2) * 0.5;
+                    antG.add(ant);
+                    // pollen grains clinging on
+                    for (var g2 = 0; g2 < 3; g2++) {
+                        var pg = new T.Mesh(new T.SphereGeometry(0.055, 6, 5), soft(0xfde047));
+                        pg.position.set(Math.cos(sa2) * (out + 0.12) + (Math.random() - .5) * .2,
+                            top + 0.3 + Math.random() * 0.3, Math.sin(sa2) * (out + 0.12) + (Math.random() - .5) * .2);
+                        antG.add(pg);
+                    }
+                }
+
+                /* ---- NECTAR at the base ---- */
+                M.nectar = new T.Mesh(new T.SphereGeometry(0.55, 16, 12), soft(0xfbbf24, { transparent: true, opacity: 0.75 }));
+                M.nectar.scale.set(1, 0.35, 1); M.nectar.position.y = -0.1;
+                ctx.addPart(M.nectar, 'nectar'); P.add(M.nectar);
+
+                P.rotation.x = 0.22;
+            },
+
+            onFrame: function (t, ctx) {
+                var M = ctx.model; if (!M.petals) return;
+                var b = M.bloom;
+                // bloom: petals swing from closed (bud) to open
+                M.petals.forEach(function (h, i) {
+                    var open = 0.15 + b * 1.05;                       // tilt outward as it blooms
+                    h.rotation.x = open;
+                    h.children[0].position.y = 0;
+                    h.rotation.z = Math.sin(t * 0.8 + i) * 0.03 * M.sway;
+                    // cut-away: fade/hide the two petals nearest the viewer
+                    var facing = Math.cos(h.userData.baseA);
+                    h.visible = !(M.cut > 0.3 && facing > 0.25);
+                });
+                M.sepals.forEach(function (h, i) {
+                    h.rotation.x = 1.75 + b * 0.55;
+                    h.rotation.z = Math.sin(t * 0.7 + i * 1.4) * 0.025 * M.sway;
+                });
+                // gentle whole-flower sway
+                ctx.pivot.rotation.z = Math.sin(t * 0.6) * 0.045 * M.sway;
+                // ovules only visible once you cut in
+                if (M.ovules) M.ovules.visible = M.cut > 0.3;
+                if (M.ovary) M.ovary.material.opacity = M.cut > 0.3 ? 0.45 : 1,
+                    M.ovary.material.transparent = M.cut > 0.3;
             }
         });
     </script>

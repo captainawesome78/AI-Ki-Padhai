@@ -4,75 +4,152 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>3D Joint &amp; Muscle (Elbow) | AIkiPadhai</title>
+    <title>3D Elbow: Joint &amp; Muscle | AIkiPadhai</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="../sci-3d.js"></script>
 </head>
 
 <body>
     <script>
-        function rot2(x, y, ang) { // rotate (x,y) about origin by ang (Z)
-            return [x * Math.cos(ang) - y * Math.sin(ang), x * Math.sin(ang) + y * Math.cos(ang)];
-        }
-        function placeMuscle(T, mesh, A, B) {
-            var a = new T.Vector3(A[0], A[1], A[2]), b = new T.Vector3(B[0], B[1], B[2]);
-            var mid = a.clone().add(b).multiplyScalar(0.5);
-            var dir = b.clone().sub(a); var len = dir.length(); dir.normalize();
-            mesh.position.copy(mid);
-            mesh.quaternion.setFromUnitVectors(new T.Vector3(0, 1, 0), dir);
-            var r = 0.3 + 0.9 * (1 - Math.min(len, 7.5) / 7.5);
-            mesh.scale.set(r, len, r);
-        }
-        function updateArm(flex, ctx) {
-            var m = ctx.model, T = ctx.THREE, ang = flex * 2.5;
-            m.forearm.rotation.z = ang;
-            var bB = rot2(0.9, -1.9, ang);   // biceps forearm attach (front)
-            placeMuscle(T, m.biceps, [0.9, 5.3, 0], [bB[0], bB[1], 0]);
-            var tB = rot2(-1.2, 0.7, ang);   // triceps forearm attach (olecranon, back)
-            placeMuscle(T, m.triceps, [-0.9, 5.3, 0], [tB[0], tB[1], 0]);
-        }
         Sci3D({
-            title: "💪 3D Elbow: Joint & Muscle",
+            title: "💪 3D Elbow: Joint &amp; Muscle",
             back: { href: "joints-and-care.html", label: "Back to Lesson" },
-            intro: { name: "3D Elbow Joint", desc: "Neeche wale slider se kohni (elbow) modo aur dekho biceps kaise phoolti (contract) hai aur triceps kaise dheeli (relax) hoti hai. Parts par tap karke jaano." },
-            camZ: 20,
+            intro: {
+                name: "3D Elbow Joint",
+                desc: "Asli shakal ki haddiyan aur maanspeshiyan. 'Kohni modo' slider ghumao — dekho BICEPS phool kar chhoti hoti hai aur TRICEPS dheeli. Ye ANTAGONISTIC jodi hai: ek sikudti hai toh doosri dheeli hoti hai. Kisi bhi part par tap karo."
+            },
+            camZ: 22,
             data: {
-                humerus: { emoji: "🦴", name: "Humerus", nick: "Upper Arm Bone", desc: "Kandhe (shoulder) se kohni tak ki upar wali haddi. Ye fixed rehti hai jab hum haath modte hain." },
-                forearm: { emoji: "🦴", name: "Forearm (Radius/Ulna)", nick: "Neeche ki Haddi", desc: "Kohni se kalai (wrist) tak ki haddi. Ye elbow joint par ghoomti hai." },
-                elbow: { emoji: "🔩", name: "Elbow (Hinge Joint)", nick: "Darwaza Joint", desc: "Hinge joint - sirf ek direction mein mudta hai, bilkul darwaze ki tarah. Yahin do haddiyan milti hain." },
-                biceps: { emoji: "💪", name: "Biceps Muscle", nick: "Flexor", desc: "Haath ke aage wali muscle. Jab ye SIKUDTI (contract) hai toh haddi ko kheench kar kohni MODTI hai - aur phool (bulge) jaati hai." },
-                triceps: { emoji: "🔻", name: "Triceps Muscle", nick: "Extensor", desc: "Haath ke peeche wali muscle. Ye biceps ki OPPOSITE kaam karti hai - jab biceps modti hai, triceps DHEELI (relax) hoti hai. Isi jodi ko antagonistic pair kehte hain." }
+                humerus: { emoji: "🦴", name: "Humerus", nick: "Upar wali haddi", desc: "Kandhe se kohni tak ki haddi. Jab hum haath modte hain, ye STHIR (fixed) rehti hai — isiliye ise 'origin' kehte hain. Iske sire par gol CONDYLE hote hain jo jod banate hain.", stats: [["Kahan", "Kandha se kohni"], ["Chalti hai?", "Nahi (sthir)"], ["Sire par", "Condyles (gol ubhaar)"]] },
+                radius: { emoji: "🦴", name: "Radius &amp; Ulna", nick: "Neeche wali haddiyan", desc: "Kohni se kalai tak DO haddiyan. Ye HILTI hain — isiliye inhe 'insertion' kehte hain. Do haddiyan hone se hi hum kalai ko ghuma sakte hain!", stats: [["Kitni", "2 (radius + ulna)"], ["Kahan", "Kohni se kalai"], ["Chalti hai?", "Haan"], ["Faayda", "Kalai ghuma sakte hain"]] },
+                biceps: { emoji: "💪", name: "Biceps", nick: "Modne wali",  desc: "Haath ke SAAMNE ki maanspeshi. Jab ye SIKUDTI (contract) hai toh chhoti aur MOTI ho jaati hai, aur haath MUD jaata hai. Isiliye biceps ko 'FLEXOR' kehte hain.", stats: [["Position", "Haath ke saamne"], ["Kaam", "Haath MODNA (flexor)"], ["Sikudne par", "Chhoti + moti"], ["Jodi", "Triceps ke saath"]] },
+                triceps: { emoji: "🦾", name: "Triceps", nick: "Seedha karne wali", desc: "Haath ke PEECHE ki maanspeshi. Jab haath seedha karna ho tab YE sikudti hai aur biceps dheeli hoti hai. Ise 'EXTENSOR' kehte hain.", stats: [["Position", "Haath ke peeche"], ["Kaam", "Haath SEEDHA karna (extensor)"], ["Biceps sikude toh", "Ye dheeli"], ["Naam ka matlab", "Teen sir wali"]] },
+                tendon: { emoji: "🪢", name: "Tendon", nick: "Haddi se jod", desc: "Bahut MAZBOOT resha jo maanspeshi ko HADDI se jodta hai. Muscle jo taakat banati hai, wo tendon ke through haddi tak pahunchti hai. (Ligament alag hota hai — wo haddi ko haddi se jodta hai.)", stats: [["Jodta hai", "Muscle → Haddi"], ["Taakat", "Bahut mazboot"], ["Ligament?", "Wo haddi→haddi jodta hai"]] },
+                cartilage: { emoji: "🧊", name: "Cartilage", nick: "Chikna gadda", desc: "Haddiyon ke sire par chikni, mulayam parat. Ye GADDE (cushion) ka kaam karti hai aur ragad (friction) kam karti hai — isiliye jod bina ghise chalta rehta hai.", stats: [["Kahan", "Haddi ke sire par"], ["Kaam", "Gadda + ragad kam"], ["Ghisne par", "Arthritis (jodon ka dard)"]] },
+                joint: { emoji: "🔗", name: "Hinge Joint", nick: "Darwaze ka kabza", desc: "Kohni ek HINGE JOINT hai — bilkul darwaze ke kabze ki tarah, sirf EK DISHA mein mudti hai. (Kandha 'ball and socket' hai, jo har disha mein ghoomta hai.)", stats: [["Prakar", "Hinge (kabza)"], ["Disha", "Sirf ek"], ["Udaharan", "Kohni, ghutna"], ["Kandha", "Ball &amp; socket (alag)"]] }
             },
             controls: [
-                { id: "flex", label: "💪 Elbow flex (kohni modo)", min: 0, max: 100, step: 1, value: 0, on: function (v, ctx) { updateArm(v / 100, ctx); } }
+                { id: "flex", label: "💪 Kohni modo (0 = seedha, 100 = poora muda)", min: 0, max: 100, step: 1, value: 30, on: function (v, ctx) { ctx.model.flex = v / 100; } },
+                { id: "skin", label: "👁️ Muscles dikhao (0 = sirf haddi)", min: 0, max: 1, step: 1, value: 1, on: function (v, ctx) { ctx.model.showM = (v === 1); } }
             ],
+
             build: function (ctx) {
-                var T = ctx.THREE, P = ctx.pivot;
-                var boneMat = 0xe7e5e4;
-                // Humerus (fixed upper arm) y: 0..6
-                var hum = new T.Mesh(new T.CylinderGeometry(0.55, 0.6, 6, 20), ctx.mat(boneMat));
-                hum.position.set(0, 3, 0);
-                ctx.addPart(hum, 'humerus'); P.add(hum);
-                var shoulder = new T.Mesh(new T.SphereGeometry(0.95, 24, 24), ctx.mat(boneMat));
-                shoulder.position.set(0, 6, 0); P.add(shoulder);
-                // Elbow joint knob
-                var elbow = new T.Mesh(new T.SphereGeometry(0.8, 24, 24), ctx.mat(0xcbd5e1));
-                elbow.position.set(0, 0, 0);
-                ctx.addPart(elbow, 'elbow'); P.add(elbow);
-                // Forearm group (rotates at elbow)
-                var fg = new T.Group();
-                var fbone = new T.Mesh(new T.CylinderGeometry(0.5, 0.4, 6, 20), ctx.mat(boneMat));
-                fbone.position.set(0, -3, 0); fg.add(fbone);
-                var wrist = new T.Mesh(new T.SphereGeometry(0.55, 20, 20), ctx.mat(boneMat));
-                wrist.position.set(0, -6, 0); fg.add(wrist);
-                ctx.addPart(fg, 'forearm'); P.add(fg);
-                // Muscles
-                var biceps = new T.Mesh(new T.CylinderGeometry(1, 1, 1, 16), ctx.mat(0xef4444));
-                ctx.addPart(biceps, 'biceps'); P.add(biceps);
-                var triceps = new T.Mesh(new T.CylinderGeometry(1, 1, 1, 16), ctx.mat(0xb91c1c));
-                ctx.addPart(triceps, 'triceps'); P.add(triceps);
-                ctx.model = { T: T, forearm: fg, biceps: biceps, triceps: triceps };
-                updateArm(0, ctx);
+                var T = ctx.THREE, P = ctx.pivot, M = ctx.model;
+                M.flex = 0.3; M.showM = true;
+
+                var warm = new T.DirectionalLight(0xffe0e0, 0.45); warm.position.set(-7, 4, 6); ctx.scene.add(warm);
+                function mat(hex, o) { var m = ctx.mat(hex, o); m.shininess = 24; return m; }
+
+                function roughen(g, amt) {
+                    var p = g.attributes.position;
+                    for (var i = 0; i < p.count; i++) {
+                        var x = p.getX(i), y = p.getY(i), z = p.getZ(i);
+                        var n = Math.sin(x * 2.6 + y * 1.9) * Math.cos(z * 2.2);
+                        p.setXYZ(i, x + n * amt, y + n * amt * 0.5, z + n * amt);
+                    }
+                    p.needsUpdate = true; g.computeVertexNormals(); return g;
+                }
+                /* real bone: narrow shaft, flared ends with condyles (lathe profile) */
+                function boneGeo(len, shaft, endR) {
+                    var pr = [[0.02, -len / 2], [endR * 0.85, -len / 2 + 0.15], [endR, -len / 2 + 0.55],
+                    [shaft * 1.1, -len / 2 + 1.3], [shaft, -len * 0.1], [shaft, len * 0.1],
+                    [shaft * 1.1, len / 2 - 1.3], [endR, len / 2 - 0.55], [endR * 0.85, len / 2 - 0.15], [0.02, len / 2]];
+                    return roughen(new T.LatheGeometry(pr.map(function (p) { return new T.Vector2(p[0], p[1]); }), 26), 0.05);
+                }
+
+                /* ---------- HUMERUS (fixed, upper) ---------- */
+                var humG = new T.Group();
+                var hum = new T.Mesh(boneGeo(11, 0.62, 1.15), mat(0xf5f5f4));
+                hum.rotation.z = Math.PI / 2;
+                humG.add(hum);
+                // condyles at the elbow end (two rounded knobs = the hinge)
+                [-0.62, 0.62].forEach(function (dz) {
+                    var cd = new T.Mesh(roughen(new T.SphereGeometry(0.82, 18, 14), 0.04), mat(0xe7e5e4));
+                    cd.position.set(5.4, 0, dz); cd.scale.set(0.9, 1, 0.8); humG.add(cd);
+                });
+                humG.position.set(-5.4, 2.2, 0);
+                ctx.addPart(humG, 'humerus'); P.add(humG);
+
+                /* ---------- FOREARM group (rotates at the elbow) ---------- */
+                M.arm = new T.Group();
+                M.arm.position.set(0, 2.2, 0);          // pivot = elbow
+                P.add(M.arm);
+
+                var radG = new T.Group();
+                var rad = new T.Mesh(boneGeo(10, 0.5, 0.85), mat(0xf5f5f4));
+                rad.rotation.z = Math.PI / 2; rad.position.set(5, 0, 0.55);
+                radG.add(rad);
+                var uln = new T.Mesh(boneGeo(10.4, 0.44, 0.95), mat(0xeeeceb));
+                uln.rotation.z = Math.PI / 2; uln.position.set(5.1, -0.25, -0.6);
+                radG.add(uln);
+                // hand block
+                var hand = new T.Mesh(roughen(new T.SphereGeometry(0.9, 16, 12), 0.08), mat(0xfda4af));
+                hand.scale.set(1.5, 0.85, 0.7); hand.position.set(10.6, -0.15, 0);
+                radG.add(hand);
+                ctx.addPart(radG, 'radius'); M.arm.add(radG);
+
+                /* ---------- CARTILAGE at the joint ---------- */
+                var cart = new T.Mesh(new T.SphereGeometry(0.95, 18, 14), mat(0x93c5fd, { transparent: true, opacity: 0.62 }));
+                cart.scale.set(0.85, 1, 1.35); cart.position.set(0, 2.2, 0);
+                ctx.addPart(cart, 'cartilage'); P.add(cart);
+
+                /* ---------- JOINT capsule marker ---------- */
+                var jt = new T.Mesh(new T.TorusGeometry(1.5, 0.14, 10, 24), mat(0x38bdf8, { transparent: true, opacity: 0.5 }));
+                jt.position.set(0, 2.2, 0); jt.rotation.y = Math.PI / 2;
+                ctx.addPart(jt, 'joint'); P.add(jt);
+
+                /* ---------- BICEPS: lathe belly that bulges ---------- */
+                function muscleGeo(len, fat) {
+                    var pr = [[0.03, -len / 2], [fat * 0.3, -len / 2 + 0.5], [fat * 0.85, -len * 0.18],
+                    [fat, 0], [fat * 0.85, len * 0.18], [fat * 0.3, len / 2 - 0.5], [0.03, len / 2]];
+                    return new T.LatheGeometry(pr.map(function (p) { return new T.Vector2(p[0], p[1]); }), 22);
+                }
+                M.bic = new T.Mesh(muscleGeo(8.2, 1.15), mat(0xdc2626));
+                M.bic.rotation.z = Math.PI / 2;
+                M.bic.position.set(-5.2, 3.5, 0.55);
+                ctx.addPart(M.bic, 'biceps'); P.add(M.bic);
+
+                M.tri = new T.Mesh(muscleGeo(8.6, 0.95), mat(0xb91c1c));
+                M.tri.rotation.z = Math.PI / 2;
+                M.tri.position.set(-5.2, 0.85, -0.7);
+                ctx.addPart(M.tri, 'triceps'); P.add(M.tri);
+
+                /* ---------- TENDONS (tubes from muscle to bone) ---------- */
+                M.tenG = new T.Group(); ctx.addPart(M.tenG, 'tendon'); P.add(M.tenG);
+                function tendon(pts, r) {
+                    var c = new T.CatmullRomCurve3(pts.map(function (p) { return new T.Vector3(p[0], p[1], p[2]); }));
+                    var m = new T.Mesh(new T.TubeGeometry(c, 20, r, 8, false), mat(0xfef3c7));
+                    M.tenG.add(m); return m;
+                }
+                M.bicTen = tendon([[-1.2, 3.5, 0.55], [0.6, 3.1, 0.5], [2.0, 2.4, 0.5]], 0.16);
+                tendon([[-9.2, 3.5, 0.55], [-10.4, 3.2, 0.4]], 0.16);
+                M.triTen = tendon([[-1.0, 0.85, -0.7], [0.9, 1.2, -0.7], [1.9, 1.9, -0.6]], 0.14);
+                tendon([[-9.4, 0.85, -0.7], [-10.6, 1.1, -0.6]], 0.14);
+
+                P.rotation.x = 0.1;
+                P.position.x = -1.5;
+            },
+
+            onFrame: function (t, ctx) {
+                var M = ctx.model; if (!M.arm) return;
+                var f = M.flex;
+                // forearm swings up around the elbow
+                M.arm.rotation.z = f * 2.05;
+
+                // biceps: contracts => SHORTER and FATTER (this is the whole lesson)
+                M.bic.scale.set(1 + f * 0.55, 1 - f * 0.24, 1 + f * 0.55);
+                M.bic.position.y = 3.5 + f * 0.35;
+                M.bic.material.color.setHex(f > 0.55 ? 0xef4444 : 0xdc2626);
+
+                // triceps: relaxes => LONGER and THINNER
+                M.tri.scale.set(1 - f * 0.3, 1 + f * 0.14, 1 - f * 0.3);
+                M.tri.material.color.setHex(f > 0.55 ? 0x991b1b : 0xb91c1c);
+
+                M.bic.visible = M.tri.visible = M.tenG.visible = M.showM;
+
+                // subtle breathing shimmer so it feels alive
+                var b = 1 + Math.sin(t * 2) * 0.008;
+                M.bic.scale.multiplyScalar(b);
             }
         });
     </script>
