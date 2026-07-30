@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reproductive Health Explorer | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #451a03, #b45309); color: #fef3c7; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #fde68a; text-decoration: none; border: 1px solid rgba(253,230,138,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 940px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+        .card h3 { color: #fff; font-size: 13px; margin-bottom: 11px; text-transform: uppercase; letter-spacing: .05em; }
+        .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+        .tabs button { flex: 1; min-width: 150px; background: rgba(255,255,255,.1); border: 2px solid transparent; color: #fde68a; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 700; font-family: inherit; font-size: 14px; }
+        .tabs button.on { border-color: #f59e0b; background: rgba(245,158,11,.2); color: #fff; }
+        .items { display: flex; gap: 8px; flex-wrap: wrap; }
+        .items button { background: rgba(0,0,0,.25); border: 2px solid transparent; color: #fde68a; padding: 11px 14px; border-radius: 10px; cursor: pointer; font-weight: 600; font-family: inherit; font-size: 13.5px; }
+        .items button.on { border-color: #fbbf24; background: rgba(251,191,36,.18); color: #fff; }
+        .detail { background: rgba(0,0,0,.28); border-radius: 12px; padding: 16px; margin-top: 14px; }
+        .detail .n { font-size: 19px; font-weight: 800; color: #fff; margin-bottom: 3px; }
+        .detail .t { font-size: 12.5px; color: #fcd34d; margin-bottom: 12px; }
+        .row { background: rgba(255,255,255,.05); border-radius: 9px; padding: 11px 13px; margin-bottom: 8px; font-size: 14px; line-height: 1.65; }
+        .row b { color: #fff; }
+        .safe { background: rgba(34,197,94,.14); border-left: 3px solid #4ade80; }
+        .warn { background: rgba(239,68,68,.14); border-left: 3px solid #f87171; }
+        .foot { font-size: 13px; color: #fcd34d; margin-top: 14px; line-height: 1.7; background: rgba(0,0,0,.25); border-radius: 10px; padding: 13px; }
+        .foot b { color: #fff; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="reproductive-health.html">← Back to Lesson</a>
+        <div class="title">🩺 Reproductive Health Explorer</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <div class="tabs">
+                <button id="t0" class="on" onclick="setTab(0)">👨‍👩‍👧 Parivar Niyojan</button>
+                <button id="t1" onclick="setTab(1)">🦠 HIV: Kaise failta hai</button>
+                <button id="t2" onclick="setTab(2)">💚 Kishor Swasthya</button>
+            </div>
+            <div class="items" id="items"></div>
+            <div class="detail" id="detail"></div>
+            <div class="foot" id="foot"></div>
+        </div>
+    </div>
+
+    <script>
+        var TABS = [
+            {
+                foot: '🩺 <b>Yaad rakho:</b> koi bhi tareeka apnane se pehle <b>doctor ki salaah</b> zaroori hai — har vyakti ke liye alag tareeka theek hota hai. Ye jaankari sirf <b>vaigyanik samajh</b> ke liye hai, jaisa NCERT syllabus mein diya gaya hai.',
+                items: [
+                    {
+                        n: "Barrier method (Condom)", t: "Rukavat wala tareeka",
+                        rows: [["Kaise kaam karta hai", "Sperm ko ande tak pahunchne se <b>bhautik roop se rokta</b> hai"],
+                        ["Khaas baat", "Ye <b>ekmatra</b> tareeka hai jo garbhnirodh ke saath-saath <b>STD aur HIV se bhi bachata</b> hai", "safe"],
+                        ["Prakar", "Nar aur maada — dono ke liye upalabdh"]]
+                    },
+                    {
+                        n: "Hormonal method (Goli / Injection)", t: "Rasayanik tareeka",
+                        rows: [["Kaise kaam karta hai", "Hormones ka santulan badal kar <b>ovulation</b> (ande ka nikalna) rokta hai"],
+                        ["Dhyan", "Doctor ki salaah zaroori — kuch mahilaon mein side-effects ho sakte hain", "warn"],
+                        ["STD se bachav", "<b>NAHI</b> — ye sankraman se suraksha nahi deta", "warn"]]
+                    },
+                    {
+                        n: "IUCD (Copper-T)", t: "Uterus mein rakha jaane wala",
+                        rows: [["Kaise kaam karta hai", "Uterus mein rakha jaata hai jisse fertilised anda <b>implant nahi</b> ho paata"],
+                        ["Kaun lagata hai", "Sirf <b>prashikshit doctor</b> ya nurse", "warn"],
+                        ["Samay", "Kai saal tak kaam karta hai"]]
+                    },
+                    {
+                        n: "Surgical method", t: "Sthayi (permanent)",
+                        rows: [["Nar mein", "<b>Vasectomy</b> — vas deferens nali baandh di jaati hai"],
+                        ["Maada mein", "<b>Tubectomy</b> — fallopian tube baandh di jaati hai"],
+                        ["Khaas", "Ye <b>sthayi</b> hai — sirf un logon ke liye jinka parivar poora ho chuka ho", "warn"]]
+                    }
+                ]
+            },
+            {
+                foot: '💚 <b>Sabse zaroori baat:</b> HIV se peedit vyakti ke saath <b>baithna, khaana, padhna aur dosti karna poori tarah surakshit hai</b>. Unse bhedbhav karna <b>vaigyanik roop se galat aur amanviya</b> hai. Aaj ART dawaiyon se wo lambi, swasth zindagi jee sakte hain.',
+                items: [
+                    {
+                        n: "✅ HIV ISSE failta hai", t: "Ye raaste khatre wale hain",
+                        rows: [["Asurakshit yaun sampark", "Sabse aam raasta", "warn"],
+                        ["Sankramit khoon chadhana", "Isiliye har khoon ki <b>jaanch</b> zaroori hai", "warn"],
+                        ["Ek hi soi (needle) dobara", "Hamesha <b>nayi, sterile</b> soi hi istemal ho", "warn"],
+                        ["Sankramit maa se bachche ko", "Garbh, janm ya doodh ke through", "warn"]]
+                    },
+                    {
+                        n: "❌ HIV ISSE NAHI failta", t: "In se darne ki koi zaroorat nahi",
+                        rows: [["Haath milane ya gale lagne se", "Bilkul surakshit", "safe"],
+                        ["Saath khaana khane se", "Bilkul surakshit", "safe"],
+                        ["Ek hi bartan, toilet ya pool se", "Bilkul surakshit", "safe"],
+                        ["Machhar ke kaatne se", "HIV machhar se <b>nahi</b> failta", "safe"],
+                        ["Saath padhne-khelne se", "Bilkul surakshit", "safe"]]
+                    },
+                    {
+                        n: "Shareer mein hota kya hai", t: "Vigyan samjho",
+                        rows: [["HIV kya karta hai", "Shareer ki <b>rog-pratirodhak</b> (immune) WBC ko kamzor kar deta hai"],
+                        ["AIDS kya hai", "Wo aakhri avastha jab shareer choti bimariyon se bhi nahi lad paata"],
+                        ["Ilaaj", "Poora ilaaj abhi nahi, par <b>ART dawaiyon</b> se virus control mein rehta hai", "safe"]]
+                    },
+                    {
+                        n: "Aur bhi STDs", t: "Sirf HIV nahi",
+                        rows: [["Bacteria se", "Gonorrhoea, Syphilis — inka <b>antibiotics se ilaaj sambhav</b> hai", "safe"],
+                        ["Virus se", "Warts, HIV — inka ilaaj mushkil hai", "warn"],
+                        ["Sabse zaroori", "Samay par doctor ko dikhana — sharm mein deri karna khatarnaak hai"]]
+                    }
+                ]
+            },
+            {
+                foot: '📞 Bharat mein bachchon aur kishoron ke liye <b>CHILDLINE 1098</b> par muft aur gopniya madad milti hai. Sarkari aspatalon mein <b>RKSK</b> ke tahat kishoron ke liye alag salaah kendra bhi hote hain.',
+                items: [
+                    {
+                        n: "Javaani ke badlav", t: "Sab bilkul saamanya hai",
+                        rows: [["Kya hota hai", "10-14 saal ki umar mein hormones sakriya hote hain aur shareer badalta hai"],
+                        ["Yaad rakho", "Har vyakti mein ye badlav <b>alag umar</b> par aate hain — jaldi ya der se hona bilkul normal hai", "safe"],
+                        ["Sharm ki baat?", "Bilkul nahi. Sawaal ho toh maa-baap, badi behen-bhai, teacher ya doctor se poochna sahi hai", "safe"]]
+                    },
+                    {
+                        n: "Maasik swachhta", t: "Ladkiyon aur ladkon — dono ke liye",
+                        rows: [["Saaf-safai", "Saaf pad/cloth istemal karein aur <b>har 4-6 ghante</b> mein badlein"],
+                        ["Khaan-paan", "Iron wala khaana (palak, gud, chana) aur khoob paani", "safe"],
+                        ["Doctor kab", "Bahut zyada dard ya bahut zyada rakt-srav ho toh zaroor dikhayein", "warn"],
+                        ["Ladkon ke liye", "Ye samajhna zaroori hai taaki mazaak na udayein balki samajhdaari dikhayein", "safe"]]
+                    },
+                    {
+                        n: "Baal vivah aur kanoon", t: "Kanoon aapki suraksha ke liye hai",
+                        rows: [["Nyoontam aayu", "Ladki <b>18 saal</b>, ladka <b>21 saal</b>"],
+                        ["Kam umar mein garbh", "Maa aur bachche dono ke liye <b>khatarnaak</b> — shareer abhi taiyaar nahi hota", "warn"],
+                        ["Ling jaanch", "Janm se pehle ling jaanch <b>kanoonan apradh</b> hai (PCPNDT Act)", "warn"],
+                        ["Padhai", "Jaldi shaadi se ladkiyon ki padhai chhoot jaati hai — ye poori zindagi asar karta hai"]]
+                    },
+                    {
+                        n: "Apne shareer par apna haq", t: "Ye sabse zaroori baat hai",
+                        rows: [["Yaad rakho", "Aapke shareer par sirf <b>AAPKA</b> adhikaar hai", "safe"],
+                        ["NA kehna", "Kisi bhi galat sparsh ya dabaav ko <b>NA kehna aapka poora haq</b> hai", "safe"],
+                        ["Kuch galat lage toh", "Turant kisi bharose wale bade (maa-baap, teacher) ko batayein — chup mat rahein", "safe"],
+                        ["Madad", "<b>CHILDLINE 1098</b> — muft, 24 ghante, gopniya", "safe"]]
+                    }
+                ]
+            }
+        ];
+        var tab = 0, item = 0;
+        function setTab(i) { tab = i; item = 0; for (var k = 0; k < 3; k++) document.getElementById('t' + k).className = (k === i ? 'on' : ''); render(); }
+        function render() {
+            var T = TABS[tab];
+            var box = document.getElementById('items'); box.innerHTML = '';
+            T.items.forEach(function (it, i) {
+                var b = document.createElement('button');
+                b.textContent = it.n; b.className = (i === item ? 'on' : '');
+                b.onclick = function () { item = i; render(); };
+                box.appendChild(b);
+            });
+            var it = T.items[item];
+            var d = document.getElementById('detail');
+            d.innerHTML = '<div class="n">' + it.n + '</div><div class="t">' + it.t + '</div>' +
+                it.rows.map(function (r) {
+                    return '<div class="row ' + (r[2] || '') + '"><b>' + r[0] + ':</b> ' + r[1] + '</div>';
+                }).join('');
+            document.getElementById('foot').innerHTML = T.foot;
+        }
+        render();
+    </script>
+</body>
+
+</html>

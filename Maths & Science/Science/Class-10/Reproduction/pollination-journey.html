@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pollination to Seed Journey | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #052e16, #15803d); color: #dcfce7; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #bbf7d0; text-decoration: none; border: 1px solid rgba(187,247,208,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 940px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+        canvas { width: 100%; height: auto; background: rgba(0,0,0,.22); border-radius: 12px; display: block; }
+        .stage { font-size: 21px; font-weight: 800; color: #fff; margin-top: 12px; }
+        .desc { font-size: 14px; line-height: 1.75; margin-top: 6px; }
+        .desc b { color: #fff; }
+        .btns { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+        .btns button { flex: 1; min-width: 120px; border: none; padding: 13px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 15px; }
+        .go { background: #22c55e; color: #052e16; } .rst { background: transparent; color: #bbf7d0; border: 1px solid rgba(187,247,208,.4); }
+        .prog { display: flex; gap: 4px; margin-top: 12px; }
+        .prog div { flex: 1; height: 7px; background: rgba(255,255,255,.15); border-radius: 4px; }
+        .prog div.on { background: #4ade80; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="plant-sexual.html">← Back to Lesson</a>
+        <div class="title">🐝 Pollination → Seed Journey</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <canvas id="cv" width="880" height="380"></canvas>
+            <div class="stage" id="st"></div>
+            <div class="desc" id="ds"></div>
+            <div class="btns">
+                <button class="go" onclick="next()" id="nb">▶ Aage badho</button>
+                <button class="rst" onclick="reset()">↺ Shuru se</button>
+            </div>
+            <div class="prog" id="pg"></div>
+        </div>
+    </div>
+
+    <script>
+        var S = [
+            { n: "1. Anther par pollen banta hai", d: "Phool ke <b>NAR</b> hisse (stamen) ke anther mein hazaron <b>pollen grains</b> (paraag kan) bante hain. Har pollen ke andar <b>nar yugmak (male gamete)</b> hota hai." },
+            { n: "2. Pollination — pollen ka safar", d: "Bhaawra (keeda) nectar peene aata hai, aur uske shareer par pollen <b>chipak</b> jaata hai. Wo agle phool par jaata hai aur pollen wahan ke <b>STIGMA</b> par gir jaata hai. Doosre paudhe ka pollen ho toh ise <b>cross-pollination</b> kehte hain — isse zyada variation milti hai." },
+            { n: "3. Pollen stigma par chipakta hai", d: "Stigma <b>CHIPCHIPA</b> hota hai — isi wajah se pollen wahan tik jaata hai aur hawa se udta nahi. Ye phool ka smart design hai!" },
+            { n: "4. Pollen tube bad'ti hai", d: "Pollen se ek patli <b>POLLEN TUBE</b> nikalti hai jo <b>style</b> ke andar se hoti hui neeche <b>ovary</b> ki taraf badhti hai. Ye tube nar yugmak ko apne saath le jaati hai." },
+            { n: "5. Fertilisation (nivechan)", d: "Pollen tube <b>ovule</b> tak pahunchti hai aur nar yugmak ko andar chhod deti hai. Nar yugmak + maada yugmak (anda) mil jaate hain → <b>ZYGOTE</b> ban gaya! Yahi fertilisation hai." },
+            { n: "6. Beej aur phal ban'na", d: "Ab badlav shuru: <b>Zygote → bhroon (embryo)</b>, <b>Ovule → BEEJ (seed)</b>, aur <b>Ovary → PHAL (fruit)</b>. Petal, stamen aur stigma ab bekaar hain — wo <b>sookh kar gir</b> jaate hain." },
+            { n: "7. Ankuran (Germination)", d: "Beej mitti mein girta hai. Sahi <b>nami, hawa aur taapmaan</b> milne par bhroon jaag jaata hai — <b>jad neeche</b> aur <b>ankur upar</b> nikalta hai. Ek naya paudha taiyaar — aur chakra phir se shuru!" }
+        ];
+        var i = 0;
+        var cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+
+        function flower(x, y, s, faded) {
+            var al = faded ? 0.3 : 1;
+            // petals
+            ctx.fillStyle = 'rgba(244,114,182,' + al + ')';
+            for (var p = 0; p < 5; p++) {
+                var a = (p / 5) * Math.PI * 2 - Math.PI / 2;
+                ctx.beginPath();
+                ctx.ellipse(x + Math.cos(a) * 26 * s, y + Math.sin(a) * 26 * s, 20 * s, 11 * s, a, 0, 7);
+                ctx.fill();
+            }
+            // stem
+            ctx.strokeStyle = 'rgba(77,124,15,' + al + ')'; ctx.lineWidth = 6 * s;
+            ctx.beginPath(); ctx.moveTo(x, y + 10 * s); ctx.lineTo(x, y + 95 * s); ctx.stroke();
+            // carpel: ovary + style + stigma
+            ctx.fillStyle = 'rgba(134,239,172,' + al + ')';
+            ctx.beginPath(); ctx.ellipse(x, y + 44 * s, 15 * s, 20 * s, 0, 0, 7); ctx.fill();
+            ctx.strokeStyle = 'rgba(163,230,53,' + al + ')'; ctx.lineWidth = 4 * s;
+            ctx.beginPath(); ctx.moveTo(x, y + 26 * s); ctx.lineTo(x, y - 20 * s); ctx.stroke();
+            ctx.fillStyle = 'rgba(250,204,21,' + al + ')';
+            ctx.beginPath(); ctx.ellipse(x, y - 24 * s, 10 * s, 6 * s, 0, 0, 7); ctx.fill();
+            // stamens
+            for (var k = 0; k < 4; k++) {
+                var ka = -0.9 + k * 0.6;
+                ctx.strokeStyle = 'rgba(252,211,77,' + al + ')'; ctx.lineWidth = 2.5 * s;
+                ctx.beginPath(); ctx.moveTo(x, y + 20 * s);
+                ctx.lineTo(x + Math.sin(ka) * 30 * s, y - 14 * s); ctx.stroke();
+                ctx.fillStyle = 'rgba(245,158,11,' + al + ')';
+                ctx.beginPath(); ctx.arc(x + Math.sin(ka) * 30 * s, y - 16 * s, 5 * s, 0, 7); ctx.fill();
+            }
+        }
+        function draw() {
+            var W = 880, H = 380; ctx.clearRect(0, 0, W, H);
+            ctx.fillStyle = '#78350f'; ctx.fillRect(0, 320, W, 60);
+
+            var late = i >= 5;
+            flower(220, 170, 1, i >= 1 && i <= 4 ? false : (i >= 5));
+            if (i >= 1) flower(600, 170, 1, false);
+
+            // bee carrying pollen
+            if (i === 1) {
+                var bx = 220 + (600 - 220) * 0.5;
+                ctx.font = '30px sans-serif'; ctx.fillText('🐝', bx - 15, 110);
+                ctx.fillStyle = '#fde047';
+                for (var d = 0; d < 4; d++) { ctx.beginPath(); ctx.arc(bx + d * 6 - 8, 122, 3, 0, 7); ctx.fill(); }
+                ctx.strokeStyle = 'rgba(253,224,71,.5)'; ctx.setLineDash([6, 5]); ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.moveTo(250, 150); ctx.quadraticCurveTo(410, 80, 570, 150); ctx.stroke();
+                ctx.setLineDash([]);
+            }
+            // pollen sitting on stigma
+            if (i >= 2) {
+                ctx.fillStyle = '#fde047';
+                ctx.beginPath(); ctx.arc(600, 140, 7, 0, 7); ctx.fill();
+                ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+            }
+            // pollen tube growing down the style
+            if (i >= 3) {
+                var grow = i >= 4 ? 1 : 0.6;
+                ctx.strokeStyle = '#fbbf24'; ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.moveTo(600, 146);
+                ctx.lineTo(600, 146 + (214 - 146) * grow); ctx.stroke();
+                ctx.fillStyle = '#fef08a';
+                ctx.beginPath(); ctx.arc(600, 146 + (214 - 146) * grow, 5, 0, 7); ctx.fill();
+                ctx.fillStyle = '#fde68a'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'left';
+                ctx.fillText('pollen tube', 612, 190);
+            }
+            // ovules / zygote inside the ovary
+            ctx.textAlign = 'center';
+            if (i >= 1) {
+                [[-6, 210], [6, 222]].forEach(function (o, k) {
+                    ctx.fillStyle = (i >= 4 && k === 0) ? '#f59e0b' : '#fef9c3';
+                    ctx.beginPath(); ctx.arc(600 + o[0], o[1], 5, 0, 7); ctx.fill();
+                });
+                if (i >= 4) { ctx.fillStyle = '#fbbf24'; ctx.font = 'bold 11px sans-serif'; ctx.fillText('ZYGOTE', 660, 214); }
+            }
+            // fruit + seed
+            if (i >= 5) {
+                ctx.fillStyle = '#dc2626';
+                ctx.beginPath(); ctx.ellipse(600, 218, 34, 40, 0, 0, 7); ctx.fill();
+                ctx.fillStyle = '#fef3c7';
+                ctx.beginPath(); ctx.ellipse(600, 218, 10, 14, 0, 0, 7); ctx.fill();
+                ctx.fillStyle = '#fca5a5'; ctx.font = 'bold 12px sans-serif';
+                ctx.fillText('PHAL (ovary se)', 600, 282);
+                ctx.fillStyle = '#fde68a'; ctx.font = 'bold 10px sans-serif';
+                ctx.fillText('BEEJ', 600, 222);
+            }
+            // germination
+            if (i >= 6) {
+                ctx.fillStyle = '#fef3c7';
+                ctx.beginPath(); ctx.ellipse(300, 335, 11, 15, 0, 0, 7); ctx.fill();
+                ctx.strokeStyle = '#65a30d'; ctx.lineWidth = 5;
+                ctx.beginPath(); ctx.moveTo(300, 325); ctx.lineTo(300, 275); ctx.stroke();
+                ctx.fillStyle = '#22c55e';
+                ctx.beginPath(); ctx.ellipse(288, 272, 14, 7, -0.5, 0, 7); ctx.fill();
+                ctx.beginPath(); ctx.ellipse(312, 272, 14, 7, 0.5, 0, 7); ctx.fill();
+                ctx.strokeStyle = '#a16207'; ctx.lineWidth = 3;
+                [-1, 0, 1].forEach(function (o) {
+                    ctx.beginPath(); ctx.moveTo(300, 348); ctx.lineTo(300 + o * 14, 372); ctx.stroke();
+                });
+                ctx.fillStyle = '#86efac'; ctx.font = 'bold 12px sans-serif';
+                ctx.fillText('NAYA PAUDHA 🌱', 300, 250);
+            }
+            ctx.fillStyle = '#bbf7d0'; ctx.font = 'bold 12px sans-serif';
+            ctx.fillText('Phool A (pollen dene wala)', 220, 300);
+            if (i >= 1) ctx.fillText('Phool B (pollen lene wala)', 600, 320);
+            ctx.textAlign = 'left';
+        }
+        function render() {
+            document.getElementById('st').textContent = S[i].n;
+            document.getElementById('ds').innerHTML = S[i].d;
+            var p = document.getElementById('pg'); p.innerHTML = '';
+            S.forEach(function (_, k) { var d = document.createElement('div'); if (k <= i) d.className = 'on'; p.appendChild(d); });
+            document.getElementById('nb').textContent = (i === S.length - 1) ? '↺ Phir se' : '▶ Aage badho';
+            draw();
+        }
+        function next() { i = (i + 1) % S.length; render(); }
+        function reset() { i = 0; render(); }
+        render();
+    </script>
+</body>
+
+</html>

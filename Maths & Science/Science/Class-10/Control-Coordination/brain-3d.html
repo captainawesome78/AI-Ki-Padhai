@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Human Brain | AIkiPadhai</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="../sci-3d.js"></script>
+</head>
+
+<body>
+    <script>
+        var FRONTAL = 0xf9a8d4, PARIETAL = 0xc4b5fd, TEMPORAL = 0xfcd34d,
+            OCCIPITAL = 0x86efac, CEREB = 0xfb923c, STEM = 0xd6bcfa, CORD = 0xe9d5ff;
+
+        Sci3D({
+            title: "🧠 3D Human Brain",
+            back: { href: "brain.html", label: "Back to Lesson" },
+            intro: {
+                name: "3D Brain Lab",
+                desc: "Asli fold (gyri-sulci) wala dimaag. Chaaron LOBES alag rang mein — kisi par bhi tap karo. 'Cut-away' se dimaag ko beech se kaat kar andar dekho, aur 'Signal' se sandesh ko cerebrum se spinal cord tak dauadte hue dekho."
+            },
+            camZ: 24,
+            data: {
+                frontal: {
+                    emoji: "🎯", name: "Frontal Lobe", nick: "Sochne wala",
+                    desc: "Sabse aage ka hissa — SOCHNA, faisla lena, yojana banana, bhasha aur vyaktitva (personality). Aichhik (voluntary) harkatein bhi yahin se control hoti hain. Insaanon mein ye sabse bada hai — isiliye hum sabse zyada soch paate hain.",
+                    stats: [["Kaam", "Sochna, faisla, yojana"], ["Bhi", "Voluntary movement"], ["Khaas", "Insaan mein sabse bada"], ["Hissa", "Cerebrum ka"]]
+                },
+                parietal: {
+                    emoji: "✋", name: "Parietal Lobe", nick: "Chhuan aur ehsaas",
+                    desc: "Upar-peeche ka hissa. CHHUAN, dard, garmi-sardi aur dabaav ka ehsaas yahin samjha jaata hai. Ye bhi batata hai ki aapka haath-pair abhi kahan hai (bina dekhe).",
+                    stats: [["Kaam", "Chhuan, dard, taapmaan"], ["Bhi", "Sthaan ka gyaan"], ["Position", "Upar-peeche"], ["Hissa", "Cerebrum ka"]]
+                },
+                temporal: {
+                    emoji: "👂", name: "Temporal Lobe", nick: "Sunna aur yaadein",
+                    desc: "Kaan ke paas ka hissa. SUNNA, bhasha samajhna, gandh aur YAADEIN (memory) — sab yahin. Isi mein hippocampus hota hai jo nayi yaadein banata hai.",
+                    stats: [["Kaam", "Sunna, bhasha"], ["Bhi", "Yaadein + gandh"], ["Position", "Kaan ke paas"], ["Hissa", "Cerebrum ka"]]
+                },
+                occipital: {
+                    emoji: "👁️", name: "Occipital Lobe", nick: "Dekhne wala",
+                    desc: "Sabse PEECHE ka hissa — aur poori tarah DEKHNE (vision) ke liye. Mazedaar baat: aankh peeche nahi, aage hai — par uska sandesh dimaag ke sabse peeche wale hisse mein jaakar samjha jaata hai!",
+                    stats: [["Kaam", "Dekhna (vision)"], ["Position", "Sabse peeche"], ["Mazedaar", "Aankh aage, processing peeche"], ["Hissa", "Cerebrum ka"]]
+                },
+                cerebellum: {
+                    emoji: "⚖️", name: "Cerebellum", nick: "Chhota dimaag",
+                    desc: "Peeche-neeche ka hissa, jiski satah par bahut BAREEK lakeerein hoti hain. SANTULAN (balance) aur harkaton mein taalmel. Cycle chalana, seedhi line par chalna, pen pakadna — sab isi ke bharose.",
+                    stats: [["Kaam", "Santulan + taalmel"], ["Naam ka matlab", "Chhota dimaag"], ["Satah", "Bahut bareek lakeerein"], ["Sharaab se", "Sabse pehle prabhavit"]]
+                },
+                medulla: {
+                    emoji: "💓", name: "Medulla", nick: "Jeevan-rakshak",
+                    desc: "Sabse neeche ka hissa jo spinal cord se milta hai. DHADKAN, SAANS, rakt chaap, ulti, chheenk aur khaansi — sab ANAICHHIK kriyaein yahin se control hoti hain. Isiliye ye shareer ka sabse zaroori hissa hai.",
+                    stats: [["Control", "Dhadkan + saans"], ["Bhi", "BP, ulti, chheenk"], ["Prakar", "Involuntary"], ["Chot", "Sabse khatarnaak"]]
+                },
+                cord: {
+                    emoji: "🔌", name: "Spinal Cord", nick: "Mukhya taar",
+                    desc: "Reedh ki haddi ke andar surakshit lamba taar. Do kaam: (1) dimaag aur shareer ke beech sandesh le jaana, (2) REFLEX ACTIONS ko khud control karna — dimaag ko poochhe bina!",
+                    stats: [["Suraksha", "Reedh ki haddi"], ["Kaam 1", "Sandesh le jaana"], ["Kaam 2", "Reflex control"], ["Lambai", "~45 cm"]]
+                },
+                fissure: {
+                    emoji: "〰️", name: "Gyri &amp; Sulci", nick: "Folds",
+                    desc: "Dimaag ki satah par ubhaar (gyri) aur khaancha (sulci). Sochne ka kaam sirf BAHRI PARAT par hota hai — isliye zyada satah chahiye. Par khopdi chhoti hai, toh prakriti ne satah ko MOD kar thoos diya. Khol kar failao toh ek takiye ke gilaf jitni badi!",
+                    stats: [["Gyri", "Ubhaar"], ["Sulci", "Khaancha"], ["Kyun", "Chhoti khopdi mein zyada satah"], ["Failaane par", "~takiye ke gilaf jitna"]]
+                }
+            },
+            controls: [
+                { id: "cut", label: "🔪 Cut-away (beech se kaato)", min: 0, max: 100, step: 1, value: 0, on: function (v, ctx) { ctx.model.setCut(v / 100); } },
+                { id: "sig", label: "⚡ Signal bhejo (0=off, 1=on)", min: 0, max: 1, step: 1, value: 1, on: function (v, ctx) { ctx.model.sig = (v === 1); } },
+                { id: "sep", label: "↔️ Lobes alag karo", min: 0, max: 100, step: 1, value: 0, on: function (v, ctx) { ctx.model.sep = v / 100; } }
+            ],
+
+            build: function (ctx) {
+                var T = ctx.THREE, P = ctx.pivot, M = ctx.model;
+                M.sig = true; M.sep = 0;
+
+                var rim = new T.DirectionalLight(0xffd6e8, 0.55); rim.position.set(-8, 4, -7); ctx.scene.add(rim);
+                var fill = new T.DirectionalLight(0xe0e7ff, 0.42); fill.position.set(5, -5, 6); ctx.scene.add(fill);
+
+                ctx.renderer.localClippingEnabled = true;
+                M.plane = new T.Plane(new T.Vector3(-1, 0, 0), 30);
+                function tissue(hex) {
+                    var m = ctx.mat(hex);
+                    m.shininess = 10; m.side = T.DoubleSide;
+                    m.clippingPlanes = [M.plane];
+                    return m;
+                }
+
+                /* ---- brain folds: layered noise, IDENTICAL for every patch so
+                       the gyri run continuously across lobe boundaries ---- */
+                var R = 4.2;
+                function foldify(geo, amp, freq) {
+                    var pos = geo.attributes.position;
+                    for (var i = 0; i < pos.count; i++) {
+                        var x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
+                        var n = Math.sin(x * freq) * Math.cos(y * freq * 1.25) +
+                                Math.sin(y * freq * 0.95) * Math.cos(z * freq * 1.15) +
+                                Math.sin(z * freq * 1.2) * Math.cos(x * freq * 0.85);
+                        var d = 1 + (n / 3) * amp;
+                        // flatten the underside a little (brains sit flat on the stem)
+                        var yy = y * d; if (yy < -R * 0.62) yy = -R * 0.62 + (yy + R * 0.62) * 0.35;
+                        pos.setXYZ(i, x * d, yy, z * d);
+                    }
+                    pos.needsUpdate = true; geo.computeVertexNormals();
+                    return geo;
+                }
+
+                M.brain = new T.Group(); P.add(M.brain);
+                M.lobes = [];
+
+                /* ---- ONE continuous cortical surface, cut into lobe patches ----
+                   Each patch is a slice of the SAME sphere (phi/theta ranges), so the
+                   patches meet edge-to-edge and read as a single organ, not 8 balls. */
+                function patch(key, hex, phiS, phiL, thetaS, thetaL, side) {
+                    var g = new T.SphereGeometry(R, 92, 64, phiS, phiL, thetaS, thetaL);
+                    foldify(g, 0.075, 2.7);
+                    var m = new T.Mesh(g, tissue(hex));
+                    m.userData.side = side;
+                    ctx.addPart(m, key);
+                    M.hemi[side > 0 ? 0 : 1].add(m);
+                    M.lobes.push(m);
+                    return m;
+                }
+                // two hemisphere groups so they can be separated
+                M.hemi = [new T.Group(), new T.Group()];
+                M.hemi.forEach(function (h) { M.brain.add(h); });
+
+                var PI = Math.PI;
+                // RIGHT hemisphere occupies phi 0..PI ; LEFT occupies PI..2PI
+                [[0, 1], [PI, -1]].forEach(function (hs) {
+                    var p0 = hs[0], side = hs[1];
+                    patch('frontal', FRONTAL, p0 + 0.00 * PI, 0.36 * PI, 0.06 * PI, 0.66 * PI, side);
+                    patch('parietal', PARIETAL, p0 + 0.36 * PI, 0.30 * PI, 0.06 * PI, 0.46 * PI, side);
+                    patch('temporal', TEMPORAL, p0 + 0.30 * PI, 0.40 * PI, 0.52 * PI, 0.36 * PI, side);
+                    patch('occipital', OCCIPITAL, p0 + 0.66 * PI, 0.34 * PI, 0.10 * PI, 0.52 * PI, side);
+                    // fill the small crown gap so there is no hole at the top
+                    patch('parietal', PARIETAL, p0 + 0.00 * PI, 1.00 * PI, 0.00 * PI, 0.07 * PI, side);
+                });
+
+                // brain proportions: longer front-to-back, a bit narrow, slightly squat
+                M.brain.scale.set(0.82, 0.92, 1.16);
+
+                /* ---- lateral sulcus: the deep groove above the temporal lobe ---- */
+                [1, -1].forEach(function (side) {
+                    var sul = new T.Mesh(new T.TorusGeometry(3.5, 0.22, 8, 40, Math.PI * 1.1), tissue(0x9d174d));
+                    sul.position.set(side * 1.5, -0.55, 0.2);
+                    sul.rotation.y = side > 0 ? -Math.PI / 2 : Math.PI / 2;
+                    sul.rotation.z = 0.25;
+                    M.brain.add(sul);
+                });
+
+                /* ---- longitudinal fissure between the hemispheres ---- */
+                var fis = new T.Mesh(new T.BoxGeometry(0.3, 5.0, 9.0), tissue(0x9d174d));
+                fis.position.set(0, 1.0, 0);
+                ctx.addPart(fis, 'fissure'); M.brain.add(fis);
+
+                /* ---- corpus callosum: the bridge, only seen when cut open ---- */
+                var ccC = new T.CatmullRomCurve3([
+                    new T.Vector3(0, -0.2, 2.6), new T.Vector3(0, 1.5, 1.2),
+                    new T.Vector3(0, 1.7, -0.6), new T.Vector3(0, 0.4, -2.4)]);
+                M.cc = new T.Mesh(new T.TubeGeometry(ccC, 30, 0.42, 12, false), tissue(0xfef3c7));
+                ctx.addPart(M.cc, 'fissure'); M.brain.add(M.cc);
+
+                /* ---- CEREBELLUM: finer, tighter folds (its real look) ---- */
+                M.cereb = new T.Group(); ctx.addPart(M.cereb, 'cerebellum'); M.brain.add(M.cereb);
+                [1, -1].forEach(function (side) {
+                    var cg = new T.SphereGeometry(1.95, 64, 44);
+                    foldify(cg, 0.05, 9.5);
+                    var cm = new T.Mesh(cg, tissue(CEREB));
+                    cm.scale.set(0.8, 0.6, 0.74);
+                    cm.position.set(1.15 * side, -2.5, -3.9);
+                    M.cereb.add(cm);
+                });
+
+                /* ---- BRAINSTEM + SPINAL CORD ---- */
+                var stemCurve = new T.CatmullRomCurve3([
+                    new T.Vector3(0, -1.6, -0.9), new T.Vector3(0, -2.7, -1.5),
+                    new T.Vector3(0, -3.9, -1.9), new T.Vector3(0, -4.9, -2.05)]);
+                M.stem = new T.Mesh(new T.TubeGeometry(stemCurve, 30, 0.78, 20, false), tissue(STEM));
+                ctx.addPart(M.stem, 'medulla'); M.brain.add(M.stem);
+
+                var cordCurve = new T.CatmullRomCurve3([
+                    new T.Vector3(0, -4.8, -2.05), new T.Vector3(0, -7.0, -2.1),
+                    new T.Vector3(0, -9.4, -2.0), new T.Vector3(0, -11.6, -1.85)]);
+                M.cord = new T.Mesh(new T.TubeGeometry(cordCurve, 40, 0.48, 16, false), tissue(CORD));
+                ctx.addPart(M.cord, 'cord'); M.brain.add(M.cord);
+                M.cordCurve = cordCurve;
+
+                for (var n = 0; n < 6; n++) {
+                    var u = 0.12 + n * 0.16;
+                    var p0b = cordCurve.getPoint(u);
+                    [1, -1].forEach(function (s2) {
+                        var c = new T.CatmullRomCurve3([p0b,
+                            new T.Vector3(p0b.x + s2 * 0.9, p0b.y - 0.15, p0b.z + 0.3),
+                            new T.Vector3(p0b.x + s2 * 2.1, p0b.y - 0.5, p0b.z + 0.75)]);
+                        var nv = new T.Mesh(new T.TubeGeometry(c, 12, 0.11, 8, false), tissue(0xfde68a));
+                        ctx.addPart(nv, 'cord'); M.brain.add(nv);
+                    });
+                }
+
+                M.pulse = new T.Mesh(new T.SphereGeometry(0.36, 14, 12), ctx.mat(0xfde047));
+                M.brain.add(M.pulse); M.pulseT = 0;
+
+                M.setCut = function (v) {
+                    M.cutAmt = v;
+                    M.plane.constant = 30 - v * 30.2;
+                };
+                M.setCut(0);
+
+                M.brain.rotation.y = 0.42;
+                P.rotation.x = 0.06;
+            },
+
+            onFrame: function (t, ctx) {
+                var M = ctx.model; if (!M.lobes) return;
+
+                // slide the two hemispheres apart to inspect them
+                M.hemi[0].position.x = M.sep * 2.6;
+                M.hemi[1].position.x = -M.sep * 2.6;
+                if (M.cc) M.cc.visible = M.cutAmt > 0.15 || M.sep > 0.15;
+
+                // signal: cerebrum -> brainstem -> down the spinal cord
+                M.pulse.visible = M.sig;
+                if (M.sig) {
+                    M.pulseT += 0.006;
+                    if (M.pulseT > 1) M.pulseT = 0;
+                    var u = M.pulseT, p;
+                    if (u < 0.35) {                     // through the cerebrum toward the stem
+                        var k2 = u / 0.35;
+                        p = new ctx.THREE.Vector3(1.2 - k2 * 1.2, 2.2 - k2 * 2.6, 2.4 - k2 * 3.6);
+                    } else if (u < 0.5) {               // brainstem
+                        var k3 = (u - 0.35) / 0.15;
+                        p = new ctx.THREE.Vector3(0, -0.6 - k3 * 3.6, -1.2 - k3 * 0.8);
+                    } else {                            // down the cord
+                        p = M.cordCurve.getPoint((u - 0.5) / 0.5);
+                    }
+                    M.pulse.position.copy(p);
+                    M.pulse.scale.setScalar(1 + Math.sin(t * 16) * 0.2);
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

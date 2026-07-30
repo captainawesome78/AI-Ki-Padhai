@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Variation Simulator | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #083344, #0e7490); color: #e0f2fe; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #a5f3fc; text-decoration: none; border: 1px solid rgba(165,243,252,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 940px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+        .card h3 { color: #fff; font-size: 13px; margin-bottom: 11px; text-transform: uppercase; letter-spacing: .05em; }
+        .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
+        .col { background: rgba(0,0,0,.26); border-radius: 14px; padding: 15px; border-top: 4px solid; }
+        .ase { border-color: #f59e0b; } .sex { border-color: #4ade80; }
+        .col h4 { font-size: 16px; color: #fff; margin-bottom: 3px; }
+        .col .w { font-size: 12px; margin-bottom: 12px; }
+        .ase .w { color: #fcd34d; } .sex .w { color: #86efac; }
+        .pop { display: flex; flex-wrap: wrap; gap: 5px; min-height: 78px; }
+        .org { width: 26px; height: 26px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; }
+        .dead { opacity: .18; }
+        .stat { font-size: 13px; margin-top: 10px; line-height: 1.6; }
+        .stat b { color: #fff; }
+        .btns { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+        .btns button { flex: 1; min-width: 130px; border: none; padding: 13px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 15px; }
+        .go { background: #06b6d4; color: #04222b; } .dis { background: #ef4444; color: #fff; } .rst { background: transparent; color: #a5f3fc; border: 1px solid rgba(165,243,252,.4); }
+        .note { font-size: 13.5px; color: #a5f3fc; margin-top: 12px; line-height: 1.75; background: rgba(0,0,0,.25); border-radius: 10px; padding: 13px; }
+        .note b { color: #fff; }
+        .gen { text-align: center; font-weight: 700; color: #7dd3fc; margin-top: 10px; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="why-reproduce.html">← Back to Lesson</a>
+        <div class="title">🎲 Variation Simulator</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <div class="two">
+                <div class="col ase">
+                    <h4>🦠 Asexual (1 parent)</h4>
+                    <div class="w">Sab santaan parent ki hubahu copy</div>
+                    <div class="pop" id="popA"></div>
+                    <div class="stat" id="stA"></div>
+                </div>
+                <div class="col sex">
+                    <h4>🌸 Sexual (2 parents)</h4>
+                    <div class="w">Har santaan thodi alag</div>
+                    <div class="pop" id="popS"></div>
+                    <div class="stat" id="stS"></div>
+                </div>
+            </div>
+            <div class="gen" id="gen"></div>
+            <div class="btns">
+                <button class="go" onclick="breed()">🧬 Agli peedhi banao</button>
+                <button class="dis" onclick="disaster()">🔥 Garmi ki laher aayi!</button>
+                <button class="rst" onclick="reset()">↺ Reset</button>
+            </div>
+            <div class="note" id="note"></div>
+        </div>
+    </div>
+
+    <script>
+        /* each organism has a heat-tolerance value 1..9 ; a heatwave kills everyone below 5 */
+        var A = [], S = [], gen = 0, hit = false;
+        var COLS = ['#1e3a8a', '#1d4ed8', '#0891b2', '#0d9488', '#16a34a', '#65a30d', '#ca8a04', '#ea580c', '#dc2626'];
+
+        function chip(v, dead) {
+            var d = document.createElement('div');
+            d.className = 'org' + (dead ? ' dead' : '');
+            d.style.background = COLS[v - 1];
+            d.style.color = '#fff';
+            d.textContent = v;
+            d.title = 'Garmi sehne ki kshamata: ' + v;
+            return d;
+        }
+        function render() {
+            var pa = document.getElementById('popA'), ps = document.getElementById('popS');
+            pa.innerHTML = ''; ps.innerHTML = '';
+            A.forEach(function (o) { pa.appendChild(chip(o.v, o.dead)); });
+            S.forEach(function (o) { ps.appendChild(chip(o.v, o.dead)); });
+            var aAlive = A.filter(function (o) { return !o.dead; }).length;
+            var sAlive = S.filter(function (o) { return !o.dead; }).length;
+            var aVals = [...new Set(A.map(function (o) { return o.v; }))].length;
+            var sVals = [...new Set(S.map(function (o) { return o.v; }))].length;
+            document.getElementById('stA').innerHTML =
+                'Alag-alag values: <b>' + aVals + '</b><br>Zinda: <b>' + aAlive + ' / ' + A.length + '</b>';
+            document.getElementById('stS').innerHTML =
+                'Alag-alag values: <b>' + sVals + '</b><br>Zinda: <b>' + sAlive + ' / ' + S.length + '</b>';
+            document.getElementById('gen').textContent = 'Peedhi (generation): ' + gen;
+
+            var n = document.getElementById('note');
+            if (!hit) {
+                n.innerHTML = 'Har jeev par likha number = uski <b>garmi sehne ki kshamata</b> (1 = kamzor, 9 = mazboot).<br><br>' +
+                    '🦠 <b>Asexual</b> mein sab santaan parent ki copy hain — isliye sabka number lagbhag <b>ek jaisa</b> rehta hai.<br>' +
+                    '🌸 <b>Sexual</b> mein do parents ke gun mix hote hain — isliye numbers <b>alag-alag</b> ho jaate hain.<br><br>' +
+                    'Kuch peedhiyan banao, phir <b>🔥 Garmi ki laher</b> dabao aur dekho kya hota hai!';
+            } else {
+                n.innerHTML = '🔥 <b>Garmi ki laher aayi — jinki kshamata 5 se kam thi, wo nahi bach paaye.</b><br><br>' +
+                    '🦠 Asexual: <b>' + aAlive + '</b> zinda bache — kyunki sab ek jaise the, toh ya sab bach jaate ya <b>sab mar jaate</b>.<br>' +
+                    '🌸 Sexual: <b>' + sAlive + '</b> zinda bache — kyunki variation ki wajah se <b>kuch na kuch mazboot</b> zaroor the.<br><br>' +
+                    '✅ <b>Yahi variation ka asli faayda hai:</b> badalte maahol mein prajaati ko bachaye rakhna. Isiliye variation ko prajaati ka <b>beema (insurance)</b> kehte hain.';
+            }
+        }
+        function breed() {
+            if (hit) return;
+            gen++;
+            // asexual: near-perfect copies, only rare tiny mutation
+            var na = [];
+            (A.length ? A : [{ v: 4 }]).slice(0, 6).forEach(function (o) {
+                for (var k = 0; k < 2; k++) {
+                    var v = o.v;
+                    if (Math.random() < 0.06) v += (Math.random() < .5 ? -1 : 1);   // rare copying error
+                    na.push({ v: Math.max(1, Math.min(9, v)), dead: false });
+                }
+            });
+            A = na.slice(0, 12);
+            // sexual: child gets a mix of two parents + variation
+            var ns = [];
+            var pool = S.length ? S : [{ v: 3 }, { v: 5 }];
+            for (var i = 0; i < 12; i++) {
+                var p1 = pool[Math.floor(Math.random() * pool.length)];
+                var p2 = pool[Math.floor(Math.random() * pool.length)];
+                var v = Math.round((p1.v + p2.v) / 2) + (Math.floor(Math.random() * 5) - 2);
+                ns.push({ v: Math.max(1, Math.min(9, v)), dead: false });
+            }
+            S = ns;
+            render();
+        }
+        function disaster() {
+            hit = true;
+            A.forEach(function (o) { o.dead = o.v < 5; });
+            S.forEach(function (o) { o.dead = o.v < 5; });
+            render();
+        }
+        function reset() {
+            gen = 0; hit = false;
+            A = []; S = [];
+            for (var i = 0; i < 12; i++) { A.push({ v: 4, dead: false }); }
+            for (var j = 0; j < 12; j++) { S.push({ v: 2 + Math.floor(Math.random() * 6), dead: false }); }
+            render();
+        }
+        reset();
+    </script>
+</body>
+
+</html>

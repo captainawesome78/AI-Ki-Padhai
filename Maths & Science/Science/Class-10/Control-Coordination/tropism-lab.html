@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plant Tropism Lab | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #052e16, #15803d); color: #dcfce7; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #bbf7d0; text-decoration: none; border: 1px solid rgba(187,247,208,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 900px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+        canvas { width: 100%; height: auto; background: rgba(0,0,0,.22); border-radius: 12px; display: block; }
+        .modes { display: flex; gap: 9px; flex-wrap: wrap; margin-bottom: 12px; }
+        .modes button { flex: 1; min-width: 135px; background: rgba(255,255,255,.1); border: 2px solid transparent; color: #bbf7d0; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 700; font-family: inherit; font-size: 14px; }
+        .modes button.on { border-color: #4ade80; background: rgba(74,222,128,.2); color: #fff; }
+        label { display: flex; justify-content: space-between; font-size: 14px; margin: 12px 0 5px; }
+        label b { color: #4ade80; }
+        input[type=range] { width: 100%; accent-color: #22c55e; }
+        .btns { display: flex; gap: 10px; margin-top: 12px; }
+        .btns button { flex: 1; border: none; padding: 13px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 15px; }
+        .go { background: #22c55e; color: #052e16; } .rst { background: transparent; color: #bbf7d0; border: 1px solid rgba(187,247,208,.4); }
+        .expl { background: rgba(0,0,0,.28); border-radius: 12px; padding: 15px; margin-top: 12px; font-size: 14px; line-height: 1.75; }
+        .expl b { color: #fff; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="plant-control.html">← Back to Lesson</a>
+        <div class="title">🌱 Plant Tropism Lab</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <div class="modes">
+                <button id="mP" class="on" onclick="setM('photo')">☀️ Phototropism</button>
+                <button id="mG" onclick="setM('geo')">🌍 Geotropism</button>
+                <button id="mH" onclick="setM('hydro')">💧 Hydrotropism</button>
+            </div>
+            <canvas id="cv" width="840" height="340"></canvas>
+            <label id="lbl">☀️ Roshni ki disha <b><span id="dV">Right</span></b></label>
+            <input type="range" id="dir" min="0" max="2" step="1" value="2" oninput="upd()">
+            <div class="btns">
+                <button class="go" onclick="grow()">▶ Kuch din badhne do</button>
+                <button class="rst" onclick="resetL()">↺ Reset</button>
+            </div>
+            <div class="expl" id="expl"></div>
+        </div>
+    </div>
+
+    <script>
+        var cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+        var mode = 'photo', dir = 2, t = 0, timer = null;
+        // dir: 0 = left, 1 = top, 2 = right   (for hydro: 0 = left pot, 2 = right pot)
+
+        function setM(m) {
+            mode = m;
+            document.getElementById('mP').className = m === 'photo' ? 'on' : '';
+            document.getElementById('mG').className = m === 'geo' ? 'on' : '';
+            document.getElementById('mH').className = m === 'hydro' ? 'on' : '';
+            var l = document.getElementById('lbl');
+            if (m === 'photo') l.innerHTML = '☀️ Roshni ki disha <b><span id="dV"></span></b>';
+            else if (m === 'geo') l.innerHTML = '🌍 Paudhe ko ghumao (0=seedha, 2=ulta) <b><span id="dV"></span></b>';
+            else l.innerHTML = '💧 Paani kis taraf hai <b><span id="dV"></span></b>';
+            upd();
+        }
+        function upd() {
+            dir = +document.getElementById('dir').value;
+            var names = mode === 'geo' ? ['Seedha', 'Tirchha', 'Ulta'] :
+                mode === 'hydro' ? ['Baayein', 'Beech mein', 'Daayein'] : ['Baayein', 'Upar', 'Daayein'];
+            var el = document.getElementById('dV'); if (el) el.textContent = names[dir];
+            draw(); explain();
+        }
+        function bendAmount() { return Math.min(1, t / 100); }
+
+        function draw() {
+            var W = 840, H = 340; ctx.clearRect(0, 0, W, H);
+            var b = bendAmount();
+            var soilY = 250, cx = 420;
+
+            // light source
+            if (mode === 'photo') {
+                var lx = dir === 0 ? 90 : dir === 2 ? 750 : 420, ly = dir === 1 ? 45 : 95;
+                ctx.fillStyle = 'rgba(253,224,71,.28)';
+                ctx.beginPath(); ctx.arc(lx, ly, 60, 0, 7); ctx.fill();
+                ctx.fillStyle = '#fde047'; ctx.beginPath(); ctx.arc(lx, ly, 30, 0, 7); ctx.fill();
+                ctx.fillStyle = '#422006'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
+                ctx.fillText('☀️', lx, ly + 5);
+            }
+            // water pots for hydrotropism
+            if (mode === 'hydro') {
+                [[170, 0], [670, 2]].forEach(function (p) {
+                    var wet = (dir === p[1]);
+                    ctx.fillStyle = wet ? 'rgba(56,189,248,.55)' : 'rgba(148,163,184,.2)';
+                    ctx.fillRect(p[0] - 55, soilY + 20, 110, 55);
+                    ctx.fillStyle = wet ? '#7dd3fc' : '#94a3b8';
+                    ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
+                    ctx.fillText(wet ? '💧 GEELI mitti' : 'sookhi mitti', p[0], soilY + 52);
+                });
+            }
+            // soil
+            ctx.fillStyle = '#78350f'; ctx.fillRect(0, soilY, W, H - soilY);
+            ctx.textAlign = 'left';
+
+            // ---- plant ----
+            ctx.save();
+            ctx.translate(cx, soilY);
+            if (mode === 'geo') ctx.rotate(dir * 0.78);   // tilt the whole pot
+
+            // stem: bends toward stimulus as it grows
+            var bend = 0;
+            if (mode === 'photo') bend = (dir === 0 ? -1 : dir === 2 ? 1 : 0) * b * 0.9;
+            if (mode === 'geo') bend = -dir * 0.78 * b;   // stem straightens back UP against gravity
+            ctx.strokeStyle = '#4d7c0f'; ctx.lineWidth = 9; ctx.lineCap = 'round';
+            ctx.beginPath(); ctx.moveTo(0, 0);
+            var segs = 8, px = 0, py = 0;
+            for (var i = 1; i <= segs; i++) {
+                var k = i / segs;
+                px += Math.sin(bend * k) * 13;
+                py -= 13;
+                ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+            // leaves
+            ctx.fillStyle = '#22c55e';
+            [0.45, 0.75].forEach(function (k, i) {
+                var lxp = Math.sin(bend * k) * 13 * (segs * k), lyp = -13 * segs * k;
+                ctx.beginPath();
+                ctx.ellipse(lxp + (i ? 22 : -22), lyp, 20, 9, i ? 0.4 : -0.4, 0, 7); ctx.fill();
+            });
+            // flower head at the tip
+            ctx.fillStyle = '#fbbf24';
+            ctx.beginPath(); ctx.arc(px, py - 6, 13, 0, 7); ctx.fill();
+
+            // roots: bend the OPPOSITE way
+            var rbend = 0;
+            if (mode === 'photo') rbend = -bend * 0.35;
+            if (mode === 'geo') rbend = dir * 0.78 * b;      // roots turn DOWN toward gravity
+            if (mode === 'hydro') rbend = (dir === 0 ? -1 : dir === 2 ? 1 : 0) * b * 1.0;
+            ctx.strokeStyle = '#a16207'; ctx.lineWidth = 6;
+            [-1, 0, 1].forEach(function (o) {
+                ctx.beginPath(); ctx.moveTo(0, 0);
+                var rx = 0, ry = 0;
+                for (var j = 1; j <= 6; j++) {
+                    var kk = j / 6;
+                    rx += Math.sin(rbend * kk) * 11 + o * 3;
+                    ry += 11;
+                    ctx.lineTo(rx, ry);
+                }
+                ctx.stroke();
+            });
+            ctx.restore();
+
+            // auxin annotation for phototropism
+            if (mode === 'photo' && dir !== 1 && b > 0.15) {
+                var side = dir === 2 ? -1 : 1;
+                ctx.fillStyle = 'rgba(168,85,247,.75)';
+                for (var a2 = 0; a2 < 5; a2++) {
+                    ctx.beginPath(); ctx.arc(cx + side * 12, soilY - 30 - a2 * 18, 5, 0, 7); ctx.fill();
+                }
+                ctx.fillStyle = '#c4b5fd'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
+                ctx.fillText('AUXIN yahan jama', cx + side * 92, soilY - 120);
+                ctx.fillText('(chhaanv wali side)', cx + side * 92, soilY - 104);
+                ctx.textAlign = 'left';
+            }
+        }
+        function explain() {
+            var e = document.getElementById('expl'), b = bendAmount();
+            if (mode === 'photo') {
+                e.innerHTML = '<b>PHOTOTROPISM</b> — roshni par pratikriya.<br><br>' +
+                    'Roshni ek taraf se aane par <b>AUXIN</b> hormone <b>chhaanv wali (andhere) side</b> mein jama ho jaata hai. Auxin cells ko <b>lamba</b> karta hai — toh andhere wali side <b>zyada badhti</b> hai, aur tana apne aap <b>roshni ki taraf jhuk</b> jaata hai.<br><br>' +
+                    '🌱 Tana: roshni ki taraf = <b>positive</b> phototropism<br>🥕 Jad: roshni se door = <b>negative</b> phototropism';
+            } else if (mode === 'geo') {
+                e.innerHTML = '<b>GEOTROPISM (Gravitropism)</b> — gurutva par pratikriya.<br><br>' +
+                    'Paudhe ko ulta kar do — kuch din mein tana phir se <b>UPAR</b> mudne lagega aur jad phir se <b>NEECHE</b>. Paudha "dekhta" nahi, wo gravity mehsoos karta hai!<br><br>' +
+                    '🌱 Tana: gravity ke <b>ulta</b> (upar) = <b>negative</b> geotropism<br>🥕 Jad: gravity ki <b>taraf</b> (neeche) = <b>positive</b> geotropism<br><br>' +
+                    '💡 Isiliye beej ko kaise bhi bo do, ankur hamesha upar aur jad hamesha neeche hi jaati hai.';
+            } else {
+                e.innerHTML = '<b>HYDROTROPISM</b> — paani par pratikriya.<br><br>' +
+                    'Jad us taraf mudti hai jahan <b>nami (paani)</b> zyada ho — chahe wo raasta seedha na ho. Isiliye paudhe ki jadein kabhi-kabhi paani ki paaip ki taraf mud jaati hai aur use tod deti hain!<br><br>' +
+                    '🥕 Jad: paani ki taraf = <b>positive</b> hydrotropism';
+            }
+            if (b < 0.1) e.innerHTML += '<br><br>▶ "Kuch din badhne do" dabao aur dekho paudha kaise mudta hai.';
+        }
+        function grow() {
+            if (timer) clearInterval(timer);
+            t = 0;
+            timer = setInterval(function () {
+                t += 3; draw(); explain();
+                if (t >= 100) { clearInterval(timer); timer = null; }
+            }, 45);
+        }
+        function resetL() { if (timer) { clearInterval(timer); timer = null; } t = 0; draw(); explain(); }
+        setM('photo');
+    </script>
+</body>
+
+</html>

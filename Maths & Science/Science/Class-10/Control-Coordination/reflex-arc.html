@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reflex Arc Simulator | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #0b1220, #0e7490); color: #e0f2fe; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.35); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #a5f3fc; text-decoration: none; border: 1px solid rgba(165,243,252,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 960px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,.06); border-radius: 16px; padding: 16px; margin-bottom: 14px; }
+        canvas { width: 100%; height: auto; border-radius: 12px; display: block; }
+        .btns { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+        .btns button { flex: 1; min-width: 130px; border: none; padding: 13px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 15px; }
+        .hot { background: linear-gradient(180deg,#f87171,#dc2626); color: #fff; }
+        .slow { background: rgba(255,255,255,.1); color: #a5f3fc; border: 1px solid rgba(165,243,252,.35); }
+        .rst { background: transparent; color: #a5f3fc; border: 1px solid rgba(165,243,252,.4); }
+        .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 9px; margin-top: 12px; }
+        .st { background: rgba(0,0,0,.3); border-left: 4px solid #334155; border-radius: 0 10px 10px 0; padding: 10px 12px; font-size: 13px; opacity: .32; transition: all .25s; line-height: 1.5; }
+        .st.on { opacity: 1; border-left-color: #22d3ee; background: rgba(34,211,238,.12); }
+        .st b { color: #fff; display: block; margin-bottom: 2px; }
+        .timer { text-align: center; font-size: 15px; margin-top: 10px; font-weight: 700; color: #7dd3fc; min-height: 22px; }
+        .note { font-size: 13.5px; color: #a5f3fc; margin-top: 12px; line-height: 1.75; background: rgba(0,0,0,.25); border-radius: 10px; padding: 13px; }
+        .note b { color: #fff; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="reflex-action.html">← Back to Lesson</a>
+        <div class="title">⚡ Reflex Arc Simulator</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <canvas id="cv" width="900" height="430"></canvas>
+            <div class="btns">
+                <button class="hot" onclick="fire(1)">🔥 Garam cheez chhuo!</button>
+                <button class="slow" onclick="fire(0.25)">🐢 Slow motion</button>
+                <button class="rst" onclick="reset()">↺ Reset</button>
+            </div>
+            <div class="timer" id="timer"></div>
+            <div class="steps" id="steps"></div>
+            <div class="note" id="note"></div>
+        </div>
+    </div>
+
+    <script>
+        var cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+        var W = 900, H = 430;
+        var stage = -1, raf = null, t0 = 0, el = 0, speed = 1;
+
+        var STEPS = [
+            ["1. Receptor", "Khaal ke thermoreceptors garmi pakadte hain"],
+            ["2. Sensory neuron", "Sandesh dorsal root se spinal cord mein"],
+            ["3. Relay neuron", "Grey matter mein turant faisla"],
+            ["4. Motor neuron", "Hukum ventral root se bahar"],
+            ["5. Effector", "Muscle sikudti hai — haath hat gaya!"],
+            ["6. Dimaag", "Ab jaakar DARD mehsoos hota hai"]
+        ];
+
+        /* ---------- path waypoints (anatomically laid out) ---------- */
+        var SKIN = [128, 300], ELBOW = [268, 258], SHOULD = [400, 214];
+        var DRG = [546, 196];                 // dorsal root ganglion (sensory cell body)
+        var CORD = [640, 232];                // grey matter (relay)
+        var VENT = [612, 288];                // ventral root exit
+        var MUS = [258, 330];                 // biceps
+        var BRAIN = [700, 78];
+
+        function grad(a, b, c1, c2) { var g = ctx.createLinearGradient(a[0], a[1], b[0], b[1]); g.addColorStop(0, c1); g.addColorStop(1, c2); return g; }
+        function curve(pts, col, w, dash) {
+            ctx.save(); if (dash) ctx.setLineDash(dash);
+            ctx.strokeStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+            ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+            for (var i = 1; i < pts.length - 1; i++) {
+                var xc = (pts[i][0] + pts[i + 1][0]) / 2, yc = (pts[i][1] + pts[i + 1][1]) / 2;
+                ctx.quadraticCurveTo(pts[i][0], pts[i][1], xc, yc);
+            }
+            ctx.lineTo(pts[pts.length - 1][0], pts[pts.length - 1][1]);
+            ctx.stroke(); ctx.restore();
+        }
+        /* draw a real-looking neuron: soma + dendrites + axon */
+        function neuron(x, y, r, col, dendDir) {
+            ctx.fillStyle = col;
+            ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
+            ctx.strokeStyle = 'rgba(255,255,255,.45)'; ctx.lineWidth = 1.5; ctx.stroke();
+            ctx.fillStyle = 'rgba(0,0,0,.35)';
+            ctx.beginPath(); ctx.arc(x - r * .2, y - r * .15, r * .38, 0, 7); ctx.fill();
+            ctx.strokeStyle = col; ctx.lineWidth = 2;
+            for (var i = 0; i < 5; i++) {
+                var a = dendDir + (i - 2) * 0.45;
+                ctx.beginPath(); ctx.moveTo(x + Math.cos(a) * r, y + Math.sin(a) * r);
+                ctx.lineTo(x + Math.cos(a) * (r + 11), y + Math.sin(a) * (r + 11)); ctx.stroke();
+            }
+        }
+
+        function drawScene(pulse, trail) {
+            ctx.clearRect(0, 0, W, H);
+            // background wash
+            var bg = ctx.createLinearGradient(0, 0, 0, H);
+            bg.addColorStop(0, 'rgba(15,23,42,.55)'); bg.addColorStop(1, 'rgba(2,44,58,.55)');
+            ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+
+            /* ---------- ARM (silhouette) ---------- */
+            ctx.strokeStyle = 'rgba(251,146,120,.30)'; ctx.lineWidth = 44; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+            ctx.beginPath(); ctx.moveTo(150, 300); ctx.lineTo(ELBOW[0], ELBOW[1]); ctx.lineTo(SHOULD[0], SHOULD[1]); ctx.stroke();
+            // hand
+            ctx.fillStyle = 'rgba(251,146,120,.38)';
+            ctx.beginPath(); ctx.ellipse(132, 306, 30, 22, -0.35, 0, 7); ctx.fill();
+            // biceps belly (contracts at stage 4)
+            var flex = stage >= 4 ? 1 : 0;
+            ctx.fillStyle = flex ? 'rgba(239,68,68,.85)' : 'rgba(220,38,38,.5)';
+            ctx.beginPath();
+            ctx.ellipse(MUS[0], MUS[1] - flex * 6, 52 + flex * 10, 17 + flex * 6, -0.3, 0, 7); ctx.fill();
+            ctx.fillStyle = '#fecaca'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center';
+            ctx.fillText('BICEPS (effector)', MUS[0], MUS[1] + 34);
+
+            /* ---------- FLAME ---------- */
+            ctx.font = '34px sans-serif'; ctx.textAlign = 'center';
+            ctx.fillText('🔥', 74, 318);
+
+            /* ---------- SPINAL COLUMN + CORD CROSS-SECTION ---------- */
+            // vertebra ring
+            ctx.fillStyle = 'rgba(226,232,240,.16)';
+            ctx.beginPath(); ctx.ellipse(628, 244, 92, 78, 0, 0, 7); ctx.fill();
+            ctx.strokeStyle = 'rgba(226,232,240,.35)'; ctx.lineWidth = 3; ctx.stroke();
+            ctx.fillStyle = '#cbd5e1'; ctx.font = 'bold 11px sans-serif';
+            ctx.fillText('VERTEBRA (reedh ki haddi)', 628, 148);
+
+            // white matter (outer oval)
+            ctx.fillStyle = 'rgba(241,245,249,.85)';
+            ctx.beginPath(); ctx.ellipse(628, 244, 62, 52, 0, 0, 7); ctx.fill();
+
+            // GREY MATTER — the butterfly / H shape (the iconic bit)
+            ctx.fillStyle = '#94a3b8';
+            ctx.beginPath();
+            ctx.moveTo(628, 210);
+            ctx.bezierCurveTo(600, 206, 578, 214, 580, 228);   // dorsal horn L
+            ctx.bezierCurveTo(582, 240, 604, 240, 610, 246);
+            ctx.bezierCurveTo(598, 256, 578, 262, 582, 274);   // ventral horn L
+            ctx.bezierCurveTo(588, 286, 612, 284, 628, 276);
+            ctx.bezierCurveTo(644, 284, 668, 286, 674, 274);   // ventral horn R
+            ctx.bezierCurveTo(678, 262, 658, 256, 646, 246);
+            ctx.bezierCurveTo(652, 240, 674, 240, 676, 228);   // dorsal horn R
+            ctx.bezierCurveTo(678, 214, 656, 206, 628, 210);
+            ctx.fill();
+            ctx.fillStyle = '#475569'; ctx.font = 'bold 10px sans-serif';
+            ctx.fillText('GREY MATTER', 628, 250);
+            ctx.fillStyle = '#64748b'; ctx.font = '9px sans-serif';
+            ctx.fillText('(butterfly shape)', 628, 262);
+            ctx.fillStyle = '#94a3b8'; ctx.font = 'bold 10px sans-serif';
+            ctx.fillText('white matter', 628, 306);
+
+            /* ---------- NEURON PATHS ---------- */
+            var sensOn = stage >= 1, relayOn = stage >= 2, motOn = stage >= 3;
+            // sensory: skin -> elbow -> shoulder -> DRG -> dorsal horn
+            curve([SKIN, ELBOW, SHOULD, [488, 200], DRG, [590, 214]],
+                sensOn ? grad(SKIN, DRG, '#4ade80', '#22c55e') : 'rgba(255,255,255,.16)', sensOn ? 5 : 3);
+            // motor: ventral horn -> out -> muscle
+            curve([[600, 272], VENT, [470, 300], [350, 322], MUS],
+                motOn ? grad(VENT, MUS, '#f87171', '#ef4444') : 'rgba(255,255,255,.16)', motOn ? 5 : 3);
+            // relay (inside grey matter)
+            curve([[598, 224], [620, 240], [612, 268]], relayOn ? '#22d3ee' : 'rgba(255,255,255,.2)', relayOn ? 5 : 3);
+            // ascending to brain (dashed, late)
+            curve([[640, 214], [668, 170], [692, 120]], stage >= 5 ? '#c084fc' : 'rgba(255,255,255,.12)', 3, [7, 6]);
+
+            /* ---------- BRAIN ---------- */
+            ctx.fillStyle = stage >= 5 ? 'rgba(244,114,182,.5)' : 'rgba(244,114,182,.22)';
+            ctx.beginPath(); ctx.ellipse(BRAIN[0], BRAIN[1], 62, 42, 0, 0, 7); ctx.fill();
+            for (var f = 0; f < 5; f++) {
+                ctx.strokeStyle = 'rgba(157,23,77,.45)'; ctx.lineWidth = 2.5;
+                ctx.beginPath(); ctx.arc(BRAIN[0] - 40 + f * 20, BRAIN[1], 13, Math.PI * .15, Math.PI * .85); ctx.stroke();
+            }
+            ctx.fillStyle = stage >= 5 ? '#fff' : '#fbcfe8'; ctx.font = 'bold 12px sans-serif';
+            ctx.fillText('DIMAAG', BRAIN[0], BRAIN[1] + 60);
+            if (stage >= 5) { ctx.fillStyle = '#fca5a5'; ctx.font = 'bold 13px sans-serif'; ctx.fillText('😖 "AAH! DARD!"', BRAIN[0], BRAIN[1] - 55); }
+
+            /* ---------- NEURON CELL BODIES ---------- */
+            neuron(DRG[0], DRG[1], 12, sensOn ? '#4ade80' : '#475569', -0.6);
+            ctx.fillStyle = sensOn ? '#bbf7d0' : '#64748b'; ctx.font = 'bold 10px sans-serif';
+            ctx.fillText('DORSAL ROOT', DRG[0], DRG[1] - 26);
+            ctx.fillText('GANGLION', DRG[0], DRG[1] - 15);
+            neuron(614, 236, 9, relayOn ? '#22d3ee' : '#475569', 1.6);
+            ctx.fillStyle = '#fbbf24'; ctx.font = 'bold 10px sans-serif';
+            ctx.fillText('RECEPTOR', SKIN[0] - 6, SKIN[1] + 40);
+
+            // root labels
+            ctx.fillStyle = sensOn ? '#86efac' : '#64748b'; ctx.font = '10px sans-serif'; ctx.textAlign = 'left';
+            ctx.fillText('dorsal root (IN)', 500, 190);
+            ctx.fillStyle = motOn ? '#fca5a5' : '#64748b';
+            ctx.fillText('ventral root (OUT)', 500, 312);
+            ctx.textAlign = 'center';
+
+            /* ---------- IMPULSE with glowing trail ---------- */
+            if (trail && trail.length) {
+                trail.forEach(function (p, i) {
+                    var a = (i + 1) / trail.length;
+                    ctx.fillStyle = 'rgba(253,224,71,' + (a * 0.5) + ')';
+                    ctx.beginPath(); ctx.arc(p[0], p[1], 4 + a * 4, 0, 7); ctx.fill();
+                });
+            }
+            if (pulse) {
+                ctx.fillStyle = 'rgba(253,224,71,.28)';
+                ctx.beginPath(); ctx.arc(pulse[0], pulse[1], 18, 0, 7); ctx.fill();
+                ctx.fillStyle = '#fde047';
+                ctx.beginPath(); ctx.arc(pulse[0], pulse[1], 8, 0, 7); ctx.fill();
+                ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+            }
+            ctx.textAlign = 'left';
+        }
+
+        function lerp(a, b, k) { return [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k]; }
+        function along(pts, k) {
+            var seg = (pts.length - 1) * k, i = Math.min(pts.length - 2, Math.floor(seg));
+            return lerp(pts[i], pts[i + 1], seg - i);
+        }
+        function renderSteps() {
+            var s = document.getElementById('steps'); s.innerHTML = '';
+            STEPS.forEach(function (st, i) {
+                var d = document.createElement('div');
+                d.className = 'st' + (i <= stage ? ' on' : '');
+                d.innerHTML = '<b>' + st[0] + '</b>' + st[1];
+                s.appendChild(d);
+            });
+            var n = document.getElementById('note');
+            if (stage < 0) n.innerHTML = 'Button dabao. Dhyan se dekho — sandesh dimaag tak <b>baad mein</b> pahunchta hai.';
+            else if (stage < 5) n.innerHTML = 'Sandesh abhi <b>dimaag tak gaya hi nahi</b>. Faisla <b>spinal cord</b> ne liya — isiliye itna tez hua.';
+            else n.innerHTML = '✅ <b>Reflex arc poora:</b> Receptor → Sensory neuron → Relay neuron (spinal cord) → Motor neuron → Effector.<br><br>' +
+                'Dimaag ko sandesh <b>sabse aakhir</b> mein mila — isiliye haath pehle hata aur <b>dard baad mein</b> mehsoos hua. ' +
+                'Agar dimaag ke faisle ka intezaar karte toh ~10 guna zyada samay lagta aur khaal jal jaati.';
+        }
+        var SENS = [SKIN, ELBOW, SHOULD, [488, 200], DRG, [590, 214]];
+        var MOT = [[600, 272], VENT, [470, 300], [350, 322], MUS];
+        var TOBRAIN = [[640, 214], [668, 170], [692, 120]];
+
+        function fire(sp) {
+            speed = sp; if (raf) cancelAnimationFrame(raf);
+            stage = 0; t0 = performance.now(); renderSteps();
+            var trail = [];
+            function step() {
+                el = (performance.now() - t0) / 1000 * speed;
+                var real = (performance.now() - t0) / 1000;
+                document.getElementById('timer').textContent =
+                    '⏱️ ' + real.toFixed(2) + ' s beeta  •  asli reflex sirf ~0.05 s leta hai';
+                var p = null;
+                if (el < 0.85) { stage = 1; p = along(SENS, el / 0.85); }
+                else if (el < 1.15) { stage = 2; p = [614, 236]; }
+                else if (el < 2.0) { stage = 3; p = along(MOT, (el - 1.15) / 0.85); }
+                else if (el < 2.35) { stage = 4; p = MUS; }
+                else if (el < 3.3) { stage = 5; p = along(TOBRAIN, (el - 2.35) / 0.95); }
+                else { stage = 5; p = null; }
+                if (p) { trail.push(p); if (trail.length > 12) trail.shift(); } else trail = [];
+                renderSteps(); drawScene(p, trail);
+                if (el < 3.5) raf = requestAnimationFrame(step);
+            }
+            step();
+        }
+        function reset() {
+            if (raf) cancelAnimationFrame(raf);
+            stage = -1; document.getElementById('timer').textContent = '';
+            renderSteps(); drawScene();
+        }
+        reset();
+    </script>
+</body>
+
+</html>

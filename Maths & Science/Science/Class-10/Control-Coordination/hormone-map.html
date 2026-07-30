@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hormone Body Map | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #451a03, #b45309); color: #fef3c7; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #fde68a; text-decoration: none; border: 1px solid rgba(253,230,138,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { display: flex; gap: 18px; max-width: 960px; margin: 0 auto; padding: 20px; flex-wrap: wrap; }
+        .stage { flex: 1 1 290px; min-width: 260px; }
+        .side { flex: 1 1 340px; min-width: 300px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+        svg { width: 100%; height: auto; }
+        .gname { font-size: 21px; font-weight: 800; color: #fff; }
+        .gpos { font-size: 12.5px; color: #fcd34d; margin-bottom: 12px; }
+        .row { background: rgba(0,0,0,.26); border-radius: 10px; padding: 12px; margin-bottom: 9px; font-size: 14px; line-height: 1.6; }
+        .row b { color: #fff; }
+        .hot { cursor: pointer; }
+        .hot:hover circle { stroke: #fff; stroke-width: 3; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="hormones.html">← Back to Lesson</a>
+        <div class="title">🧍 Hormone Body Map</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="stage">
+            <div class="card">
+                <svg viewBox="0 0 240 460" xmlns="http://www.w3.org/2000/svg" id="body" role="img" aria-label="Human body with endocrine glands">
+                    <ellipse cx="120" cy="52" rx="34" ry="40" fill="rgba(253,230,138,.18)" stroke="rgba(253,230,138,.5)" stroke-width="2"/>
+                    <rect x="104" y="90" width="32" height="26" fill="rgba(253,230,138,.18)" stroke="rgba(253,230,138,.5)" stroke-width="2"/>
+                    <path d="M70 118 L170 118 L182 250 L58 250 Z" fill="rgba(253,230,138,.18)" stroke="rgba(253,230,138,.5)" stroke-width="2"/>
+                    <rect x="52" y="128" width="18" height="110" rx="9" fill="rgba(253,230,138,.14)" stroke="rgba(253,230,138,.4)" stroke-width="2"/>
+                    <rect x="170" y="128" width="18" height="110" rx="9" fill="rgba(253,230,138,.14)" stroke="rgba(253,230,138,.4)" stroke-width="2"/>
+                    <rect x="82" y="250" width="24" height="170" rx="12" fill="rgba(253,230,138,.14)" stroke="rgba(253,230,138,.4)" stroke-width="2"/>
+                    <rect x="134" y="250" width="24" height="170" rx="12" fill="rgba(253,230,138,.14)" stroke="rgba(253,230,138,.4)" stroke-width="2"/>
+                    <g id="glands"></g>
+                </svg>
+                <p style="font-size:12.5px;color:#fcd34d;text-align:center;margin-top:8px">Kisi bhi 🔴 gland par tap karo</p>
+            </div>
+        </div>
+        <div class="side">
+            <div class="card">
+                <div class="gname" id="gn"></div>
+                <div class="gpos" id="gp"></div>
+                <div id="rows"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var G = [
+            {
+                x: 120, y: 62, n: "Pituitary Gland", pos: "Dimaag ke bilkul neeche", col: "#f472b6",
+                rows: [["Hormone", "Growth Hormone (GH)"],
+                ["Kaam", "Shareer ka BADHNA — haddiyon aur maanspeshiyon ki vriddhi"],
+                ["Khaas naam", "MASTER GLAND — kyunki ye baaki glands ko bhi control karti hai"],
+                ["Kam ho toh", "Dwarfism (bahut kam kad)"],
+                ["Zyada ho toh", "Gigantism (bahut zyada kad)"]]
+            },
+            {
+                x: 120, y: 103, n: "Thyroid Gland", pos: "Gale mein, titli ke aakar ki", col: "#38bdf8",
+                rows: [["Hormone", "Thyroxine"],
+                ["Kaam", "Carbohydrate, protein aur fat ka METABOLISM control karna"],
+                ["Zaroori", "Isko banane ke liye IODINE chahiye"],
+                ["Kami se", "GHENGA (goitre) — gale mein sujan"],
+                ["Bachav", "Iodine wala namak khaayein"]]
+            },
+            {
+                x: 152, y: 175, n: "Adrenal Glands", pos: "Dono gurdon ke upar", col: "#ef4444",
+                rows: [["Hormone", "Adrenaline"],
+                ["Kaam", "Emergency hormone — \"FIGHT or FLIGHT\""],
+                ["Asar", "Dhadkan tez, saans tez, muscles mein zyada khoon"],
+                ["Kab", "Dar, gussa, tanaav ya khatre mein"],
+                ["Isiliye", "Darr par dil zor se dhadakta hai"]]
+            },
+            {
+                x: 104, y: 186, n: "Pancreas", pos: "Pet ke peeche", col: "#22c55e",
+                rows: [["Hormone", "Insulin"],
+                ["Kaam", "Khoon mein SHAKKAR (sugar) ka star control karna"],
+                ["Khaas", "Ye endocrine AUR exocrine — dono hai!"],
+                ["Kami se", "MADHUMEH (diabetes)"],
+                ["Ilaaj", "Insulin injection, parhez, roz vyayam"]]
+            },
+            {
+                x: 120, y: 232, n: "Testes / Ovary", pos: "Prajanan ang", col: "#a855f7",
+                rows: [["Ladkon mein", "TESTOSTERONE (testes se)"],
+                ["Asar", "Daadhi-moonch, bhaari aawaz, maanspeshiyan"],
+                ["Ladkiyon mein", "OESTROGEN (ovary se)"],
+                ["Asar", "Shareer ke badlav aur maasik chakra"],
+                ["Kab", "Javaani (puberty) mein sakriya hote hain"]]
+            }
+        ];
+        var cur = 0;
+        function build() {
+            var g = document.getElementById('glands'); g.innerHTML = '';
+            G.forEach(function (gl, i) {
+                var wrap = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                wrap.setAttribute('class', 'hot');
+                wrap.innerHTML = '<circle cx="' + gl.x + '" cy="' + gl.y + '" r="' + (i === cur ? 11 : 8) + '" fill="' + gl.col + '" stroke="' + (i === cur ? '#fff' : 'rgba(255,255,255,.5)') + '" stroke-width="' + (i === cur ? 3 : 2) + '"/>';
+                wrap.onclick = function () { cur = i; build(); show(); };
+                g.appendChild(wrap);
+            });
+        }
+        function show() {
+            var gl = G[cur];
+            document.getElementById('gn').textContent = gl.n;
+            document.getElementById('gp').textContent = gl.pos;
+            var r = document.getElementById('rows'); r.innerHTML = '';
+            gl.rows.forEach(function (row) {
+                var d = document.createElement('div'); d.className = 'row';
+                d.innerHTML = '<b>' + row[0] + ':</b> ' + row[1];
+                r.appendChild(d);
+            });
+        }
+        build(); show();
+    </script>
+</body>
+
+</html>
