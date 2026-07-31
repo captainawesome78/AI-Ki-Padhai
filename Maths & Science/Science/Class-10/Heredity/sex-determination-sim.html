@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sex Determination Simulator | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #4a044e, #9d174d); color: #fce7f3; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #f9a8d4; text-decoration: none; border: 1px solid rgba(249,168,212,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 960px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+        .card h3 { color: #fff; font-size: 13px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: .05em; }
+        .gam { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 14px; }
+        .gcol { background: rgba(0,0,0,.28); border-radius: 14px; padding: 15px; border-top: 4px solid; }
+        .gm { border-color: #f472b6; } .gp { border-color: #60a5fa; }
+        .gcol h4 { font-size: 15px; color: #fff; margin-bottom: 4px; }
+        .gcol .sub { font-size: 12.5px; margin-bottom: 12px; }
+        .gm .sub { color: #f9a8d4; } .gp .sub { color: #93c5fd; }
+        .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+        .chip { padding: 9px 16px; border-radius: 9px; font-weight: 800; font-size: 16px; font-family: 'Courier New', monospace; }
+        .cx { background: #ec4899; color: #fff; } .cy { background: #3b82f6; color: #fff; }
+        .gnote { font-size: 12.5px; margin-top: 11px; line-height: 1.6; }
+        .gm .gnote { color: #fbcfe8; } .gp .gnote { color: #bfdbfe; }
+        .btns { display: flex; gap: 10px; margin: 4px 0 0; flex-wrap: wrap; }
+        .btns button { flex: 1; min-width: 130px; border: none; padding: 13px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 15px; }
+        .b1 { background: #f472b6; color: #4a044e; } .b10 { background: #a78bfa; color: #2e1065; }
+        .b100 { background: #fbbf24; color: #451a03; }
+        .rst { background: transparent; color: #f9a8d4; border: 1px solid rgba(249,168,212,.4); }
+        .stage { text-align: center; padding: 16px 10px; min-height: 118px; }
+        .stage .big { font-size: 44px; }
+        .stage .res { font-size: 20px; font-weight: 800; color: #fff; margin-top: 8px; }
+        .stage .exp { font-size: 13.5px; color: #f9a8d4; margin-top: 6px; line-height: 1.6; }
+        .kids { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; max-height: 168px; overflow-y: auto; }
+        .kid { width: 25px; height: 25px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+        .kb { background: rgba(59,130,246,.75); } .kg { background: rgba(236,72,153,.75); }
+        .bars { margin-top: 14px; }
+        .bar { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; font-size: 14px; }
+        .bar .lb { width: 92px; font-weight: 700; color: #fff; }
+        .bar .tr { flex: 1; background: rgba(0,0,0,.35); border-radius: 20px; height: 24px; overflow: hidden; }
+        .bar .fl { height: 100%; border-radius: 20px; transition: width .35s; }
+        .bar .pc { width: 108px; text-align: right; font-weight: 800; color: #fff; font-family: 'Courier New', monospace; }
+        .note { font-size: 13.5px; color: #f9a8d4; margin-top: 14px; line-height: 1.8; background: rgba(0,0,0,.28); border-radius: 10px; padding: 14px; }
+        .note b { color: #fff; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="sex-determination.html">← Back to Lesson</a>
+        <div class="title">👶 Sex Determination Simulator</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <h3>Dono parents ke paas kya hai</h3>
+            <div class="gam">
+                <div class="gcol gm">
+                    <h4>👩 Maa — 44 + XX</h4>
+                    <div class="sub">Ovum mein ja sakta hai:</div>
+                    <div class="chips"><span class="chip cx">X</span><span class="chip cx">X</span></div>
+                    <div class="gnote">Dono ek jaise hain — isliye <b>har ovum mein X hi</b> jaayega. Maa ke paas doosra vikalp hai hi nahi.</div>
+                </div>
+                <div class="gcol gp">
+                    <h4>👨 Pita — 44 + XY</h4>
+                    <div class="sub">Sperm mein ja sakta hai:</div>
+                    <div class="chips"><span class="chip cx">X</span><span class="chip cy">Y</span></div>
+                    <div class="gnote">Dono <b>alag</b> hain — aadhe sperm X wale, aadhe Y wale. <b>Faisla yahin hota hai.</b></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Bachcha banao</h3>
+            <div class="stage">
+                <div class="big" id="big">🎲</div>
+                <div class="res" id="res">Neeche koi button dabao</div>
+                <div class="exp" id="exp">Har baar ek sperm randomly chunna jaayega — bilkul asli zindagi ki tarah.</div>
+            </div>
+            <div class="btns">
+                <button class="b1" onclick="run(1)">👶 1 bachcha</button>
+                <button class="b10" onclick="run(10)">👶 10 bachche</button>
+                <button class="b100" onclick="run(100)">👶 100 bachche</button>
+                <button class="rst" onclick="reset()">↺ Reset</button>
+            </div>
+            <div class="kids" id="kids"></div>
+            <div class="bars">
+                <div class="bar"><span class="lb">👦 Ladke</span><span class="tr"><span class="fl" id="fb" style="width:0;background:#3b82f6"></span></span><span class="pc" id="pb">0 (0%)</span></div>
+                <div class="bar"><span class="lb">👧 Ladkiyan</span><span class="tr"><span class="fl" id="fg" style="width:0;background:#ec4899"></span></span><span class="pc" id="pg">0 (0%)</span></div>
+            </div>
+            <div class="note" id="note">Shuru karne ke liye upar koi button dabao. <b>100 bachche</b> wala button do-teen baar dabao — aur dhyaan do ki nateeja har baar <b>50-50 ke aas-paas</b> hi rehta hai.</div>
+        </div>
+    </div>
+
+    <script>
+        var boys = 0, girls = 0, log = [];
+
+        function reset() {
+            boys = 0; girls = 0; log = [];
+            document.getElementById('big').textContent = '🎲';
+            document.getElementById('res').textContent = 'Neeche koi button dabao';
+            document.getElementById('exp').textContent = 'Har baar ek sperm randomly chunna jaayega — bilkul asli zindagi ki tarah.';
+            document.getElementById('kids').innerHTML = '';
+            document.getElementById('note').innerHTML = 'Shuru karne ke liye upar koi button dabao. <b>100 bachche</b> wala button do-teen baar dabao — aur dhyaan do ki nateeja har baar <b>50-50 ke aas-paas</b> hi rehta hai.';
+            paint();
+        }
+
+        function run(n) {
+            var lastBoy = false;
+            for (var i = 0; i < n; i++) {
+                var boy = Math.random() < 0.5;      /* the sperm carried Y */
+                if (boy) boys++; else girls++;
+                log.push(boy);
+                lastBoy = boy;
+            }
+            if (n === 1) {
+                document.getElementById('big').textContent = lastBoy ? '👦' : '👧';
+                document.getElementById('res').innerHTML = lastBoy
+                    ? 'X (maa) + <b>Y</b> (pita) = <b>XY</b> — LADKA'
+                    : 'X (maa) + <b>X</b> (pita) = <b>XX</b> — LADKI';
+                document.getElementById('exp').textContent = lastBoy
+                    ? 'Is baar pita ka Y wala sperm pahunche — isliye ladka.'
+                    : 'Is baar pita ka X wala sperm pahunche — isliye ladki.';
+            } else {
+                document.getElementById('big').textContent = '👶';
+                document.getElementById('res').textContent = n + ' bachche ek saath banaye';
+                document.getElementById('exp').textContent = 'Neeche ginti dekho — aur har bachcha maa se X hi laaya.';
+            }
+            paint();
+        }
+
+        function paint() {
+            var total = boys + girls;
+            var kb = total ? boys / total * 100 : 0;
+            var kg = total ? girls / total * 100 : 0;
+            document.getElementById('fb').style.width = kb + '%';
+            document.getElementById('fg').style.width = kg + '%';
+            document.getElementById('pb').textContent = boys + ' (' + kb.toFixed(1) + '%)';
+            document.getElementById('pg').textContent = girls + ' (' + kg.toFixed(1) + '%)';
+
+            /* show at most the last 200 children so the page never gets huge */
+            var show = log.slice(-200), h = '';
+            for (var i = 0; i < show.length; i++) {
+                h += '<div class="kid ' + (show[i] ? 'kb' : 'kg') + '">' + (show[i] ? '👦' : '👧') + '</div>';
+            }
+            document.getElementById('kids').innerHTML = h;
+
+            if (total === 0) return;
+            var off = Math.abs(kb - 50);
+            var msg;
+            if (total < 10) {
+                msg = '🎲 Abhi sirf <b>' + total + '</b> bachche hue hain — itne kam mein ratio kuch bhi ho sakta hai, bilkul jaise sikka 3 baar uchaalne par teeno head aa sakte hain. <b>100 wala button</b> dabao aur phir dekho.';
+            } else if (off < 6) {
+                msg = '🎯 Dekho! <b>' + total + '</b> bachchon mein ratio lagbhag <b>50-50</b> hai. Jitni zyada baar chalao, utna hi 50% ke paas pahunchta jaayega — kyunki pita ke aadhe sperm X wale aur aadhe Y wale hote hain.';
+            } else if (off < 14) {
+                msg = '📊 Ratio <b>' + kb.toFixed(1) + '% : ' + kg.toFixed(1) + '%</b> hai — 50-50 ke kaafi paas. Thoda jhukav sirf <b>sanyog</b> hai. Aur bachche banao, jhukav apne aap kam ho jaayega.';
+            } else {
+                msg = '🤔 Abhi ratio <b>' + kb.toFixed(1) + '% : ' + kg.toFixed(1) + '%</b> dikh raha hai — 50-50 se door. Ye <b>galat nahi</b> hai, bas sanyog hai. Yahi wajah hai ki kisi ek parivaar mein saari betiyan ya saare bete ho sakte hain — aur isme <b>maa ki koi galti nahi</b> hoti.';
+            }
+            document.getElementById('note').innerHTML = msg
+                + '<br><br>⚖️ <b>Har bachche mein maa ne X hi diya</b> — ' + total + ' mein se ' + total + ' baar. Ladka ya ladki ka faisla poori tarah <b>pita ke sperm</b> se hua.';
+        }
+
+        reset();
+    </script>
+</body>
+
+</html>

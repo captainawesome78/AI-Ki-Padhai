@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Punnett Square Builder | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #083344, #0e7490); color: #e0f2fe; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #a5f3fc; text-decoration: none; border: 1px solid rgba(165,243,252,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 980px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+        .card h3 { color: #fff; font-size: 13px; margin-bottom: 11px; text-transform: uppercase; letter-spacing: .05em; }
+        .modes { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+        .modes button { flex: 1; min-width: 150px; border: 1px solid rgba(165,243,252,.35); background: rgba(0,0,0,.25); color: #a5f3fc; padding: 12px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 14px; }
+        .modes button.on { background: #06b6d4; color: #04222b; border-color: #06b6d4; }
+        .traitbar { font-size: 13.5px; color: #a5f3fc; background: rgba(0,0,0,.25); border-radius: 10px; padding: 12px; line-height: 1.7; margin-bottom: 14px; }
+        .traitbar b { color: #fff; }
+        .parents { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+        .pcol { background: rgba(0,0,0,.26); border-radius: 14px; padding: 15px; border-top: 4px solid; }
+        .pa { border-color: #f472b6; } .pb { border-color: #60a5fa; }
+        .pcol h4 { font-size: 15px; color: #fff; margin-bottom: 10px; }
+        .opts { display: flex; gap: 7px; flex-wrap: wrap; }
+        .opts button { border: 1px solid rgba(255,255,255,.22); background: rgba(255,255,255,.06); color: #e0f2fe; padding: 9px 13px; border-radius: 9px; font-weight: 800; cursor: pointer; font-size: 15px; font-family: 'Courier New', monospace; }
+        .opts button.on { background: #fff; color: #083344; border-color: #fff; }
+        .pheno { font-size: 13px; margin-top: 10px; color: #bae6fd; }
+        .pheno b { color: #fff; }
+        .sqwrap { overflow-x: auto; margin-top: 6px; }
+        table.sq { border-collapse: collapse; margin: 0 auto; }
+        table.sq td { border: 2px solid rgba(255,255,255,.22); text-align: center; font-family: 'Courier New', monospace; font-weight: 800; }
+        table.sq td.hd { background: rgba(124,58,237,.35); color: #fff; font-size: 17px; padding: 10px 8px; min-width: 62px; }
+        table.sq td.corner { background: transparent; border: none; }
+        table.sq td.cell { font-size: 16px; padding: 12px 8px; min-width: 62px; color: #06202b; }
+        .legend { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 15px; }
+        .lg { flex: 1; min-width: 165px; border-radius: 11px; padding: 11px 13px; color: #06202b; }
+        .lg .n { font-size: 20px; font-weight: 800; }
+        .lg .l { font-size: 12.5px; font-weight: 700; line-height: 1.45; }
+        .ratios { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 15px; }
+        .rbox { background: rgba(0,0,0,.3); border-radius: 12px; padding: 14px; text-align: center; }
+        .rbox .t { font-size: 11.5px; text-transform: uppercase; letter-spacing: .05em; color: #7dd3fc; margin-bottom: 6px; }
+        .rbox .v { font-size: 20px; font-weight: 800; color: #fff; font-family: 'Courier New', monospace; }
+        .note { font-size: 13.5px; color: #a5f3fc; margin-top: 14px; line-height: 1.75; background: rgba(0,0,0,.25); border-radius: 10px; padding: 13px; }
+        .note b { color: #fff; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="monohybrid.html">← Back to Lesson</a>
+        <div class="title">🔲 Punnett Square Builder</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <h3>1. Cross ka prakaar chuno</h3>
+            <div class="modes">
+                <button id="m1" class="on" onclick="setMode(1)">Monohybrid — 1 lakshan</button>
+                <button id="m2" onclick="setMode(2)">Dihybrid — 2 lakshan</button>
+            </div>
+            <div class="traitbar" id="traitbar"></div>
+            <h3>2. Dono parents ka genotype chuno</h3>
+            <div class="parents">
+                <div class="pcol pa">
+                    <h4>👩 Parent 1</h4>
+                    <div class="opts" id="optsA"></div>
+                    <div class="pheno" id="phA"></div>
+                </div>
+                <div class="pcol pb">
+                    <h4>👨 Parent 2</h4>
+                    <div class="opts" id="optsB"></div>
+                    <div class="pheno" id="phB"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>3. Nateeja</h3>
+            <div class="sqwrap" id="sqwrap"></div>
+            <div class="legend" id="legend"></div>
+            <div class="ratios">
+                <div class="rbox"><div class="t">Phenotype ratio</div><div class="v" id="rPhen">—</div></div>
+                <div class="rbox"><div class="t">Genotype ratio</div><div class="v" id="rGen">—</div></div>
+            </div>
+            <div class="note" id="note"></div>
+        </div>
+    </div>
+
+    <script>
+        /* ---------------- trait definitions ---------------- */
+        var T1 = { D: 'T', r: 't', dom: 'Lamba', rec: 'Chhota', name: 'Paudhe ki lambai' };
+        var T2 = { D: 'R', r: 'r', dom: 'Gol', rec: 'Jhurriwala', name: 'Beej ka aakaar' };
+        var T3 = { D: 'Y', r: 'y', dom: 'Peela', rec: 'Hara', name: 'Beej ka rang' };
+
+        var mode = 1, gA = '', gB = '';
+
+        /* every genotype the user can pick, in a fixed order */
+        function genoList() {
+            if (mode === 1) return ['TT', 'Tt', 'tt'];
+            var one = ['RR', 'Rr', 'rr'], two = ['YY', 'Yy', 'yy'], out = [];
+            one.forEach(function (a) { two.forEach(function (b) { out.push(a + b); }); });
+            return out;
+        }
+
+        /* gametes produced by a genotype, e.g. Tt -> [T,t] ; RrYy -> [RY,Ry,rY,ry] */
+        function gametes(g) {
+            if (mode === 1) return [g.charAt(0), g.charAt(1)];
+            var a = [g.charAt(0), g.charAt(1)], b = [g.charAt(2), g.charAt(3)], out = [];
+            a.forEach(function (x) { b.forEach(function (y) { out.push(x + y); }); });
+            return out;
+        }
+
+        /* combine two gametes into a tidy genotype: dominant letter always first */
+        function combine(x, y) {
+            if (mode === 1) return sortPair(x, y);
+            return sortPair(x.charAt(0), y.charAt(0)) + sortPair(x.charAt(1), y.charAt(1));
+        }
+        function sortPair(a, b) {
+            /* upper-case (dominant) letter goes first: t+T -> Tt */
+            return (a === a.toUpperCase()) ? a + b : (b === b.toUpperCase() ? b + a : a + b);
+        }
+
+        /* what does this genotype LOOK like? */
+        function phenoOf(g) {
+            if (mode === 1) return has(g, 'T') ? T1.dom : T1.rec;
+            return (has(g.slice(0, 2), 'R') ? T2.dom : T2.rec) + ' + ' + (has(g.slice(2), 'Y') ? T3.dom : T3.rec);
+        }
+        function has(pair, letter) { return pair.indexOf(letter) > -1; }
+
+        var PCOL = {};
+        function phenoColour(p) {
+            var map = {};
+            map[T1.dom] = '#86efac'; map[T1.rec] = '#fcd34d';
+            map[T2.dom + ' + ' + T3.dom] = '#fde68a';
+            map[T2.dom + ' + ' + T3.rec] = '#bbf7d0';
+            map[T2.rec + ' + ' + T3.dom] = '#fed7aa';
+            map[T2.rec + ' + ' + T3.rec] = '#e2e8f0';
+            return map[p] || '#e2e8f0';
+        }
+
+        /* ---------------- UI ---------------- */
+        function setMode(m) {
+            mode = m;
+            document.getElementById('m1').className = (m === 1 ? 'on' : '');
+            document.getElementById('m2').className = (m === 2 ? 'on' : '');
+            document.getElementById('traitbar').innerHTML = (m === 1)
+                ? '<b>' + T1.name + '</b> — <b>T</b> = ' + T1.dom + ' (dominant), <b>t</b> = ' + T1.rec + ' (recessive)'
+                : '<b>' + T2.name + '</b> — <b>R</b> = ' + T2.dom + ', <b>r</b> = ' + T2.rec + '<br>'
+                + '<b>' + T3.name + '</b> — <b>Y</b> = ' + T3.dom + ', <b>y</b> = ' + T3.rec;
+            gA = (m === 1) ? 'Tt' : 'RrYy';
+            gB = gA;
+            drawOpts(); run();
+        }
+
+        function drawOpts() {
+            ['A', 'B'].forEach(function (side) {
+                var box = document.getElementById('opts' + side);
+                box.innerHTML = '';
+                genoList().forEach(function (g) {
+                    var b = document.createElement('button');
+                    b.textContent = g;
+                    b.className = ((side === 'A' ? gA : gB) === g) ? 'on' : '';
+                    b.onclick = function () { if (side === 'A') gA = g; else gB = g; drawOpts(); run(); };
+                    box.appendChild(b);
+                });
+            });
+            document.getElementById('phA').innerHTML = 'Dikhta hai: <b>' + phenoOf(gA) + '</b>';
+            document.getElementById('phB').innerHTML = 'Dikhta hai: <b>' + phenoOf(gB) + '</b>';
+        }
+
+        /* reduce a list of counts to the smallest whole-number ratio */
+        function gcd(a, b) { return b ? gcd(b, a % b) : a; }
+        function ratio(nums) {
+            var g = nums.reduce(function (x, y) { return gcd(x, y); });
+            if (!g) g = 1;
+            return nums.map(function (n) { return n / g; }).join(' : ');
+        }
+
+        function run() {
+            var ga = gametes(gA), gb = gametes(gB);
+            var phCount = {}, gnCount = {}, phOrder = [], gnOrder = [];
+
+            /* build the square */
+            var html = '<table class="sq"><tr><td class="corner"></td>';
+            gb.forEach(function (x) { html += '<td class="hd">' + x + '</td>'; });
+            html += '</tr>';
+            ga.forEach(function (y) {
+                html += '<tr><td class="hd">' + y + '</td>';
+                gb.forEach(function (x) {
+                    var g = combine(y, x), p = phenoOf(g);
+                    if (!(p in phCount)) { phCount[p] = 0; phOrder.push(p); }
+                    if (!(g in gnCount)) { gnCount[g] = 0; gnOrder.push(g); }
+                    phCount[p]++; gnCount[g]++;
+                    html += '<td class="cell" style="background:' + phenoColour(p) + '">' + g + '</td>';
+                });
+                html += '</tr>';
+            });
+            html += '</table>';
+            document.getElementById('sqwrap').innerHTML = html;
+
+            /* legend — one chip per phenotype, biggest first */
+            phOrder.sort(function (a, b) { return phCount[b] - phCount[a]; });
+            var total = ga.length * gb.length;
+            var lg = '';
+            phOrder.forEach(function (p) {
+                var pc = Math.round(phCount[p] / total * 1000) / 10;
+                lg += '<div class="lg" style="background:' + phenoColour(p) + '">'
+                    + '<div class="n">' + phCount[p] + ' / ' + total + '</div>'
+                    + '<div class="l">' + p + '<br>' + pc + '%</div></div>';
+            });
+            document.getElementById('legend').innerHTML = lg;
+
+            document.getElementById('rPhen').textContent = ratio(phOrder.map(function (p) { return phCount[p]; }));
+            gnOrder.sort(function (a, b) { return gnCount[b] - gnCount[a] || a.localeCompare(b); });
+            document.getElementById('rGen').textContent =
+                gnOrder.map(function (g) { return gnCount[g] + ' ' + g; }).join(' : ');
+
+            /* a note that reacts to what the user actually built */
+            var n = '';
+            var pr = ratio(phOrder.map(function (p) { return phCount[p]; }));
+            if (mode === 1) {
+                if (pr === '3 : 1') n = '🎯 Yahi wo mashhoor <b>3:1</b> hai! Dono parents <b>Tt</b> (heterozygous) hain — isliye chhupa hua recessive lakshan wapas nikal aaya. Dhyaan do: phenotype 3:1 hai par genotype <b>1:2:1</b> — dono alag hain.';
+                else if (pr === '1 : 1') n = '🕵️ Ye ek <b>test cross</b> jaisa nateeja hai — 50:50. Agar ek bhi <b>' + T1.rec + '</b> bachcha dikhe, toh pakka hai ki dominant dikhne wala parent <b>heterozygous (Tt)</b> tha.';
+                else if (phOrder.length === 1) n = '📌 Saare bachche <b>ek jaise</b> dikh rahe hain. Aisa tab hota hai jab kam se kam ek parent <b>homozygous dominant (TT)</b> ho, ya dono <b>homozygous</b> ho.';
+                else n = '📌 Har khaane mein upar wala gamete + baayen wala gamete mila hai. Rang wahi hai jo <b>bahar se dikhta</b> hai (phenotype).';
+            } else {
+                if (pr === '9 : 3 : 3 : 1') n = '🎯 Ye hai <b>9:3:3:1</b> — dihybrid cross ka sabse mashhoor nateeja! Beech ke do khaane (<b>' + T2.dom + ' + ' + T3.rec + '</b> aur <b>' + T2.rec + ' + ' + T3.dom + '</b>) <b>naye mel (recombinant)</b> hain — ye kisi bhi shuddh parent mein the hi nahi. Yahi <b>Law of Independent Assortment</b> ka saboot hai.';
+                else n = '📌 Dono lakshan <b>ek doosre se bilkul swatantra</b> chalte hain. Shortcut: har lakshan ka apna ratio nikaalo aur dono ko <b>guna</b> kar do — 16 khaane banane ki zaroorat hi nahi padegi.';
+            }
+            document.getElementById('note').innerHTML = n;
+        }
+
+        setMode(1);
+    </script>
+</body>
+
+</html>

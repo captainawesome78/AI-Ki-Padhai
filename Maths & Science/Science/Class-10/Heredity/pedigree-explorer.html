@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trait & Pedigree Explorer | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #451a03, #b45309); color: #fef3c7; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.32); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #fcd34d; text-decoration: none; border: 1px solid rgba(252,211,77,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 980px; margin: 0 auto; padding: 20px; }
+        .card { background: rgba(255,255,255,.08); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+        .card h3 { color: #fff; font-size: 13px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: .05em; }
+        .traits { display: flex; gap: 9px; flex-wrap: wrap; }
+        .traits button { flex: 1; min-width: 148px; border: 1px solid rgba(252,211,77,.3); background: rgba(0,0,0,.25); color: #fde68a; padding: 11px 9px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 13.5px; line-height: 1.4; }
+        .traits button.on { background: #f59e0b; color: #451a03; border-color: #f59e0b; }
+        .tinfo { font-size: 13.5px; color: #fde68a; background: rgba(0,0,0,.28); border-radius: 10px; padding: 13px; margin-top: 13px; line-height: 1.75; }
+        .tinfo b { color: #fff; }
+        .picks { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+        .pcol { background: rgba(0,0,0,.28); border-radius: 14px; padding: 15px; border-top: 4px solid; }
+        .pm { border-color: #f472b6; } .pf { border-color: #60a5fa; }
+        .pcol h4 { font-size: 15px; color: #fff; margin-bottom: 10px; }
+        .pcol .opts { display: flex; gap: 7px; flex-wrap: wrap; }
+        .pcol .opts button { border: 1px solid rgba(255,255,255,.22); background: rgba(255,255,255,.07); color: #fef3c7; padding: 9px 13px; border-radius: 9px; font-weight: 800; cursor: pointer; font-family: 'Courier New', monospace; font-size: 15px; }
+        .pcol .opts button.on { background: #fff; color: #451a03; border-color: #fff; }
+        .pcol .lbl { font-size: 12.5px; color: #fcd34d; margin-top: 9px; line-height: 1.5; }
+        .pcol .lbl b { color: #fff; }
+        .tree { overflow-x: auto; padding: 6px 0; }
+        svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+        .legend { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; font-size: 13px; margin-top: 8px; }
+        .legend span { display: flex; align-items: center; gap: 7px; }
+        .sw { width: 17px; height: 17px; border: 2px solid #fff; }
+        .sq { border-radius: 3px; } .ci { border-radius: 50%; }
+        .odds { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 15px; }
+        .obox { background: rgba(0,0,0,.32); border-radius: 12px; padding: 14px; text-align: center; }
+        .obox .t { font-size: 11.5px; text-transform: uppercase; letter-spacing: .05em; color: #fcd34d; margin-bottom: 6px; }
+        .obox .v { font-size: 23px; font-weight: 800; color: #fff; }
+        .obox .s { font-size: 11.5px; color: #fde68a; margin-top: 4px; }
+        .note { font-size: 13.5px; color: #fde68a; margin-top: 14px; line-height: 1.8; background: rgba(0,0,0,.28); border-radius: 10px; padding: 14px; }
+        .note b { color: #fff; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="acquired-inherited.html">← Back to Lesson</a>
+        <div class="title">🌳 Trait &amp; Pedigree Explorer</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <h3>1. Lakshan chuno</h3>
+            <div class="traits" id="traits"></div>
+            <div class="tinfo" id="tinfo"></div>
+        </div>
+
+        <div class="card">
+            <h3>2. Daadi-daada ka genotype chuno</h3>
+            <div class="picks">
+                <div class="pcol pm"><h4>👵 Daadi</h4><div class="opts" id="optsM"></div><div class="lbl" id="lblM"></div></div>
+                <div class="pcol pf"><h4>👴 Daada</h4><div class="opts" id="optsF"></div><div class="lbl" id="lblF"></div></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>3. Vansh-vriksh (pedigree)</h3>
+            <div class="tree" id="tree"></div>
+            <div class="legend">
+                <span><i class="sw sq" id="lg1"></i> Purush (aadmi)</span>
+                <span><i class="sw ci" id="lg2"></i> Stri (aurat)</span>
+                <span><i class="sw sq" style="background:#f59e0b"></i> Lakshan DIKHTA hai</span>
+                <span><i class="sw sq" style="background:#78716c"></i> Lakshan nahi dikhta</span>
+                <span><i class="sw sq" style="background:#fef3c7"></i> Carrier (chhupa hua)</span>
+            </div>
+            <div class="odds">
+                <div class="obox"><div class="t">Bachche mein lakshan</div><div class="v" id="oShow">—</div><div class="s" id="oShowS"></div></div>
+                <div class="obox"><div class="t">Bachcha carrier hoga</div><div class="v" id="oCar">—</div><div class="s" id="oCarS"></div></div>
+                <div class="obox"><div class="t">Bilkul saaf (shuddh)</div><div class="v" id="oCln">—</div><div class="s" id="oClnS"></div></div>
+            </div>
+            <div class="note" id="note"></div>
+        </div>
+    </div>
+
+    <script>
+        /* ---------------- traits ---------------- */
+        var TRAITS = [
+            { key: 'ear', D: 'E', r: 'e', dom: 'Latakti kaan ki lau', rec: 'Chipki kaan ki lau', label: '👂 Kaan ki lau', kind: 'normal',
+              info: 'Kaan ki latakti hui lau <b>dominant</b> hai. Chipki hui lau tabhi dikhti hai jab bachche ko <b>dono</b> parents se recessive allele (e) mile.' },
+            { key: 'dim', D: 'D', r: 'd', dom: 'Gaal par gadda (dimple)', rec: 'Bina gadde ke', label: '😊 Gaal ka gadda', kind: 'normal',
+              info: 'Gadda (dimple) <b>dominant</b> hai. Isliye do gadde wale maa-baap ka bachcha bina gadde ka ho sakta hai — par ulta lagbhag kabhi nahi hota.' },
+            { key: 'tng', D: 'R', r: 'r', dom: 'Jeebh mod sakta hai', rec: 'Jeebh nahi mod sakta', label: '👅 Jeebh mod\'na', kind: 'normal',
+              info: 'Jeebh ko U shape mein mod paana <b>dominant</b> maana jaata hai. (Asal mein isme abhyaas ka bhi thoda haath hota hai — isliye ye ekdum saaf udaharan nahi hai.)' },
+            { key: 'sic', D: 'A', r: 'a', dom: 'Swasth', rec: 'Sickle cell anaemia', label: '🩸 Sickle cell', kind: 'disease',
+              info: 'Sickle cell anaemia <b>recessive</b> hai — bimari tabhi hoti hai jab bachche ko <b>dono</b> parents se kharab allele (a) mile. Sirf ek allele wale <b>carrier</b> bilkul swasth rehte hain, par allele aage bhej sakte hain.' }
+        ];
+        var tIdx = 0, gM = 'Ee', gF = 'Ee';
+
+        function T() { return TRAITS[tIdx]; }
+        function opts() { var t = T(); return [t.D + t.D, t.D + t.r, t.r + t.r]; }
+        function phen(g) { var t = T(); return g.indexOf(t.D) > -1 ? t.dom : t.rec; }
+        function isCarrier(g) { var t = T(); return g === t.D + t.r; }
+        function showsRec(g) { var t = T(); return g === t.r + t.r; }
+
+        /* ---------------- UI ---------------- */
+        function drawTraits() {
+            var box = document.getElementById('traits'); box.innerHTML = '';
+            TRAITS.forEach(function (t, i) {
+                var b = document.createElement('button');
+                b.textContent = t.label;
+                b.className = (i === tIdx) ? 'on' : '';
+                b.onclick = function () { tIdx = i; gM = T().D + T().r; gF = T().D + T().r; drawAll(); };
+                box.appendChild(b);
+            });
+            var t = T();
+            document.getElementById('tinfo').innerHTML =
+                '<b>' + t.D + '</b> = ' + t.dom + ' (dominant)  •  <b>' + t.r + '</b> = ' + t.rec + ' (recessive)<br>' + t.info;
+        }
+
+        function drawPicks() {
+            [['M', function (v) { gM = v; }, function () { return gM; }],
+             ['F', function (v) { gF = v; }, function () { return gF; }]].forEach(function (p) {
+                var box = document.getElementById('opts' + p[0]); box.innerHTML = '';
+                opts().forEach(function (g) {
+                    var b = document.createElement('button');
+                    b.textContent = g;
+                    b.className = (p[2]() === g) ? 'on' : '';
+                    b.onclick = function () { p[1](g); drawAll(); };
+                    box.appendChild(b);
+                });
+                var g = p[2](), extra = isCarrier(g) ? ' — <b>CARRIER</b> (lakshan chhupa hua hai)' : '';
+                document.getElementById('lbl' + p[0]).innerHTML = 'Dikhta hai: <b>' + phen(g) + '</b>' + extra;
+            });
+        }
+
+        /* all four children of the cross, with their probability weight */
+        function children() {
+            var a = [gM.charAt(0), gM.charAt(1)], b = [gF.charAt(0), gF.charAt(1)], out = [];
+            a.forEach(function (x) {
+                b.forEach(function (y) {
+                    var g = (x === x.toUpperCase()) ? x + y : (y === y.toUpperCase() ? y + x : x + y);
+                    out.push(g);
+                });
+            });
+            return out;
+        }
+
+        function drawTree() {
+            var kids = children(), t = T();
+            var FILL = function (g) {
+                if (showsRec(g)) return t.kind === 'disease' ? '#dc2626' : '#f59e0b';
+                if (isCarrier(g)) return '#fef3c7';
+                return '#78716c';
+            };
+            var W = 620, s = '<svg viewBox="0 0 ' + W + ' 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pedigree chart of one cross">';
+            /* generation I — the grandparents */
+            s += '<text x="' + (W / 2) + '" y="20" text-anchor="middle" font-size="12" font-weight="800" fill="#fde68a">Peedhi I — Daadi &amp; Daada</text>';
+            s += '<circle cx="230" cy="60" r="24" fill="' + FILL(gM) + '" stroke="#fff" stroke-width="2.5"/>';
+            s += '<text x="230" y="65" text-anchor="middle" font-size="14" font-weight="800" fill="' + (isCarrier(gM) || FILL(gM) === '#fef3c7' ? '#451a03' : '#fff') + '">' + gM + '</text>';
+            s += '<rect x="366" y="36" width="48" height="48" rx="4" fill="' + FILL(gF) + '" stroke="#fff" stroke-width="2.5"/>';
+            s += '<text x="390" y="65" text-anchor="middle" font-size="14" font-weight="800" fill="' + (isCarrier(gF) || FILL(gF) === '#fef3c7' ? '#451a03' : '#fff') + '">' + gF + '</text>';
+            /* marriage line + drop line */
+            s += '<line x1="254" y1="60" x2="366" y2="60" stroke="#fde68a" stroke-width="3"/>';
+            s += '<line x1="310" y1="60" x2="310" y2="112" stroke="#fde68a" stroke-width="3"/>';
+            s += '<line x1="86" y1="112" x2="534" y2="112" stroke="#fde68a" stroke-width="3"/>';
+            /* generation II — the four equally likely children */
+            s += '<text x="' + (W / 2) + '" y="146" text-anchor="middle" font-size="12" font-weight="800" fill="#fde68a">Peedhi II — chaar barabar sambhavna wale bachche</text>';
+            var xs = [86, 235, 385, 534];
+            kids.forEach(function (g, i) {
+                var x = xs[i], boy = (i % 2 === 0);
+                s += '<line x1="' + x + '" y1="112" x2="' + x + '" y2="160" stroke="#fde68a" stroke-width="3"/>';
+                if (boy) {
+                    s += '<rect x="' + (x - 25) + '" y="160" width="50" height="50" rx="4" fill="' + FILL(g) + '" stroke="#fff" stroke-width="2.5"/>';
+                } else {
+                    s += '<circle cx="' + x + '" cy="185" r="25" fill="' + FILL(g) + '" stroke="#fff" stroke-width="2.5"/>';
+                }
+                s += '<text x="' + x + '" y="191" text-anchor="middle" font-size="15" font-weight="800" fill="' + (FILL(g) === '#fef3c7' ? '#451a03' : '#fff') + '">' + g + '</text>';
+                s += '<text x="' + x + '" y="232" text-anchor="middle" font-size="10.5" fill="#fde68a">' + (showsRec(g) ? t.rec : t.dom) + '</text>';
+                if (isCarrier(g)) s += '<text x="' + x + '" y="248" text-anchor="middle" font-size="10" font-weight="800" fill="#fbbf24">CARRIER</text>';
+                s += '<text x="' + x + '" y="' + (isCarrier(g) ? 264 : 248) + '" text-anchor="middle" font-size="10" fill="#d6d3d1">25% sambhavna</text>';
+            });
+            s += '<text x="' + (W / 2) + '" y="290" text-anchor="middle" font-size="10.5" fill="#d6d3d1">⬛ chaukor = ladka    ⚪ gol = ladki    (ling ka is lakshan se koi lena-dena nahi)</text>';
+            s += '</svg>';
+            document.getElementById('tree').innerHTML = s;
+
+            /* ---- odds ---- */
+            var t2 = T();
+            var nShow = kids.filter(showsRec).length;
+            var nCar = kids.filter(isCarrier).length;
+            var nCln = kids.filter(function (g) { return g === t2.D + t2.D; }).length;
+            function pc(n) { return (n / 4 * 100) + '%'; }
+            document.getElementById('oShow').textContent = pc(nShow);
+            document.getElementById('oShowS').textContent = nShow + ' / 4 — ' + t2.rec;
+            document.getElementById('oCar').textContent = pc(nCar);
+            document.getElementById('oCarS').textContent = nCar + ' / 4 — ' + t2.D + t2.r + ' (swasth par allele rakhta hai)';
+            document.getElementById('oCln').textContent = pc(nCln);
+            document.getElementById('oClnS').textContent = nCln + ' / 4 — ' + t2.D + t2.D + ' (recessive allele bilkul nahi)';
+
+            /* ---- a note that reacts to the actual cross ---- */
+            var n;
+            if (nShow === 0 && nCar === 0) {
+                n = '📌 Is cross mein <b>recessive allele hai hi nahi</b> — isliye ye lakshan aage kisi bhi peedhi mein nahi ja sakta.';
+            } else if (nShow === 0 && nCar > 0) {
+                n = '🕵️ Dhyaan do — <b>kisi bhi bachche mein lakshan dikh nahi raha</b>, phir bhi ' + nCar + ' bachche <b>carrier</b> hain! Wo bilkul theek hain, par allele chhupa kar aage le ja rahe hain. Isiliye koi lakshan <b>ek peedhi chhodkar</b> achanak wapas aa sakta hai.';
+            } else if (nShow === 4) {
+                n = '📌 Dono parents <b>' + t2.r + t2.r + '</b> hain — isliye <b>har bachche</b> mein lakshan dikhega. Recessive × recessive se hamesha recessive hi milta hai.';
+            } else if (nShow === 1) {
+                n = '🎯 Ye wahi classic <b>3:1</b> hai — 3 bachchon mein lakshan chhupa hua aur 1 mein dikh gaya. Dono parents <b>carrier (' + t2.D + t2.r + ')</b> hain.';
+            } else {
+                n = '📌 Aadhe bachchon mein lakshan dikh raha hai — ye ek <b>test cross</b> jaisa nateeja hai (carrier × recessive).';
+            }
+            if (t2.kind === 'disease') {
+                n += '<br><br>🩺 <b>Asli zindagi mein:</b> ' + (nShow ? 'is jodi ke bachche ko sickle cell hone ki sambhavna <b>' + pc(nShow) + '</b> hai — har bachche ke liye alag se. ' : '') +
+                    'Isiliye shaadi se pehle <b>jaanch</b> karwana samajhdari hai — isse pata chal jaata hai ki aap carrier hain ya nahi. Bharat mein kai jagah ye jaanch <b>muft</b> milti hai.';
+            }
+            document.getElementById('note').innerHTML = n;
+        }
+
+        function drawAll() { drawTraits(); drawPicks(); drawTree(); }
+
+        document.getElementById('lg1').style.background = '#78716c';
+        document.getElementById('lg2').style.background = '#78716c';
+        drawAll();
+    </script>
+</body>
+
+</html>

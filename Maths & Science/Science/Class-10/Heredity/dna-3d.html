@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D DNA Se Chromosome Tak | AIkiPadhai</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="../sci-3d.js"></script>
+</head>
+
+<body>
+    <script>
+        /* base colours */
+        var C_A = 0xef4444, C_T = 0x3b82f6, C_G = 0x22c55e, C_C = 0xeab308;
+        var SUGAR = 0x94a3b8, PHOS = 0xf97316, BOND = 0xe2e8f0;
+        var HIST = 0x7c3aed, FIBRE = 0xc4b5fd, CHROM = 0x8b5cf6, GENEC = 0xf59e0b;
+
+        Sci3D({
+            title: "🧊 3D DNA Se Chromosome Tak",
+            back: { href: "genes-chromosomes.html", label: "Back to Lesson" },
+            intro: {
+                name: "DNA & Chromosome Lab",
+                desc: "Char zoom level — sabse chhoti double helix se lekar poore chromosome tak. 'Zoom level' slider se level badlo. Helix par 'Untwist' slider ghumao aur ghumi hui seedhi ko seedhi seedhi banta dekho — tabhi A-T aur G-C ki jodi saaf dikhti hai. 'Gene' slider se ek gene ka tukda highlight karo."
+            },
+            camZ: 30,
+            data: {
+                helix: { emoji: "🧬", name: "Double Helix", nick: "Ghumi hui seedhi", desc: "DNA ki shakl — do lambi chain ek doosre ke aas-paas lipti hui. Ye shakl 1953 mein Watson aur Crick ne batayi thi, jiske liye Rosalind Franklin ki X-ray tasveerein bahut zaroori theen. Dhyaan do: dono chain barabar doori par nahi hain — isliye ek chaudi (major) aur ek patli (minor) groove banti hai.", stats: [["Poora naam", "Deoxyribo Nucleic Acid"], ["Shakl", "Double helix"], ["Ek ghumav mein", "~10.5 base pairs"], ["Chaudai", "2 nanometre"]] },
+                backbone: { emoji: "🪜", name: "Sugar-Phosphate Backbone", nick: "Seedhi ke khambe", desc: "Seedhi ke DONO khambe. Ye baari-baari se sugar (deoxyribose, slaty rang) aur phosphate (narangi) se bane hain. Ye hissa har jagah BILKUL EK JAISA hai — isme koi jaankari nahi hoti. Iska kaam sirf bases ko sahi tarteeb mein pakad kar rakhna hai.", stats: [["Kis se bana", "Sugar + Phosphate"], ["Kitne", "2 (har taraf ek)"], ["Jaankari", "Nahi — sirf dhaancha"], ["Disha", "Dono ULTI (anti-parallel)"]] },
+                base: { emoji: "🔤", name: "Bases — A, T, G, C", nick: "Zindagi ke 4 akshar", desc: "Seedhi ki har SEEDHI (step). Sirf chaar tarah ke hote hain: Adenine (laal), Thymine (neela), Guanine (hara), Cytosine (peela). Poori duniya ke har jeev ka DNA inhi chaar akshar se bana hai — farak sirf TARTEEB ka hai. Insaan mein lagbhag 300 crore base pairs hain.", stats: [["Kitne prakaar", "Sirf 4 — A, T, G, C"], ["Kahan", "Seedhi ke steps"], ["Insaan mein", "~300 crore base pairs"], ["Jaankari", "Poori — tarteeb hi sandesh hai"]] },
+                pairing: { emoji: "🤝", name: "Base Pairing Rule", nick: "A-T aur G-C", desc: "Sabse zaroori niyam: A HAMESHA T ke saath, aur G HAMESHA C ke saath jodi banata hai. Kabhi A-G ya T-C nahi. A-T ke beech 2 hydrogen bond hote hain, G-C ke beech 3 — isliye G-C jodi zyada mazboot hoti hai. Isi niyam ki wajah se DNA apni hubahu copy bana paata hai: ek chain dekho, doosri apne aap tay ho jaati hai!", stats: [["A jodi banata", "Sirf T ke saath"], ["G jodi banata", "Sirf C ke saath"], ["A-T bond", "2 hydrogen bond"], ["G-C bond", "3 hydrogen bond (zyada mazboot)"]] },
+                gene: { emoji: "🎯", name: "Gene", nick: "Ek nirdesh", desc: "DNA ka ek KHAAS TUKDA jo ek protein banane ka nuskha rakhta hai — aur wahi protein phir koi lakshan banata hai. Yaad rakho: Gene → Protein → Lakshan. Insaan mein lagbhag 20,000 gene hain, par wo poore DNA ka sirf 2% hissa hain! Baaki DNA control aur dhaanche ka kaam karta hai.", stats: [["Kya hai", "DNA ka ek tukda"], ["Kaam", "Ek protein ka nuskha"], ["Insaan mein", "~20,000 gene"], ["DNA ka kitna hissa", "Sirf ~2%"]] },
+                histone: { emoji: "🧶", name: "Histone Protein", nick: "DNA ki firki", desc: "Protein ka ek chhota golla jiske chaaron taraf DNA lipat jaata hai — bilkul jaise dhaaga firki (reel) par lipatta hai. Har histone par DNA lagbhag DO baar lipatta hai. Isi ki wajah se 2 meter lamba DNA ek chhoti si cell mein sama paata hai.", stats: [["Kya hai", "Protein ka golla"], ["Kitna DNA lipatta", "~2 chakkar"], ["Kaam", "DNA ko chhota karna"], ["Ek nucleosome", "8 histone + DNA"]] },
+                nucleosome: { emoji: "📿", name: "Nucleosome", nick: "Maala ke moti", desc: "Histone + uspar lipta DNA = ek nucleosome. Microscope se dekhne par ye 'dhaage par moti (beads on a string)' jaisa dikhta hai. Yahi packing ka PEHLA kadam hai — isse DNA lagbhag 7 guna chhota ho jaata hai.", stats: [["Kis se bana", "Histone + lipta DNA"], ["Dikhta hai", "Dhaage par moti jaisa"], ["Chhota karta hai", "~7 guna"], ["Kadam", "Packing ka pehla"]] },
+                chromatin: { emoji: "🌀", name: "Chromatin Fibre", nick: "Coil ka coil", desc: "Moti wali maala khud coil ban jaati hai — ek mota dhaaga jise chromatin fibre kehte hain. Phir wo bhi loop banata hai aur wo loop bhi coil banta hai. Har kadam par DNA aur chhota hota jaata hai — poori packing lagbhag 10,000 guna chhota kar deti hai!", stats: [["Kya", "Nucleosome ki coil"], ["Motai", "30 nanometre"], ["Aage", "Loop, phir aur coil"], ["Kul packing", "~10,000 guna"]] },
+                chromosome: { emoji: "🧫", name: "Chromosome", nick: "Poora bundle", desc: "Sabse zyada packed roop — ye sirf cell division ke waqt banta hai. Do behen chromatid beech mein CENTROMERE se jude hote hain, isliye 'X' jaisa dikhta hai. Insaan mein 46 chromosome (23 jodi) hote hain — har jodi ka ek maa se, ek pita se.", stats: [["Kab dikhta hai", "Sirf cell division mein"], ["Do hisse", "Behen chromatid"], ["Beech ka jod", "Centromere"], ["Insaan mein", "46 (23 jodi)"]] }
+            },
+            controls: [
+                { id: "lvl", label: "🔍 Zoom level: 0=Double Helix  1=Nucleosome  2=Chromatin  3=Chromosome", min: 0, max: 3, step: 1, value: 0, on: function (v, ctx) { ctx.model.setLevel(v); } },
+                { id: "untwist", label: "🪜 Untwist — helix ko seedhi seedhi banao (0 → 100)", min: 0, max: 100, step: 1, value: 0, on: function (v, ctx) { ctx.model.u = v / 100; } },
+                { id: "gene", label: "🎯 Gene highlight (0=off, 1=on)", min: 0, max: 1, step: 1, value: 0, on: function (v, ctx) { ctx.model.setGene(v === 1); } }
+            ],
+
+            build: function (ctx) {
+                var T = ctx.THREE, P = ctx.pivot, M = ctx.model;
+                M.u = 0; M.lvl = 0;
+
+                var rim = new T.DirectionalLight(0xc7d2fe, 0.55); rim.position.set(-8, 6, -7); ctx.scene.add(rim);
+
+                function sph(r, hex, seg) { return new T.Mesh(new T.SphereGeometry(r, seg || 14, seg || 12), ctx.mat(hex)); }
+
+                /* ============================================================
+                   LEVEL 0 — THE DOUBLE HELIX
+                   Built entirely from spheres so that every frame we only need
+                   to move positions (no re-orientation maths, no geometry rebuild).
+                   Real B-DNA: ~10.5 bp per turn, and the two strands are NOT
+                   opposite each other — the offset is ~140 deg, which is what
+                   creates the wide "major groove" and narrow "minor groove".
+                   ============================================================ */
+                var NBP = 24;                    // base pairs shown
+                var STEP = (Math.PI * 2) / 10.5; // radians per base pair
+                var RISE = 0.78;                 // vertical rise per base pair
+                var RAD = 2.3;                   // helix radius
+                var OFF = 2.44;                  // strand offset (rad) -> grooves
+                var Y0 = -(NBP - 1) * RISE / 2;
+
+                var helix = new T.Group(); P.add(helix);
+                M.bp = [];
+
+                // A real-ish sequence so the colours are not a repeating pattern
+                var SEQ = "ATGCGATTACGCATGGCCTAAGCT";
+                function partner(b) { return b === 'A' ? 'T' : b === 'T' ? 'A' : b === 'G' ? 'C' : 'G'; }
+                function baseCol(b) { return b === 'A' ? C_A : b === 'T' ? C_T : b === 'G' ? C_G : C_C; }
+
+                var geneFrom = 8, geneTo = 15;   // which base pairs form the highlighted "gene"
+
+                for (var i = 0; i < NBP; i++) {
+                    var b1 = SEQ.charAt(i % SEQ.length), b2 = partner(b1);
+                    var nb = (b1 === 'A' || b1 === 'T') ? 2 : 3;   // hydrogen bonds
+
+                    var rec = { i: i, inGene: (i >= geneFrom && i <= geneTo), bonds: [] };
+
+                    // sugar (one per strand) + phosphate (offset half a step, closes the gaps)
+                    rec.s1 = sph(0.40, SUGAR); rec.s2 = sph(0.40, SUGAR);
+                    rec.p1 = sph(0.32, PHOS); rec.p2 = sph(0.32, PHOS);
+                    // the two bases of this pair
+                    rec.b1 = sph(0.44, baseCol(b1)); rec.b2 = sph(0.44, baseCol(b2));
+                    // hydrogen bonds between them
+                    for (var k = 0; k < nb; k++) rec.bonds.push(sph(0.10, BOND, 8));
+
+                    helix.add(rec.s1, rec.s2, rec.p1, rec.p2, rec.b1, rec.b2);
+                    rec.bonds.forEach(function (o) { helix.add(o); });
+
+                    ctx.addPart(rec.s1, 'backbone'); ctx.addPart(rec.s2, 'backbone');
+                    ctx.addPart(rec.p1, 'backbone'); ctx.addPart(rec.p2, 'backbone');
+                    ctx.addPart(rec.b1, 'base'); ctx.addPart(rec.b2, 'base');
+                    rec.bonds.forEach(function (o) { ctx.addPart(o, 'pairing'); });
+
+                    M.bp.push(rec);
+                }
+                M.helix = helix;
+
+                /* place every sphere for a given untwist amount u (0 = full helix, 1 = flat ladder) */
+                M.layout = function (u) {
+                    var tw = 1 - u;                       // twist factor
+                    var spread = 1 + u * 0.55;            // ladder opens out a little as it untwists
+                    for (var i = 0; i < M.bp.length; i++) {
+                        var r = M.bp[i], y = Y0 + i * RISE;
+                        var a = i * STEP * tw;
+                        var a1 = a, a2 = a + OFF;
+                        var R = RAD * spread;
+                        var x1 = Math.cos(a1) * R, z1 = Math.sin(a1) * R * tw;
+                        var x2 = Math.cos(a2) * R, z2 = Math.sin(a2) * R * tw;
+                        r.s1.position.set(x1, y, z1);
+                        r.s2.position.set(x2, y, z2);
+                        // phosphate sits half a step further along the same strand
+                        var h1 = a1 + STEP * tw * 0.5, h2 = a2 + STEP * tw * 0.5, hy = y + RISE * 0.5;
+                        r.p1.position.set(Math.cos(h1) * R, hy, Math.sin(h1) * R * tw);
+                        r.p2.position.set(Math.cos(h2) * R, hy, Math.sin(h2) * R * tw);
+                        // bases sit inside, on the chord between the two backbones
+                        r.b1.position.set(x1 + (x2 - x1) * 0.30, y, z1 + (z2 - z1) * 0.30);
+                        r.b2.position.set(x1 + (x2 - x1) * 0.70, y, z1 + (z2 - z1) * 0.70);
+                        // hydrogen bonds evenly between the two bases
+                        var n = r.bonds.length;
+                        for (var k = 0; k < n; k++) {
+                            var f = 0.40 + (k + 0.5) * (0.20 / n);
+                            r.bonds[k].position.set(x1 + (x2 - x1) * f, y, z1 + (z2 - z1) * f);
+                        }
+                    }
+                };
+                M.layout(0);
+
+                /* ============================================================
+                   LEVEL 1 — NUCLEOSOMES ("beads on a string")
+                   DNA wound ~1.7 turns around each histone core.
+                   ============================================================ */
+                var nucGrp = new T.Group(); P.add(nucGrp); nucGrp.visible = false;
+                M.nuc = nucGrp; M.beads = [];
+                var beadX = [-8.4, -2.8, 2.8, 8.4];
+                beadX.forEach(function (bx, bi) {
+                    var g = new T.Group(); g.position.set(bx, Math.sin(bi * 1.7) * 1.6, Math.cos(bi * 2.1) * 1.2);
+                    // histone core: 8 protein sub-units clustered into a disc
+                    var core = new T.Group();
+                    for (var q = 0; q < 8; q++) {
+                        var ang = q * Math.PI / 4;
+                        var s = sph(0.72, HIST, 16);
+                        s.position.set(Math.cos(ang) * 0.72, (q % 2 ? 0.32 : -0.32), Math.sin(ang) * 0.72);
+                        core.add(s);
+                    }
+                    g.add(core); ctx.addPart(core, 'histone');
+                    // DNA wrapped 1.7 turns around it
+                    var pts = [];
+                    for (var w = 0; w <= 60; w++) {
+                        var f = w / 60, aa = f * Math.PI * 2 * 1.7 - 1.0;
+                        pts.push(new T.Vector3(Math.cos(aa) * 1.62, (f - 0.5) * 1.05, Math.sin(aa) * 1.62));
+                    }
+                    var wrap = new T.Mesh(new T.TubeGeometry(new T.CatmullRomCurve3(pts), 70, 0.24, 8, false), ctx.mat(0x38bdf8));
+                    g.add(wrap); ctx.addPart(wrap, 'nucleosome');
+                    nucGrp.add(g); M.beads.push(g);
+                });
+                // linker DNA joining the beads
+                var lpts = [];
+                for (var L = 0; L <= 40; L++) {
+                    var f2 = L / 40, x = -11.6 + f2 * 23.2;
+                    lpts.push(new T.Vector3(x, Math.sin(f2 * 7.2) * 1.4, Math.cos(f2 * 8.4) * 1.0));
+                }
+                var linker = new T.Mesh(new T.TubeGeometry(new T.CatmullRomCurve3(lpts), 90, 0.20, 8, false), ctx.mat(0x0ea5e9));
+                nucGrp.add(linker); ctx.addPart(linker, 'nucleosome');
+
+                /* ============================================================
+                   LEVEL 2 — CHROMATIN FIBRE (solenoid: the bead string coiled)
+                   ============================================================ */
+                var chrGrp = new T.Group(); P.add(chrGrp); chrGrp.visible = false;
+                M.chr = chrGrp;
+                var cpts = [];
+                for (var c = 0; c <= 260; c++) {
+                    var f3 = c / 260, ang3 = f3 * Math.PI * 2 * 9;   // 9 turns
+                    cpts.push(new T.Vector3(Math.cos(ang3) * 3.1, -9 + f3 * 18, Math.sin(ang3) * 3.1));
+                }
+                var sol = new T.Mesh(new T.TubeGeometry(new T.CatmullRomCurve3(cpts), 320, 0.62, 10, false), ctx.mat(FIBRE));
+                chrGrp.add(sol); ctx.addPart(sol, 'chromatin');
+                // a few histone beads peeking out of the coil so the link to level 1 is visible
+                for (var hb = 0; hb < 18; hb++) {
+                    var f4 = hb / 17, a4 = f4 * Math.PI * 2 * 9;
+                    var bead = sph(0.46, HIST, 12);
+                    bead.position.set(Math.cos(a4) * 3.1, -9 + f4 * 18, Math.sin(a4) * 3.1);
+                    chrGrp.add(bead); ctx.addPart(bead, 'histone');
+                }
+
+                /* ============================================================
+                   LEVEL 3 — THE WHOLE CHROMOSOME (two chromatids + centromere)
+                   ============================================================ */
+                var chmGrp = new T.Group(); P.add(chmGrp); chmGrp.visible = false;
+                M.chm = chmGrp;
+                function chromatid(side) {
+                    var pts2 = [];
+                    for (var s2 = 0; s2 <= 40; s2++) {
+                        var f5 = s2 / 40, y5 = -9.5 + f5 * 19;
+                        // pinch in at the centromere (middle), bow out at the ends
+                        var bow = Math.abs(f5 - 0.5) * 2;             // 1 at ends, 0 at middle
+                        var x5 = side * (0.55 + bow * 2.5);
+                        pts2.push(new T.Vector3(x5, y5, Math.sin(f5 * 3.4) * 0.35));
+                    }
+                    var tube = new T.Mesh(new T.TubeGeometry(new T.CatmullRomCurve3(pts2), 60, 1.15, 14, false), ctx.mat(CHROM));
+                    return tube;
+                }
+                var cd1 = chromatid(-1), cd2 = chromatid(1);
+                chmGrp.add(cd1, cd2); ctx.addPart(cd1, 'chromosome'); ctx.addPart(cd2, 'chromosome');
+                var cen = new T.Mesh(new T.SphereGeometry(1.5, 20, 16), ctx.mat(0x4c1d95));
+                cen.scale.set(1.35, 0.72, 1); chmGrp.add(cen); ctx.addPart(cen, 'chromosome');
+                // gene bands along one chromatid
+                M.bands = [];
+                [-6.2, -2.4, 3.1, 6.8].forEach(function (by, bi2) {
+                    var band = new T.Mesh(new T.SphereGeometry(1.22, 18, 14), ctx.mat(bi2 === 1 ? GENEC : 0xa78bfa));
+                    band.scale.set(1, 0.42, 1);
+                    var bowb = Math.abs((by + 9.5) / 19 - 0.5) * 2;
+                    band.position.set(-(0.55 + bowb * 2.5), by, 0);
+                    chmGrp.add(band); ctx.addPart(band, bi2 === 1 ? 'gene' : 'chromosome');
+                    if (bi2 === 1) M.geneBand = band;
+                    M.bands.push(band);
+                });
+
+                /* ---- level switching ---- */
+                M.setLevel = function (v) {
+                    M.lvl = v;
+                    helix.visible = (v === 0);
+                    nucGrp.visible = (v === 1);
+                    chrGrp.visible = (v === 2);
+                    chmGrp.visible = (v === 3);
+                    ctx.selectKey(v === 0 ? 'helix' : v === 1 ? 'nucleosome' : v === 2 ? 'chromatin' : 'chromosome');
+                };
+
+                /* ---- gene highlight ---- */
+                M.setGene = function (on) {
+                    M.gene = on;
+                    M.bp.forEach(function (r) {
+                        var lit = on && r.inGene;
+                        r.b1.material.emissive.setHex(lit ? 0x7c2d12 : 0x000000);
+                        r.b2.material.emissive.setHex(lit ? 0x7c2d12 : 0x000000);
+                        r.s1.material.color.setHex(lit ? GENEC : SUGAR);
+                        r.s2.material.color.setHex(lit ? GENEC : SUGAR);
+                    });
+                    if (M.geneBand) M.geneBand.material.emissive.setHex(on ? 0x92400e : 0x000000);
+                };
+                M.setGene(false);
+                M.setLevel(0);
+            },
+
+            onFrame: function (t, ctx) {
+                var M = ctx.model;
+                if (M.lvl === 0) {
+                    M.layout(M.u);
+                    // gentle breathing so the model never looks frozen
+                    M.helix.scale.setScalar(1 + Math.sin(t * 0.8) * 0.012);
+                } else if (M.lvl === 1) {
+                    M.beads.forEach(function (g, i) {
+                        g.rotation.y = Math.sin(t * 0.5 + i) * 0.22;
+                    });
+                } else if (M.lvl === 2) {
+                    M.chr.rotation.y = Math.sin(t * 0.35) * 0.18;
+                } else {
+                    M.chm.rotation.y = Math.sin(t * 0.4) * 0.16;
+                    if (M.gene && M.geneBand) {
+                        M.geneBand.scale.set(1 + Math.sin(t * 3) * 0.09, 0.42, 1 + Math.sin(t * 3) * 0.09);
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
