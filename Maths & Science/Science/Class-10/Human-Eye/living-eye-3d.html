@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Living Eye | AIkiPadhai</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="../sci-3d.js"></script>
+</head>
+
+<body>
+    <script>
+        var C_OBJ = 0x22c55e, C_SCLERA = 0xf8fafc, C_CORNEA = 0x7dd3fc, C_IRIS = 0x7c3aed,
+            C_LENS = 0x93c5fd, C_RETINA = 0xf97316, C_SPEC = 0x38bdf8,
+            C_RAY = 0xfbbf24, C_SHARP = 0x22c55e, C_BLUR = 0xef4444;
+
+        var UNEAR = 60, UFAR = 200, HOBJ = 5.5;   /* 60 = the normal eye's near point */
+
+        Sci3D({
+            title: "👁️ 3D Living Eye",
+            back: { href: "eye-structure.html", label: "Back to Lesson" },
+            pickHint: false,
+            intro: {
+                name: "Aankh — chalti hui",
+                desc: "Kuch set karne ki zaroorat nahi, sab apne aap chal raha hai. Hara OBJECT khud paas-door aata-jaata hai, aur light ki gendein aankh ke andar jaati dikhti hain. Dhyaan se dekho: object paas aate hi LENS MOTA ho jaata hai — yahi accommodation hai. Upar wale slider se defect chuno aur dekho ki image retina se aage ya peeche gir jaata hai — phir chashma lagao aur use theek hote dekho."
+            },
+            camZ: 62,
+            data: {
+                object: { emoji: "🟢", name: "Object", nick: "Hara teer", desc: "Wo cheez jise aankh dekh rahi hai. Ye khud paas aur door hoti rehti hai taaki aap dekh sako ki aankh har doori par kaise adjust karti hai.", stats: [["Kya karti hai", "Light reflect karti hai"], ["Doori", "khud badalti rehti hai"]] },
+                cornea: { emoji: "💧", name: "Cornea", nick: "Aage ki khidki", desc: "Aankh ki sabse aage wali paardarshi parat. Light sabse pehle yahin ghusti hai — aur sabse ZYADA yahin mudti hai (lagbhag 70% kaam cornea ka hai!).\n\nCornea apna aakaar badal nahi sakta. Isiliye LASIK operation mein laser se cornea ka aakaar badla jaata hai.", stats: [["Kitna light modta", "~70%"], ["Aakaar badal sakta?", "Nahi"], ["LASIK", "isi ka aakaar badalta hai"]] },
+                iris: { emoji: "🟣", name: "Iris aur Pupil", nick: "Rangeen hissa", desc: "IRIS wo rangeen hissa hai jisse aapki aankh ka rang banta hai. Uske beech ka kaala chhed PUPIL hai.\n\nTez roshni mein iris pupil ko CHHOTA kar deta hai (retina ko bachane ke liye), aur andhere mein BADA kar deta hai. Ye ek reflex action hai — aapko sochna nahi padta.", stats: [["Kaam", "Light kitni andar aaye"], ["Tez roshni", "pupil chhota"], ["Andhera", "pupil bada"], ["Control", "reflex — apne aap"]] },
+                lens: { emoji: "🔵", name: "Eye Lens", nick: "Mota-patla hone wala", desc: "Ek LACHILA convex lens. Ye aage-peeche nahi khisakta — ye apna AAKAAR badalta hai.\n\nDekhte raho: object paas aate hi lens MOTA ho jaata hai (focal length chhoti), aur door jaate hi PATLA (focal length badi). Isi ko ACCOMMODATION kehte hain.\n\nCamera ise nahi kar sakta — camera ka lens khisakta hai, aakaar nahi badalta.", stats: [["Prakaar", "Convex, lachila"], ["Paas dekhne par", "MOTA (f chhoti)"], ["Door dekhne par", "PATLA (f badi)"], ["Kaun badalta hai", "Ciliary muscles"]] },
+                retina: { emoji: "🟠", name: "Retina", nick: "Peeche ka parda", desc: "Aankh ka screen, jahan image banta hai. Isme light pakadne wali cells hoti hain — RODS (kam roshni mein dekhne ke liye) aur CONES (rang pehchaanne ke liye).\n\nYahan bana image REAL, ULTA aur CHHOTA hota hai. Dimaag use seedha kar deta hai.", stats: [["Image kaisa", "Real, ulta, chhota"], ["Rods", "Andhere mein dekhna"], ["Cones", "Rang pehchaanna"], ["Aage", "Optic nerve se dimaag tak"]] },
+                spot: { emoji: "🎯", name: "Focus Spot", nick: "Hara = saaf, laal = dhundhla", desc: "Retina par light kahan gir rahi hai.\n\nHARA CHHOTA BINDU = light theek retina par mil rahi hai → tasveer SAAF.\n\nLAAL BADA DHABBA = light retina par milne se pehle ya baad mein mil rahi hai → tasveer DHUNDHLI. Dhabba jitna bada, utna zyada dhundhla.", stats: [["Hara bindu", "Saaf dikh raha hai"], ["Laal dhabba", "Dhundhla dikh raha hai"], ["Dhabbe ka size", "Kitna dhundhla hai"]] },
+                spec: { emoji: "👓", name: "Chashma", nick: "Correcting lens", desc: "Chashme ka lens aankh ke lens ke saath milkar kaam karta hai — aur unke POWER seedhe jud jaate hain (P = P1 + P2).\n\nMYOPIA ke liye CONCAVE lens (power negative) — ye light ko pehle thoda faila deta hai, jisse image peeche khisak kar retina par aa jaata hai.\n\nHYPERMETROPIA ke liye CONVEX lens (power positive) — ye light ko pehle hi thoda jod deta hai, jisse image aage aakar retina par aa jaata hai.", stats: [["Myopia", "Concave (power −)"], ["Hypermetropia", "Convex (power +)"], ["Niyam", "P = P₁ + P₂"]] }
+            },
+            controls: [
+                { id: "mode", label: "👁️ Aankh:  0 = Normal   1 = Myopia   2 = Myopia + chashma   3 = Hypermetropia   4 = Hypermetropia + chashma", min: 0, max: 4, step: 1, value: 0, on: function (v, ctx) { ctx.model.setMode(v); } },
+                { id: "play", label: "▶️ Apne aap chalao  (0 = rok do, 1 = chal raha hai)", min: 0, max: 1, step: 1, value: 1, on: function (v, ctx) { ctx.model.playing = (v === 1); } },
+                { id: "hand", label: "✋ Rokne ke baad object ko KHUD khisakao", min: UNEAR, max: UFAR, step: 2, value: 100, on: function (v, ctx) { ctx.model.handU = -v; if (!ctx.model.playing) ctx.model.draw(); } }
+            ],
+
+            build: function (ctx) {
+                var T = ctx.THREE, P = ctx.pivot, M = ctx.model;
+                M.mode = 0; M.playing = true; M.handU = -100; M.u = -100;
+
+                var rim = new T.DirectionalLight(0xbfdbfe, 0.5); rim.position.set(-10, 8, 8); ctx.scene.add(rim);
+
+                /* ---------- floating labels ---------- */
+                function makeLabel(text, hex, w) {
+                    var cv = document.createElement('canvas'); cv.width = 512; cv.height = 128;
+                    var sp = new T.Sprite(new T.SpriteMaterial({ map: new T.CanvasTexture(cv), transparent: true, depthTest: false }));
+                    sp.userData.cv = cv;
+                    sp.scale.set(w || 9, (w || 9) * 0.25, 1);
+                    P.add(sp); paint(sp, text, hex); return sp;
+                }
+                function paint(sp, text, hex) {
+                    var cv = sp.userData.cv, c = cv.getContext && cv.getContext('2d');
+                    if (c) {
+                        c.clearRect(0, 0, 512, 128);
+                        c.font = 'bold 74px system-ui, sans-serif';
+                        c.textAlign = 'center'; c.textBaseline = 'middle';
+                        c.lineWidth = 13; c.strokeStyle = 'rgba(2,8,15,.94)'; c.strokeText(text, 256, 64);
+                        c.fillStyle = hex; c.fillText(text, 256, 64);
+                    }
+                    if (sp.material.map) sp.material.map.needsUpdate = true;
+                }
+                M.paint = paint;
+
+                /* ---------- the eyeball (cut away so you can see inside) ---------- */
+                var EYE_R = 24;
+                function eyeball() {
+                    var g = new T.Group();
+                    /* white of the eye: a sphere with the front and the near half removed */
+                    var sclera = new T.Mesh(
+                        new T.SphereGeometry(EYE_R, 56, 40, Math.PI * 0.06, Math.PI * 1.88, 0, Math.PI * 0.5),
+                        ctx.mat(C_SCLERA, { transparent: true, opacity: 0.30 }));
+                    sclera.material.side = T.DoubleSide;
+                    sclera.rotation.z = -Math.PI / 2;
+                    g.add(sclera);
+                    return g;
+                }
+                M.eye = eyeball(); P.add(M.eye);
+
+                /* cornea: a small dome at the front */
+                M.cornea = new T.Mesh(new T.SphereGeometry(11, 32, 22, 0, Math.PI * 2, 0, 0.82),
+                    ctx.mat(C_CORNEA, { transparent: true, opacity: 0.42 }));
+                M.cornea.material.side = T.DoubleSide;
+                M.cornea.rotation.z = Math.PI / 2; M.cornea.position.x = -6;
+                P.add(M.cornea); ctx.addPart(M.cornea, 'cornea');
+
+                /* iris ring + pupil */
+                M.iris = new T.Mesh(new T.TorusGeometry(6.4, 1.9, 12, 34), ctx.mat(C_IRIS));
+                M.iris.rotation.y = Math.PI / 2; M.iris.position.x = -1.5;
+                P.add(M.iris); ctx.addPart(M.iris, 'iris');
+
+                /* eye lens — a lathe we rebuild whenever its thickness changes */
+                M.lensGrp = new T.Group(); P.add(M.lensGrp);
+                M.lensMat = ctx.mat(C_LENS, { transparent: true, opacity: 0.62 });
+                M.lensMesh = null;
+                M.setLensThickness = function (t) {
+                    if (M.lensMesh) { M.lensGrp.remove(M.lensMesh); M.lensMesh.geometry.dispose(); }
+                    var pts = [], N = 16;
+                    for (var i = 0; i <= N; i++) {
+                        var q = i / N, y = (q - 0.5) * 11;
+                        var w = t * Math.cos(q * Math.PI - Math.PI / 2);
+                        pts.push(new T.Vector2(Math.max(0.12, w), y));
+                    }
+                    M.lensMesh = new T.Mesh(new T.LatheGeometry(pts, 26), M.lensMat);
+                    M.lensMesh.rotation.z = Math.PI / 2;
+                    M.lensGrp.add(M.lensMesh);
+                    ctx.addPart(M.lensMesh, 'lens');
+                };
+                M.setLensThickness(2.2);
+
+                /* retina: an arc at the back, position depends on the eye */
+                M.retina = new T.Mesh(new T.TorusGeometry(13, 0.85, 10, 40, Math.PI * 1.1), ctx.mat(C_RETINA));
+                M.retina.rotation.y = Math.PI / 2; M.retina.rotation.z = Math.PI * 0.45;
+                P.add(M.retina); ctx.addPart(M.retina, 'retina');
+
+                /* the spot where light actually lands */
+                M.spot = new T.Mesh(new T.SphereGeometry(1, 18, 14), ctx.mat(C_SHARP));
+                M.spot.material.emissive.setHex(0x14532d);
+                P.add(M.spot); ctx.addPart(M.spot, 'spot');
+
+                /* spectacle lens, shown only in the corrected modes */
+                M.specGrp = new T.Group(); P.add(M.specGrp);
+                M.specMesh = null;
+                M.setSpec = function (kind) {          /* 0 none, -1 concave, +1 convex */
+                    if (M.specMesh) { M.specGrp.remove(M.specMesh); M.specMesh.geometry.dispose(); }
+                    M.specMesh = null;
+                    if (!kind) return;
+                    var pts = [], N = 16;
+                    for (var i = 0; i <= N; i++) {
+                        var q = i / N, y = (q - 0.5) * 22, k = Math.cos(q * Math.PI - Math.PI / 2);
+                        var w = kind > 0 ? (0.35 + 1.5 * k) : (1.9 - 1.5 * k);
+                        pts.push(new T.Vector2(Math.max(0.12, w * 0.5), y));
+                    }
+                    M.specMesh = new T.Mesh(new T.LatheGeometry(pts, 24), ctx.mat(C_SPEC, { transparent: true, opacity: 0.5 }));
+                    M.specMesh.rotation.z = Math.PI / 2;
+                    M.specMesh.position.x = -20;
+                    M.specGrp.add(M.specMesh);
+                    ctx.addPart(M.specMesh, 'spec');
+                };
+
+                /* object arrow */
+                function arrow(colour) {
+                    var g = new T.Group();
+                    var sh = new T.Mesh(new T.CylinderGeometry(0.34, 0.34, 1, 12), ctx.mat(colour));
+                    sh.position.y = 0.5; g.add(sh);
+                    var hd = new T.Mesh(new T.ConeGeometry(0.95, 1.5, 16), ctx.mat(colour));
+                    hd.position.y = 1; g.add(hd);
+                    P.add(g); return g;
+                }
+                M.obj = arrow(C_OBJ); ctx.addPart(M.obj, 'object');
+
+                /* rays: 2 rays, object -> eye lens -> retina, each with light pulses */
+                function seg(colour, th) {
+                    var m = new T.Mesh(new T.CylinderGeometry(th, th, 1, 8), ctx.mat(colour));
+                    m.visible = false; P.add(m); return m;
+                }
+                function place(mesh, ax, ay, bx, by) {
+                    var dx = bx - ax, dy = by - ay, L = Math.sqrt(dx * dx + dy * dy);
+                    if (!isFinite(L) || L < 0.01) { mesh.visible = false; return; }
+                    mesh.position.set((ax + bx) / 2, (ay + by) / 2, 0);
+                    mesh.scale.set(1, L, 1);
+                    mesh.lookAt(bx, by, 0); mesh.rotateX(Math.PI / 2);
+                    mesh.visible = true;
+                }
+                M.place = place;
+                M.rays = [0, 1].map(function () {
+                    var r = { inc: seg(C_RAY, 0.16), out: seg(C_RAY, 0.16), pulses: [] };
+                    for (var k = 0; k < 3; k++) {
+                        var p = new T.Mesh(new T.SphereGeometry(0.62, 12, 10), ctx.mat(0xfffbeb));
+                        p.material.emissive.setHex(C_RAY); p.visible = false; P.add(p); r.pulses.push(p);
+                    }
+                    return r;
+                });
+
+                M.cross = new T.Mesh(new T.SphereGeometry(1.15, 16, 12), ctx.mat(0xf59e0b));
+                M.cross.material.emissive.setHex(0x78350f);
+                M.cross.visible = false; P.add(M.cross); ctx.addPart(M.cross, 'spot');
+                M.lCross = makeLabel('', '#fbbf24', 18);
+
+                M.lObj = makeLabel('OBJECT', '#4ade80', 11);
+                M.lSpot = makeLabel('SAAF', '#4ade80', 10);
+                M.lEye = makeLabel('NORMAL AANKH', '#7dd3fc', 17);
+
+                /* ---------- optics: identical to the model checked against the lessons ---------- */
+                function eyeOf(mode) {
+                    if (mode === 0) return { R: 20, fMin: 15, fMax: 20, spec: 0, kind: 0 };
+                    if (mode === 1) return { R: 24, fMin: 15, fMax: 20, spec: 0, kind: 0 };
+                    if (mode === 2) return { R: 24, fMin: 15, fMax: 20, spec: -120, kind: -1 };
+                    if (mode === 3) return { R: 17, fMin: 15, fMax: 20, spec: 0, kind: 0 };
+                    return { R: 17, fMin: 15, fMax: 20, spec: 113.33, kind: 1 };
+                }
+                M.solve = function (mode, u) {
+                    var e = eyeOf(mode);
+                    var needTot = 1 / (1 / e.R - 1 / u);
+                    var needEye = e.spec ? 1 / (1 / needTot - 1 / e.spec) : needTot;
+                    var fEye = Math.min(e.fMax, Math.max(e.fMin, needEye));
+                    var fTot = e.spec ? 1 / (1 / fEye + 1 / e.spec) : fEye;
+                    var v = 1 / (1 / fTot + 1 / u);
+                    return { e: e, fEye: fEye, fTot: fTot, v: v, R: e.R, sharp: Math.abs(v - e.R) < 0.12 };
+                };
+                M.eyeOf = eyeOf;
+
+                var NAMES = ['NORMAL AANKH', 'MYOPIA', 'MYOPIA + CHASHMA', 'HYPERMETROPIA', 'HYPERMETROPIA + CHASHMA'];
+
+                M.draw = function () {
+                    var u = M.u, s = M.solve(M.mode, u), e = s.e;
+
+                    /* retina sits where this eye's retina is */
+                    M.retina.position.x = e.R;
+                    /* lens thickness: fatter when the eye is accommodating harder (small f) */
+                    /* Normalise accommodation over the range this demo actually sweeps, so the
+                       far end reads as a genuinely thin lens and the near end as a fat one. */
+                    var accRaw = (e.fMax - s.fEye) / (e.fMax - e.fMin);
+                    var lo = (e.fMax - Math.min(e.fMax, Math.max(e.fMin, 1 / (1 / e.R + 1 / UFAR)))) / (e.fMax - e.fMin);
+                    var hi = (e.fMax - Math.min(e.fMax, Math.max(e.fMin, 1 / (1 / e.R + 1 / UNEAR)))) / (e.fMax - e.fMin);
+                    var acc = (hi - lo) > 0.02 ? (accRaw - lo) / (hi - lo) : accRaw;
+                    acc = Math.max(0, Math.min(1, acc));
+                    M.setLensThickness(1.5 + acc * 2.8);
+
+                    setObj(M.obj, u, HOBJ);
+                    M.lObj.position.set(u, HOBJ + 4, 0);
+                    M.lEye.position.set(6, 30, 0);
+
+                    /* two rays from the object tip through the eye lens, meeting at v */
+                    var tip = HOBJ, hImg = (s.v / u) * tip;
+                    var A = [{ hit: tip, }, { hit: 0 }];        /* parallel ray, and the centre ray */
+                    var lines = [
+                        { hit: tip, sl: (0 - tip) / (s.fTot - 0) },
+                        { hit: 0, sl: (0 - tip) / (0 - u) }
+                    ];
+                    M.lines = lines; M.tipY = tip;
+                    var hitYs = [];
+                    M.rays.forEach(function (r, i) {
+                        var L = lines[i];
+                        M.place(r.inc, u, tip, 0, L.hit);
+                        var ey = L.hit + L.sl * (e.R - 0);
+                        M.place(r.out, 0, L.hit, e.R, ey);
+                        hitYs.push(ey);
+                    });
+
+                    /* Two readings, both meaningful:
+                       - miss  : how far the crossing point is from the retina (the lesson's picture)
+                       - blur  : how far apart the two rays land ON the retina (what you'd see) */
+                    var miss = s.v - e.R;
+                    var blur = Math.abs(hitYs[0] - hitYs[1]);
+                    var sharp = Math.abs(miss) < 0.25;
+                    M.spot.position.set(e.R, (hitYs[0] + hitYs[1]) / 2, 0);
+                    var sz = Math.max(0.85, Math.min(7, blur * 2.6));
+                    M.spot.scale.set(0.7, sz, sz);
+                    M.spot.material.color.setHex(sharp ? C_SHARP : C_BLUR);
+                    M.spot.material.emissive.setHex(sharp ? 0x14532d : 0x7f1d1d);
+                    M.lSpot.position.set(e.R + 7, (hitYs[0] + hitYs[1]) / 2, 0);
+                    M.paint(M.lSpot, sharp ? 'SAAF ✓' : 'DHUNDHLA ✗', sharp ? '#4ade80' : '#f87171');
+
+                    /* where the two rays actually cross - the textbook "image forms here" point */
+                    var cross = Math.max(-4, Math.min(46, s.v));
+                    M.cross.position.set(cross, 0, 0);
+                    M.cross.visible = !sharp;
+                    M.cross.material.color.setHex(miss < 0 ? 0xf59e0b : 0x38bdf8);
+                    M.lCross.visible = !sharp;
+                    M.lCross.position.set(cross, -9, 0);
+                    if (!sharp) M.paint(M.lCross, miss < 0 ? 'image retina se PEHLE' : 'image retina ke PEECHE',
+                        miss < 0 ? '#fbbf24' : '#7dd3fc');
+
+                    M.setSpecIfNeeded(e.kind);
+                    M.paint(M.lEye, NAMES[M.mode], sharp ? '#7dd3fc' : '#fca5a5');
+                    M.state = { s: s, sharp: sharp, blur: blur, acc: acc };
+                    M.hud();
+                };
+
+                M.specKind = null;
+                M.setSpecIfNeeded = function (k) { if (k !== M.specKind) { M.specKind = k; M.setSpec(k); } };
+
+                function setObj(g, x, h) { g.position.set(x, 0, 0); g.scale.set(1, h, 1); }
+
+                /* ---------- plain-language status strip ---------- */
+                var bar = null;
+                if (document.body && document.body.appendChild) {
+                    bar = document.createElement('div');
+                    bar.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:64px;z-index:6;' +
+                        'background:rgba(9,20,30,.9);border:1px solid rgba(255,255,255,.14);border-radius:999px;' +
+                        'padding:9px 20px;color:#e2e8f0;font:700 13.5px system-ui,sans-serif;white-space:nowrap;' +
+                        'pointer-events:none;max-width:94vw;overflow:hidden;text-overflow:ellipsis';
+                    document.body.appendChild(bar);
+                }
+                M.hud = function () {
+                    if (!bar || !M.state) return;
+                    var st = M.state, d = Math.round(Math.abs(M.u));
+                    var lensTxt = st.acc > 0.66 ? 'lens MOTA' : (st.acc < 0.33 ? 'lens PATLA' : 'lens beech mein');
+                    var where = d < 70 ? 'PAAS' : (d > 150 ? 'BAHUT DOOR' : 'DOOR');
+                    bar.innerHTML =
+                        'Object ' + where +
+                        ' &nbsp;→&nbsp; <span style="color:#93c5fd">' + lensTxt + '</span>' +
+                        ' &nbsp;→&nbsp; <span style="color:' + (st.sharp ? '#4ade80' : '#f87171') + '">' +
+                        (st.sharp ? 'retina par SAAF ✓' : 'retina par DHUNDHLA ✗') + '</span>';
+                };
+
+                M.setMode = function (x) { M.mode = x; M.draw(); ctx.selectKey(x === 0 ? 'lens' : (x === 2 || x === 4) ? 'spec' : 'spot'); };
+                M.draw();
+            },
+
+            onFrame: function (t, ctx) {
+                var M = ctx.model;
+                if (!M.draw) return;
+                if (M.playing) {
+                    var ph = (Math.sin(t * 0.34) + 1) / 2;
+                    M.u = -(UNEAR + (UFAR - UNEAR) * ph);
+                } else {
+                    M.u = M.handU;
+                }
+                M.draw();
+
+                /* light pulses stream along both rays, endlessly */
+                var lines = M.lines, u = M.u, tip = M.tipY, R = M.state.s.R;
+                if (!lines) return;
+                M.rays.forEach(function (r, i) {
+                    var L = lines[i];
+                    var ax = u, ay = tip, bx = 0, by = L.hit, cx = R, cy = L.hit + L.sl * (R - 0);
+                    var d1 = Math.hypot(bx - ax, by - ay), d2 = Math.hypot(cx - bx, cy - by), tot = d1 + d2;
+                    r.pulses.forEach(function (p, k) {
+                        var ph = ((t * 0.4 + k / r.pulses.length) % 1), d = ph * tot, x, y;
+                        if (d <= d1) { var q = d1 ? d / d1 : 0; x = ax + (bx - ax) * q; y = ay + (by - ay) * q; }
+                        else { var q2 = d2 ? (d - d1) / d2 : 0; x = bx + (cx - bx) * q2; y = by + (cy - by) * q2; }
+                        p.position.set(x, y, 0);
+                        p.visible = true;
+                        p.scale.setScalar(0.9 + Math.sin(t * 6 + k) * 0.14);
+                    });
+                });
+                /* the iris breathes a little, as a real pupil does */
+                if (M.iris) M.iris.scale.setScalar(1 + Math.sin(t * 0.9) * 0.05);
+            }
+        });
+    </script>
+</body>
+
+</html>

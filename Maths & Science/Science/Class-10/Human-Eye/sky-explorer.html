@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sky Colour Explorer | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #082f49, #0e7490); color: #e0f2fe; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.32); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #a5f3fc; text-decoration: none; border: 1px solid rgba(165,243,252,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 940px; margin: 0 auto; padding: 18px; }
+        .card { background: rgba(255,255,255,.08); border-radius: 16px; padding: 16px; margin-bottom: 13px; }
+        .card h3 { color: #fff; font-size: 12.5px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .05em; }
+        .slider label { display: block; font-size: 13.5px; color: #a5f3fc; margin-bottom: 7px; font-weight: 600; }
+        .slider label b { color: #fff; }
+        input[type=range] { width: 100%; accent-color: #22d3ee; height: 26px; }
+        .presets { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 10px; }
+        .presets button { flex: 1; min-width: 104px; border: 1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.07); color: #e0f2fe; padding: 9px 8px; border-radius: 9px; font-size: 12.5px; cursor: pointer; font-weight: 700; }
+        .presets button:hover { background: rgba(255,255,255,.18); }
+        .stage { border-radius: 14px; overflow: hidden; }
+        svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+        .bars { margin-top: 14px; }
+        .bar { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; font-size: 13px; }
+        .bar .lb { width: 74px; font-weight: 700; }
+        .bar .tr { flex: 1; background: rgba(0,0,0,.4); border-radius: 20px; height: 20px; overflow: hidden; }
+        .bar .fl { height: 100%; border-radius: 20px; transition: width .3s; }
+        .bar .pc { width: 62px; text-align: right; font-weight: 800; font-family: 'Courier New', monospace; }
+        .note { font-size: 14px; line-height: 1.85; background: rgba(0,0,0,.3); border-radius: 11px; padding: 14px; margin-top: 13px; border-left: 4px solid #22d3ee; }
+        .note b { color: #fff; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="scattering.html">← Back to Lesson</a>
+        <div class="title">🌇 Sky Colour Explorer</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <h3>Sooraj ko aasman mein ghumao</h3>
+            <div class="slider">
+                <label id="lab"></label>
+                <input type="range" id="sun" min="0" max="90" step="1" value="90" oninput="setSun(this.value)">
+            </div>
+            <div class="presets">
+                <button onclick="jump(90)">☀️ Dopahar</button>
+                <button onclick="jump(45)">🌤️ Teesre pehar</button>
+                <button onclick="jump(12)">🌆 Shaam</button>
+                <button onclick="jump(2)">🌇 Sunset</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Kya ho raha hai</h3>
+            <div class="stage" id="stage"></div>
+            <div class="bars" id="bars"></div>
+            <div class="note" id="note"></div>
+        </div>
+    </div>
+
+    <script>
+        /* Rayleigh scattering: the amount scattered goes as 1 / wavelength^4.
+           So violet (410 nm) scatters about (700/410)^4 ~ 8.5 times more than red. */
+        var COLS = [
+            { n: 'Violet', hex: '#8b5cf6', wl: 410 },
+            { n: 'Blue', hex: '#3b82f6', wl: 470 },
+            { n: 'Green', hex: '#22c55e', wl: 530 },
+            { n: 'Yellow', hex: '#eab308', wl: 580 },
+            { n: 'Orange', hex: '#f97316', wl: 620 },
+            { n: 'Red', hex: '#ef4444', wl: 700 }
+        ];
+        var alt = 90;                       /* sun altitude above the horizon, degrees */
+
+        /* How much atmosphere the light must cross, relative to straight overhead.
+           The simple 1/sin formula blows up at the horizon; the real maximum is
+           about 38 because the Earth curves away, so we cap it there. */
+        function airMass(a) {
+            var r = Math.max(a, 0.5) * Math.PI / 180;
+            return Math.min(38, 1 / Math.sin(r));
+        }
+        /* Fraction of each colour that SURVIVES the trip straight to your eye.
+           TAU_RED is the real Rayleigh optical depth at 700 nm looking straight up
+           (~0.026); every other colour scales as 1/wavelength^4. */
+        var TAU_RED = 0.026;
+        function survives(c, a) {
+            var k = Math.pow(700 / c.wl, 4);
+            return Math.exp(-TAU_RED * k * airMass(a));
+        }
+
+        var W = 860, H = 320;
+
+        function draw() {
+            var am = airMass(alt);
+            var surv = COLS.map(function (c) { return { c: c, s: survives(c, alt) }; });
+            /* colour of the sun's disc = what is left of the direct beam */
+            var sunCol = mix(surv);
+            /* colour of the sky = what got scattered OUT of the beam */
+            var skyCol = mix(surv.map(function (x) { return { c: x.c, s: 1 - x.s }; }));
+
+            var rad = alt * Math.PI / 180;
+            var sx = 120 + Math.cos(rad) * 0 + (90 - alt) / 90 * 0;
+            var sunX = 700 - (alt / 90) * 480;
+            var sunY = 250 - Math.sin(rad) * 200;
+
+            var g = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sky colour at different sun positions">';
+            g += '<defs><linearGradient id="skyg" x1="0" y1="0" x2="0" y2="1">'
+                + '<stop offset="0" stop-color="' + shade(skyCol, 0.72) + '"/>'
+                + '<stop offset="1" stop-color="' + shade(skyCol, 1.25) + '"/></linearGradient></defs>';
+            g += '<rect x="0" y="0" width="' + W + '" height="258" fill="url(#skyg)"/>';
+            g += '<rect x="0" y="258" width="' + W + '" height="' + (H - 258) + '" fill="#0f172a"/>';
+
+            /* the path the light takes through the atmosphere */
+            g += '<rect x="0" y="150" width="' + W + '" height="108" fill="#ffffff" opacity=".07"/>';
+            g += '<text x="12" y="168" font-size="10.5" font-weight="800" fill="rgba(255,255,255,.7)">VAAYUMANDAL</text>';
+
+            g += '<circle cx="' + sunX + '" cy="' + sunY + '" r="' + (alt < 12 ? 26 : 21) + '" fill="' + sunCol + '"/>';
+            g += '<circle cx="' + sunX + '" cy="' + sunY + '" r="' + (alt < 12 ? 40 : 32) + '" fill="' + sunCol + '" opacity=".28"/>';
+
+            /* beam from sun to observer */
+            g += '<line x1="' + sunX + '" y1="' + sunY + '" x2="150" y2="252" stroke="' + sunCol + '" stroke-width="5" opacity=".95"/>';
+
+            /* scattered light bouncing off air molecules along the beam */
+            var steps = 7;
+            for (var i = 1; i <= steps; i++) {
+                var t = i / (steps + 1);
+                var mx = sunX + (150 - sunX) * t, my = sunY + (252 - sunY) * t;
+                g += '<circle cx="' + mx + '" cy="' + my + '" r="3.4" fill="rgba(255,255,255,.55)"/>';
+                for (var k = 0; k < 3; k++) {
+                    var a2 = (k * 2.1) + i, L = 26;
+                    g += '<line x1="' + mx + '" y1="' + my + '" x2="' + (mx + Math.cos(a2) * L) + '" y2="' + (my + Math.sin(a2) * L) + '" stroke="' + skyCol + '" stroke-width="2.4" opacity=".85"/>';
+                }
+            }
+
+            g += '<circle cx="150" cy="256" r="10" fill="#f8fafc"/>';
+            g += '<text x="150" y="286" text-anchor="middle" font-size="12" font-weight="800" fill="#e2e8f0">AAP</text>';
+            g += '<text x="' + (W - 14) + '" y="26" text-anchor="end" font-size="12" font-weight="800" fill="rgba(255,255,255,.9)">Hawa ka raasta: ' + am.toFixed(1) + '× lamba</text>';
+            g += '</svg>';
+            document.getElementById('stage').innerHTML = g;
+
+            var bh = '';
+            surv.forEach(function (x) {
+                var pc = x.s * 100;
+                bh += '<div class="bar"><span class="lb" style="color:' + x.c.hex + '">' + x.c.n + '</span>'
+                    + '<span class="tr"><span class="fl" style="width:' + pc.toFixed(1) + '%;background:' + x.c.hex + '"></span></span>'
+                    + '<span class="pc" style="color:' + x.c.hex + '">' + pc.toFixed(0) + '%</span></div>';
+            });
+            document.getElementById('bars').innerHTML =
+                '<div style="font-size:12px;color:#a5f3fc;margin-bottom:8px;font-weight:700">Har rang ka kitna hissa SEEDHA aap tak pahuncha</div>' + bh;
+
+            document.getElementById('lab').innerHTML =
+                'Sooraj ki oonchai: <b>' + alt + '°</b> ' + (alt > 70 ? '(sar ke lagbhag upar)' : alt > 25 ? '(dhalta hua)' : '(ufaq ke paas)');
+
+            var blue = surv[1].s * 100, red = surv[5].s * 100;
+            var t;
+            if (alt > 60) {
+                t = '☀️ <b>Sooraj lagbhag sar ke upar hai.</b> Roshni ko hawa ki sabse <b>patli</b> parat paar karni padi (sirf ' + am.toFixed(1) + '× raasta).<br><br>'
+                    + 'Isliye <b>lagbhag saare rang</b> aap tak pahunch gaye — dekho, neela bhi ' + blue.toFixed(0) + '% bacha hai. Sab rang milkar sooraj <b>safed/peela</b> dikhta hai.<br><br>'
+                    + '💙 Aur aasman? Jo neela raaste mein <b>bikhar</b> gaya, wo har taraf se aapki aankh tak aa raha hai — isiliye aasman <b>neela</b> dikhta hai.';
+            } else if (alt > 25) {
+                t = '🌤️ Sooraj dhalne laga hai. Ab roshni ko <b>' + am.toFixed(1) + '× lamba</b> raasta paar karna pad raha hai.<br><br>'
+                    + 'Neela ghatkar <b>' + blue.toFixed(0) + '%</b> reh gaya, par laal abhi bhi <b>' + red.toFixed(0) + '%</b> hai. Isiliye sooraj thoda <b>peela-narangi</b> lagne laga hai.<br><br>'
+                    + '💡 Slider aur ghumao — sooraj jitna neeche jaayega, farak utna saaf dikhega.';
+            } else if (alt > 6) {
+                t = '🌆 <b>Shaam ho rahi hai.</b> Raasta ab <b>' + am.toFixed(1) + '× lamba</b> hai.<br><br>'
+                    + 'Neela lagbhag khatam — sirf <b>' + blue.toFixed(0) + '%</b> bacha. Laal abhi bhi <b>' + red.toFixed(0) + '%</b> hai, kyunki wo sabse <b>kam bikharta</b> hai.<br><br>'
+                    + 'Isiliye aasman aur sooraj dono <b>narangi</b> hone lage hain.';
+            } else {
+                t = '🌇 <b>SUNSET!</b> Sooraj ufaq par hai, aur roshni ko hawa ki <b>' + am.toFixed(1) + '× moti</b> parat paar karni pad rahi hai.<br><br>'
+                    + 'Dekho bars mein: <b>violet aur neela lagbhag poori tarah bikhar kar khatam</b> ho gaye (neela sirf ' + blue.toFixed(0) + '%). Sirf <b>laal aur narangi</b> bache — laal abhi bhi <b>' + red.toFixed(0) + '%</b>.<br><br>'
+                    + '🔴 <b>Isiliye sunset laal dikhta hai.</b> Aur isiliye <b>khatre ka signal bhi laal</b> hota hai — laal roshni sabse kam bikharti hai, isliye kohre aur dhuen mein bhi sabse door tak saaf dikhti hai.';
+            }
+            document.getElementById('note').innerHTML = t;
+        }
+
+        /* mix a set of weighted colours into one hex value */
+        function mix(list) {
+            var r = 0, g = 0, b = 0, tot = 0;
+            list.forEach(function (x) {
+                var h = x.c.hex, w = Math.max(0, x.s);
+                r += parseInt(h.substr(1, 2), 16) * w;
+                g += parseInt(h.substr(3, 2), 16) * w;
+                b += parseInt(h.substr(5, 2), 16) * w;
+                tot += w;
+            });
+            if (tot <= 0.0001) return '#0b1220';
+            return rgb(r / tot, g / tot, b / tot);
+        }
+        function shade(hex, f) {
+            return rgb(parseInt(hex.substr(1, 2), 16) * f, parseInt(hex.substr(3, 2), 16) * f, parseInt(hex.substr(5, 2), 16) * f);
+        }
+        function rgb(r, g, b) {
+            function c(x) { x = Math.round(Math.max(0, Math.min(255, x))); return (x < 16 ? '0' : '') + x.toString(16); }
+            return '#' + c(r) + c(g) + c(b);
+        }
+
+        function setSun(v) { alt = parseInt(v, 10); draw(); }
+        function jump(v) { alt = v; document.getElementById('sun').value = v; draw(); }
+        draw();
+    </script>
+</body>
+
+</html>

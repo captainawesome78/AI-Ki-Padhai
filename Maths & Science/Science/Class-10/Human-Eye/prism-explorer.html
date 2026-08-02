@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prism &amp; Rainbow Explorer | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #451a03, #b45309); color: #fef3c7; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.32); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #fcd34d; text-decoration: none; border: 1px solid rgba(252,211,77,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 960px; margin: 0 auto; padding: 18px; }
+        .card { background: rgba(255,255,255,.08); border-radius: 16px; padding: 16px; margin-bottom: 13px; }
+        .card h3 { color: #fff; font-size: 12.5px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .05em; }
+        .modes { display: flex; gap: 8px; flex-wrap: wrap; }
+        .modes button { flex: 1; min-width: 150px; border: 1px solid rgba(252,211,77,.32); background: rgba(0,0,0,.25); color: #fde68a; padding: 11px 8px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 13px; }
+        .modes button.on { background: #f59e0b; color: #451a03; border-color: #f59e0b; }
+        .slider { margin-top: 14px; }
+        .slider label { display: block; font-size: 13.5px; color: #fde68a; margin-bottom: 7px; font-weight: 600; }
+        .slider label b { color: #fff; }
+        input[type=range] { width: 100%; accent-color: #fbbf24; height: 26px; }
+        .stage { background: #0b1220; border-radius: 14px; padding: 8px; overflow-x: auto; }
+        svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+        .note { font-size: 14px; line-height: 1.85; background: rgba(0,0,0,.3); border-radius: 11px; padding: 14px; margin-top: 13px; border-left: 4px solid #f59e0b; }
+        .note b { color: #fff; }
+        .tbl { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 13px; }
+        .tbl th { text-align: left; padding: 8px 9px; color: #fcd34d; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; border-bottom: 1px solid rgba(252,211,77,.28); }
+        .tbl td { padding: 8px 9px; border-bottom: 1px solid rgba(255,255,255,.07); }
+        .sw { display: inline-block; width: 15px; height: 15px; border-radius: 3px; vertical-align: -2px; margin-right: 7px; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="dispersion.html">← Back to Lesson</a>
+        <div class="title">🌈 Prism &amp; Rainbow Explorer</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <h3>1. Kya dekhna hai</h3>
+            <div class="modes">
+                <button id="m0" class="on" onclick="setMode(0)">Ek prism — rang alag</button>
+                <button id="m1" onclick="setMode(1)">Do prism — rang wapas jodo</button>
+                <button id="m2" onclick="setMode(2)">Baarish ki boond — rainbow</button>
+            </div>
+            <div class="slider" id="angWrap">
+                <label id="alab"></label>
+                <input type="range" id="ang" min="0" max="60" step="1" value="35" oninput="setAng(this.value)">
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>2. Kya ho raha hai</h3>
+            <div class="stage" id="stage"></div>
+            <div class="note" id="note"></div>
+            <table class="tbl" id="tbl"></table>
+        </div>
+    </div>
+
+    <script>
+        /* Refractive index of crown glass for each colour. Violet is slowed most,
+           so it has the highest n and bends the most - exactly what the lesson says. */
+        var COLS = [
+            { n: 'Red', hex: '#ef4444', ri: 1.513, wl: 700 },
+            { n: 'Orange', hex: '#f97316', ri: 1.516, wl: 620 },
+            { n: 'Yellow', hex: '#eab308', ri: 1.520, wl: 580 },
+            { n: 'Green', hex: '#22c55e', ri: 1.526, wl: 530 },
+            { n: 'Blue', hex: '#3b82f6', ri: 1.531, wl: 470 },
+            { n: 'Indigo', hex: '#4f46e5', ri: 1.536, wl: 445 },
+            { n: 'Violet', hex: '#8b5cf6', ri: 1.542, wl: 410 }
+        ];
+        var C = 3e8;
+        var mode = 0, ang = 35;
+
+        /* deviation through a thin-ish prism of apex angle A: d = (n - 1) * A  */
+        function deviation(ri, A) { return (ri - 1) * A; }
+
+        var W = 860, H = 380;
+
+        function draw() {
+            var g = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Dispersion of white light">';
+            g += '<rect x="0" y="0" width="' + W + '" height="' + H + '" fill="#0b1220"/>';
+
+            if (mode === 2) g += drawDrop();
+            else g += drawPrisms();
+
+            g += '</svg>';
+            document.getElementById('stage').innerHTML = g;
+            drawTable();
+            drawNote();
+            document.getElementById('angWrap').style.display = (mode === 2) ? 'none' : '';
+            document.getElementById('alab').innerHTML =
+                'Prism ka apex angle: <b>A = ' + ang + '°</b> — slider ghumao aur dekho ki rang kitne alag hote hain';
+        }
+
+        function drawPrisms() {
+            var g = '', A = ang;
+            var px = 250, py = 190, sz = 110;
+            /* prism 1 */
+            g += '<polygon points="' + px + ',' + (py - sz) + ' ' + (px + sz * 0.75) + ',' + (py + sz * 0.6) + ' ' + (px - sz * 0.75) + ',' + (py + sz * 0.6) + '" fill="rgba(125,211,252,.30)" stroke="#7dd3fc" stroke-width="2.5"/>';
+            g += '<text x="' + px + '" y="' + (py + sz * 0.6 + 22) + '" text-anchor="middle" font-size="11.5" font-weight="800" fill="#7dd3fc">PRISM 1</text>';
+            /* incoming white light */
+            g += '<line x1="10" y1="150" x2="' + (px - 62) + '" y2="170" stroke="#f8fafc" stroke-width="6"/>';
+            g += '<line x1="10" y1="150" x2="' + (px - 62) + '" y2="170" stroke="#cbd5e1" stroke-width="1"/>';
+            g += '<text x="12" y="138" font-size="12" font-weight="800" fill="#f1f5f9">SAFED LIGHT</text>';
+            g += '<text x="12" y="122" font-size="10" fill="#94a3b8">(saat rang chhupe hue)</text>';
+
+            var spread = A * 0.55;                       /* how far the fan opens, in px per degree-ish */
+            var midIdx = 3;
+            var outX = (mode === 1) ? 560 : W - 168;
+            var fan = COLS.map(function (c, i) {
+                var d = deviation(c.ri, A);
+                var y = 170 + (d - deviation(COLS[midIdx].ri, A)) * spread * 6 + (i - midIdx) * 0.4;
+                return { c: c, y: y, d: d };
+            });
+            fan.forEach(function (f) {
+                g += '<line x1="' + (px - 62) + '" y1="170" x2="' + (px + 62) + '" y2="' + (f.y - 6) + '" stroke="' + f.c.hex + '" stroke-width="3.4"/>';
+                g += '<line x1="' + (px + 62) + '" y1="' + (f.y - 6) + '" x2="' + outX + '" y2="' + f.y + '" stroke="' + f.c.hex + '" stroke-width="3.4"/>';
+            });
+
+            if (mode === 0) {
+                fan.forEach(function (f) {
+                    g += '<text x="' + (outX + 10) + '" y="' + (f.y + 4) + '" font-size="11.5" font-weight="800" fill="' + f.c.hex + '">' + f.c.n + '</text>';
+                });
+                g += '<text x="' + (px + 130) + '" y="118" font-size="12" font-weight="800" fill="#fde68a">SPECTRUM — saat rang alag</text>';
+                g += '<text x="' + (px + 130) + '" y="136" font-size="10.5" fill="#fcd34d">Violet sabse zyada muda, red sabse kam</text>';
+            } else {
+                /* prism 2, inverted, recombines the fan */
+                var qx = 640, qy = 190;
+                g += '<polygon points="' + qx + ',' + (qy + sz * 0.6) + ' ' + (qx + sz * 0.75) + ',' + (qy - sz) + ' ' + (qx - sz * 0.75) + ',' + (qy - sz) + '" fill="rgba(125,211,252,.30)" stroke="#7dd3fc" stroke-width="2.5"/>';
+                g += '<text x="' + qx + '" y="' + (qy + sz * 0.6 + 22) + '" text-anchor="middle" font-size="11.5" font-weight="800" fill="#7dd3fc">PRISM 2 (ULTA)</text>';
+                fan.forEach(function (f) {
+                    g += '<line x1="' + outX + '" y1="' + f.y + '" x2="' + (qx + 40) + '" y2="186" stroke="' + f.c.hex + '" stroke-width="3.4"/>';
+                });
+                g += '<line x1="' + (qx + 40) + '" y1="186" x2="' + (W - 14) + '" y2="186" stroke="#f8fafc" stroke-width="6"/>';
+                g += '<line x1="' + (qx + 40) + '" y1="186" x2="' + (W - 14) + '" y2="186" stroke="#cbd5e1" stroke-width="1"/>';
+                g += '<text x="' + (W - 14) + '" y="172" text-anchor="end" font-size="13" font-weight="800" fill="#f1f5f9">SAFED WAPAS! ✓</text>';
+            }
+            return g;
+        }
+
+        function drawDrop() {
+            var g = '', cx = 430, cy = 150, R = 100;
+            g += '<circle cx="' + cx + '" cy="' + cy + '" r="' + R + '" fill="rgba(125,211,252,.22)" stroke="#7dd3fc" stroke-width="3"/>';
+            g += '<text x="' + cx + '" y="' + (cy + R + 28) + '" text-anchor="middle" font-size="12" font-weight="800" fill="#7dd3fc">BAARISH KI EK BOOND</text>';
+            g += '<circle cx="60" cy="40" r="18" fill="#fde047"/>';
+            g += '<text x="86" y="34" font-size="11.5" font-weight="800" fill="#fde047">SOORAJ</text>';
+            g += '<line x1="76" y1="48" x2="' + (cx - 74) + '" y2="' + (cy - 44) + '" stroke="#f8fafc" stroke-width="5"/>';
+            g += '<line x1="76" y1="48" x2="' + (cx - 74) + '" y2="' + (cy - 44) + '" stroke="#cbd5e1" stroke-width="1"/>';
+            var pick = [0, 3, 6];
+            pick.forEach(function (i, k) {
+                var c = COLS[i], off = (k - 1) * 9;
+                g += '<line x1="' + (cx - 74) + '" y1="' + (cy - 44) + '" x2="' + (cx + 62 + off) + '" y2="' + (cy + 66 - off) + '" stroke="' + c.hex + '" stroke-width="3.4"/>';
+                g += '<line x1="' + (cx + 62 + off) + '" y1="' + (cy + 66 - off) + '" x2="' + (cx - 68) + '" y2="' + (cy + 24 + off * 1.6) + '" stroke="' + c.hex + '" stroke-width="3.4"/>';
+                g += '<line x1="' + (cx - 68) + '" y1="' + (cy + 24 + off * 1.6) + '" x2="90" y2="' + (cy + 130 + off * 4) + '" stroke="' + c.hex + '" stroke-width="3.4"/>';
+            });
+            g += '<text x="' + (cx - 20) + '" y="' + (cy - 66) + '" font-size="11" font-weight="800" fill="#f1f5f9">1. refraction + dispersion</text>';
+            g += '<text x="' + (cx + 78) + '" y="' + (cy + 96) + '" font-size="11" font-weight="800" fill="#fbbf24">2. total internal reflection</text>';
+            g += '<text x="96" y="' + (cy + 158) + '" font-size="11" font-weight="800" fill="#f1f5f9">3. refraction — rang bahar</text>';
+            g += '<circle cx="60" cy="' + (cy + 176) + '" r="9" fill="#f8fafc"/>';
+            g += '<text x="60" y="' + (cy + 202) + '" text-anchor="middle" font-size="11" font-weight="800" fill="#e2e8f0">aapki aankh</text>';
+            g += '<text x="620" y="60" font-size="11.5" font-weight="800" fill="#fde68a">Roshni JIS taraf se aayi,</text>';
+            g += '<text x="620" y="78" font-size="11.5" font-weight="800" fill="#fde68a">USI taraf lautti hai —</text>';
+            g += '<text x="620" y="96" font-size="11" fill="#fcd34d">isiliye rainbow dekhne ke liye</text>';
+            g += '<text x="620" y="112" font-size="11" fill="#fcd34d">peeth sooraj ki taraf honi chahiye</text>';
+            return g;
+        }
+
+        function drawTable() {
+            var h = '<tr><th>Rang</th><th>Wavelength</th><th>n (kaanch)</th><th>Kaanch mein raftaar</th><th>Mudav (A=' + ang + '°)</th></tr>';
+            COLS.forEach(function (c) {
+                var v = C / c.ri;
+                h += '<tr><td><span class="sw" style="background:' + c.hex + '"></span>' + c.n + '</td>'
+                    + '<td>' + c.wl + ' nm</td>'
+                    + '<td>' + c.ri.toFixed(3) + '</td>'
+                    + '<td>' + (v / 1e8).toFixed(3) + ' × 10⁸ m/s</td>'
+                    + '<td><b>' + deviation(c.ri, ang).toFixed(2) + '°</b></td></tr>';
+            });
+            document.getElementById('tbl').innerHTML = h;
+        }
+
+        function drawNote() {
+            var dR = deviation(COLS[0].ri, ang), dV = deviation(COLS[6].ri, ang);
+            var spread = (dV - dR).toFixed(2);
+            var t;
+            if (mode === 0) {
+                t = '📌 Prism har rang ko <b>alag kon</b> par modta hai. Table dekho: <b>violet ka n sabse zyada</b> (1.542) hai, isliye wo kaanch mein sabse <b>dheema</b> chalta hai aur sabse <b>zyada mudta</b> hai. Red ka n sabse kam hai, isliye wo sabse kam mudta hai.<br><br>'
+                    + 'Abhi <b>A = ' + ang + '°</b> par red <b>' + dR.toFixed(2) + '°</b> muda aur violet <b>' + dV.toFixed(2) + '°</b> — yani <b>' + spread + '° ka farak</b>. Yahi farak spectrum banata hai.<br><br>'
+                    + (ang < 8
+                        ? '⚠️ Apex angle bahut chhota hai, isliye rang lagbhag <b>ek saath</b> hain — spectrum dikh hi nahi raha. Slider badhao!'
+                        : '💡 Slider badhao — apex angle badhte hi rang aur <b>zyada alag</b> hote jaate hain.');
+            } else if (mode === 1) {
+                t = '🎯 Yahi <b>Newton ka doosra prayog</b> hai. Pehle prism ne saat rang alag kiye, aur doosre <b>ulte prism</b> ne unhe wapas <b>jod</b> diya — doosri taraf se phir se <b>SAFED</b> roshni nikli.<br><br>'
+                    + 'Isse do baatein sabit hoti hain:<br>'
+                    + '1️⃣ Kaanch rang <b>banata nahi</b> — wo sirf pehle se maujood rangon ko <b>alag</b> karta hai<br>'
+                    + '2️⃣ Safed roshni asal mein <b>saat rangon ka mel</b> hai';
+            } else {
+                t = '🌈 Rainbow banne ke liye ek boond ke andar <b>teen</b> cheezein hoti hain:<br>'
+                    + '1️⃣ <b>Refraction + dispersion</b> — ghuste waqt light mudti hai aur rang alag ho jaate hain<br>'
+                    + '2️⃣ <b>Total internal reflection</b> — rang boond ki peechhe wali deewar se wapas uchhalte hain<br>'
+                    + '3️⃣ <b>Refraction</b> — bahar nikalte waqt wo phir mudte hain aur aur alag ho jaate hain<br><br>'
+                    + '💡 Isiliye rainbow hamesha <b>sooraj ke ULTI taraf</b> dikhta hai. Aur wo asal mein poora <b>gol</b> hota hai — zameen neeche wala hissa kaat deti hai!';
+            }
+            document.getElementById('note').innerHTML = t;
+        }
+
+        function setMode(m) {
+            mode = m;
+            for (var i = 0; i < 3; i++) document.getElementById('m' + i).className = (i === m ? 'on' : '');
+            draw();
+        }
+        function setAng(v) { ang = parseInt(v, 10); draw(); }
+        setMode(0);
+    </script>
+</body>
+
+</html>

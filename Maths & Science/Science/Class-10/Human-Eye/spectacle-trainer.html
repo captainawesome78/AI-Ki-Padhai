@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spectacle Power Trainer | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #4a044e, #9d174d); color: #fce7f3; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #f9a8d4; text-decoration: none; border: 1px solid rgba(249,168,212,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 820px; margin: 0 auto; padding: 18px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 18px; margin-bottom: 13px; }
+        .score { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px; }
+        .sbox { flex: 1; min-width: 96px; background: rgba(0,0,0,.3); border-radius: 11px; padding: 11px; text-align: center; }
+        .sbox .t { font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; color: #f9a8d4; }
+        .sbox .v { font-size: 21px; font-weight: 800; color: #fff; }
+        .qtxt { font-size: 16.5px; line-height: 1.9; color: #fff; }
+        .qtxt b { color: #fbbf24; }
+        .hint { font-size: 13.5px; color: #f9a8d4; margin-top: 12px; background: rgba(0,0,0,.25); border-radius: 9px; padding: 12px 14px; line-height: 1.75; }
+        .hint b { color: #fff; }
+        .ask { margin-top: 16px; }
+        .ask label { display: block; font-size: 13.5px; color: #f9a8d4; font-weight: 700; margin-bottom: 6px; }
+        .ask input { width: 100%; padding: 12px 14px; border-radius: 10px; border: 1.5px solid rgba(255,255,255,.2); background: rgba(0,0,0,.3); color: #fff; font-size: 16px; font-family: 'Courier New', monospace; font-weight: 700; }
+        .ask input:focus { outline: none; border-color: #f472b6; }
+        .ask input.ok { border-color: #22c55e; background: rgba(21,128,61,.25); }
+        .ask input.no { border-color: #ef4444; background: rgba(153,27,27,.25); }
+        .opts2 { display: flex; gap: 8px; flex-wrap: wrap; }
+        .opts2 button { flex: 1; min-width: 118px; border: 1.5px solid rgba(255,255,255,.2); background: rgba(0,0,0,.3); color: #fce7f3; padding: 11px 8px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 13.5px; }
+        .opts2 button.sel { background: #fff; color: #4a044e; border-color: #fff; }
+        .opts2 button.ok { background: #22c55e; color: #052e16; border-color: #22c55e; }
+        .opts2 button.no { background: #ef4444; color: #fff; border-color: #ef4444; }
+        .btns { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+        .btns button { flex: 1; min-width: 128px; border: none; padding: 13px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 15px; }
+        .chk { background: #f472b6; color: #4a044e; } .nxt { background: #fbbf24; color: #451a03; }
+        .rst { background: transparent; color: #f9a8d4; border: 1px solid rgba(249,168,212,.4); }
+        .sol { margin-top: 15px; background: rgba(0,0,0,.32); border-radius: 12px; padding: 15px; font-size: 14.5px; line-height: 2; display: none; border-left: 4px solid #fbbf24; }
+        .sol.show { display: block; }
+        .sol b { color: #fff; } .sol .h { color: #fbbf24; font-weight: 800; display: block; margin-bottom: 8px; font-size: 13px; text-transform: uppercase; letter-spacing: .05em; }
+        .sol .step { margin: 10px 0; }
+        .verdict { font-size: 16px; font-weight: 800; margin-top: 13px; text-align: center; padding: 11px; border-radius: 10px; display: none; }
+        .verdict.show { display: block; }
+        .verdict.win { background: rgba(34,197,94,.25); color: #86efac; }
+        .verdict.lose { background: rgba(239,68,68,.22); color: #fca5a5; }
+        .tip { font-size: 12.5px; color: #f9a8d4; margin-top: 10px; font-style: italic; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="eye-defects.html">← Back to Lesson</a>
+        <div class="title">👓 Spectacle Power Trainer</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <div class="score">
+                <div class="sbox"><div class="t">Sawaal</div><div class="v" id="sQ">1</div></div>
+                <div class="sbox"><div class="t">Sahi</div><div class="v" id="sR" style="color:#86efac">0</div></div>
+                <div class="sbox"><div class="t">Galat</div><div class="v" id="sW" style="color:#fca5a5">0</div></div>
+                <div class="sbox"><div class="t">Streak</div><div class="v" id="sS" style="color:#fbbf24">0</div></div>
+            </div>
+
+            <div class="qtxt" id="q"></div>
+            <div class="hint" id="hint"></div>
+
+            <div class="ask">
+                <label>Kaunsa defect hai?</label>
+                <div class="opts2">
+                    <button id="d0" onclick="pick('def',0)">Myopia</button>
+                    <button id="d1" onclick="pick('def',1)">Hypermetropia</button>
+                </div>
+            </div>
+            <div class="ask">
+                <label>Kaunsa lens chahiye?</label>
+                <div class="opts2">
+                    <button id="l0" onclick="pick('lens',0)">Concave</button>
+                    <button id="l1" onclick="pick('lens',1)">Convex</button>
+                </div>
+            </div>
+            <div class="ask">
+                <label>Lens ki focal length f (cm, chinh ke saath)</label>
+                <input id="af" type="text" placeholder="jaise -80 ya +33.3" autocomplete="off">
+            </div>
+            <div class="ask">
+                <label>Lens ka power P (dioptre, chinh ke saath)</label>
+                <input id="ap" type="text" placeholder="jaise -1.25 ya +3" autocomplete="off">
+            </div>
+            <div class="tip">💡 Do dashamlav tak theek hai. Chinh (+ / −) zaroor lagao — wahi asli imtihaan hai.</div>
+
+            <div class="btns">
+                <button class="chk" id="chk" onclick="check()">✓ Jawab jaancho</button>
+                <button class="nxt" onclick="nextQ()">→ Agla sawaal</button>
+                <button class="rst" onclick="resetAll()">↺ Reset</button>
+            </div>
+
+            <div class="verdict" id="verdict"></div>
+            <div class="sol" id="sol"></div>
+        </div>
+    </div>
+
+    <script>
+        var D = 25;                      /* normal near point, cm */
+        var cur = null, qn = 1, right = 0, wrong = 0, streak = 0;
+        var picked = { def: null, lens: null }, answered = false;
+
+        function r2(x) { return Math.round(x * 100) / 100; }
+        function rnd(a) { return a[Math.floor(Math.random() * a.length)]; }
+
+        /* MYOPIA: object at infinity must be imaged at the far point -> f = -(far point)
+           HYPERMETROPIA: object at 25 cm must be imaged at the near point
+                          -> 1/f = 1/(-near) - 1/(-25) */
+        function makeQ() {
+            var isMyopia = Math.random() < 0.5;
+            if (isMyopia) {
+                var far = rnd([50, 60, 80, 100, 120, 150, 200, 250]);
+                var f = -far;
+                return { my: true, dist: far, f: f, P: r2(100 / f) };
+            }
+            var near = rnd([40, 50, 60, 75, 100, 125, 150]);
+            var invF = (-1 / near) + (1 / D);
+            var f2 = 1 / invF;
+            return { my: false, dist: near, f: r2(f2), P: r2(100 / f2) };
+        }
+
+        function render() {
+            var c = cur;
+            document.getElementById('q').innerHTML = c.my
+                ? 'Ek vyakti ko <b>door</b> ki cheezein dhundhli dikhti hain. Uska <b>far point sirf ' + c.dist + ' cm</b> hai — usse aage kuch saaf nahi dikhta.<br>Use door tak saaf dekhne ke liye kaunsa lens, aur kitne power ka?'
+                : 'Ek vyakti ko <b>paas</b> ki cheezein dhundhli dikhti hain. Uska <b>near point ' + c.dist + ' cm</b> hai — usse paas kuch saaf nahi dikhta.<br>Use <b>25 cm</b> par kitaab padhne ke liye kaunsa lens, aur kitne power ka?';
+            document.getElementById('hint').innerHTML =
+                '<b>Yaad rakho:</b> lens formula <b>1/f = 1/v − 1/u</b>, aur power <b>P = 1/f</b> (f <b>metre</b> mein!).<br>'
+                + 'Lens ko object ka image us jagah banana hai jahan tak us vyakti ko <b>dikhta hai</b> — aur wo image <b>virtual</b> hoga (v negative).';
+
+            ['af', 'ap'].forEach(function (id) { var e = document.getElementById(id); e.value = ''; e.className = ''; });
+            ['d0', 'd1', 'l0', 'l1'].forEach(function (id) { document.getElementById(id).className = ''; });
+            picked = { def: null, lens: null }; answered = false;
+            document.getElementById('sol').className = 'sol';
+            document.getElementById('verdict').className = 'verdict';
+            document.getElementById('chk').disabled = false;
+            document.getElementById('sQ').textContent = qn;
+        }
+
+        function pick(what, val) {
+            if (answered) return;
+            picked[what] = val;
+            var pre = (what === 'def') ? 'd' : 'l';
+            document.getElementById(pre + '0').className = (val === 0 ? 'sel' : '');
+            document.getElementById(pre + '1').className = (val === 1 ? 'sel' : '');
+        }
+
+        function near(txt, target) {
+            var x = parseFloat(String(txt).replace(/[^0-9eE.+-]/g, ''));
+            if (isNaN(x)) return false;
+            return Math.abs(x - target) <= Math.max(0.06, Math.abs(target) * 0.015);
+        }
+
+        function check() {
+            if (answered) return;
+            answered = true;
+            var c = cur;
+            var wantDef = c.my ? 0 : 1, wantLens = c.my ? 0 : 1;
+            var okD = picked.def === wantDef, okL = picked.lens === wantLens;
+            var okF = near(document.getElementById('af').value, c.f);
+            var okP = near(document.getElementById('ap').value, c.P);
+
+            document.getElementById('af').className = okF ? 'ok' : 'no';
+            document.getElementById('ap').className = okP ? 'ok' : 'no';
+            document.getElementById('d' + wantDef).className = 'ok';
+            document.getElementById('l' + wantLens).className = 'ok';
+            if (picked.def !== null && !okD) document.getElementById('d' + picked.def).className = 'no';
+            if (picked.lens !== null && !okL) document.getElementById('l' + picked.lens).className = 'no';
+
+            var all = okD && okL && okF && okP;
+            if (all) { right++; streak++; } else { wrong++; streak = 0; }
+            document.getElementById('sR').textContent = right;
+            document.getElementById('sW').textContent = wrong;
+            document.getElementById('sS').textContent = streak;
+
+            var vd = document.getElementById('verdict');
+            vd.className = 'verdict show ' + (all ? 'win' : 'lose');
+            vd.textContent = all
+                ? (streak >= 3 ? '🔥 Kamaal! ' + streak + ' sahi lagataar!' : '✅ Bilkul sahi! Chaaron jawab theek.')
+                : '❌ Kuch reh gaya — neeche poora hal dekho.';
+
+            var html = '<span class="h">Poora hal</span>';
+            if (c.my) {
+                html += '<div class="step"><b>Step 1 — samjho kya karna hai:</b><br>'
+                    + 'Use <b>door</b> ki cheezein nahi dikhtin, matlab <b>MYOPIA</b>. Lens ko <b>anant (infinity)</b> ki cheez ka image uske <b>far point (' + c.dist + ' cm)</b> par banana hai — kyunki wahan tak use dikhta hai.</div>';
+                html += '<div class="step"><b>Step 2 — chinh ke saath likho:</b><br>u = <b>−∞</b> &nbsp;•&nbsp; v = <b>−' + c.dist + ' cm</b> (virtual, usi taraf)</div>';
+                html += '<div class="step"><b>Step 3 — lens formula:</b><br>'
+                    + '1/f = 1/v − 1/u = 1/(−' + c.dist + ') − 0 = −1/' + c.dist + '<br>'
+                    + '<b>f = −' + c.dist + ' cm = ' + r2(c.f / 100) + ' m</b></div>';
+                html += '<div class="step"><b>Step 4 — power:</b><br>P = 1/f = 1/(' + r2(c.f / 100) + ') = <b>' + c.P + ' D</b><br>'
+                    + 'Power <b>negative</b> hai → <b>CONCAVE lens</b> ✓</div>';
+                html += '<div class="step">💡 <b>Shortcut:</b> myopia mein hamesha <b>f = −(far point)</b>. Bas metre mein badal kar P nikaal lo.</div>';
+            } else {
+                html += '<div class="step"><b>Step 1 — samjho kya karna hai:</b><br>'
+                    + 'Use <b>paas</b> ki cheezein nahi dikhtin, matlab <b>HYPERMETROPIA</b>. Lens ko <b>25 cm</b> par rakhi kitaab ka image uske <b>near point (' + c.dist + ' cm)</b> par banana hai.</div>';
+                html += '<div class="step"><b>Step 2 — chinh ke saath likho:</b><br>u = <b>−25 cm</b> &nbsp;•&nbsp; v = <b>−' + c.dist + ' cm</b> (virtual, usi taraf)</div>';
+                html += '<div class="step"><b>Step 3 — lens formula:</b><br>'
+                    + '1/f = 1/v − 1/u = 1/(−' + c.dist + ') − 1/(−25)<br>'
+                    + '1/f = −1/' + c.dist + ' + 1/25 = ' + r2(1 / c.f * 1000) / 1000 + '<br>'
+                    + '<b>f = ' + c.f + ' cm = ' + r2(c.f / 100) + ' m</b></div>';
+                html += '<div class="step"><b>Step 4 — power:</b><br>P = 1/f = 1/(' + r2(c.f / 100) + ') = <b>+' + c.P + ' D</b><br>'
+                    + 'Power <b>positive</b> hai → <b>CONVEX lens</b> ✓</div>';
+                html += '<div class="step">💡 <b>Shortcut:</b> hypermetropia mein <b>1/f = 1/25 − 1/(near point)</b>, dono cm mein.</div>';
+            }
+            html += '<div class="step">✅ <b>Jaanch:</b> ' + (c.my
+                ? 'myopia ka jawab hamesha <b>negative power</b> aur <b>concave</b> lens hota hai. Agar aapko positive mila toh chinh ki galti hai.'
+                : 'hypermetropia ka jawab hamesha <b>positive power</b> aur <b>convex</b> lens hota hai.') + '</div>';
+
+            var sol = document.getElementById('sol');
+            sol.innerHTML = html; sol.className = 'sol show';
+            document.getElementById('chk').disabled = true;
+        }
+
+        function nextQ() { qn++; cur = makeQ(); render(); }
+        function resetAll() {
+            qn = 1; right = 0; wrong = 0; streak = 0; cur = makeQ(); render();
+            document.getElementById('sR').textContent = 0;
+            document.getElementById('sW').textContent = 0;
+            document.getElementById('sS').textContent = 0;
+        }
+        cur = makeQ(); render();
+    </script>
+</body>
+
+</html>
