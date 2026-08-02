@@ -47,12 +47,12 @@
 <body>
     <div class="topbar">
         <a class="back" href="acquired-inherited.html">← Back to Lesson</a>
-        <div class="title">🌳 Trait &amp; Pedigree Explorer</div>
+        <div class="title">🌳 Trait (lakshan) &amp; Pedigree Explorer</div>
         <span style="width:60px"></span>
     </div>
     <div class="wrap">
         <div class="card">
-            <h3>1. Lakshan chuno</h3>
+            <h3>1. Trait chuno</h3>
             <div class="traits" id="traits"></div>
             <div class="tinfo" id="tinfo"></div>
         </div>
@@ -71,12 +71,12 @@
             <div class="legend">
                 <span><i class="sw sq" id="lg1"></i> Purush (aadmi)</span>
                 <span><i class="sw ci" id="lg2"></i> Stri (aurat)</span>
-                <span><i class="sw sq" style="background:#f59e0b"></i> Lakshan DIKHTA hai</span>
-                <span><i class="sw sq" style="background:#78716c"></i> Lakshan nahi dikhta</span>
+                <span><i class="sw sq" style="background:#f59e0b"></i> Trait DIKHTA hai</span>
+                <span><i class="sw sq" style="background:#78716c"></i> Trait nahi dikhta</span>
                 <span><i class="sw sq" style="background:#fef3c7"></i> Carrier (chhupa hua)</span>
             </div>
             <div class="odds">
-                <div class="obox"><div class="t">Bachche mein lakshan</div><div class="v" id="oShow">—</div><div class="s" id="oShowS"></div></div>
+                <div class="obox"><div class="t">Bachche mein trait</div><div class="v" id="oShow">—</div><div class="s" id="oShowS"></div></div>
                 <div class="obox"><div class="t">Bachcha carrier hoga</div><div class="v" id="oCar">—</div><div class="s" id="oCarS"></div></div>
                 <div class="obox"><div class="t">Bilkul saaf (shuddh)</div><div class="v" id="oCln">—</div><div class="s" id="oClnS"></div></div>
             </div>
@@ -130,7 +130,7 @@
                     b.onclick = function () { p[1](g); drawAll(); };
                     box.appendChild(b);
                 });
-                var g = p[2](), extra = isCarrier(g) ? ' — <b>CARRIER</b> (lakshan chhupa hua hai)' : '';
+                var g = p[2](), extra = isCarrier(g) ? ' — <b>CARRIER</b> (trait chhupa hua hai)' : '';
                 document.getElementById('lbl' + p[0]).innerHTML = 'Dikhta hai: <b>' + phen(g) + '</b>' + extra;
             });
         }
@@ -166,7 +166,7 @@
             s += '<line x1="310" y1="60" x2="310" y2="112" stroke="#fde68a" stroke-width="3"/>';
             s += '<line x1="86" y1="112" x2="534" y2="112" stroke="#fde68a" stroke-width="3"/>';
             /* generation II — the four equally likely children */
-            s += '<text x="' + (W / 2) + '" y="146" text-anchor="middle" font-size="12" font-weight="800" fill="#fde68a">Peedhi II — chaar barabar sambhavna wale bachche</text>';
+            s += '<text x="' + (W / 2) + '" y="146" text-anchor="middle" font-size="12" font-weight="800" fill="#fde68a">Peedhi II — chaar barabar probability wale bachche</text>';
             var xs = [86, 235, 385, 534];
             kids.forEach(function (g, i) {
                 var x = xs[i], boy = (i % 2 === 0);
@@ -179,9 +179,9 @@
                 s += '<text x="' + x + '" y="191" text-anchor="middle" font-size="15" font-weight="800" fill="' + (FILL(g) === '#fef3c7' ? '#451a03' : '#fff') + '">' + g + '</text>';
                 s += '<text x="' + x + '" y="232" text-anchor="middle" font-size="10.5" fill="#fde68a">' + (showsRec(g) ? t.rec : t.dom) + '</text>';
                 if (isCarrier(g)) s += '<text x="' + x + '" y="248" text-anchor="middle" font-size="10" font-weight="800" fill="#fbbf24">CARRIER</text>';
-                s += '<text x="' + x + '" y="' + (isCarrier(g) ? 264 : 248) + '" text-anchor="middle" font-size="10" fill="#d6d3d1">25% sambhavna</text>';
+                s += '<text x="' + x + '" y="' + (isCarrier(g) ? 264 : 248) + '" text-anchor="middle" font-size="10" fill="#d6d3d1">25% probability</text>';
             });
-            s += '<text x="' + (W / 2) + '" y="290" text-anchor="middle" font-size="10.5" fill="#d6d3d1">⬛ chaukor = ladka    ⚪ gol = ladki    (ling ka is lakshan se koi lena-dena nahi)</text>';
+            s += '<text x="' + (W / 2) + '" y="290" text-anchor="middle" font-size="10.5" fill="#d6d3d1">⬛ chaukor = ladka    ⚪ gol = ladki    (ling ka is trait se koi lena-dena nahi)</text>';
             s += '</svg>';
             document.getElementById('tree').innerHTML = s;
 
@@ -201,18 +201,18 @@
             /* ---- a note that reacts to the actual cross ---- */
             var n;
             if (nShow === 0 && nCar === 0) {
-                n = '📌 Is cross mein <b>recessive allele hai hi nahi</b> — isliye ye lakshan aage kisi bhi peedhi mein nahi ja sakta.';
+                n = '📌 Is cross mein <b>recessive allele hai hi nahi</b> — isliye ye trait aage kisi bhi peedhi mein nahi ja sakta.';
             } else if (nShow === 0 && nCar > 0) {
-                n = '🕵️ Dhyaan do — <b>kisi bhi bachche mein lakshan dikh nahi raha</b>, phir bhi ' + nCar + ' bachche <b>carrier</b> hain! Wo bilkul theek hain, par allele chhupa kar aage le ja rahe hain. Isiliye koi lakshan <b>ek peedhi chhodkar</b> achanak wapas aa sakta hai.';
+                n = '🕵️ Dhyaan do — <b>kisi bhi bachche mein trait dikh nahi raha</b>, phir bhi ' + nCar + ' bachche <b>carrier</b> hain! Wo bilkul theek hain, par allele chhupa kar aage le ja rahe hain. Isiliye koi trait <b>ek peedhi chhodkar</b> achanak wapas aa sakta hai.';
             } else if (nShow === 4) {
-                n = '📌 Dono parents <b>' + t2.r + t2.r + '</b> hain — isliye <b>har bachche</b> mein lakshan dikhega. Recessive × recessive se hamesha recessive hi milta hai.';
+                n = '📌 Dono parents <b>' + t2.r + t2.r + '</b> hain — isliye <b>har bachche</b> mein trait dikhega. Recessive × recessive se hamesha recessive hi milta hai.';
             } else if (nShow === 1) {
-                n = '🎯 Ye wahi classic <b>3:1</b> hai — 3 bachchon mein lakshan chhupa hua aur 1 mein dikh gaya. Dono parents <b>carrier (' + t2.D + t2.r + ')</b> hain.';
+                n = '🎯 Ye wahi classic <b>3:1</b> hai — 3 bachchon mein trait chhupa hua aur 1 mein dikh gaya. Dono parents <b>carrier (' + t2.D + t2.r + ')</b> hain.';
             } else {
-                n = '📌 Aadhe bachchon mein lakshan dikh raha hai — ye ek <b>test cross</b> jaisa nateeja hai (carrier × recessive).';
+                n = '📌 Aadhe bachchon mein trait dikh raha hai — ye ek <b>test cross</b> jaisa nateeja hai (carrier × recessive).';
             }
             if (t2.kind === 'disease') {
-                n += '<br><br>🩺 <b>Asli zindagi mein:</b> ' + (nShow ? 'is jodi ke bachche ko sickle cell hone ki sambhavna <b>' + pc(nShow) + '</b> hai — har bachche ke liye alag se. ' : '') +
+                n += '<br><br>🩺 <b>Asli zindagi mein:</b> ' + (nShow ? 'is jodi ke bachche ko sickle cell hone ki probability <b>' + pc(nShow) + '</b> hai — har bachche ke liye alag se. ' : '') +
                     'Isiliye shaadi se pehle <b>jaanch</b> karwana samajhdari hai — isse pata chal jaata hai ki aap carrier hain ya nahi. Bharat mein kai jagah ye jaanch <b>muft</b> milti hai.';
             }
             document.getElementById('note').innerHTML = n;

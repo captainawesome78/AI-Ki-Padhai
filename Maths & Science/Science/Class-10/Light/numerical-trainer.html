@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Numerical Trainer | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #4a044e, #9d174d); color: #fce7f3; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #f9a8d4; text-decoration: none; border: 1px solid rgba(249,168,212,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 800px; margin: 0 auto; padding: 18px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 18px; margin-bottom: 13px; }
+        .score { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+        .sbox { flex: 1; min-width: 100px; background: rgba(0,0,0,.3); border-radius: 11px; padding: 11px; text-align: center; }
+        .sbox .t { font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; color: #f9a8d4; }
+        .sbox .v { font-size: 21px; font-weight: 800; color: #fff; }
+        .qtxt { font-size: 16.5px; line-height: 1.85; color: #fff; }
+        .qtxt b { color: #fbbf24; }
+        .given { font-size: 13.5px; color: #f9a8d4; margin-top: 11px; background: rgba(0,0,0,.25); border-radius: 9px; padding: 11px 13px; line-height: 1.7; }
+        .given b { color: #fff; }
+        .asks { margin-top: 15px; }
+        .ask { margin-bottom: 12px; }
+        .ask label { display: block; font-size: 13.5px; color: #f9a8d4; font-weight: 700; margin-bottom: 6px; }
+        .ask input { width: 100%; padding: 12px 14px; border-radius: 10px; border: 1.5px solid rgba(255,255,255,.2); background: rgba(0,0,0,.3); color: #fff; font-size: 16px; font-family: 'Courier New', monospace; font-weight: 700; }
+        .ask input:focus { outline: none; border-color: #f472b6; }
+        .ask input.ok { border-color: #22c55e; background: rgba(21,128,61,.25); }
+        .ask input.no { border-color: #ef4444; background: rgba(153,27,27,.25); }
+        .opts2 { display: flex; gap: 8px; flex-wrap: wrap; }
+        .opts2 button { flex: 1; min-width: 108px; border: 1.5px solid rgba(255,255,255,.2); background: rgba(0,0,0,.3); color: #fce7f3; padding: 11px 8px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 13.5px; }
+        .opts2 button.sel { background: #fff; color: #4a044e; border-color: #fff; }
+        .opts2 button.ok { background: #22c55e; color: #052e16; border-color: #22c55e; }
+        .opts2 button.no { background: #ef4444; color: #fff; border-color: #ef4444; }
+        .btns { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+        .btns button { flex: 1; min-width: 130px; border: none; padding: 13px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 15px; }
+        .chk { background: #f472b6; color: #4a044e; } .nxt { background: #fbbf24; color: #451a03; }
+        .rst { background: transparent; color: #f9a8d4; border: 1px solid rgba(249,168,212,.4); }
+        .sol { margin-top: 15px; background: rgba(0,0,0,.32); border-radius: 12px; padding: 15px; font-size: 14.5px; line-height: 1.95; display: none; border-left: 4px solid #fbbf24; }
+        .sol.show { display: block; }
+        .sol b { color: #fff; } .sol .h { color: #fbbf24; font-weight: 800; display: block; margin-bottom: 7px; font-size: 13px; text-transform: uppercase; letter-spacing: .05em; }
+        .sol .step { margin: 9px 0; }
+        .verdict { font-size: 16px; font-weight: 800; margin-top: 13px; text-align: center; padding: 11px; border-radius: 10px; display: none; }
+        .verdict.show { display: block; }
+        .verdict.win { background: rgba(34,197,94,.25); color: #86efac; }
+        .verdict.lose { background: rgba(239,68,68,.22); color: #fca5a5; }
+        .tip { font-size: 12.5px; color: #f9a8d4; margin-top: 10px; font-style: italic; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="mirror-formula.html">← Back to Lesson</a>
+        <div class="title">🧮 Numerical Trainer</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <div class="score">
+                <div class="sbox"><div class="t">Sawaal</div><div class="v" id="sQ">1</div></div>
+                <div class="sbox"><div class="t">Sahi</div><div class="v" id="sR" style="color:#86efac">0</div></div>
+                <div class="sbox"><div class="t">Galat</div><div class="v" id="sW" style="color:#fca5a5">0</div></div>
+                <div class="sbox"><div class="t">Streak</div><div class="v" id="sS" style="color:#fbbf24">0</div></div>
+            </div>
+
+            <div class="qtxt" id="q"></div>
+            <div class="given" id="given"></div>
+
+            <div class="asks">
+                <div class="ask">
+                    <label>v — image ki doori (cm, chinh ke saath)</label>
+                    <input id="av" type="text" inputmode="text" placeholder="jaise -30 ya +12" autocomplete="off">
+                </div>
+                <div class="ask">
+                    <label>m — magnification (chinh ke saath)</label>
+                    <input id="am" type="text" inputmode="text" placeholder="jaise -2 ya 0.6" autocomplete="off">
+                </div>
+                <div class="ask">
+                    <label>Image ki nature</label>
+                    <div class="opts2">
+                        <button id="n0" onclick="pick('nat',0)">Real</button>
+                        <button id="n1" onclick="pick('nat',1)">Virtual</button>
+                    </div>
+                </div>
+                <div class="ask">
+                    <label>Image ki orientation</label>
+                    <div class="opts2">
+                        <button id="o0" onclick="pick('ori',0)">Inverted (ulta)</button>
+                        <button id="o1" onclick="pick('ori',1)">Erect (seedha)</button>
+                    </div>
+                </div>
+            </div>
+            <div class="tip">💡 Dashamlav do jagah tak theek hai. Chinh (+ / −) zaroor lagao — wahi asli imtihaan hai.</div>
+
+            <div class="btns">
+                <button class="chk" id="chk" onclick="check()">✓ Jawab jaancho</button>
+                <button class="nxt" onclick="nextQ()">→ Agla sawaal</button>
+                <button class="rst" onclick="resetAll()">↺ Reset</button>
+            </div>
+
+            <div class="verdict" id="verdict"></div>
+            <div class="sol" id="sol"></div>
+        </div>
+    </div>
+
+    <script>
+        /* ---------- physics (New Cartesian, identical to the lessons) ---------- */
+        function solveM(u, f) { var v = 1 / (1 / f - 1 / u); return { v: v, m: -v / u, real: v < 0 }; }
+        function solveL(u, f) { var v = 1 / (1 / f + 1 / u); return { v: v, m: v / u, real: v > 0 }; }
+
+        var KINDS = [
+            { k: 'cm', label: 'Concave mirror', fs: -1, isM: true },
+            { k: 'xm', label: 'Convex mirror', fs: +1, isM: true },
+            { k: 'cl', label: 'Convex lens', fs: +1, isM: false },
+            { k: 'xl', label: 'Concave lens', fs: -1, isM: false }
+        ];
+        var cur = null, qn = 1, right = 0, wrong = 0, streak = 0, best = 0;
+        var picked = { nat: null, ori: null }, answered = false;
+
+        function rnd(a) { return a[Math.floor(Math.random() * a.length)]; }
+        function r2(x) { return Math.round(x * 100) / 100; }
+
+        function makeQ() {
+            var kind = rnd(KINDS);
+            var fmag = rnd([10, 12, 15, 20, 25, 30]);
+            var f = kind.fs * fmag;
+            /* pick u so the answer is never a divide-by-zero and lands on tidy-ish numbers */
+            var pool = [fmag * 0.4, fmag * 0.5, fmag * 0.75, fmag * 1.5, fmag * 2, fmag * 2.5, fmag * 3];
+            var u = -Math.round(rnd(pool) * 2) / 2;
+            if (Math.abs(Math.abs(u) - fmag) < 0.01) u -= 5;          /* never exactly at F */
+            var giveR = Math.random() < 0.35;                          /* sometimes give R instead of f */
+            var h = rnd([2, 3, 4, 5, 6]);
+            var s = kind.isM ? solveM(u, f) : solveL(u, f);
+            return { kind: kind, f: f, fmag: fmag, u: u, h: h, giveR: giveR && kind.isM, s: s };
+        }
+
+        function render() {
+            var c = cur, k = c.kind;
+            document.getElementById('q').innerHTML =
+                'Ek <b>' + k.label + '</b> ki ' + (c.giveR ? 'radius of curvature <b>R = ' + (2 * c.fmag) + ' cm</b>' : 'focal length <b>' + c.fmag + ' cm</b>') +
+                ' hai. Uske saamne <b>' + c.h + ' cm</b> ka ek object <b>' + Math.abs(c.u) + ' cm</b> ki doori par rakha hai.<br>' +
+                'Image ki doori (v), magnification (m), nature aur orientation nikaalo.';
+            document.getElementById('given').innerHTML =
+                '<b>Yaad rakho:</b> ' + (k.isM
+                    ? 'Mirror → <b>1/v + 1/u = 1/f</b> aur <b>m = −v/u</b>'
+                    : 'Lens → <b>1/v − 1/u = 1/f</b> aur <b>m = v/u</b>') +
+                (c.giveR ? '<br>R diya hai — pehle <b>f = R/2</b> nikaalo.' : '') +
+                '<br>Concave mirror aur concave lens ka f <b>negative</b>; convex mirror aur convex lens ka f <b>positive</b>. u <b>hamesha negative</b>.';
+
+            ['av', 'am'].forEach(function (id) {
+                var el = document.getElementById(id); el.value = ''; el.className = ''; el.disabled = false;
+            });
+            ['n0', 'n1', 'o0', 'o1'].forEach(function (id) { document.getElementById(id).className = ''; });
+            picked = { nat: null, ori: null }; answered = false;
+            document.getElementById('sol').className = 'sol';
+            document.getElementById('verdict').className = 'verdict';
+            document.getElementById('chk').disabled = false;
+            document.getElementById('sQ').textContent = qn;
+        }
+
+        function pick(what, val) {
+            if (answered) return;
+            picked[what] = val;
+            var pre = (what === 'nat') ? 'n' : 'o';
+            document.getElementById(pre + '0').className = (val === 0 ? 'sel' : '');
+            document.getElementById(pre + '1').className = (val === 1 ? 'sel' : '');
+        }
+
+        function near(txt, target) {
+            var x = parseFloat(String(txt).replace(/[^0-9eE.+-]/g, ''));
+            if (isNaN(x)) return false;
+            return Math.abs(x - target) <= Math.max(0.06, Math.abs(target) * 0.012);
+        }
+
+        function check() {
+            if (answered) return;
+            answered = true;
+            var s = cur.s, k = cur.kind;
+            var okV = near(document.getElementById('av').value, s.v);
+            var okM = near(document.getElementById('am').value, s.m);
+            var wantNat = s.real ? 0 : 1;
+            var wantOri = s.m < 0 ? 0 : 1;
+            var okN = picked.nat === wantNat, okO = picked.ori === wantOri;
+
+            document.getElementById('av').className = okV ? 'ok' : 'no';
+            document.getElementById('am').className = okM ? 'ok' : 'no';
+            document.getElementById('n' + wantNat).className = 'ok';
+            document.getElementById('o' + wantOri).className = 'ok';
+            if (picked.nat !== null && !okN) document.getElementById('n' + picked.nat).className = 'no';
+            if (picked.ori !== null && !okO) document.getElementById('o' + picked.ori).className = 'no';
+
+            var all = okV && okM && okN && okO;
+            if (all) { right++; streak++; if (streak > best) best = streak; }
+            else { wrong++; streak = 0; }
+            document.getElementById('sR').textContent = right;
+            document.getElementById('sW').textContent = wrong;
+            document.getElementById('sS').textContent = streak;
+
+            var vd = document.getElementById('verdict');
+            vd.className = 'verdict show ' + (all ? 'win' : 'lose');
+            vd.textContent = all
+                ? (streak >= 3 ? '🔥 Shaandaar! ' + streak + ' sahi lagataar!' : '✅ Bilkul sahi! Chaaron jawab theek.')
+                : '❌ Kuch reh gaya — neeche poora hal dekho.';
+
+            /* full worked solution, in the same style as the lesson */
+            var f = cur.f, u = cur.u, invU = 1 / u, invF = 1 / f, invV = k.isM ? (invF - invU) : (invF + invU);
+            var html = '<span class="h">Poora hal</span>';
+            html += '<div class="step"><b>Step 1 — chinh ke saath likho:</b><br>' +
+                (cur.giveR ? 'R = ' + (cur.kind.fs * 2 * cur.fmag) + ' cm → f = R/2 = <b>' + f + ' cm</b><br>' : 'f = <b>' + f + ' cm</b> (' + k.label + ')<br>') +
+                'u = <b>' + u + ' cm</b> (object hamesha negative) &nbsp;•&nbsp; h = +' + cur.h + ' cm</div>';
+            html += '<div class="step"><b>Step 2 — formula:</b><br>' +
+                (k.isM ? '1/v + 1/u = 1/f &nbsp;→&nbsp; 1/v = 1/f − 1/u' : '1/v − 1/u = 1/f &nbsp;→&nbsp; 1/v = 1/f + 1/u') + '<br>' +
+                '1/v = 1/(' + f + ') ' + (k.isM ? '−' : '+') + ' 1/(' + u + ') = ' + r2(invF) + ' ' + (k.isM ? '−' : '+') + ' ' + r2(invU) + ' = <b>' + Math.round(invV * 10000) / 10000 + '</b><br>' +
+                '<b>v = ' + r2(s.v) + ' cm</b></div>';
+            html += '<div class="step"><b>Step 3 — magnification:</b><br>' +
+                (k.isM ? 'm = −v/u = −(' + r2(s.v) + ')/(' + u + ')' : 'm = v/u = (' + r2(s.v) + ')/(' + u + ')') +
+                ' = <b>' + r2(s.m) + '</b><br>h′ = m × h = ' + r2(s.m) + ' × ' + cur.h + ' = <b>' + r2(s.m * cur.h) + ' cm</b></div>';
+            html += '<div class="step"><b>Step 4 — chinh padho:</b><br>' +
+                'v ' + (s.v < 0 ? 'negative' : 'positive') + ' hai → ' +
+                (k.isM
+                    ? (s.real ? 'image darpan ke <b>saamne</b> → <b>REAL</b>' : 'image mirror ke <b>peeche</b> → <b>VIRTUAL</b>')
+                    : (s.real ? 'image <b>doosri taraf</b> → <b>REAL</b>' : 'image <b>usi taraf</b> → <b>VIRTUAL</b>')) + '<br>' +
+                'm ' + (s.m < 0 ? 'negative' : 'positive') + ' hai → image <b>' + (s.m < 0 ? 'INVERTED (ulta)' : 'ERECT (seedha)') + '</b><br>' +
+                '|m| = ' + r2(Math.abs(s.m)) + ' → image <b>' + (Math.abs(s.m) > 1.001 ? 'BADA' : (Math.abs(s.m) < 0.999 ? 'CHHOTA' : 'utna hi bada')) + '</b></div>';
+
+            /* a sanity note that mirrors the "check your answer" habit taught in the lesson */
+            if (k.k === 'xm') html += '<div class="step">✅ <b>Jaanch:</b> convex mirror ka jawab <b>hamesha</b> virtual + erect + chhota hota hai — yahi mila.</div>';
+            else if (k.k === 'xl') html += '<div class="step">✅ <b>Jaanch:</b> concave lens ka jawab <b>hamesha</b> virtual + erect + chhota hota hai — yahi mila.</div>';
+            else if (Math.abs(u) < cur.fmag) html += '<div class="step">✅ <b>Jaanch:</b> object F ke <b>andar</b> tha — isliye ' + (k.isM ? 'concave mirror' : 'convex lens') + ' ne <b>virtual, erect aur bada</b> image banaya. Yahi wo ek apwaad wala case hai.</div>';
+            else html += '<div class="step">✅ <b>Jaanch:</b> object F se <b>pare</b> tha — isliye image <b>real aur inverted</b> mila, jaisa table kehti hai.</div>';
+
+            var sol = document.getElementById('sol');
+            sol.innerHTML = html; sol.className = 'sol show';
+            document.getElementById('chk').disabled = true;
+        }
+
+        function nextQ() { qn++; cur = makeQ(); render(); }
+        function resetAll() { qn = 1; right = 0; wrong = 0; streak = 0; cur = makeQ(); render();
+            document.getElementById('sR').textContent = 0; document.getElementById('sW').textContent = 0;
+            document.getElementById('sS').textContent = 0; }
+
+        cur = makeQ(); render();
+    </script>
+</body>
+
+</html>

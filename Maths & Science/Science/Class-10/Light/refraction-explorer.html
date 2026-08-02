@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Refraction &amp; TIR Explorer | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #052e16, #15803d); color: #dcfce7; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #86efac; text-decoration: none; border: 1px solid rgba(134,239,172,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 980px; margin: 0 auto; padding: 18px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 16px; margin-bottom: 13px; }
+        .card h3 { color: #fff; font-size: 12.5px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .05em; }
+        .modes { display: flex; gap: 8px; flex-wrap: wrap; }
+        .modes button { flex: 1; min-width: 140px; border: 1px solid rgba(134,239,172,.32); background: rgba(0,0,0,.25); color: #86efac; padding: 11px 8px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 13px; }
+        .modes button.on { background: #22c55e; color: #052e16; border-color: #22c55e; }
+        .slider { margin-top: 14px; }
+        .slider label { display: block; font-size: 13.5px; color: #86efac; margin-bottom: 7px; font-weight: 600; }
+        .slider label b { color: #fff; }
+        input[type=range] { width: 100%; accent-color: #4ade80; height: 26px; }
+        .stage { background: rgba(0,0,0,.28); border-radius: 14px; padding: 8px; overflow-x: auto; }
+        svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+        .res { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 13px; }
+        .rbox { background: rgba(0,0,0,.3); border-radius: 11px; padding: 12px; text-align: center; }
+        .rbox .t { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: #86efac; margin-bottom: 5px; }
+        .rbox .v { font-size: 17px; font-weight: 800; color: #fff; font-family: 'Courier New', monospace; }
+        .note { font-size: 14px; line-height: 1.8; background: rgba(0,0,0,.3); border-radius: 11px; padding: 14px; margin-top: 13px; border-left: 4px solid #22c55e; }
+        .note b { color: #fff; }
+        .note.tir { border-left-color: #f59e0b; background: rgba(120,53,15,.4); }
+        .mats { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 10px; }
+        .mats button { border: 1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.06); color: #dcfce7; padding: 8px 12px; border-radius: 8px; font-size: 12.5px; cursor: pointer; font-weight: 700; }
+        .mats button.on { background: #fff; color: #052e16; border-color: #fff; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="refraction.html">← Back to Lesson</a>
+        <div class="title">💎 Refraction (apvartan) &amp; TIR Explorer</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <h3>1. Roshni kis taraf ja rahi hai</h3>
+            <div class="modes">
+                <button id="d0" class="on" onclick="setDir(0)">Hawa → Ghana medium</button>
+                <button id="d1" onclick="setDir(1)">Ghana medium → Hawa</button>
+            </div>
+            <h3 style="margin-top:16px">2. Medium chuno</h3>
+            <div class="mats" id="mats"></div>
+            <div class="slider">
+                <label id="ilab"></label>
+                <input type="range" id="ang" min="0" max="89" step="1" value="45" oninput="setI(this.value)">
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>3. Kya ho raha hai</h3>
+            <div class="stage" id="stage"></div>
+            <div class="res">
+                <div class="rbox"><div class="t">Angle of incidence (i)</div><div class="v" id="ri">—</div></div>
+                <div class="rbox"><div class="t">Angle of refraction (r)</div><div class="v" id="rr">—</div></div>
+                <div class="rbox"><div class="t">Critical angle (C)</div><div class="v" id="rc">—</div></div>
+                <div class="rbox"><div class="t">Raftaar (m/s)</div><div class="v" id="rs">—</div></div>
+            </div>
+            <div class="note" id="note"></div>
+        </div>
+    </div>
+
+    <script>
+        var MATS = [
+            { n: 'Paani', v: 1.33 },
+            { n: 'Kerosene', v: 1.44 },
+            { n: 'Kaanch', v: 1.50 },
+            { n: 'Heera', v: 2.42 }
+        ];
+        var mi = 2, dir = 0, i = 45;     /* dir 0 = air->dense, 1 = dense->air */
+        var Cc = 3e8;
+
+        function nOf() { return MATS[mi].v; }
+        function critical() { return Math.asin(1 / nOf()) * 180 / Math.PI; }
+
+        /* returns the refraction angle in degrees, or null when TIR happens */
+        function refract() {
+            var n = nOf(), s;
+            if (dir === 0) s = Math.sin(i * Math.PI / 180) / n;      /* air -> dense */
+            else s = Math.sin(i * Math.PI / 180) * n;                /* dense -> air */
+            if (s > 1) return null;                                  /* no solution => TIR */
+            return Math.asin(s) * 180 / Math.PI;
+        }
+
+        var W = 820, H = 420, BX = 410, BY = 210, L = 170;
+
+        function draw() {
+            var n = nOf(), r = refract(), C = critical(), tir = (r === null);
+            var topDense = (dir === 1);        /* dense medium on top when going dense -> air */
+            var g = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Refraction at a boundary">';
+            g += '<defs>';
+            ['#f59e0b|ia', '#22c55e|ra', '#dc2626|ta'].forEach(function (p) {
+                var q = p.split('|');
+                g += '<marker id="' + q[1] + '" markerWidth="10" markerHeight="10" refX="8" refY="3.4" orient="auto"><path d="M0,0 L9,3.4 L0,6.8 Z" fill="' + q[0] + '"/></marker>';
+            });
+            g += '</defs>';
+
+            /* the two media */
+            g += '<rect x="0" y="0" width="' + W + '" height="' + BY + '" fill="' + (topDense ? 'rgba(56,189,248,.30)' : 'rgba(226,232,240,.07)') + '"/>';
+            g += '<rect x="0" y="' + BY + '" width="' + W + '" height="' + (H - BY) + '" fill="' + (topDense ? 'rgba(226,232,240,.07)' : 'rgba(56,189,248,.30)') + '"/>';
+            g += '<line x1="0" y1="' + BY + '" x2="' + W + '" y2="' + BY + '" stroke="#7dd3fc" stroke-width="3"/>';
+            g += '<text x="18" y="30" font-size="13" font-weight="800" fill="#e0f2fe">' + (topDense ? MATS[mi].n + ' (n = ' + n + ')' : 'HAWA (n = 1.00)') + '</text>';
+            g += '<text x="18" y="' + (H - 16) + '" font-size="13" font-weight="800" fill="#e0f2fe">' + (topDense ? 'HAWA (n = 1.00)' : MATS[mi].n + ' (n = ' + n + ')') + '</text>';
+
+            /* normal */
+            g += '<line x1="' + BX + '" y1="30" x2="' + BX + '" y2="' + (H - 30) + '" stroke="#a78bfa" stroke-width="2" stroke-dasharray="7 5"/>';
+            g += '<text x="' + (BX + 8) + '" y="24" font-size="11" font-weight="700" fill="#c4b5fd">normal</text>';
+
+            var ir = i * Math.PI / 180;
+            /* incident ray comes down from the top-left into the boundary */
+            var ix = BX - L * Math.sin(ir), iy = BY - L * Math.cos(ir);
+            g += '<line x1="' + ix + '" y1="' + iy + '" x2="' + BX + '" y2="' + BY + '" stroke="#f59e0b" stroke-width="3.5" marker-end="url(#ia)"/>';
+            g += '<text x="' + (ix - 6) + '" y="' + (iy - 8) + '" text-anchor="end" font-size="12" font-weight="800" fill="#f59e0b">incident</text>';
+
+            /* the partially reflected ray is always there, but only worth showing at/after TIR */
+            var rx = BX + L * Math.sin(ir), ry = BY - L * Math.cos(ir);
+            g += '<line x1="' + BX + '" y1="' + BY + '" x2="' + rx + '" y2="' + ry + '" stroke="#dc2626" stroke-width="' + (tir ? 4 : 1.6) + '" opacity="' + (tir ? 1 : .35) + '" marker-end="url(#ta)"/>';
+            g += '<text x="' + (rx + 6) + '" y="' + (ry - 8) + '" font-size="12" font-weight="800" fill="#f87171" opacity="' + (tir ? 1 : .5) + '">' + (tir ? 'POORI roshni wapas!' : 'thoda reflect') + '</text>';
+
+            /* refracted ray, when it exists */
+            if (!tir) {
+                var rr = r * Math.PI / 180;
+                var tx = BX + L * Math.sin(rr), ty = BY + L * Math.cos(rr);
+                g += '<line x1="' + BX + '" y1="' + BY + '" x2="' + tx + '" y2="' + ty + '" stroke="#22c55e" stroke-width="3.5" marker-end="url(#ra)"/>';
+                g += '<text x="' + (tx + 6) + '" y="' + (ty + 14) + '" font-size="12" font-weight="800" fill="#4ade80">refracted</text>';
+                /* angle arcs */
+                g += '<path d="M' + BX + ' ' + (BY - 62) + ' A 62 62 0 0 0 ' + (BX - 62 * Math.sin(ir)) + ' ' + (BY - 62 * Math.cos(ir)) + '" fill="none" stroke="#f59e0b" stroke-width="2.2"/>';
+                g += '<text x="' + (BX - 38 * Math.sin(ir / 2)) + '" y="' + (BY - 74) + '" text-anchor="middle" font-size="14" font-weight="800" fill="#f59e0b">i</text>';
+                g += '<path d="M' + (BX + 62 * Math.sin(rr)) + ' ' + (BY + 62 * Math.cos(rr)) + ' A 62 62 0 0 0 ' + BX + ' ' + (BY + 62) + '" fill="none" stroke="#22c55e" stroke-width="2.2"/>';
+                g += '<text x="' + (BX + 26) + '" y="' + (BY + 82) + '" text-anchor="middle" font-size="14" font-weight="800" fill="#4ade80">r</text>';
+            } else {
+                g += '<text x="' + BX + '" y="' + (BY + 70) + '" text-anchor="middle" font-size="16" font-weight="800" fill="#f59e0b">✗ Roshni bahar nikal hi nahi paayi</text>';
+                g += '<text x="' + BX + '" y="' + (BY + 94) + '" text-anchor="middle" font-size="13" fill="#fcd34d">TOTAL INTERNAL REFLECTION</text>';
+            }
+
+            /* critical angle marker, only meaningful when leaving the dense medium */
+            if (dir === 1) {
+                var cr = C * Math.PI / 180;
+                g += '<line x1="' + BX + '" y1="' + BY + '" x2="' + (BX - 205 * Math.sin(cr)) + '" y2="' + (BY - 205 * Math.cos(cr)) + '" stroke="#fbbf24" stroke-width="1.6" stroke-dasharray="6 6" opacity=".85"/>';
+                g += '<text x="' + (BX - 205 * Math.sin(cr) - 6) + '" y="' + (BY - 205 * Math.cos(cr) - 6) + '" text-anchor="end" font-size="11.5" font-weight="800" fill="#fbbf24">C = ' + C.toFixed(1) + '°</text>';
+            }
+            g += '</svg>';
+            document.getElementById('stage').innerHTML = g;
+
+            document.getElementById('ri').textContent = i + '°';
+            document.getElementById('rr').textContent = tir ? 'koi nahi' : r.toFixed(1) + '°';
+            document.getElementById('rc').textContent = C.toFixed(1) + '°';
+            document.getElementById('rs').textContent = (Cc / n / 1e8).toFixed(2) + '×10⁸';
+            document.getElementById('ilab').innerHTML = 'Angle of incidence: <b>i = ' + i + '°</b> — slider ghumao';
+
+            var note = document.getElementById('note'), t;
+            note.className = 'note' + (tir ? ' tir' : '');
+            if (i === 0) {
+                t = '📌 <b>i = 0°</b> — roshni satah par bilkul <b>perpendicular</b> gir rahi hai. Isliye wo <b>bilkul nahi mudti</b> (r = 0° bhi hai). Wajah: wavefront ke dono sire <b>ek saath</b> dheeme hote hain, isliye modne ki koi wajah hi nahi banti.';
+            } else if (dir === 0) {
+                t = '📌 Roshni <b>kam ghane (hawa)</b> se <b>zyada ghane (' + MATS[mi].n + ')</b> medium mein ja rahi hai. Isliye wo <b>dheemi</b> ho gayi aur <b>normal ki TARAF</b> mud gayi.<br><br>'
+                  + 'Dekho: <b>r (' + r.toFixed(1) + '°) &lt; i (' + i + '°)</b> — hamesha.<br><br>'
+                  + '💡 Is disha mein <b>TIR kabhi nahi</b> ho sakta, chaahe i kitna bhi bada karo. TIR ke liye roshni ka <b>ghane se kam ghane</b> mein jaana zaroori hai. Doosra button dabakar dekho!';
+            } else if (!tir) {
+                var left = (C - i).toFixed(1);
+                t = '📌 Roshni <b>zyada ghane (' + MATS[mi].n + ')</b> se <b>hawa</b> mein ja rahi hai, isliye wo <b>tez</b> ho gayi aur <b>normal se DOOR</b> mud gayi.<br><br>'
+                  + 'Dekho: <b>r (' + r.toFixed(1) + '°) &gt; i (' + i + '°)</b>.<br><br>'
+                  + '🔶 Critical angle abhi <b>' + C.toFixed(1) + '°</b> hai — aur aap sirf <b>' + left + '° door</b> ho! Slider aur badhao aur dekho kya hota hai.';
+            } else {
+                t = '🔥 <b>TOTAL INTERNAL REFLECTION ho gaya!</b><br><br>'
+                  + 'i = <b>' + i + '°</b> ab critical angle <b>' + C.toFixed(1) + '°</b> se bada hai — isliye roshni bahar nikal hi nahi paa rahi. Wo <b>poori ki poori</b> wapas ghane medium mein hi reflected ho gayi.<br><br>'
+                  + '🌐 <b>Yahi optical fibre ka raaz hai:</b> roshni fibre ke andar har baar TIR karti hai, isliye hazaron kilometre chali jaati hai bina bahar nikle. Poori duniya ka internet isi par chalta hai.<br><br>'
+                  + (mi === 3 ? '💎 <b>Heere ka C sirf 24.4° hai</b> — itna chhota ki andar ghusi roshni bahut mushkil se bahar nikal paati hai. Isiliye heera itna chamakta hai!'
+                              : '💡 <b>Heera</b> chunkar dekho — uska C sirf <b>24.4°</b> hai, isliye usme TIR bahut jaldi shuru ho jaata hai.');
+            }
+            note.innerHTML = t;
+        }
+
+        function setDir(d) {
+            dir = d;
+            document.getElementById('d0').className = (d === 0 ? 'on' : '');
+            document.getElementById('d1').className = (d === 1 ? 'on' : '');
+            draw();
+        }
+        function setI(v) { i = parseInt(v, 10); draw(); }
+        function drawMats() {
+            var box = document.getElementById('mats'); box.innerHTML = '';
+            MATS.forEach(function (m, k) {
+                var b = document.createElement('button');
+                b.textContent = m.n + ' (n=' + m.v + ')';
+                b.className = (k === mi) ? 'on' : '';
+                b.onclick = function () { mi = k; drawMats(); draw(); };
+                box.appendChild(b);
+            });
+        }
+        drawMats(); draw();
+    </script>
+</body>
+
+</html>

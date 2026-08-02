@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ray Diagram Builder | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #083344, #0e7490); color: #e0f2fe; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #a5f3fc; text-decoration: none; border: 1px solid rgba(165,243,252,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 1000px; margin: 0 auto; padding: 18px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 16px; margin-bottom: 13px; }
+        .card h3 { color: #fff; font-size: 12.5px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .05em; }
+        .modes { display: flex; gap: 8px; flex-wrap: wrap; }
+        .modes button { flex: 1; min-width: 138px; border: 1px solid rgba(165,243,252,.32); background: rgba(0,0,0,.25); color: #a5f3fc; padding: 11px 8px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 13px; }
+        .modes button.on { background: #06b6d4; color: #04222b; border-color: #06b6d4; }
+        .slider { margin-top: 14px; }
+        .slider label { display: block; font-size: 13px; color: #a5f3fc; margin-bottom: 7px; font-weight: 600; }
+        .slider label b { color: #fff; }
+        input[type=range] { width: 100%; accent-color: #22d3ee; height: 26px; }
+        .presets { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 9px; }
+        .presets button { border: 1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.06); color: #e0f2fe; padding: 7px 11px; border-radius: 8px; font-size: 12px; cursor: pointer; font-weight: 600; }
+        .presets button:hover { background: rgba(255,255,255,.16); }
+        .stage { background: rgba(0,0,0,.28); border-radius: 14px; padding: 8px; overflow-x: auto; }
+        svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+        .steps { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 13px; }
+        .steps button { flex: 1; min-width: 128px; border: none; padding: 12px 9px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 13.5px; }
+        .nxt { background: #22d3ee; color: #04222b; } .rst { background: transparent; color: #a5f3fc; border: 1px solid rgba(165,243,252,.4); }
+        .nxt:disabled { background: rgba(255,255,255,.12); color: #64748b; cursor: default; }
+        .rule { font-size: 14px; line-height: 1.8; background: rgba(0,0,0,.3); border-radius: 11px; padding: 14px; margin-top: 13px; border-left: 4px solid #22d3ee; }
+        .rule b { color: #fff; } .rule .n { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: #67e8f9; font-weight: 800; display: block; margin-bottom: 5px; }
+        .result { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 13px; }
+        .rbox { background: rgba(0,0,0,.3); border-radius: 11px; padding: 12px; text-align: center; }
+        .rbox .t { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: #67e8f9; margin-bottom: 5px; }
+        .rbox .v { font-size: 17px; font-weight: 800; color: #fff; font-family: 'Courier New', monospace; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="spherical-mirrors.html">← Back to Lesson</a>
+        <div class="title">📐 Ray (kiran) Diagram Builder</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <h3>1. Element chuno</h3>
+            <div class="modes">
+                <button id="m0" class="on" onclick="setMode(0)">Concave mirror</button>
+                <button id="m1" onclick="setMode(1)">Convex mirror</button>
+                <button id="m2" onclick="setMode(2)">Convex lens</button>
+                <button id="m3" onclick="setMode(3)">Concave lens</button>
+            </div>
+            <div class="slider">
+                <label id="ulab"></label>
+                <input type="range" id="u" min="2" max="26" step="0.5" value="18" oninput="setU(this.value)">
+                <div class="presets" id="presets"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>2. Rays ek-ek karke banao</h3>
+            <div class="stage" id="stage"></div>
+            <div class="steps">
+                <button class="nxt" id="next" onclick="next()">➕ Agli ray banao</button>
+                <button class="rst" onclick="reset()">↺ Phir se</button>
+            </div>
+            <div class="rule" id="rule"></div>
+            <div class="result">
+                <div class="rbox"><div class="t">v (image doori)</div><div class="v" id="rv">—</div></div>
+                <div class="rbox"><div class="t">m (magnification)</div><div class="v" id="rm">—</div></div>
+                <div class="rbox"><div class="t">Nature</div><div class="v" id="rn">—</div></div>
+                <div class="rbox"><div class="t">Orientation</div><div class="v" id="ro">—</div></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ---------- model (same units the lesson uses: f = 12 cm) ---------- */
+        var F = 12, H = 5;
+        var mode = 0, u = -18, step = 0;
+
+        var NAMES = ['Concave mirror', 'Convex mirror', 'Convex lens', 'Concave lens'];
+        function isMirror() { return mode < 2; }
+        function fOf() { return (mode === 0 || mode === 3) ? -F : F; }
+
+        function solve() {
+            var f = fOf(), v, m;
+            if (isMirror()) { v = 1 / (1 / f - 1 / u); m = -v / u; }
+            else { v = 1 / (1 / f + 1 / u); m = v / u; }
+            var real = isMirror() ? v < 0 : v > 0;
+            return { f: f, v: v, m: m, real: real, far: !isFinite(v) || Math.abs(v) > 400 };
+        }
+
+        /* ---------- the three construction rays, as (hitY, outSlope) ---------- */
+        function rays() {
+            var f = fOf(), tip = H, out = [];
+            if (isMirror()) {
+                out.push({ hit: tip, sl: (0 - tip) / (f - 0),
+                    n: 'Ray 1 — Axis ke PARALLEL',
+                    d: 'Object ke sire se axis ke <b>parallel</b> ek ray mirror par bhejo. Reflection ke baad wo <b>F se hokar</b> jaati hai.' });
+                var s2 = (0 - tip) / (2 * f - u);
+                out.push({ hit: tip + s2 * (0 - u), sl: s2,
+                    n: 'Ray 2 — C se hokar',
+                    d: 'Object ke sire se <b>C (centre of curvature)</b> ki taraf ray bhejo. Ye mirror par <b>perpendicular</b> girti hai, isliye <b>usi raaste se seedhi wapas</b> laut jaati hai.' });
+                var s3 = (0 - tip) / (f - u);
+                out.push({ hit: tip + s3 * (0 - u), sl: 0,
+                    n: 'Ray 3 — F se hokar',
+                    d: 'Object ke sire se <b>F ki taraf</b> ray bhejo. Reflection ke baad wo <b>axis ke parallel</b> nikal jaati hai — bilkul Ray 1 ka <b>ulta</b>.' });
+            } else {
+                out.push({ hit: tip, sl: (0 - tip) / (f - 0),
+                    n: 'Ray 1 — Axis ke PARALLEL',
+                    d: 'Object ke sire se axis ke <b>parallel</b> ray bhejo. Refraction ke baad wo <b>F₂ se hokar</b> jaati hai (concave lens mein F₁ se <b>aati hui lagti</b> hai).' });
+                out.push({ hit: 0, sl: (0 - tip) / (0 - u),
+                    n: 'Ray 2 — Optical centre se',
+                    d: 'Object ke sire se <b>optical centre (O)</b> se hokar ray bhejo. Ye <b>bilkul nahi mudti</b> — seedhi nikal jaati hai. Sabse aasaan ray!' });
+                var s3b = (0 - tip) / (-f - u);
+                out.push({ hit: tip + s3b * (0 - u), sl: 0,
+                    n: 'Ray 3 — F₁ ki taraf',
+                    d: 'Object ke sire se <b>F₁ ki taraf</b> ray bhejo. Refraction ke baad wo <b>axis ke parallel</b> nikal jaati hai.' });
+            }
+            return out;
+        }
+
+        /* ---------- drawing ---------- */
+        var W = 900, HT = 380, CX = 450, CY = 190, SC = 11;   /* SC = px per cm */
+        var X = function (cm) { return CX + cm * SC; };
+        var Y = function (cm) { return CY - cm * SC; };
+
+        function draw() {
+            var s = solve(), f = fOf(), R = rays(), hi = s.m * H;
+            var g = '<svg viewBox="0 0 ' + W + ' ' + HT + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ray diagram for ' + NAMES[mode] + '">';
+            g += '<defs>';
+            ['#f59e0b|a1', '#0ea5e9|a2', '#ec4899|a3'].forEach(function (p) {
+                var q = p.split('|');
+                g += '<marker id="' + q[1] + '" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="' + q[0] + '"/></marker>';
+            });
+            g += '</defs>';
+
+            /* axis */
+            g += '<line x1="20" y1="' + CY + '" x2="' + (W - 20) + '" y2="' + CY + '" stroke="#94a3b8" stroke-width="2"/>';
+
+            /* element */
+            if (isMirror()) {
+                var bend = (mode === 0) ? -1 : 1;
+                g += '<path d="M' + X(0) + ' ' + Y(9) + ' Q' + X(bend * 4.6) + ' ' + CY + ' ' + X(0) + ' ' + Y(-9) + '" fill="none" stroke="#22d3ee" stroke-width="6"/>';
+            } else {
+                if (mode === 2) g += '<path d="M' + X(0) + ' ' + Y(9) + ' Q' + X(2.6) + ' ' + CY + ' ' + X(0) + ' ' + Y(-9) + ' Q' + X(-2.6) + ' ' + CY + ' ' + X(0) + ' ' + Y(9) + ' Z" fill="rgba(125,211,252,.35)" stroke="#22d3ee" stroke-width="2.5"/>';
+                else g += '<path d="M' + X(-2.2) + ' ' + Y(9) + ' Q' + X(-0.5) + ' ' + CY + ' ' + X(-2.2) + ' ' + Y(-9) + ' L' + X(2.2) + ' ' + Y(-9) + ' Q' + X(0.5) + ' ' + CY + ' ' + X(2.2) + ' ' + Y(9) + ' Z" fill="rgba(125,211,252,.35)" stroke="#22d3ee" stroke-width="2.5"/>';
+            }
+
+            /* F and C / 2F markers */
+            function mark(cm, lbl, col) {
+                g += '<circle cx="' + X(cm) + '" cy="' + CY + '" r="4.5" fill="' + col + '"/>';
+                g += '<text x="' + X(cm) + '" y="' + (CY + 20) + '" text-anchor="middle" font-size="12" font-weight="800" fill="' + col + '">' + lbl + '</text>';
+            }
+            var af = Math.abs(f);
+            if (isMirror()) {
+                var sgn = (mode === 0) ? -1 : 1;
+                mark(sgn * af, 'F', '#4ade80'); mark(sgn * 2 * af, 'C', '#c4b5fd');
+            } else {
+                mark(-af, 'F₁', '#4ade80'); mark(af, 'F₂', '#4ade80');
+                mark(-2 * af, '2F₁', '#c4b5fd'); mark(2 * af, '2F₂', '#c4b5fd');
+            }
+
+            /* object */
+            g += '<line x1="' + X(u) + '" y1="' + CY + '" x2="' + X(u) + '" y2="' + Y(H) + '" stroke="#4ade80" stroke-width="4"/>';
+            g += '<polygon points="' + X(u) + ',' + (Y(H) - 11) + ' ' + (X(u) - 7) + ',' + Y(H) + ' ' + (X(u) + 7) + ',' + Y(H) + '" fill="#4ade80"/>';
+            g += '<text x="' + X(u) + '" y="' + (CY + 34) + '" text-anchor="middle" font-size="12" font-weight="800" fill="#4ade80">OBJECT</text>';
+
+            /* the rays revealed so far */
+            var cols = ['#f59e0b', '#0ea5e9', '#ec4899'], mk = ['a1', 'a2', 'a3'];
+            var endX = isMirror() ? -38 : 38;
+            for (var i = 0; i < step && i < 3; i++) {
+                var r = R[i], c = cols[i];
+                g += '<line x1="' + X(u) + '" y1="' + Y(H) + '" x2="' + X(0) + '" y2="' + Y(r.hit) + '" stroke="' + c + '" stroke-width="2.6" marker-end="url(#' + mk[i] + ')"/>';
+                var ey = r.hit + r.sl * (endX - 0);
+                g += '<line x1="' + X(0) + '" y1="' + Y(r.hit) + '" x2="' + X(endX) + '" y2="' + Y(ey) + '" stroke="' + c + '" stroke-width="2.6" marker-end="url(#' + mk[i] + ')"/>';
+                if (!s.real && !s.far) {
+                    g += '<line x1="' + X(0) + '" y1="' + Y(r.hit) + '" x2="' + X(s.v) + '" y2="' + Y(hi) + '" stroke="' + c + '" stroke-width="1.6" stroke-dasharray="7 6" opacity=".75"/>';
+                }
+            }
+
+            /* image, once at least two rays are up */
+            if (step >= 2) {
+                if (s.far) {
+                    g += '<text x="' + CX + '" y="' + (CY - 130) + '" text-anchor="middle" font-size="15" font-weight="800" fill="#fbbf24">Object theek F par hai → image ANANT par banega</text>';
+                } else {
+                    var col = s.real ? '#f87171' : '#c4b5fd';
+                    var dash = s.real ? '' : ' stroke-dasharray="8 5"';
+                    g += '<line x1="' + X(s.v) + '" y1="' + CY + '" x2="' + X(s.v) + '" y2="' + Y(hi) + '" stroke="' + col + '" stroke-width="4"' + dash + '/>';
+                    var dir = hi >= 0 ? -1 : 1;
+                    g += '<polygon points="' + X(s.v) + ',' + (Y(hi) + dir * 11) + ' ' + (X(s.v) - 7) + ',' + Y(hi) + ' ' + (X(s.v) + 7) + ',' + Y(hi) + '" fill="' + col + '"/>';
+                    var ly = hi >= 0 ? CY + 34 : CY - 24;
+                    g += '<text x="' + X(s.v) + '" y="' + ly + '" text-anchor="middle" font-size="12" font-weight="800" fill="' + col + '">IMAGE (' + (s.real ? 'real' : 'virtual') + ')</text>';
+                }
+            }
+            g += '</svg>';
+            document.getElementById('stage').innerHTML = g;
+
+            /* readouts */
+            document.getElementById('rv').textContent = s.far ? '∞' : (Math.round(s.v * 10) / 10) + ' cm';
+            document.getElementById('rm').textContent = s.far ? '∞' : (Math.round(s.m * 100) / 100);
+            document.getElementById('rn').textContent = s.far ? '—' : (s.real ? 'REAL' : 'VIRTUAL');
+            document.getElementById('ro').textContent = s.far ? '—' : (s.m < 0 ? 'Inverted' : 'Erect');
+
+            document.getElementById('ulab').innerHTML =
+                'Object ki doori: <b>u = ' + u + ' cm</b> &nbsp;•&nbsp; is element ka <b>f = ' + f + ' cm</b> (' + NAMES[mode] + ')';
+
+            document.getElementById('next').disabled = (step >= 3);
+            document.getElementById('next').textContent = step >= 3 ? '✓ Teeno rays ban gayin' : '➕ Ray ' + (step + 1) + ' banao';
+
+            var rl;
+            if (step === 0) {
+                rl = '<span class="n">Shuru karo</span>Neeche <b>"Ray 1 banao"</b> dabao. Har ray ke saath uska <b>niyam</b> bhi yahin dikhega.';
+            } else if (step <= 3) {
+                var r0 = R[step - 1];
+                rl = '<span class="n">' + r0.n + '</span>' + r0.d;
+                if (step === 2) rl += '<br><br>🎯 <b>Do rays kaafi hain!</b> Jahan ye milti hain, wahi image ka sira hai. Teesri ray sirf <b>jaanch (check)</b> ke liye hai.';
+                if (step === 3) rl += '<br><br>✅ <b>Teeno rays ek hi bindu par mili</b> — matlab diagram sahi hai. Formula se nikala hua v bhi wahi keh raha hai: dekho upar wala box.';
+            }
+            if (step >= 2 && !s.real) {
+                rl += '<br><br>💡 <b>Dashed lines</b> dhyaan se dekho — rays sach mein wahan milti <b>nahi</b>, sirf <b>milti hui lagti</b> hain. Isiliye ye image <b>VIRTUAL</b> hai aur parde par nahi aayega.';
+            }
+            document.getElementById('rule').innerHTML = rl;
+        }
+
+        /* ---------- controls ---------- */
+        function setMode(m) {
+            mode = m;
+            for (var i = 0; i < 4; i++) document.getElementById('m' + i).className = (i === m ? 'on' : '');
+            step = 0; drawPresets(); draw();
+        }
+        function setU(val) { u = -parseFloat(val); step = 0; draw(); }
+        function next() { if (step < 3) step++; draw(); }
+        function reset() { step = 0; draw(); }
+
+        function drawPresets() {
+            var p = document.getElementById('presets'), list;
+            if (mode === 0 || mode === 2) {
+                list = [['Bahut door', 26], ['2F/C se pare', 20], ['Theek 2F/C par', 24], ['F aur 2F ke beech', 18], ['Theek F par', 12], ['F ke andar', 6]];
+                if (mode === 0) list[2] = ['Theek C par', 24];
+            } else {
+                list = [['Door', 24], ['Madhyam', 14], ['Paas', 6], ['Bahut paas', 3]];
+            }
+            p.innerHTML = '';
+            list.forEach(function (it) {
+                var b = document.createElement('button');
+                b.textContent = it[0];
+                b.onclick = function () { document.getElementById('u').value = it[1]; setU(it[1]); };
+                p.appendChild(b);
+            });
+        }
+
+        setMode(0);
+    </script>
+</body>
+
+</html>

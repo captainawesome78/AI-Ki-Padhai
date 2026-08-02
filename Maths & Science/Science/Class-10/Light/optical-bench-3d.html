@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Optical Bench | AIkiPadhai</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="../sci-3d.js"></script>
+</head>
+
+<body>
+    <script>
+        var C_OBJ = 0x22c55e, C_REAL = 0xef4444, C_VIRT = 0xa855f7;
+        var C_RAY1 = 0xfbbf24, C_RAY2 = 0x38bdf8;
+        var C_GLASS = 0x7dd3fc, C_MIRR = 0xe2e8f0, C_F = 0x22c55e, C_C = 0xa78bfa;
+
+        var F = 8;          /* focal length, bench units */
+        var HOBJ = 3.6;     /* object height */
+        var UMIN = 3, UMAX = 28;
+
+        Sci3D({
+            title: "🔦 3D Optical Bench",
+            back: { href: "spherical-mirrors.html", label: "Back to Lesson" },
+            pickHint: false,
+            intro: {
+                name: "Dekho, apne aap chal raha hai",
+                desc: "Yahan kuch set karne ki zaroorat nahi — sab apne aap chal raha hai. Hara OBJECT khud aage-peeche khisak raha hai, aur light ki chhoti gendein (pulses) us par se nikal kar mirror/lens tak jaa rahi hain. Jahan wo dono milti hain, wahi IMAGE ban jaata hai. Object paas aata hai toh image bada hota hai, door jaata hai toh chhota. Upar wale slider se mirror ya lens badal kar dekho."
+            },
+            camZ: 46,
+            data: {
+                object: { emoji: "🟢", name: "Object", nick: "Hara teer", desc: "Wo cheez jiska image ban raha hai. Ye khud aage-peeche khisak raha hai taaki aap dekh sako ki jagah badalne se image kaise badalta hai. Object hamesha BAAYEN taraf rakha jaata hai.", stats: [["Rang", "Hara"], ["Ye kya karta hai", "Light ko reflect karta hai"], ["Kahan", "Hamesha baayen taraf"]] },
+                image: { emoji: "🔴", name: "Image", nick: "Laal ya baingani", desc: "Jahan light ki dono rays milti hain, wahin image banta hai.\n\nLAAL = REAL image — light sach mein wahan pahunchti hai, isliye ise screen par pakad sakte ho (jaise cinema ka parda).\n\nBAINGANI = VIRTUAL image — light wahan pahunchti hi nahi, sirf wahan se aati hui LAGTI hai. Screen par nahi pakad sakte (jaise aapka chehra mirror mein).\n\nTeer neeche ki taraf ho toh image ULTA (inverted) hai.", stats: [["Laal", "Real — screen par aayega"], ["Baingani", "Virtual — screen par nahi"], ["Neeche ka teer", "Ulta (inverted)"], ["Upar ka teer", "Seedha (erect)"]] },
+                element: { emoji: "🔷", name: "Mirror / Lens", nick: "Beech wali cheez", desc: "MIRROR light ko WAPAS bhej deta hai, isliye image usi taraf banta hai jahan object hai.\n\nLENS light ko PAAR jaane deta hai, isliye image doosri taraf banta hai.\n\nUpar wale slider se chaaron badal kar dekho — har ek ka apna alag mizaaj hai.", stats: [["Mirror", "Light wapas bhejta hai"], ["Lens", "Light paar jaane deta hai"], ["Focal length", "8 units (sabhi mein)"]] },
+                focus: { emoji: "🟩", name: "F — Focus", nick: "Hara khamba", desc: "Sabse khaas jagah. Door se aane wali saari parallel light EXACTLY yahin aakar milti hai.\n\nDekhte raho — jab object is hare khambe ko paar karta hai, image achanak doosri taraf chala jaata hai aur seedha ho jaata hai! Yahi is poore chapter ka sabse bada mod hai.", stats: [["Doori", "f = 8 units"], ["Yahan kya hota", "Parallel light milti hai"], ["Object F ke andar", "Image virtual + bada"], ["Object F se pare", "Image real + ulta"]] },
+                centre: { emoji: "🟪", name: "C / 2F", nick: "Baingani khamba", desc: "F se theek DUGNI doori par. Mirror mein ise C (centre of curvature) kehte hain, lens mein 2F.\n\nJab object theek is khambe par ho, toh image bhi utne hi bade size ka banta hai — na chhota, na bada. Dekhte raho, ye pal aayega!", stats: [["Doori", "2f = 16 units"], ["Mirror mein naam", "C"], ["Lens mein naam", "2F"], ["Object yahan ho toh", "Image utna hi bada"]] },
+                ray1: { emoji: "🟡", name: "Peeli light", nick: "Seedhi aati hai", desc: "Ye light object se BILKUL SEEDHI (axis ke parallel) chalti hai. Mirror/lens se takrane ke baad wo mud kar F (hare khambe) se hokar jaati hai.\n\nPeeli gendein isi raaste par daud rahi hain — unhe follow karo.", stats: [["Aati hai", "Seedhi, axis ke parallel"], ["Jaati hai", "F se hokar"]] },
+                ray2: { emoji: "🔵", name: "Neeli light", nick: "Beech se jaati hai", desc: "LENS mein: ye light lens ke bilkul beech (optical centre) se guzarti hai — aur BILKUL NAHI mudti, seedhi nikal jaati hai.\n\nMIRROR mein: ye light F se hokar aati hai, aur takrane ke baad BILKUL SEEDHI (parallel) chali jaati hai.", stats: [["Lens mein", "Beech se seedhi nikalti"], ["Mirror mein", "F se aayi → seedhi gayi"]] }
+            },
+            controls: [
+                { id: "mode", label: "🔷 Kya dekhna hai:  0 = Concave mirror   1 = Convex mirror   2 = Convex lens   3 = Concave lens", min: 0, max: 3, step: 1, value: 0, on: function (v, ctx) { ctx.model.setMode(v); } },
+                { id: "play", label: "▶️ Apne aap chalao  (0 = rok do, 1 = chal raha hai)", min: 0, max: 1, step: 1, value: 1, on: function (v, ctx) { ctx.model.playing = (v === 1); } },
+                { id: "hand", label: "✋ Rokne ke baad object ko KHUD khisakao", min: UMIN, max: UMAX, step: 0.5, value: 20, on: function (v, ctx) { ctx.model.handU = -v; if (!ctx.model.playing) ctx.model.draw(); } }
+            ],
+
+            build: function (ctx) {
+                var T = ctx.THREE, P = ctx.pivot, M = ctx.model;
+                M.mode = 0; M.playing = true; M.handU = -20; M.u = -20; M.t = 0;
+
+                var rim = new T.DirectionalLight(0xbfdbfe, 0.45); rim.position.set(-9, 8, -6); ctx.scene.add(rim);
+
+                /* ---------- floating text labels (sprites always face the camera) ---------- */
+                function label(text, hex, size) {
+                    var cv = document.createElement('canvas');
+                    cv.width = 512; cv.height = 128;
+                    var c2 = cv.getContext && cv.getContext('2d');
+                    if (c2) {
+                        c2.clearRect(0, 0, 512, 128);
+                        c2.font = 'bold 76px system-ui, sans-serif';
+                        c2.textAlign = 'center'; c2.textBaseline = 'middle';
+                        c2.lineWidth = 12; c2.strokeStyle = 'rgba(2,8,15,0.92)';
+                        c2.strokeText(text, 256, 64);
+                        c2.fillStyle = hex; c2.fillText(text, 256, 64);
+                    }
+                    var tex = new T.CanvasTexture(cv);
+                    var sp = new T.Sprite(new T.SpriteMaterial({ map: tex, transparent: true, depthTest: false }));
+                    var w = size || 7;
+                    sp.scale.set(w, w * 0.25, 1);
+                    sp.userData.cv = cv; sp.userData.tex = tex;
+                    P.add(sp); return sp;
+                }
+                function retext(sp, text, hex) {
+                    var cv = sp.userData.cv, c2 = cv.getContext && cv.getContext('2d');
+                    if (!c2) return;
+                    c2.clearRect(0, 0, 512, 128);
+                    c2.font = 'bold 76px system-ui, sans-serif';
+                    c2.textAlign = 'center'; c2.textBaseline = 'middle';
+                    c2.lineWidth = 12; c2.strokeStyle = 'rgba(2,8,15,0.92)';
+                    c2.strokeText(text, 256, 64);
+                    c2.fillStyle = hex; c2.fillText(text, 256, 64);
+                    sp.userData.tex.needsUpdate = true;
+                }
+
+                /* ---------- bench ---------- */
+                var rail = new T.Mesh(new T.BoxGeometry(70, 0.7, 3.6), ctx.mat(0x1e293b));
+                rail.position.set(0, -1.2, 0); P.add(rail);
+                var axis = new T.Mesh(new T.CylinderGeometry(0.07, 0.07, 70, 8), ctx.mat(0x64748b));
+                axis.rotation.z = Math.PI / 2; P.add(axis);
+
+                /* ---------- arrows ---------- */
+                function arrow(colour, opts) {
+                    var g = new T.Group();
+                    var sh = new T.Mesh(new T.CylinderGeometry(0.26, 0.26, 1, 12), ctx.mat(colour, opts));
+                    sh.position.y = 0.5; g.add(sh);
+                    var hd = new T.Mesh(new T.ConeGeometry(0.72, 1.2, 16), ctx.mat(colour, opts));
+                    hd.position.y = 1; g.add(hd);
+                    g.userData.sh = sh; g.userData.hd = hd;
+                    P.add(g); return g;
+                }
+                function setArrow(g, x, h) {
+                    g.position.set(x, 0, 0);
+                    g.scale.set(1, Math.abs(h), 1);
+                    g.rotation.z = (h < 0) ? Math.PI : 0;
+                }
+                M.obj = arrow(C_OBJ); ctx.addPart(M.obj, 'object');
+                M.img = arrow(C_REAL, { transparent: true, opacity: 0.9 }); ctx.addPart(M.img, 'image');
+                M.lObj = label('OBJECT', '#4ade80', 8);
+                M.lImg = label('IMAGE', '#f87171', 7.5);
+                M.lEl = label('MIRROR', '#7dd3fc', 8.5);
+
+                /* ---------- F and C posts ---------- */
+                function post(colour, key, txt) {
+                    var g = new T.Group();
+                    var rod = new T.Mesh(new T.CylinderGeometry(0.12, 0.12, 2.4, 8), ctx.mat(colour));
+                    rod.position.y = -1.2; g.add(rod);
+                    g.add(new T.Mesh(new T.SphereGeometry(0.44, 14, 12), ctx.mat(colour)));
+                    P.add(g); ctx.addPart(g, key);
+                    return { grp: g, lab: label(txt, colour === C_F ? '#4ade80' : '#c4b5fd', 3.2) };
+                }
+                M.fA = post(C_F, 'focus', 'F'); M.fB = post(C_F, 'focus', 'F');
+                M.cA = post(C_C, 'centre', 'C'); M.cB = post(C_C, 'centre', 'C');
+
+                /* ---------- the four elements ---------- */
+                function lensMesh(convex) {
+                    var pts = [], N = 20;
+                    for (var i = 0; i <= N; i++) {
+                        var t = i / N, y = (t - 0.5) * 15, k = Math.cos(t * Math.PI - Math.PI / 2);
+                        var w = convex ? 0.5 + 1.6 * k : 2.1 - 1.6 * k;
+                        pts.push(new T.Vector2(Math.max(0.14, w * 0.5), y));
+                    }
+                    var m = new T.Mesh(new T.LatheGeometry(pts, 28), ctx.mat(C_GLASS, { transparent: true, opacity: 0.45 }));
+                    m.rotation.z = Math.PI / 2; return m;
+                }
+                function mirrorMesh(concave) {
+                    var s = concave ? -1 : 1;
+                    var m = new T.Mesh(new T.SphereGeometry(19, 44, 32, 0, Math.PI * 2, 0, 0.40),
+                        ctx.mat(C_MIRR, { transparent: true, opacity: 0.95 }));
+                    m.material.side = T.DoubleSide; m.material.shininess = 130;
+                    m.rotation.z = s * Math.PI / 2; m.position.x = s * -19;
+                    return m;
+                }
+                M.elems = [mirrorMesh(true), mirrorMesh(false), lensMesh(true), lensMesh(false)];
+                M.elems.forEach(function (e) { e.visible = false; P.add(e); ctx.addPart(e, 'element'); });
+
+                /* ---------- rays: 2 only, each = incident + emergent, plus a faint virtual tail ---------- */
+                function seg(colour, thick, op) {
+                    var m = new T.Mesh(new T.CylinderGeometry(thick, thick, 1, 8),
+                        ctx.mat(colour, op ? { transparent: true, opacity: op } : undefined));
+                    m.visible = false; P.add(m); return m;
+                }
+                function place(mesh, ax, ay, bx, by) {
+                    var dx = bx - ax, dy = by - ay, L = Math.sqrt(dx * dx + dy * dy);
+                    if (!isFinite(L) || L < 0.01) { mesh.visible = false; return; }
+                    mesh.position.set((ax + bx) / 2, (ay + by) / 2, 0);
+                    mesh.scale.set(1, L, 1);
+                    mesh.lookAt(bx, by, 0); mesh.rotateX(Math.PI / 2);
+                    mesh.visible = true;
+                }
+                M.rays = [C_RAY1, C_RAY2].map(function (col, i) {
+                    var r = { col: col, key: 'ray' + (i + 1), inc: seg(col, 0.13), out: seg(col, 0.13), virt: seg(col, 0.06, 0.5), pulses: [] };
+                    for (var k = 0; k < 3; k++) {
+                        var p = new T.Mesh(new T.SphereGeometry(0.44, 12, 10), ctx.mat(0xfffbeb));
+                        p.material.emissive.setHex(col); p.visible = false; P.add(p); r.pulses.push(p);
+                    }
+                    ctx.addPart(r.inc, r.key); ctx.addPart(r.out, r.key);
+                    return r;
+                });
+
+                /* ---------- physics ---------- */
+                M.solve = function (mode, u) {
+                    var f = (mode === 0 || mode === 3) ? -F : F, isM = mode < 2, v, m;
+                    if (isM) { v = 1 / (1 / f - 1 / u); m = -v / u; }
+                    else { v = 1 / (1 / f + 1 / u); m = v / u; }
+                    return { f: f, v: v, m: m, isM: isM, real: isM ? v < 0 : v > 0 };
+                };
+
+                var NAMES = ['CONCAVE MIRROR', 'CONVEX MIRROR', 'CONVEX LENS', 'CONCAVE LENS'];
+
+                M.draw = function () {
+                    var u = M.u, mode = M.mode, s = M.solve(mode, u), f = s.f;
+                    var hi = s.m * HOBJ, af = Math.abs(f);
+                    var tooFar = !isFinite(s.v) || Math.abs(s.v) > 52;
+
+                    M.elems.forEach(function (e, i) { e.visible = (i === mode); });
+                    setArrow(M.obj, u, HOBJ);
+                    M.lObj.position.set(u, HOBJ + 2.6, 0);
+                    M.lEl.position.set(0, 11.5, 0);
+
+                    /* F / C posts — mirrors only show the side that is physically real for them */
+                    var side = (mode === 1) ? 1 : -1;              /* convex mirror: behind */
+                    if (s.isM) {
+                        M.fA.grp.position.set(side * af, 0, 0); M.cA.grp.position.set(side * 2 * af, 0, 0);
+                        M.fA.lab.position.set(side * af, -3.4, 0); M.cA.lab.position.set(side * 2 * af, -3.4, 0);
+                        M.fB.grp.visible = M.cB.grp.visible = M.fB.lab.visible = M.cB.lab.visible = false;
+                        retext(M.cA.lab, 'C', '#c4b5fd');
+                    } else {
+                        M.fA.grp.position.set(-af, 0, 0); M.fB.grp.position.set(af, 0, 0);
+                        M.cA.grp.position.set(-2 * af, 0, 0); M.cB.grp.position.set(2 * af, 0, 0);
+                        M.fA.lab.position.set(-af, -3.4, 0); M.fB.lab.position.set(af, -3.4, 0);
+                        M.cA.lab.position.set(-2 * af, -3.4, 0); M.cB.lab.position.set(2 * af, -3.4, 0);
+                        M.fB.grp.visible = M.cB.grp.visible = M.fB.lab.visible = M.cB.lab.visible = true;
+                        retext(M.cA.lab, '2F', '#c4b5fd');
+                        retext(M.cB.lab, '2F', '#c4b5fd');
+                    }
+                    M.fA.grp.visible = M.cA.grp.visible = M.fA.lab.visible = M.cA.lab.visible = true;
+
+                    /* image */
+                    M.img.visible = !tooFar; M.lImg.visible = true;
+                    if (!tooFar) {
+                        setArrow(M.img, s.v, hi);
+                        var col = s.real ? C_REAL : C_VIRT;
+                        M.img.userData.sh.material.color.setHex(col);
+                        M.img.userData.hd.material.color.setHex(col);
+                        M.img.userData.sh.material.opacity = s.real ? 0.95 : 0.5;
+                        M.img.userData.hd.material.opacity = s.real ? 0.95 : 0.5;
+                        M.lImg.position.set(s.v, (hi > 0 ? hi + 2.6 : 2.6), 0);
+                        retext(M.lImg, s.real ? 'IMAGE (real)' : 'IMAGE (virtual)', s.real ? '#f87171' : '#c4b5fd');
+                        M.lImg.scale.set(10, 2.5, 1);
+                    } else {
+                        M.lImg.position.set(s.isM ? -34 : 34, 6, 0);
+                        retext(M.lImg, 'IMAGE bahut door!', '#fbbf24');
+                        M.lImg.scale.set(12, 3, 1);
+                    }
+
+                    /* rays */
+                    var tip = HOBJ, endX = s.isM ? -34 : 34;
+                    var lines = [];
+                    if (s.isM) {
+                        lines.push({ hit: tip, sl: (0 - tip) / (f - 0) });
+                        var s2 = (0 - tip) / (f - u);
+                        lines.push({ hit: tip + s2 * (0 - u), sl: 0 });
+                    } else {
+                        lines.push({ hit: tip, sl: (0 - tip) / (f - 0) });
+                        lines.push({ hit: 0, sl: (0 - tip) / (0 - u) });
+                    }
+                    M.lines = lines; M.endX = endX; M.tip = tip;
+                    M.rays.forEach(function (r, i) {
+                        var L = lines[i];
+                        place(r.inc, u, tip, 0, L.hit);
+                        var ey = L.hit + L.sl * (endX - 0);
+                        place(r.out, 0, L.hit, endX, ey);
+                        if (!s.real && !tooFar) place(r.virt, 0, L.hit, s.v, hi);
+                        else r.virt.visible = false;
+                    });
+
+                    M.state = { s: s, tooFar: tooFar, hi: hi };
+                    M.hud();
+                };
+
+                /* ---------- plain-language status strip ---------- */
+                var bar = null;
+                if (document.body && document.body.appendChild) {
+                    bar = document.createElement('div');
+                    bar.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:64px;z-index:6;' +
+                        'background:rgba(9,20,30,.9);border:1px solid rgba(255,255,255,.14);border-radius:999px;' +
+                        'padding:9px 20px;color:#e2e8f0;font:700 13.5px system-ui,sans-serif;white-space:nowrap;' +
+                        'pointer-events:none;max-width:94vw;overflow:hidden;text-overflow:ellipsis';
+                    document.body.appendChild(bar);
+                }
+                M.hud = function () {
+                    if (!bar || !M.state) return;
+                    var s = M.state.s, tf = M.state.tooFar;
+                    var name = NAMES[M.mode];
+                    retext(M.lEl, name, '#7dd3fc');
+                    var txt;
+                    if (tf) {
+                        txt = '⚠️ Object bilkul <b>F</b> par hai — image itni door chala gaya ki dikh hi nahi raha!';
+                    } else {
+                        var mag = Math.abs(s.m);
+                        var sizeTxt = mag > 1.05 ? (Math.round(mag * 10) / 10) + '× BADA'
+                            : (mag < 0.95 ? (Math.round(mag * 100)) + '% — CHHOTA' : 'utna hi bada');
+                        txt = '<span style="color:#7dd3fc">' + name + '</span> &nbsp;→&nbsp; Image: '
+                            + '<span style="color:' + (s.real ? '#f87171' : '#c4b5fd') + '">' + (s.real ? 'REAL' : 'VIRTUAL') + '</span>'
+                            + ', <span style="color:#fcd34d">' + (s.m < 0 ? 'ULTA' : 'SEEDHA') + '</span>'
+                            + ', <span style="color:#86efac">' + sizeTxt + '</span>';
+                    }
+                    bar.innerHTML = txt;
+                };
+
+                M.setMode = function (x) { M.mode = x; M.draw(); ctx.selectKey('element'); };
+                M.draw();
+            },
+
+            onFrame: function (t, ctx) {
+                var M = ctx.model;
+                if (!M.draw) return;
+
+                /* ---- the object glides along the bench on its own ---- */
+                if (M.playing) {
+                    M.t = t;
+                    /* smooth ping-pong between far and near, slower near the focus */
+                    var ph = (Math.sin(t * 0.30) + 1) / 2;            /* 0..1, eased by the sine itself */
+                    M.u = -(UMIN + (UMAX - UMIN) * ph);
+                } else {
+                    M.u = M.handU;
+                }
+                M.draw();
+
+                /* ---- light pulses run along each ray, over and over ---- */
+                var lines = M.lines, u = M.u, tip = M.tip, endX = M.endX;
+                if (!lines) return;
+                M.rays.forEach(function (r, i) {
+                    var L = lines[i];
+                    var ax = u, ay = tip, bx = 0, by = L.hit;
+                    var cx = endX, cy = L.hit + L.sl * (endX - 0);
+                    var d1 = Math.hypot(bx - ax, by - ay), d2 = Math.hypot(cx - bx, cy - by), tot = d1 + d2;
+                    r.pulses.forEach(function (p, k) {
+                        var ph = ((t * 0.42 + k / r.pulses.length) % 1);
+                        var d = ph * tot, x, y;
+                        if (d <= d1) { var q = d1 ? d / d1 : 0; x = ax + (bx - ax) * q; y = ay + (by - ay) * q; }
+                        else { var q2 = d2 ? (d - d1) / d2 : 0; x = bx + (cx - bx) * q2; y = by + (cy - by) * q2; }
+                        p.position.set(x, y, 0);
+                        p.visible = true;
+                        var s = 0.9 + Math.sin(t * 6 + k) * 0.12;
+                        p.scale.setScalar(s);
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

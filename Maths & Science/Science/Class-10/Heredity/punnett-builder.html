@@ -57,8 +57,8 @@
         <div class="card">
             <h3>1. Cross ka prakaar chuno</h3>
             <div class="modes">
-                <button id="m1" class="on" onclick="setMode(1)">Monohybrid — 1 lakshan</button>
-                <button id="m2" onclick="setMode(2)">Dihybrid — 2 lakshan</button>
+                <button id="m1" class="on" onclick="setMode(1)">Monohybrid — 1 trait</button>
+                <button id="m2" onclick="setMode(2)">Dihybrid — 2 trait</button>
             </div>
             <div class="traitbar" id="traitbar"></div>
             <h3>2. Dono parents ka genotype chuno</h3>
@@ -81,7 +81,7 @@
             <div class="sqwrap" id="sqwrap"></div>
             <div class="legend" id="legend"></div>
             <div class="ratios">
-                <div class="rbox"><div class="t">Phenotype ratio</div><div class="v" id="rPhen">—</div></div>
+                <div class="rbox"><div class="t">Phenotype ratio (anupaat)</div><div class="v" id="rPhen">—</div></div>
                 <div class="rbox"><div class="t">Genotype ratio</div><div class="v" id="rGen">—</div></div>
             </div>
             <div class="note" id="note"></div>
@@ -221,13 +221,13 @@
             var n = '';
             var pr = ratio(phOrder.map(function (p) { return phCount[p]; }));
             if (mode === 1) {
-                if (pr === '3 : 1') n = '🎯 Yahi wo mashhoor <b>3:1</b> hai! Dono parents <b>Tt</b> (heterozygous) hain — isliye chhupa hua recessive lakshan wapas nikal aaya. Dhyaan do: phenotype 3:1 hai par genotype <b>1:2:1</b> — dono alag hain.';
+                if (pr === '3 : 1') n = '🎯 Yahi wo mashhoor <b>3:1</b> hai! Dono parents <b>Tt</b> (heterozygous) hain — isliye chhupa hua recessive trait wapas nikal aaya. Dhyaan do: phenotype 3:1 hai par genotype <b>1:2:1</b> — dono alag hain.';
                 else if (pr === '1 : 1') n = '🕵️ Ye ek <b>test cross</b> jaisa nateeja hai — 50:50. Agar ek bhi <b>' + T1.rec + '</b> bachcha dikhe, toh pakka hai ki dominant dikhne wala parent <b>heterozygous (Tt)</b> tha.';
                 else if (phOrder.length === 1) n = '📌 Saare bachche <b>ek jaise</b> dikh rahe hain. Aisa tab hota hai jab kam se kam ek parent <b>homozygous dominant (TT)</b> ho, ya dono <b>homozygous</b> ho.';
                 else n = '📌 Har khaane mein upar wala gamete + baayen wala gamete mila hai. Rang wahi hai jo <b>bahar se dikhta</b> hai (phenotype).';
             } else {
                 if (pr === '9 : 3 : 3 : 1') n = '🎯 Ye hai <b>9:3:3:1</b> — dihybrid cross ka sabse mashhoor nateeja! Beech ke do khaane (<b>' + T2.dom + ' + ' + T3.rec + '</b> aur <b>' + T2.rec + ' + ' + T3.dom + '</b>) <b>naye mel (recombinant)</b> hain — ye kisi bhi shuddh parent mein the hi nahi. Yahi <b>Law of Independent Assortment</b> ka saboot hai.';
-                else n = '📌 Dono lakshan <b>ek doosre se bilkul swatantra</b> chalte hain. Shortcut: har lakshan ka apna ratio nikaalo aur dono ko <b>guna</b> kar do — 16 khaane banane ki zaroorat hi nahi padegi.';
+                else n = '📌 Dono trait <b>ek doosre se bilkul swatantra</b> chalte hain. Shortcut: har trait ka apna ratio nikaalo aur dono ko <b>guna</b> kar do — 16 khaane banane ki zaroorat hi nahi padegi.';
             }
             document.getElementById('note').innerHTML = n;
         }

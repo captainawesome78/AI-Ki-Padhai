@@ -41,7 +41,7 @@
             <div class="series" id="series"></div>
         </div>
         <div class="card">
-            <h3>1. Dhaatu chuno (jo daalni hai)</h3>
+            <h3>1. Metal chuno (jo daalni hai)</h3>
             <div class="pick" id="metals"></div>
         </div>
         <div class="card">
@@ -157,11 +157,11 @@
                 v.className = 'verdict yes'; v.textContent = '✓ Haan! Displacement reaction hogi';
                 e.textContent = balancedEq(M.s, salt);
                 n.innerHTML = '<b>' + M.s + '</b> series mein <b>' + salt.m + '</b> se <b>upar</b> hai (zyada reactive), isliye wo ' +
-                    salt.m + ' ko uske salt se hata deta hai. ' + salt.m + ' dhaatu ban kar jam jaayegi aur ghol ka rang badal jaayega.';
+                    salt.m + ' ko uske salt se hata deta hai. ' + salt.m + ' metal ban kar jam jaayegi aur ghol ka rang badal jaayega.';
             } else {
                 v.className = 'verdict no'; v.textContent = '✗ Koi reaction nahi hogi';
                 e.textContent = M.s + ' + ' + salt.s.replace(/(\d)/g, function (d) { return "₀₁₂₃₄₅₆₇₈₉"[+d]; }) + ' → koi reaction nahi';
-                n.innerHTML = '<b>' + M.s + '</b> series mein <b>' + salt.m + '</b> se <b>neeche</b> hai (kam reactive) — kam reactive dhaatu zyada reactive ko hata <b>nahi</b> sakti.';
+                n.innerHTML = '<b>' + M.s + '</b> series mein <b>' + salt.m + '</b> se <b>neeche</b> hai (kam reactive) — kam reactive metal zyada reactive ko hata <b>nahi</b> sakti.';
             }
             draw(react && !sameMetal);
         }
