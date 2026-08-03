@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resistance Explorer | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #052e16, #15803d); color: #dcfce7; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #86efac; text-decoration: none; border: 1px solid rgba(134,239,172,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 940px; margin: 0 auto; padding: 18px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 16px; margin-bottom: 13px; }
+        .card h3 { color: #fff; font-size: 12.5px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .05em; }
+        .mats { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 14px; }
+        .mats button { flex: 1; min-width: 108px; border: 1px solid rgba(134,239,172,.3); background: rgba(0,0,0,.25); color: #86efac; padding: 10px 8px; border-radius: 9px; font-size: 12.5px; cursor: pointer; font-weight: 700; }
+        .mats button.on { background: #22c55e; color: #052e16; border-color: #22c55e; }
+        .slider { margin-bottom: 12px; }
+        .slider label { display: block; font-size: 13.5px; color: #86efac; margin-bottom: 6px; font-weight: 600; }
+        .slider label b { color: #fff; }
+        input[type=range] { width: 100%; accent-color: #4ade80; height: 26px; }
+        .stage { background: #0b1220; border-radius: 14px; padding: 8px; overflow-x: auto; }
+        svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+        .res { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 13px; }
+        .rbox { background: rgba(0,0,0,.3); border-radius: 11px; padding: 12px; text-align: center; }
+        .rbox .t { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: #86efac; margin-bottom: 5px; }
+        .rbox .v { font-size: 17px; font-weight: 800; color: #fff; font-family: 'Courier New', monospace; }
+        .note { font-size: 14px; line-height: 1.85; background: rgba(0,0,0,.3); border-radius: 11px; padding: 14px; margin-top: 13px; border-left: 4px solid #22c55e; }
+        .note b { color: #fff; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="resistance-factors.html">← Back to Lesson</a>
+        <div class="title">🔬 Resistance Explorer</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <h3>1. Metal chuno</h3>
+            <div class="mats" id="mats"></div>
+            <div class="slider">
+                <label id="llab"></label>
+                <input type="range" id="len" min="1" max="10" step="1" value="4" oninput="setL(this.value)">
+            </div>
+            <div class="slider">
+                <label id="dlab"></label>
+                <input type="range" id="dia" min="1" max="5" step="1" value="3" oninput="setD(this.value)">
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>2. Taar ke andar</h3>
+            <div class="stage" id="stage"></div>
+            <div class="res">
+                <div class="rbox"><div class="t">Resistivity ρ</div><div class="v" id="rp">—</div></div>
+                <div class="rbox"><div class="t">Lambai L</div><div class="v" id="rl">—</div></div>
+                <div class="rbox"><div class="t">Area A</div><div class="v" id="ra">—</div></div>
+                <div class="rbox"><div class="t">Resistance R</div><div class="v" id="rr">—</div></div>
+            </div>
+            <div class="note" id="note"></div>
+        </div>
+    </div>
+
+    <script>
+        /* Real resistivities, in ohm-metre */
+        var MATS = [
+            { n: 'Copper', rho: 1.6e-8, hex: '#f97316' },
+            { n: 'Aluminium', rho: 2.7e-8, hex: '#cbd5e1' },
+            { n: 'Tungsten', rho: 5.2e-8, hex: '#a78bfa' },
+            { n: 'Nichrome', rho: 100e-8, hex: '#ef4444' }
+        ];
+        var mi = 0, Lu = 4, Du = 3;          /* slider units */
+        var L_PER_UNIT = 0.5;                /* metre per length unit  */
+        var D_PER_UNIT = 0.2e-3;             /* metre per diameter unit */
+
+        function L() { return Lu * L_PER_UNIT; }
+        function D() { return Du * D_PER_UNIT; }
+        function A() { return Math.PI * Math.pow(D() / 2, 2); }
+        function R() { return MATS[mi].rho * L() / A(); }
+
+        var W = 840, H = 300;
+
+        function draw() {
+            var m = MATS[mi], r = R();
+            /* the more resistive / longer / thinner, the more collisions we draw */
+            var collide = Math.min(1, (r / 0.35));
+            var wireW = 120 + Lu * 58;              /* px */
+            var wireH = 22 + Du * 16;
+            var x0 = (W - wireW) / 2, y0 = (H - wireH) / 2 - 10;
+
+            var g = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Electrons colliding inside a wire">';
+            g += '<rect x="0" y="0" width="' + W + '" height="' + H + '" fill="#0b1220"/>';
+            /* wire body */
+            g += '<rect x="' + x0 + '" y="' + y0 + '" width="' + wireW + '" height="' + wireH + '" rx="6" fill="' + m.hex + '" opacity=".22" stroke="' + m.hex + '" stroke-width="2.5"/>';
+            /* terminals */
+            g += '<rect x="' + (x0 - 34) + '" y="' + (y0 + wireH / 2 - 10) + '" width="34" height="20" fill="#475569"/>';
+            g += '<rect x="' + (x0 + wireW) + '" y="' + (y0 + wireH / 2 - 10) + '" width="34" height="20" fill="#475569"/>';
+
+            /* metal atoms - denser for more resistive metals */
+            var rows = Math.max(1, Math.round(wireH / 22));
+            var cols = Math.round(wireW / 26);
+            var atoms = [];
+            for (var rr = 0; rr < rows; rr++) {
+                for (var cc = 0; cc < cols; cc++) {
+                    var ax = x0 + 16 + cc * (wireW - 30) / Math.max(1, cols - 1);
+                    var ay = y0 + wireH * (rr + 0.5) / rows;
+                    atoms.push([ax, ay]);
+                    g += '<circle cx="' + ax + '" cy="' + ay + '" r="4.4" fill="' + m.hex + '" opacity=".85"/>';
+                }
+            }
+            /* electrons zig-zagging, with more zig-zag when resistance is high */
+            var nE = 5;
+            for (var e = 0; e < nE; e++) {
+                var ey = y0 + wireH * (e + 0.5) / nE;
+                var pts = 'M' + (x0 - 30) + ' ' + ey;
+                var steps = Math.max(3, cols);
+                for (var s = 1; s <= steps; s++) {
+                    var sx = x0 - 30 + (wireW + 60) * s / steps;
+                    var wob = (s % 2 ? 1 : -1) * collide * (wireH * 0.30);
+                    pts += ' L' + sx + ' ' + (ey + wob);
+                }
+                g += '<path d="' + pts + '" stroke="#38bdf8" stroke-width="2.2" fill="none" opacity=".85"/>';
+                g += '<circle cx="' + (x0 - 30) + '" cy="' + ey + '" r="4" fill="#38bdf8"/>';
+            }
+            /* collision sparks */
+            var sparks = Math.round(collide * atoms.length * 0.5);
+            for (var k = 0; k < sparks; k++) {
+                var a2 = atoms[(k * 7) % atoms.length];
+                g += '<circle cx="' + a2[0] + '" cy="' + a2[1] + '" r="8" fill="#fbbf24" opacity=".33"/>';
+            }
+            g += '<text x="' + (W / 2) + '" y="26" text-anchor="middle" font-size="13" font-weight="800" fill="' + m.hex + '">' + m.n + '</text>';
+            g += '<text x="' + (W / 2) + '" y="' + (H - 40) + '" text-anchor="middle" font-size="12" font-weight="800" fill="#86efac">'
+                + (collide > 0.6 ? 'Bahut takkarein — bahut resistance' : collide > 0.25 ? 'Kuch takkarein' : 'Bahut kam takkarein — kam resistance') + '</text>';
+            g += '<text x="' + (W / 2) + '" y="' + (H - 20) + '" text-anchor="middle" font-size="11" fill="#bbf7d0">Peeli chamak = electron ka atom se takraana (yahi garmi banti hai)</text>';
+            g += '</svg>';
+            document.getElementById('stage').innerHTML = g;
+
+            document.getElementById('rp').textContent = m.rho.toExponential(1);
+            document.getElementById('rl').textContent = L().toFixed(1) + ' m';
+            document.getElementById('ra').textContent = A().toExponential(2);
+            document.getElementById('rr').textContent = r < 0.01 ? r.toExponential(2) + ' Ω' : r.toFixed(3) + ' Ω';
+            document.getElementById('llab').innerHTML = 'Lambai: <b>L = ' + L().toFixed(1) + ' m</b>';
+            document.getElementById('dlab').innerHTML = 'Vyaas (motai): <b>d = ' + (D() * 1000).toFixed(1) + ' mm</b>';
+
+            /* compare against copper at the same shape, so the material effect is obvious */
+            var rCu = MATS[0].rho * L() / A();
+            var t = '📌 <b>R = ρL/A = ' + m.rho.toExponential(1) + ' × ' + L().toFixed(1) + ' / ' + A().toExponential(2) + ' = <span style="color:#4ade80">' + (r < 0.01 ? r.toExponential(2) : r.toFixed(3)) + ' Ω</span></b><br><br>';
+            if (mi === 3) {
+                t += '🔥 <b>Nichrome</b> ki resistivity copper se lagbhag <b>62 guna</b> zyada hai. Isi shape ke copper taar ka resistance sirf <b>' + (rCu < 0.01 ? rCu.toExponential(2) : rCu.toFixed(3)) + ' Ω</b> hota. Itni zyada resistance ka matlab hai <b>bahut zyada garmi</b> — isiliye heater, iron aur toaster ke coil nichrome ke hote hain.';
+            } else if (mi === 0) {
+                t += '⚡ <b>Copper</b> ki resistivity sabse kam hai — isliye current bina zyada garmi ke bah jaata hai. Isiliye ghar ki wiring copper ki hoti hai.';
+            } else if (mi === 2) {
+                t += '💡 <b>Tungsten</b> ka melting point <b>3380 °C</b> hai — sabse zyada. Isiliye bulb ka filament isi ka banta hai: wo safed garam hokar chamak sakta hai bina pighle.';
+            } else {
+                t += '🔌 <b>Aluminium</b> copper se thoda zyada resistive hai, par bahut <b>halka</b> — isiliye bijli ke lambe taar isi ke hote hain.';
+            }
+            t += '<br><br>💡 <b>Khud aazmao:</b> lambai slider dugni karo — resistance bhi <b>dugna</b> ho jaayega. Par vyaas slider dugna karo — resistance <b>chauthai</b> ho jaayega, kyunki area vyaas ke <b>varg</b> par nirbhar karta hai (A = πr²).';
+            document.getElementById('note').innerHTML = t;
+        }
+
+        function drawMats() {
+            var b = document.getElementById('mats'); b.innerHTML = '';
+            MATS.forEach(function (m, k) {
+                var el = document.createElement('button');
+                el.textContent = m.n;
+                el.className = (k === mi) ? 'on' : '';
+                el.onclick = function () { mi = k; drawMats(); draw(); };
+                b.appendChild(el);
+            });
+        }
+        function setL(x) { Lu = parseInt(x, 10); draw(); }
+        function setD(x) { Du = parseInt(x, 10); draw(); }
+        drawMats(); draw();
+    </script>
+</body>
+
+</html>

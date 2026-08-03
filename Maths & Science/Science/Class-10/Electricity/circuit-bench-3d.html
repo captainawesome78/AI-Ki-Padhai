@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Circuit Bench | AIkiPadhai</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="../sci-3d.js"></script>
+</head>
+
+<body>
+    <script>
+        var C_WIRE = 0x94a3b8, C_BATT = 0xfbbf24, C_ELEC = 0x38bdf8,
+            C_ON = 0xfde047, C_OFF = 0x475569, C_METER = 0xe2e8f0;
+        var VSUP = 12, RB = 4;      /* 12 V supply, each bulb 4 ohm */
+
+        Sci3D({
+            title: "⚡ 3D Circuit Bench",
+            back: { href: "series.html", label: "Back to Lesson" },
+            pickHint: false,
+            intro: {
+                name: "Circuit — chalta hua",
+                desc: "Sab apne aap chal raha hai. Neeli gendein ELECTRONS hain — unhe taar mein bahte dekho. Bulb jitna tez jalega, utni zyada power. Upar wale slider se SERIES aur PARALLEL badlo aur dhyaan do: series mein current ek hi raasta pakadta hai aur bulb dhundhle jalte hain; parallel mein current BAT jaata hai aur dono bulb poori chamak se jalte hain. Phir ek bulb PHODO — aur asli farak dekho."
+            },
+            camZ: 42,
+            data: {
+                battery: { emoji: "🔋", name: "Battery", nick: "12 V", desc: "Ye circuit ko dhakka deti hai. Battery har coulomb charge ko 12 joule energy deti hai — isiliye ise 12 volt kehte hain.\n\nBattery electrons banati nahi; wo taar mein pehle se maujood electrons ko dhakka deti hai.", stats: [["Voltage", "12 V"], ["Kaam", "charge ko dhakka dena"], ["+ se −", "conventional current ki disha"]] },
+                bulb: { emoji: "💡", name: "Bulb", nick: "4 Ω ka resistor", desc: "Har bulb 4 ohm ka resistor hai. Uske andar electrons atoms se takraate hain, energy garmi aur roshni ban jaati hai.\n\nBulb ki CHAMAK uski power dikhati hai (P = I²R). Jitna zyada current, utni zyada chamak.\n\nSeries mein dono bulb dhundhle jalte hain, parallel mein dono poore.", stats: [["Resistance", "4 Ω har ek"], ["Chamak", "= power (P = I²R)"], ["Series mein", "dhundhla"], ["Parallel mein", "poori chamak"]] },
+                electron: { emoji: "🔵", name: "Electrons", nick: "Neeli gendein", desc: "Taar mein bahne wale electrons. Ye asal mein bahut DHEERE chalte hain — lagbhag 1 mm per second!\n\nToh bulb turant kyun jalta hai? Kyunki taar pehle se electrons se BHARA hai. Switch dabate hi dhakka poore taar mein turant pahunch jaata hai aur saare electrons ek saath khisakne lagte hain.\n\nDhyaan do: yahan gendein jitni TEZ chal rahi hain, utna zyada current hai.", stats: [["Asli raftaar", "~1 mm/s"], ["Dhakka pahunchta hai", "lagbhag light ki speed se"], ["Yahan", "tez = zyada current"]] },
+                ammeter: { emoji: "🔴", name: "Ammeter (A)", nick: "Current naapta hai", desc: "Current naapne wala meter. Ye hamesha SERIES mein jodte hain — taaki poora current isme se guzre.\n\nIski apni resistance bahut KAM honi chahiye, warna wo khud current ghata dega.\n\nDekho: series se parallel karte hi iska reading badh jaata hai, kyunki kul resistance ghat gayi.", stats: [["Naapta hai", "Current (ampere)"], ["Kaise jodein", "SERIES mein"], ["Apni resistance", "bahut kam honi chahiye"]] },
+                voltmeter: { emoji: "🔵", name: "Voltmeter (V)", nick: "Voltage naapta hai", desc: "Do bindu ke beech ka potential ka FARAK naapta hai. Ye hamesha PARALLEL mein jodte hain — kyunki use dono bindu se judna hota hai.\n\nIski apni resistance bahut ZYADA honi chahiye, taaki wo circuit se current chura na le.\n\nDekho: parallel mode mein har bulb par poora 12 V, par series mein sirf 6 V.", stats: [["Naapta hai", "Voltage (volt)"], ["Kaise jodein", "PARALLEL mein"], ["Apni resistance", "bahut zyada honi chahiye"]] }
+            },
+            controls: [
+                { id: "mode", label: "🔀 Circuit:  0 = SERIES   1 = PARALLEL", min: 0, max: 1, step: 1, value: 0, on: function (v, ctx) { ctx.model.setMode(v); } },
+                { id: "blow", label: "💥 Ek bulb phodo  (0 = dono theek, 1 = bulb 2 fuse)", min: 0, max: 1, step: 1, value: 0, on: function (v, ctx) { ctx.model.setBlown(v === 1); } },
+                { id: "play", label: "▶️ Electrons chalao  (0 = rok do, 1 = chal rahe hain)", min: 0, max: 1, step: 1, value: 1, on: function (v, ctx) { ctx.model.playing = (v === 1); } }
+            ],
+
+            build: function (ctx) {
+                var T = ctx.THREE, P = ctx.pivot, M = ctx.model;
+                M.mode = 0; M.blown = false; M.playing = true;
+
+                var rim = new T.DirectionalLight(0xbfdbfe, 0.45); rim.position.set(-8, 9, 7); ctx.scene.add(rim);
+
+                /* ---------- labels ---------- */
+                function label(text, hex, w) {
+                    var cv = document.createElement('canvas'); cv.width = 512; cv.height = 128;
+                    var sp = new T.Sprite(new T.SpriteMaterial({ map: new T.CanvasTexture(cv), transparent: true, depthTest: false }));
+                    sp.userData.cv = cv; sp.scale.set(w || 9, (w || 9) * 0.25, 1);
+                    P.add(sp); paint(sp, text, hex); return sp;
+                }
+                function paint(sp, text, hex) {
+                    var cv = sp.userData.cv, c = cv.getContext && cv.getContext('2d');
+                    if (c) {
+                        c.clearRect(0, 0, 512, 128);
+                        c.font = 'bold 72px system-ui, sans-serif';
+                        c.textAlign = 'center'; c.textBaseline = 'middle';
+                        c.lineWidth = 13; c.strokeStyle = 'rgba(2,8,15,.94)'; c.strokeText(text, 256, 64);
+                        c.fillStyle = hex; c.fillText(text, 256, 64);
+                    }
+                    if (sp.material.map) sp.material.map.needsUpdate = true;
+                }
+                M.paint = paint;
+
+                /* ---------- wire segments ---------- */
+                function wireSeg() {
+                    var m = new T.Mesh(new T.CylinderGeometry(0.28, 0.28, 1, 8), ctx.mat(C_WIRE));
+                    m.visible = false; P.add(m); return m;
+                }
+                function place(mesh, ax, ay, bx, by) {
+                    var dx = bx - ax, dy = by - ay, L = Math.sqrt(dx * dx + dy * dy);
+                    if (!isFinite(L) || L < 0.01) { mesh.visible = false; return; }
+                    mesh.position.set((ax + bx) / 2, (ay + by) / 2, 0);
+                    mesh.scale.set(1, L, 1);
+                    mesh.lookAt(bx, by, 0); mesh.rotateX(Math.PI / 2);
+                    mesh.visible = true;
+                }
+                M.wires = []; for (var w = 0; w < 14; w++) M.wires.push(wireSeg());
+
+                /* ---------- battery ---------- */
+                var batt = new T.Group();
+                var body = new T.Mesh(new T.BoxGeometry(7, 3.4, 3), ctx.mat(C_BATT));
+                batt.add(body);
+                var cap = new T.Mesh(new T.CylinderGeometry(0.5, 0.5, 1.2, 12), ctx.mat(0xd97706));
+                cap.rotation.z = Math.PI / 2; cap.position.x = 4; batt.add(cap);
+                batt.position.set(0, -14, 0); P.add(batt); ctx.addPart(batt, 'battery');
+                M.lBatt = label('12 V BATTERY', '#fbbf24', 12);
+                M.lBatt.position.set(0, -18.5, 0);
+
+                /* ---------- bulbs ---------- */
+                function bulb() {
+                    var g = new T.Group();
+                    var glass = new T.Mesh(new T.SphereGeometry(2.4, 24, 18), ctx.mat(C_OFF, { transparent: true, opacity: 0.55 }));
+                    g.add(glass);
+                    var base = new T.Mesh(new T.CylinderGeometry(1.05, 1.05, 1.6, 14), ctx.mat(0x64748b));
+                    base.position.y = -2.7; g.add(base);
+                    var fil = new T.Mesh(new T.TorusGeometry(0.85, 0.16, 8, 20), ctx.mat(C_OFF));
+                    fil.rotation.x = Math.PI / 2; g.add(fil);
+                    var halo = new T.Mesh(new T.SphereGeometry(3.6, 18, 14), ctx.mat(C_ON, { transparent: true, opacity: 0 }));
+                    g.add(halo);
+                    g.userData = { glass: glass, fil: fil, halo: halo };
+                    P.add(g); ctx.addPart(g, 'bulb'); return g;
+                }
+                M.b1 = bulb(); M.b2 = bulb();
+                M.lb1 = label('BULB 1', '#e2e8f0', 8);
+                M.lb2 = label('BULB 2', '#e2e8f0', 8);
+
+                /* ---------- meters ---------- */
+                function meter(txt, hex) {
+                    var g = new T.Group();
+                    var ring = new T.Mesh(new T.TorusGeometry(2.3, 0.34, 10, 28), ctx.mat(C_METER));
+                    g.add(ring);
+                    var face = new T.Mesh(new T.CircleGeometry(2.2, 26), ctx.mat(0x0f172a));
+                    face.position.z = 0.05; g.add(face);
+                    P.add(g);
+                    return { grp: g, lab: label(txt, hex, 9) };
+                }
+                M.amm = meter('A  0.0 A', '#f87171'); ctx.addPart(M.amm.grp, 'ammeter');
+                M.vol = meter('V  0.0 V', '#93c5fd'); ctx.addPart(M.vol.grp, 'voltmeter');
+
+                /* ---------- electrons ---------- */
+                M.elecs = [];
+                for (var e = 0; e < 30; e++) {
+                    var p = new T.Mesh(new T.SphereGeometry(0.42, 10, 8), ctx.mat(0xdbeafe));
+                    p.material.emissive.setHex(C_ELEC);
+                    p.visible = false; P.add(p);
+                    M.elecs.push({ mesh: p, loop: 0, phase: e / 30 });
+                }
+
+                /* ---------- circuit maths (matches the lesson exactly) ---------- */
+                M.solve = function (mode, blown) {
+                    var R1 = RB, R2 = blown ? Infinity : RB;
+                    if (mode === 0) {                     /* SERIES */
+                        if (blown) return { Rt: Infinity, I: 0, I1: 0, I2: 0, V1: 0, V2: 0, dead: true };
+                        var Rt = R1 + R2, I = VSUP / Rt;
+                        return { Rt: Rt, I: I, I1: I, I2: I, V1: I * R1, V2: I * R2, dead: false };
+                    }
+                    /* PARALLEL */
+                    var I1 = VSUP / R1, I2 = blown ? 0 : VSUP / R2;
+                    var Rt = blown ? R1 : 1 / (1 / R1 + 1 / R2);
+                    return { Rt: Rt, I: I1 + I2, I1: I1, I2: I2, V1: VSUP, V2: blown ? 0 : VSUP, dead: false };
+                };
+
+                /* ---------- path the electrons travel ---------- */
+                function buildPaths(mode) {
+                    /* each path is a closed polyline of [x,y] points */
+                    if (mode === 0) {
+                        return [[[-16, -14], [-16, 8], [-7, 8], [-7, 8], [7, 8], [16, 8], [16, -14], [0, -14], [-16, -14]]];
+                    }
+                    return [
+                        [[-16, -14], [-16, 10], [-7, 10], [7, 10], [16, 10], [16, -14], [0, -14], [-16, -14]],
+                        [[-16, -14], [-16, 0], [-7, 0], [7, 0], [16, 0], [16, -14], [0, -14], [-16, -14]]
+                    ];
+                }
+
+                var NAMES = ['SERIES', 'PARALLEL'];
+
+                M.draw = function () {
+                    var s = M.solve(M.mode, M.blown), mode = M.mode;
+                    M.paths = buildPaths(mode);
+                    M.state = s;
+
+                    /* hide all wires, then lay out the ones this layout needs */
+                    M.wires.forEach(function (w) { w.visible = false; });
+                    var wi = 0;
+                    function seg(a, b) { if (wi < M.wires.length) place(M.wires[wi++], a[0], a[1], b[0], b[1]); }
+
+                    if (mode === 0) {
+                        M.b1.position.set(-7, 8, 0); M.b2.position.set(7, 8, 0);
+                        M.lb1.position.set(-7, 12.5, 0); M.lb2.position.set(7, 12.5, 0);
+                        seg([-16, -12.3], [-16, 8]); seg([-16, 8], [-9.4, 8]);
+                        seg([-4.6, 8], [4.6, 8]);
+                        seg([9.4, 8], [16, 8]); seg([16, 8], [16, -14]);
+                        seg([16, -14], [3.6, -14]); seg([-3.6, -14], [-16, -14]); seg([-16, -14], [-16, -12.3]);
+                        M.amm.grp.position.set(-16, -2, 0); M.amm.lab.position.set(-22.5, -2, 0);
+                        M.vol.grp.position.set(-7, 1.4, 0); M.vol.lab.position.set(-7, -2.4, 0);
+                    } else {
+                        M.b1.position.set(0, 10, 0); M.b2.position.set(0, 0, 0);
+                        M.lb1.position.set(-8.5, 10, 0); M.lb2.position.set(-8.5, 0, 0);
+                        seg([-16, -12.3], [-16, 10]);
+                        seg([-16, 10], [-2.6, 10]); seg([2.6, 10], [16, 10]);
+                        seg([-16, 0], [-2.6, 0]); seg([2.6, 0], [16, 0]);
+                        seg([16, 10], [16, -14]);
+                        seg([16, -14], [3.6, -14]); seg([-3.6, -14], [-16, -14]); seg([-16, -14], [-16, -12.3]);
+                        M.amm.grp.position.set(-16, -6, 0); M.amm.lab.position.set(-22.5, -6, 0);
+                        M.vol.grp.position.set(9.5, 5, 0); M.vol.lab.position.set(9.5, 5, 0);
+                    }
+
+                    /* bulb brightness follows POWER, P = I^2 R */
+                    function light(g, I, alive) {
+                        var Pw = alive ? I * I * RB : 0;
+                        var full = (VSUP / RB) * (VSUP / RB) * RB;      /* power of one bulb on full supply */
+                        var f = Math.max(0, Math.min(1, Pw / full));
+                        var col = alive ? (f > 0.02 ? C_ON : C_OFF) : 0x7f1d1d;
+                        g.userData.fil.material.color.setHex(col);
+                        g.userData.fil.material.emissive.setHex(alive ? (f > 0.02 ? 0xb45309 : 0x000000) : 0x000000);
+                        g.userData.glass.material.color.setHex(alive ? (f > 0.02 ? C_ON : C_OFF) : 0x991b1b);
+                        g.userData.glass.material.opacity = 0.35 + f * 0.45;
+                        g.userData.halo.material.opacity = f * 0.30;
+                        g.userData.halo.scale.setScalar(0.8 + f * 0.5);
+                        return f;
+                    }
+                    var f1 = light(M.b1, s.I1, true);
+                    var f2 = light(M.b2, s.I2, !M.blown);
+                    M.bright = [f1, f2];
+
+                    M.paint(M.lb1, 'BULB 1', f1 > 0.02 ? '#fde047' : '#94a3b8');
+                    M.paint(M.lb2, M.blown ? 'BULB 2 — FUSE 💥' : 'BULB 2', M.blown ? '#f87171' : (f2 > 0.02 ? '#fde047' : '#94a3b8'));
+
+                    M.paint(M.amm.lab, 'A  ' + s.I.toFixed(1) + ' A', '#f87171');
+                    M.paint(M.vol.lab, 'V  ' + s.V1.toFixed(1) + ' V', '#93c5fd');
+
+                    M.hud();
+                };
+
+                /* ---------- status strip ---------- */
+                var bar = null;
+                if (document.body && document.body.appendChild) {
+                    bar = document.createElement('div');
+                    bar.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:64px;z-index:6;' +
+                        'background:rgba(9,20,30,.9);border:1px solid rgba(255,255,255,.14);border-radius:999px;' +
+                        'padding:9px 20px;color:#e2e8f0;font:700 13.5px system-ui,sans-serif;white-space:nowrap;' +
+                        'pointer-events:none;max-width:94vw;overflow:hidden;text-overflow:ellipsis';
+                    document.body.appendChild(bar);
+                }
+                M.hud = function () {
+                    if (!bar || !M.state) return;
+                    var s = M.state, t;
+                    if (s.dead) {
+                        t = '<span style="color:#f87171">SERIES mein ek bulb fuse → poora circuit BAND, dono bulb bujh gaye ✗</span>';
+                    } else if (M.mode === 0) {
+                        t = '<span style="color:#7dd3fc">SERIES</span> &nbsp;→&nbsp; kul R = ' + s.Rt + ' Ω, current = <span style="color:#f87171">' + s.I.toFixed(1) + ' A</span>'
+                          + ' &nbsp;→&nbsp; har bulb par sirf <span style="color:#93c5fd">' + s.V1.toFixed(1) + ' V</span>'
+                          + ' &nbsp;→&nbsp; <span style="color:#fcd34d">dhundhle</span>';
+                    } else if (M.blown) {
+                        t = '<span style="color:#7dd3fc">PARALLEL</span> &nbsp;→&nbsp; ek bulb fuse, par <span style="color:#4ade80">doosra poori chamak se jal raha hai ✓</span>'
+                          + ' &nbsp;— isiliye ghar ki wiring parallel hoti hai';
+                    } else {
+                        t = '<span style="color:#7dd3fc">PARALLEL</span> &nbsp;→&nbsp; kul R = ' + s.Rt + ' Ω, current = <span style="color:#f87171">' + s.I.toFixed(1) + ' A</span>'
+                          + ' &nbsp;→&nbsp; har bulb par poora <span style="color:#93c5fd">' + s.V1.toFixed(1) + ' V</span>'
+                          + ' &nbsp;→&nbsp; <span style="color:#4ade80">poori chamak</span>';
+                    }
+                    bar.innerHTML = t;
+                };
+
+                M.setMode = function (v) { M.mode = v; M.draw(); ctx.selectKey('bulb'); };
+                M.setBlown = function (b) { M.blown = b; M.draw(); ctx.selectKey(b ? 'bulb' : 'electron'); };
+                M.draw();
+            },
+
+            onFrame: function (t, ctx) {
+                var M = ctx.model;
+                if (!M.draw || !M.paths) return;
+                var s = M.state;
+
+                /* electrons crawl round the loop; speed shows the current in that branch */
+                var per = Math.ceil(M.elecs.length / M.paths.length);
+                M.elecs.forEach(function (e, i) {
+                    var li = Math.min(M.paths.length - 1, Math.floor(i / per));
+                    var path = M.paths[li];
+                    var branchI = (M.paths.length === 1) ? s.I : (li === 0 ? s.I1 : s.I2);
+                    if (branchI <= 0.001) { e.mesh.visible = false; return; }
+
+                    /* total length of this loop */
+                    var segs = [], tot = 0;
+                    for (var k = 0; k < path.length - 1; k++) {
+                        var a = path[k], b = path[k + 1];
+                        var L = Math.hypot(b[0] - a[0], b[1] - a[1]);
+                        segs.push({ a: a, b: b, L: L }); tot += L;
+                    }
+                    if (tot < 0.01) { e.mesh.visible = false; return; }
+
+                    var speed = M.playing ? 0.06 * branchI : 0;
+                    e.loop = ((e.phase + t * speed) % 1 + 1) % 1;
+                    var d = e.loop * tot, x = 0, y = 0;
+                    for (var k2 = 0; k2 < segs.length; k2++) {
+                        if (d <= segs[k2].L || k2 === segs.length - 1) {
+                            var q = segs[k2].L ? d / segs[k2].L : 0;
+                            x = segs[k2].a[0] + (segs[k2].b[0] - segs[k2].a[0]) * q;
+                            y = segs[k2].a[1] + (segs[k2].b[1] - segs[k2].a[1]) * q;
+                            break;
+                        }
+                        d -= segs[k2].L;
+                    }
+                    e.mesh.position.set(x, y, 0.9);
+                    e.mesh.visible = true;
+                });
+
+                /* filaments flicker very slightly, as a real hot filament does */
+                var fl = 1 + Math.sin(t * 9) * 0.03;
+                if (M.b1) M.b1.userData.halo.scale.setScalar((0.8 + M.bright[0] * 0.5) * fl);
+                if (M.b2) M.b2.userData.halo.scale.setScalar((0.8 + M.bright[1] * 0.5) * fl);
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ohm's Law Graph Explorer | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #083344, #0e7490); color: #e0f2fe; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #a5f3fc; text-decoration: none; border: 1px solid rgba(165,243,252,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 940px; margin: 0 auto; padding: 18px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 16px; margin-bottom: 13px; }
+        .card h3 { color: #fff; font-size: 12.5px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .05em; }
+        .slider { margin-bottom: 14px; }
+        .slider label { display: block; font-size: 13.5px; color: #a5f3fc; margin-bottom: 7px; font-weight: 600; }
+        .slider label b { color: #fff; }
+        input[type=range] { width: 100%; accent-color: #22d3ee; height: 26px; }
+        .stage { background: rgba(0,0,0,.3); border-radius: 14px; padding: 8px; overflow-x: auto; }
+        svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+        .res { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-top: 13px; }
+        .rbox { background: rgba(0,0,0,.3); border-radius: 11px; padding: 12px; text-align: center; }
+        .rbox .t { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: #67e8f9; margin-bottom: 5px; }
+        .rbox .v { font-size: 18px; font-weight: 800; color: #fff; font-family: 'Courier New', monospace; }
+        .tbl { width: 100%; border-collapse: collapse; margin-top: 13px; font-size: 13.5px; }
+        .tbl th { text-align: center; padding: 8px; color: #67e8f9; font-size: 11px; text-transform: uppercase; border-bottom: 1px solid rgba(103,232,249,.3); }
+        .tbl td { padding: 8px; text-align: center; border-bottom: 1px solid rgba(255,255,255,.07); font-family: 'Courier New', monospace; font-weight: 700; }
+        .note { font-size: 14px; line-height: 1.85; background: rgba(0,0,0,.3); border-radius: 11px; padding: 14px; margin-top: 13px; border-left: 4px solid #22d3ee; }
+        .note b { color: #fff; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="ohms-law.html">← Back to Lesson</a>
+        <div class="title">📈 Ohm's Law Graph Explorer</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <div class="slider">
+                <label id="vlab"></label>
+                <input type="range" id="v" min="0" max="12" step="0.5" value="6" oninput="setV(this.value)">
+            </div>
+            <div class="slider">
+                <label id="rlab"></label>
+                <input type="range" id="r" min="1" max="12" step="0.5" value="3" oninput="setR(this.value)">
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>V-I graph</h3>
+            <div class="stage" id="stage"></div>
+            <div class="res">
+                <div class="rbox"><div class="t">Voltage V</div><div class="v" id="rv">—</div></div>
+                <div class="rbox"><div class="t">Current I</div><div class="v" id="ri">—</div></div>
+                <div class="rbox"><div class="t">Resistance R</div><div class="v" id="rr">—</div></div>
+                <div class="rbox"><div class="t">Graph ki dhaal</div><div class="v" id="rs">—</div></div>
+            </div>
+            <table class="tbl" id="tbl"></table>
+            <div class="note" id="note"></div>
+        </div>
+    </div>
+
+    <script>
+        var V = 6, R = 3;
+        var W = 820, H = 400, X0 = 80, Y0 = 340, XM = 760, YM = 40;
+        var IMAX = 12, VMAX = 12;
+
+        function px(i) { return X0 + (i / IMAX) * (XM - X0); }
+        function py(v) { return Y0 - (v / VMAX) * (Y0 - YM); }
+
+        function draw() {
+            var I = V / R;
+            var g = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="V-I graph">';
+            /* grid */
+            g += '<g stroke="rgba(255,255,255,.10)" stroke-width="1">';
+            for (var k = 1; k <= 12; k++) { g += '<line x1="' + px(k) + '" y1="' + YM + '" x2="' + px(k) + '" y2="' + Y0 + '"/>'; }
+            for (var k2 = 1; k2 <= 12; k2++) { g += '<line x1="' + X0 + '" y1="' + py(k2) + '" x2="' + XM + '" y2="' + py(k2) + '"/>'; }
+            g += '</g>';
+            /* axes */
+            g += '<line x1="' + X0 + '" y1="' + Y0 + '" x2="' + XM + '" y2="' + Y0 + '" stroke="#e2e8f0" stroke-width="2.5"/>';
+            g += '<line x1="' + X0 + '" y1="' + Y0 + '" x2="' + X0 + '" y2="' + YM + '" stroke="#e2e8f0" stroke-width="2.5"/>';
+            g += '<text x="' + ((X0 + XM) / 2) + '" y="' + (H - 8) + '" text-anchor="middle" font-size="13" font-weight="800" fill="#a5f3fc">Current I (ampere) →</text>';
+            g += '<text x="24" y="' + ((YM + Y0) / 2) + '" font-size="13" font-weight="800" fill="#a5f3fc" transform="rotate(-90 24 ' + ((YM + Y0) / 2) + ')">Voltage V (volt) →</text>';
+            for (var a = 2; a <= 12; a += 2) {
+                g += '<text x="' + px(a) + '" y="' + (Y0 + 20) + '" text-anchor="middle" font-size="11" fill="#7dd3fc">' + a + '</text>';
+                g += '<text x="' + (X0 - 10) + '" y="' + (py(a) + 4) + '" text-anchor="end" font-size="11" fill="#7dd3fc">' + a + '</text>';
+            }
+            g += '<text x="' + (X0 - 10) + '" y="' + (Y0 + 4) + '" text-anchor="end" font-size="11" fill="#7dd3fc">0</text>';
+
+            /* the line for this R, drawn right across the grid */
+            var iEnd = Math.min(IMAX, VMAX / R), vEnd = iEnd * R;
+            g += '<line x1="' + X0 + '" y1="' + Y0 + '" x2="' + px(iEnd) + '" y2="' + py(vEnd) + '" stroke="#22d3ee" stroke-width="3.5"/>';
+
+            /* the working point */
+            if (I <= IMAX && V <= VMAX) {
+                g += '<line x1="' + X0 + '" y1="' + py(V) + '" x2="' + px(I) + '" y2="' + py(V) + '" stroke="#fbbf24" stroke-width="1.8" stroke-dasharray="6 5"/>';
+                g += '<line x1="' + px(I) + '" y1="' + Y0 + '" x2="' + px(I) + '" y2="' + py(V) + '" stroke="#fbbf24" stroke-width="1.8" stroke-dasharray="6 5"/>';
+                g += '<circle cx="' + px(I) + '" cy="' + py(V) + '" r="8" fill="#fbbf24"/>';
+                g += '<text x="' + (px(I) + 14) + '" y="' + (py(V) - 10) + '" font-size="12.5" font-weight="800" fill="#fde047">(' + I.toFixed(2) + ' A, ' + V + ' V)</text>';
+            }
+            /* slope triangle */
+            if (iEnd > 1.2) {
+                var i1 = iEnd * 0.45, i2 = iEnd * 0.75;
+                g += '<line x1="' + px(i1) + '" y1="' + py(i1 * R) + '" x2="' + px(i2) + '" y2="' + py(i1 * R) + '" stroke="#4ade80" stroke-width="2"/>';
+                g += '<line x1="' + px(i2) + '" y1="' + py(i1 * R) + '" x2="' + px(i2) + '" y2="' + py(i2 * R) + '" stroke="#4ade80" stroke-width="2"/>';
+                g += '<text x="' + ((px(i1) + px(i2)) / 2) + '" y="' + (py(i1 * R) + 18) + '" text-anchor="middle" font-size="11" font-weight="800" fill="#4ade80">ΔI</text>';
+                g += '<text x="' + (px(i2) + 8) + '" y="' + ((py(i1 * R) + py(i2 * R)) / 2) + '" font-size="11" font-weight="800" fill="#4ade80">ΔV</text>';
+                g += '<text x="' + (px(i2) + 30) + '" y="' + ((py(i1 * R) + py(i2 * R)) / 2 + 16) + '" font-size="11.5" font-weight="800" fill="#4ade80">dhaal = ΔV/ΔI = ' + R + ' Ω</text>';
+            }
+            g += '</svg>';
+            document.getElementById('stage').innerHTML = g;
+
+            document.getElementById('rv').textContent = V.toFixed(1) + ' V';
+            document.getElementById('ri').textContent = I.toFixed(2) + ' A';
+            document.getElementById('rr').textContent = R.toFixed(1) + ' Ω';
+            document.getElementById('rs').textContent = R.toFixed(1);
+            document.getElementById('vlab').innerHTML = 'Voltage: <b>V = ' + V.toFixed(1) + ' V</b> — slider ghumao';
+            document.getElementById('rlab').innerHTML = 'Resistance: <b>R = ' + R.toFixed(1) + ' Ω</b> — slider ghumao';
+
+            /* a small table of readings, exactly like a lab notebook */
+            var h = '<tr><th>V (volt)</th><th>I = V/R (ampere)</th><th>V / I</th></tr>';
+            [2, 4, 6, 8, 10].forEach(function (vv) {
+                var ii = vv / R;
+                h += '<tr><td>' + vv + '</td><td>' + ii.toFixed(2) + '</td><td style="color:#4ade80">' + (vv / ii).toFixed(1) + '</td></tr>';
+            });
+            document.getElementById('tbl').innerHTML = h;
+
+            var t;
+            if (V === 0) {
+                t = '📌 <b>V = 0</b> — koi dhakka nahi, isliye <b>I = 0</b>. Isiliye graph hamesha <b>origin (0,0)</b> se shuru hota hai. Bina potential difference ke current bah hi nahi sakta.';
+            } else {
+                t = '📌 Table ka teesra column dhyaan se dekho — <b>V/I hamesha ' + R.toFixed(1) + '</b> aa raha hai, chaahe voltage kuch bhi ho. <b>Yahi Ohm ka niyam hai.</b><br><br>'
+                    + 'Aur wahi number graph ki <b>dhaal</b> bhi hai. Yani <b>dhaal = resistance</b>.<br><br>'
+                    + (R >= 8
+                        ? '📈 Resistance zyada hai, isliye rekha bahut <b>khadi</b> hai — utne hi voltage par current bahut <b>kam</b> milta hai.'
+                        : R <= 2
+                            ? '📉 Resistance kam hai, isliye rekha bahut <b>letee hui</b> hai — thode se voltage par hi <b>bahut</b> current bah jaata hai.'
+                            : '💡 R slider ghumao: R badhaao toh rekha <b>khadi</b> ho jaati hai, ghataao toh <b>let</b> jaati hai. Rekha hamesha <b>seedhi</b> rehti hai — yahi Ohm ka niyam maanne ka matlab hai.');
+            }
+            document.getElementById('note').innerHTML = t;
+        }
+        function setV(x) { V = parseFloat(x); draw(); }
+        function setR(x) { R = parseFloat(x); draw(); }
+        draw();
+    </script>
+</body>
+
+</html>

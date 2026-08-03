@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Circuit Numerical Trainer | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #4a044e, #9d174d); color: #fce7f3; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #f9a8d4; text-decoration: none; border: 1px solid rgba(249,168,212,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 820px; margin: 0 auto; padding: 18px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 18px; margin-bottom: 13px; }
+        .score { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+        .sbox { flex: 1; min-width: 92px; background: rgba(0,0,0,.3); border-radius: 11px; padding: 11px; text-align: center; }
+        .sbox .t { font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; color: #f9a8d4; }
+        .sbox .v { font-size: 21px; font-weight: 800; color: #fff; }
+        .kinds { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 15px; }
+        .kinds button { flex: 1; min-width: 92px; border: 1px solid rgba(249,168,212,.3); background: rgba(0,0,0,.25); color: #f9a8d4; padding: 9px 6px; border-radius: 9px; font-size: 12px; cursor: pointer; font-weight: 700; }
+        .kinds button.on { background: #f472b6; color: #4a044e; border-color: #f472b6; }
+        .qtxt { font-size: 16.5px; line-height: 1.9; color: #fff; }
+        .qtxt b { color: #fbbf24; }
+        .hint { font-size: 13.5px; color: #f9a8d4; margin-top: 12px; background: rgba(0,0,0,.25); border-radius: 9px; padding: 12px 14px; line-height: 1.75; }
+        .hint b { color: #fff; }
+        .ask { margin-top: 15px; }
+        .ask label { display: block; font-size: 13.5px; color: #f9a8d4; font-weight: 700; margin-bottom: 6px; }
+        .ask input { width: 100%; padding: 12px 14px; border-radius: 10px; border: 1.5px solid rgba(255,255,255,.2); background: rgba(0,0,0,.3); color: #fff; font-size: 16px; font-family: 'Courier New', monospace; font-weight: 700; }
+        .ask input:focus { outline: none; border-color: #f472b6; }
+        .ask input.ok { border-color: #22c55e; background: rgba(21,128,61,.25); }
+        .ask input.no { border-color: #ef4444; background: rgba(153,27,27,.25); }
+        .btns { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+        .btns button { flex: 1; min-width: 128px; border: none; padding: 13px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 15px; }
+        .chk { background: #f472b6; color: #4a044e; } .nxt { background: #fbbf24; color: #451a03; }
+        .rst { background: transparent; color: #f9a8d4; border: 1px solid rgba(249,168,212,.4); }
+        .sol { margin-top: 15px; background: rgba(0,0,0,.32); border-radius: 12px; padding: 15px; font-size: 14.5px; line-height: 2; display: none; border-left: 4px solid #fbbf24; }
+        .sol.show { display: block; }
+        .sol b { color: #fff; } .sol .h { color: #fbbf24; font-weight: 800; display: block; margin-bottom: 8px; font-size: 13px; text-transform: uppercase; letter-spacing: .05em; }
+        .sol .step { margin: 10px 0; }
+        .verdict { font-size: 16px; font-weight: 800; margin-top: 13px; text-align: center; padding: 11px; border-radius: 10px; display: none; }
+        .verdict.show { display: block; }
+        .verdict.win { background: rgba(34,197,94,.25); color: #86efac; }
+        .verdict.lose { background: rgba(239,68,68,.22); color: #fca5a5; }
+        .tip { font-size: 12.5px; color: #f9a8d4; margin-top: 10px; font-style: italic; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="power-heating.html">← Back to Lesson</a>
+        <div class="title">🧮 Circuit Numerical Trainer</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <div class="score">
+                <div class="sbox"><div class="t">Sawaal</div><div class="v" id="sQ">1</div></div>
+                <div class="sbox"><div class="t">Sahi</div><div class="v" id="sR" style="color:#86efac">0</div></div>
+                <div class="sbox"><div class="t">Galat</div><div class="v" id="sW" style="color:#fca5a5">0</div></div>
+                <div class="sbox"><div class="t">Streak</div><div class="v" id="sS" style="color:#fbbf24">0</div></div>
+            </div>
+            <div class="kinds" id="kinds"></div>
+
+            <div class="qtxt" id="q"></div>
+            <div class="hint" id="hint"></div>
+
+            <div class="ask">
+                <label id="lab1"></label>
+                <input id="a1" type="text" autocomplete="off" placeholder="jawab likho">
+            </div>
+            <div class="ask" id="wrap2">
+                <label id="lab2"></label>
+                <input id="a2" type="text" autocomplete="off" placeholder="jawab likho">
+            </div>
+            <div class="tip">💡 Do dashamlav tak theek hai. Ikai (unit) likhne ki zaroorat nahi — sirf number.</div>
+
+            <div class="btns">
+                <button class="chk" id="chk" onclick="check()">✓ Jawab jaancho</button>
+                <button class="nxt" onclick="nextQ()">→ Agla sawaal</button>
+                <button class="rst" onclick="resetAll()">↺ Reset</button>
+            </div>
+
+            <div class="verdict" id="verdict"></div>
+            <div class="sol" id="sol"></div>
+        </div>
+    </div>
+
+    <script>
+        /* ---------- physics, same as the lessons ---------- */
+        function series(a) { return a.reduce(function (x, y) { return x + y; }, 0); }
+        function parallel(a) { return 1 / a.reduce(function (x, y) { return x + 1 / y; }, 0); }
+        function r2(x) { return Math.round(x * 100) / 100; }
+        function rnd(a) { return a[Math.floor(Math.random() * a.length)]; }
+
+        var KINDS = ['Sab', "Ohm's law", 'Series', 'Parallel', 'Power', 'Bill'];
+        var kind = 0, cur = null, qn = 1, right = 0, wrong = 0, streak = 0, answered = false;
+
+        function makeQ() {
+            var k = (kind === 0) ? 1 + Math.floor(Math.random() * 5) : kind;
+            if (k === 1) {                                   /* Ohm's law */
+                var R = rnd([2, 3, 4, 5, 6, 8, 10, 12, 20, 44]);
+                var I = rnd([0.2, 0.5, 1, 1.5, 2, 2.5, 3, 5]);
+                var V = r2(I * R);
+                return { k: 1, V: V, R: R, I: r2(I),
+                    q: 'Ek <b>' + R + ' Ω</b> ke resistor par <b>' + V + ' V</b> lagaya gaya hai.',
+                    l1: 'Current I (ampere)', a1: r2(V / R), l2: null };
+            }
+            if (k === 2) {                                   /* series */
+                var Rs = [rnd([2, 3, 4, 5]), rnd([5, 6, 8, 10]), rnd([10, 12, 15, 20])];
+                var Rt = series(Rs), Vs = rnd([12, 24, 30, 36, 45, 60]);
+                var I = Vs / Rt;
+                return { k: 2, Rs: Rs, Rt: Rt, V: Vs, I: r2(I),
+                    q: 'Teen resistor <b>' + Rs.join(' Ω, ') + ' Ω</b> <b>SERIES</b> mein <b>' + Vs + ' V</b> ki battery se jude hain.',
+                    l1: 'Kul resistance (Ω)', a1: Rt, l2: 'Current I (ampere)', a2: r2(I) };
+            }
+            if (k === 3) {                                   /* parallel */
+                var pick = rnd([[6, 6], [4, 4], [3, 6], [5, 20], [2, 3], [10, 15], [12, 12, 12], [8, 8, 8, 8]]);
+                var Rp = parallel(pick), Vp = rnd([6, 12, 24, 30]);
+                return { k: 3, Rs: pick, Rt: r2(Rp), V: Vp,
+                    q: 'Resistor <b>' + pick.join(' Ω, ') + ' Ω</b> <b>PARALLEL</b> mein <b>' + Vp + ' V</b> se jude hain.',
+                    l1: 'Kul resistance (Ω)', a1: r2(Rp), l2: 'Kul current I (ampere)', a2: r2(Vp / Rp) };
+            }
+            if (k === 4) {                                   /* power */
+                var P = rnd([40, 60, 100, 200, 500, 750, 1000, 1500, 2000]);
+                var Vv = rnd([110, 220]);
+                return { k: 4, P: P, V: Vv,
+                    q: 'Ek <b>' + P + ' W</b> ka upkaran <b>' + Vv + ' V</b> ki supply par chalta hai.',
+                    l1: 'Current I (ampere)', a1: r2(P / Vv), l2: 'Resistance R (ohm)', a2: r2(Vv * Vv / P) };
+            }
+            /* billing */
+            var w = rnd([9, 40, 60, 75, 100, 150, 500, 1000, 1500]);
+            var hr = rnd([1, 2, 3, 4, 5, 6, 8]);
+            var days = rnd([30, 30, 30, 28, 31]);
+            var rate = rnd([5, 6, 7, 8]);
+            var units = w * hr * days / 1000;
+            return { k: 5, W: w, h: hr, d: days, rate: rate,
+                q: 'Ek <b>' + w + ' W</b> ka upkaran roz <b>' + hr + ' ghante</b> chalta hai, <b>' + days + ' din</b> tak. Rate <b>₹' + rate + '</b> per unit hai.',
+                l1: 'Kitne units (kWh)', a1: r2(units), l2: 'Bill (₹)', a2: r2(units * rate) };
+        }
+
+        function render() {
+            var c = cur;
+            document.getElementById('q').innerHTML = c.q;
+            var hints = {
+                1: "<b>Ohm's law:</b> V = IR, isse I = V/R aur R = V/I",
+                2: '<b>Series:</b> R = R₁+R₂+R₃, current har jagah SAME, phir I = V/R',
+                3: '<b>Parallel:</b> 1/R = 1/R₁+1/R₂+... — aur aakhir mein <b>ULTA (reciprocal)</b> karna mat bhoolo!',
+                4: '<b>Power:</b> P = VI, P = I²R, P = V²/R — jo diya hai uske hisaab se chuno',
+                5: '<b>Units = (Watt × Ghante) / 1000</b>, aur <b>Bill = Units × rate</b>'
+            };
+            document.getElementById('hint').innerHTML = hints[c.k];
+            document.getElementById('lab1').textContent = c.l1;
+            document.getElementById('a1').value = ''; document.getElementById('a1').className = '';
+            if (c.l2) {
+                document.getElementById('wrap2').style.display = '';
+                document.getElementById('lab2').textContent = c.l2;
+                document.getElementById('a2').value = ''; document.getElementById('a2').className = '';
+            } else {
+                document.getElementById('wrap2').style.display = 'none';
+            }
+            answered = false;
+            document.getElementById('sol').className = 'sol';
+            document.getElementById('verdict').className = 'verdict';
+            document.getElementById('chk').disabled = false;
+            document.getElementById('sQ').textContent = qn;
+        }
+
+        function near(txt, target) {
+            var x = parseFloat(String(txt).replace(/[^0-9eE.+-]/g, ''));
+            if (isNaN(x)) return false;
+            return Math.abs(x - target) <= Math.max(0.02, Math.abs(target) * 0.015);
+        }
+
+        function check() {
+            if (answered) return;
+            answered = true;
+            var c = cur;
+            var ok1 = near(document.getElementById('a1').value, c.a1);
+            var ok2 = c.l2 ? near(document.getElementById('a2').value, c.a2) : true;
+            document.getElementById('a1').className = ok1 ? 'ok' : 'no';
+            if (c.l2) document.getElementById('a2').className = ok2 ? 'ok' : 'no';
+
+            var all = ok1 && ok2;
+            if (all) { right++; streak++; } else { wrong++; streak = 0; }
+            document.getElementById('sR').textContent = right;
+            document.getElementById('sW').textContent = wrong;
+            document.getElementById('sS').textContent = streak;
+
+            var vd = document.getElementById('verdict');
+            vd.className = 'verdict show ' + (all ? 'win' : 'lose');
+            vd.textContent = all ? (streak >= 3 ? '🔥 ' + streak + ' sahi lagataar!' : '✅ Bilkul sahi!')
+                                 : '❌ Neeche poora hal dekho.';
+
+            var h = '<span class="h">Poora hal</span>';
+            if (c.k === 1) {
+                h += '<div class="step"><b>Diya hai:</b> V = ' + c.V + ' V, R = ' + c.R + ' Ω</div>';
+                h += '<div class="step"><b>Ohm\'s law:</b> V = IR → I = V/R<br>I = ' + c.V + ' / ' + c.R + ' = <b>' + c.a1 + ' A</b></div>';
+            } else if (c.k === 2) {
+                h += '<div class="step"><b>Step 1 — kul resistance</b> (series mein seedhe jud jaate hain):<br>R = ' + c.Rs.join(' + ') + ' = <b>' + c.Rt + ' Ω</b></div>';
+                h += '<div class="step"><b>Step 2 — current:</b><br>I = V/R = ' + c.V + ' / ' + c.Rt + ' = <b>' + c.a2 + ' A</b></div>';
+                h += '<div class="step"><b>Step 3 — jaanch:</b> har resistor par voltage = I × R, aur sab jodkar ' + c.V + ' V aana chahiye:<br>'
+                    + c.Rs.map(function (x) { return r2(c.a2 * x); }).join(' + ') + ' = <b>' + r2(c.Rs.reduce(function (a, x) { return a + c.a2 * x; }, 0)) + ' V</b> ✓</div>';
+            } else if (c.k === 3) {
+                var terms = c.Rs.map(function (x) { return '1/' + x; }).join(' + ');
+                var sum = c.Rs.reduce(function (a, x) { return a + 1 / x; }, 0);
+                h += '<div class="step"><b>Step 1 — kul resistance:</b><br>1/R = ' + terms + ' = ' + r2(sum) + '<br>'
+                    + '<b>Ab ULTA karo:</b> R = 1 / ' + r2(sum) + ' = <b>' + c.a1 + ' Ω</b></div>';
+                h += '<div class="step"><b>Step 2 — kul current:</b><br>I = V/R = ' + c.V + ' / ' + c.a1 + ' = <b>' + c.a2 + ' A</b></div>';
+                h += '<div class="step"><b>Jaanch:</b> R<sub>p</sub> (' + c.a1 + ' Ω) sabse chhote resistor (' + Math.min.apply(null, c.Rs) + ' Ω) se bhi <b>kam</b> hai ✓ — parallel mein hamesha aisa hi hota hai.</div>';
+            } else if (c.k === 4) {
+                h += '<div class="step"><b>Current:</b> P = VI → I = P/V<br>I = ' + c.P + ' / ' + c.V + ' = <b>' + c.a1 + ' A</b></div>';
+                h += '<div class="step"><b>Resistance:</b> P = V²/R → R = V²/P<br>R = (' + c.V + ' × ' + c.V + ') / ' + c.P + ' = <b>' + c.a2 + ' Ω</b></div>';
+                /* verify with the exact values, not the rounded display ones, so the
+                   check lands back on P instead of a slightly-off number */
+                var Iex = c.P / c.V, Rex = c.V * c.V / c.P;
+                h += '<div class="step"><b>Jaanch</b> teesre formule se: P = I²R = (' + r2(Iex) + ')² × ' + r2(Rex) + ' = <b>' + r2(Iex * Iex * Rex) + ' W</b> ✓<br>'
+                    + '<span style="font-size:12.5px;opacity:.8">(hisaab mein poore number lo; sirf aakhiri jawab ko round karo — warna jaanch thodi off lagegi)</span></div>';
+            } else {
+                h += '<div class="step"><b>Step 1 — kul ghante:</b> ' + c.h + ' × ' + c.d + ' = <b>' + (c.h * c.d) + ' ghante</b></div>';
+                h += '<div class="step"><b>Step 2 — units:</b><br>Units = (Watt × Ghante) / 1000 = (' + c.W + ' × ' + (c.h * c.d) + ') / 1000 = <b>' + c.a1 + ' units</b></div>';
+                h += '<div class="step"><b>Step 3 — bill:</b><br>Bill = Units × rate = ' + c.a1 + ' × ' + c.rate + ' = <b>₹' + c.a2 + '</b></div>';
+            }
+            var sol = document.getElementById('sol');
+            sol.innerHTML = h; sol.className = 'sol show';
+            document.getElementById('chk').disabled = true;
+        }
+
+        function drawKinds() {
+            var b = document.getElementById('kinds'); b.innerHTML = '';
+            KINDS.forEach(function (n, k) {
+                var el = document.createElement('button');
+                el.textContent = n;
+                el.className = (k === kind) ? 'on' : '';
+                el.onclick = function () { kind = k; drawKinds(); nextQ(); };
+                b.appendChild(el);
+            });
+        }
+        function nextQ() { qn++; cur = makeQ(); render(); }
+        function resetAll() {
+            qn = 1; right = 0; wrong = 0; streak = 0; cur = makeQ(); render();
+            document.getElementById('sR').textContent = 0;
+            document.getElementById('sW').textContent = 0;
+            document.getElementById('sS').textContent = 0;
+        }
+        drawKinds(); cur = makeQ(); render();
+    </script>
+</body>
+
+</html>
