@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fleming Rule Trainer | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #083344, #0e7490); color: #e0f2fe; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #a5f3fc; text-decoration: none; border: 1px solid rgba(165,243,252,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 860px; margin: 0 auto; padding: 18px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 18px; margin-bottom: 13px; }
+        .score { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+        .sbox { flex: 1; min-width: 92px; background: rgba(0,0,0,.3); border-radius: 11px; padding: 11px; text-align: center; }
+        .sbox .t { font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; color: #67e8f9; }
+        .sbox .v { font-size: 21px; font-weight: 800; color: #fff; }
+        .modes { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; }
+        .modes button { flex: 1; min-width: 140px; border: 1px solid rgba(165,243,252,.32); background: rgba(0,0,0,.25); color: #a5f3fc; padding: 11px 8px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 13px; }
+        .modes button.on { background: #06b6d4; color: #04222b; border-color: #06b6d4; }
+        .qtxt { font-size: 16.5px; line-height: 1.9; color: #fff; }
+        .qtxt b { color: #fbbf24; }
+        .stage { background: rgba(0,0,0,.3); border-radius: 14px; padding: 8px; margin-top: 13px; overflow-x: auto; }
+        svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+        .hint { font-size: 13.5px; color: #a5f3fc; margin-top: 12px; background: rgba(0,0,0,.25); border-radius: 9px; padding: 12px 14px; line-height: 1.75; }
+        .hint b { color: #fff; }
+        .opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 9px; margin-top: 15px; }
+        .opts button { border: 1.5px solid rgba(255,255,255,.2); background: rgba(0,0,0,.3); color: #e0f2fe; padding: 13px 9px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 13.5px; }
+        .opts button.ok { background: #22c55e; color: #052e16; border-color: #22c55e; }
+        .opts button.no { background: #ef4444; color: #fff; border-color: #ef4444; }
+        .btns { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+        .btns button { flex: 1; min-width: 128px; border: none; padding: 13px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 15px; }
+        .nxt { background: #22d3ee; color: #04222b; }
+        .rst { background: transparent; color: #a5f3fc; border: 1px solid rgba(165,243,252,.4); }
+        .sol { margin-top: 14px; background: rgba(0,0,0,.32); border-radius: 12px; padding: 15px; font-size: 14.5px; line-height: 1.95; display: none; border-left: 4px solid #22d3ee; }
+        .sol.show { display: block; }
+        .sol b { color: #fff; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="force-on-conductor.html">← Back to Lesson</a>
+        <div class="title">✋ Fleming Rule Trainer</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <div class="score">
+                <div class="sbox"><div class="t">Sawaal</div><div class="v" id="sQ">1</div></div>
+                <div class="sbox"><div class="t">Sahi</div><div class="v" id="sR" style="color:#86efac">0</div></div>
+                <div class="sbox"><div class="t">Galat</div><div class="v" id="sW" style="color:#fca5a5">0</div></div>
+                <div class="sbox"><div class="t">Streak</div><div class="v" id="sS" style="color:#fbbf24">0</div></div>
+            </div>
+            <div class="modes">
+                <button id="m0" class="on" onclick="setMode(0)">Dono rules</button>
+                <button id="m1" onclick="setMode(1)">Sirf LEFT (motor)</button>
+                <button id="m2" onclick="setMode(2)">Sirf RIGHT (generator)</button>
+            </div>
+
+            <div class="qtxt" id="q"></div>
+            <div class="stage" id="stage"></div>
+            <div class="hint" id="hint"></div>
+            <div class="opts" id="opts"></div>
+
+            <div class="btns">
+                <button class="nxt" onclick="nextQ()">→ Agla sawaal</button>
+                <button class="rst" onclick="resetAll()">↺ Reset</button>
+            </div>
+            <div class="sol" id="sol"></div>
+        </div>
+    </div>
+
+    <script>
+        /* ---------- the physics, done with real cross products ---------- */
+        function cross(a, b) { return [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]]; }
+        var DIRS = [
+            { v: [1,0,0],  n: 'DAAYEN (east)',        s: '→' },
+            { v: [-1,0,0], n: 'BAAYEN (west)',        s: '←' },
+            { v: [0,1,0],  n: 'UPAR',                 s: '↑' },
+            { v: [0,-1,0], n: 'NEECHE',               s: '↓' },
+            { v: [0,0,1],  n: 'PAGE SE BAAHAR',       s: '⊙' },
+            { v: [0,0,-1], n: 'PAGE KE ANDAR',        s: '⊗' }
+        ];
+        function key(v) { return v.map(function (x) { return Math.abs(x) < 1e-9 ? 0 : (x > 0 ? 1 : -1); }).join(','); }
+        function find(v) { var k = key(v); for (var i = 0; i < DIRS.length; i++) if (key(DIRS[i].v) === k) return DIRS[i]; return null; }
+
+        var mode = 0, cur = null, qn = 1, right = 0, wrong = 0, streak = 0, answered = false;
+
+        function rnd(a) { return a[Math.floor(Math.random() * a.length)]; }
+
+        function makeQ() {
+            var isMotor = (mode === 0) ? (Math.random() < 0.5) : (mode === 1);
+            /* pick two perpendicular directions so the answer is a clean axis */
+            var A, B, tries = 0;
+            do {
+                A = rnd(DIRS); B = rnd(DIRS); tries++;
+            } while ((key(A.v) === key(B.v) || key(A.v) === key(B.v.map(function(x){return -x;}))) && tries < 50);
+            var ans = cross(A.v, B.v);
+            /* A = current (motor) or motion (generator); B = field */
+            return { isMotor: isMotor, A: A, B: B, ans: find(ans) };
+        }
+
+        function render() {
+            var c = cur;
+            document.getElementById('q').innerHTML = c.isMotor
+                ? 'Ek taar mein <b>CURRENT ' + c.A.n + '</b> ki taraf bah raha hai, aur <b>FIELD ' + c.B.n + '</b> ki taraf hai.<br>Taar par <b>FORCE</b> kis taraf lagega?'
+                : 'Ek taar ko <b>' + c.A.n + '</b> ki taraf <b>HILAYA</b> ja raha hai, aur <b>FIELD ' + c.B.n + '</b> ki taraf hai.<br><b>INDUCED CURRENT</b> kis taraf bahega?';
+            document.getElementById('hint').innerHTML = c.isMotor
+                ? '✋ <b>MOTOR</b> — yani <b>LEFT (ulta) haath</b> ka rule.<br>👍 Angootha = Force &nbsp;•&nbsp; 🖕 Pehli ungli = Field &nbsp;•&nbsp; 🖕 Beech wali = Current'
+                : '✋ <b>GENERATOR</b> — yani <b>RIGHT (seedha) haath</b> ka rule.<br>👍 Angootha = Gati (motion) &nbsp;•&nbsp; 🖕 Pehli ungli = Field &nbsp;•&nbsp; 🖕 Beech wali = Induced current';
+            drawStage();
+            drawOpts();
+            answered = false;
+            document.getElementById('sol').className = 'sol';
+            document.getElementById('sQ').textContent = qn;
+        }
+
+        function arrowSvg(cx, cy, d, colour, lab, sub) {
+            var g = '';
+            if (d.s === '⊙') {
+                g += '<circle cx="' + cx + '" cy="' + cy + '" r="20" fill="none" stroke="' + colour + '" stroke-width="4"/>';
+                g += '<circle cx="' + cx + '" cy="' + cy + '" r="6" fill="' + colour + '"/>';
+            } else if (d.s === '⊗') {
+                g += '<circle cx="' + cx + '" cy="' + cy + '" r="20" fill="none" stroke="' + colour + '" stroke-width="4"/>';
+                g += '<line x1="' + (cx-13) + '" y1="' + (cy-13) + '" x2="' + (cx+13) + '" y2="' + (cy+13) + '" stroke="' + colour + '" stroke-width="4"/>';
+                g += '<line x1="' + (cx+13) + '" y1="' + (cy-13) + '" x2="' + (cx-13) + '" y2="' + (cy+13) + '" stroke="' + colour + '" stroke-width="4"/>';
+            } else {
+                var dx = d.v[0] * 34, dy = -d.v[1] * 34;
+                g += '<line x1="' + (cx-dx) + '" y1="' + (cy-dy) + '" x2="' + (cx+dx) + '" y2="' + (cy+dy) + '" stroke="' + colour + '" stroke-width="5" marker-end="url(#ah' + colour.replace('#','') + ')"/>';
+            }
+            g += '<text x="' + cx + '" y="' + (cy+46) + '" text-anchor="middle" font-size="12" font-weight="800" fill="' + colour + '">' + lab + '</text>';
+            g += '<text x="' + cx + '" y="' + (cy+61) + '" text-anchor="middle" font-size="10" fill="' + colour + '" opacity=".85">' + sub + '</text>';
+            return g;
+        }
+
+        function drawStage() {
+            var c = cur;
+            var g = '<svg viewBox="0 0 620 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two known directions and one unknown">';
+            g += '<defs>';
+            ['#fbbf24','#60a5fa','#f87171'].forEach(function (col) {
+                g += '<marker id="ah' + col.replace('#','') + '" markerWidth="10" markerHeight="10" refX="8" refY="3.4" orient="auto"><path d="M0,0 L9,3.4 L0,6.8 Z" fill="' + col + '"/></marker>';
+            });
+            g += '</defs>';
+            g += arrowSvg(130, 70, c.A, '#fbbf24', c.isMotor ? 'CURRENT' : 'GATI (motion)', c.A.n);
+            g += arrowSvg(320, 70, c.B, '#60a5fa', 'FIELD', c.B.n);
+            g += '<circle cx="500" cy="70" r="34" fill="none" stroke="#f87171" stroke-width="3" stroke-dasharray="7 6"/>';
+            g += '<text x="500" y="78" text-anchor="middle" font-size="28" font-weight="800" fill="#f87171">?</text>';
+            g += '<text x="500" y="116" text-anchor="middle" font-size="12" font-weight="800" fill="#f87171">' + (c.isMotor ? 'FORCE' : 'INDUCED CURRENT') + '</text>';
+            g += '<text x="500" y="131" text-anchor="middle" font-size="10" fill="#f87171" opacity=".85">aapko batana hai</text>';
+            g += '<text x="225" y="160" text-anchor="middle" font-size="11" font-weight="800" fill="' + (c.isMotor ? '#a5f3fc' : '#86efac') + '">'
+               + (c.isMotor ? 'LEFT hand rule lagao' : 'RIGHT hand rule lagao') + '</text>';
+            g += '</svg>';
+            document.getElementById('stage').innerHTML = g;
+        }
+
+        function drawOpts() {
+            var box = document.getElementById('opts'); box.innerHTML = '';
+            DIRS.forEach(function (d) {
+                var b = document.createElement('button');
+                b.textContent = d.s + '  ' + d.n;
+                b.onclick = function () { answer(d); };
+                b.dataset.k = key(d.v);
+                box.appendChild(b);
+            });
+        }
+
+        function answer(d) {
+            if (answered) return;
+            answered = true;
+            var ok = key(d.v) === key(cur.ans.v);
+            if (ok) { right++; streak++; } else { wrong++; streak = 0; }
+            document.getElementById('sR').textContent = right;
+            document.getElementById('sW').textContent = wrong;
+            document.getElementById('sS').textContent = streak;
+
+            var box = document.getElementById('opts');
+            Array.prototype.forEach.call(box.children, function (b) {
+                if (b.dataset.k === key(cur.ans.v)) b.className = 'ok';
+                else if (b.dataset.k === key(d.v)) b.className = 'no';
+            });
+
+            var c = cur;
+            var h = '<b>' + (ok ? '✅ Bilkul sahi!' : '❌ Sahi jawab: ' + c.ans.s + ' ' + c.ans.n) + '</b><br><br>';
+            h += '<b>Kaise nikaala:</b><br>';
+            if (c.isMotor) {
+                h += '1️⃣ Ye <b>MOTOR</b> wala maamla hai (current diya hai, force chahiye) → <b>LEFT (ulta) haath</b><br>';
+                h += '2️⃣ <b>Pehli ungli</b> ko <b>' + c.B.n + '</b> karo (field)<br>';
+                h += '3️⃣ <b>Beech wali ungli</b> ko <b>' + c.A.n + '</b> karo (current)<br>';
+                h += '4️⃣ Ab <b>angootha</b> apne aap <b>' + c.ans.n + '</b> ki taraf ho jaayega → <b>yahi force hai</b>';
+            } else {
+                h += '1️⃣ Ye <b>GENERATOR</b> wala maamla hai (gati di hai, current chahiye) → <b>RIGHT (seedha) haath</b><br>';
+                h += '2️⃣ <b>Pehli ungli</b> ko <b>' + c.B.n + '</b> karo (field)<br>';
+                h += '3️⃣ <b>Angootha</b> ko <b>' + c.A.n + '</b> karo (gati)<br>';
+                h += '4️⃣ Ab <b>beech wali ungli</b> apne aap <b>' + c.ans.n + '</b> ki taraf ho jaayegi → <b>yahi induced current hai</b>';
+            }
+            h += '<br><br>💡 <b>Jaanch:</b> teeno dishaayein ek doosre ke <b>perpendicular (90°)</b> hain — hamesha honi chahiye.';
+            var sol = document.getElementById('sol');
+            sol.innerHTML = h; sol.className = 'sol show';
+        }
+
+        function setMode(m) {
+            mode = m;
+            for (var i = 0; i < 3; i++) document.getElementById('m' + i).className = (i === m ? 'on' : '');
+            nextQ();
+        }
+        function nextQ() { qn++; cur = makeQ(); render(); }
+        function resetAll() {
+            qn = 1; right = 0; wrong = 0; streak = 0; cur = makeQ(); render();
+            document.getElementById('sR').textContent = 0;
+            document.getElementById('sW').textContent = 0;
+            document.getElementById('sS').textContent = 0;
+        }
+        cur = makeQ(); render();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Living Magnetic Field | AIkiPadhai</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="../sci-3d.js"></script>
+</head>
+
+<body>
+    <script>
+        var C_WIRE = 0xf59e0b, C_FIELD = 0x8b5cf6, C_PULSE = 0xfde047,
+            C_N = 0xdc2626, C_S = 0x2563eb, C_CORE = 0x94a3b8;
+
+        Sci3D({
+            title: "🧲 3D Living Magnetic Field",
+            back: { href: "straight-wire.html", label: "Back to Lesson" },
+            pickHint: false,
+            intro: {
+                name: "Field — banta hua",
+                desc: "Sab apne aap chal raha hai. Peeli gendein CURRENT hain — taar mein bahti hui. Baingani chakre MAGNETIC FIELD hain, aur unpar chhoti gendein field ki DISHA mein ghoom rahi hain. Upar wale slider se seedha taar, loop aur solenoid badal kar dekho. Aur sabse zaroori — 'Current ULTA karo' slider dabao aur dekho ki saari field lines EK SAATH palat jaati hain."
+            },
+            camZ: 44,
+            data: {
+                wire: { emoji: "🟠", name: "Taar (current)", nick: "Peeli gendein", desc: "Taar mein bahta hua current. Peeli gendein current ki disha dikhati hain.\n\nOersted ne 1820 mein yahi dekha tha: jaise hi taar mein current chalu hua, paas rakhi compass ki sui hil gayi. Usse pata chala ki CURRENT se MAGNETIC FIELD banta hai.", stats: [["Kya bahta hai", "Current"], ["Field kab banta", "Jab current bahta ho"], ["Current band", "field bhi khatam"]] },
+                field: { emoji: "🟣", name: "Magnetic Field", nick: "Baingani chakre", desc: "Taar ke chaaron taraf banne wale magnetic field ki lines.\n\nDhyaan do: ye taar ke chaaron taraf GOL CHAKRON mein hain — kabhi taar ke saath-saath nahi. Aur taar ke paas ye GHANE hain, door jaate hi door-door — kyunki field door jaate hue kamzor pad jaata hai.\n\nHar chakre par ghoomti chhoti gendein field ki DISHA dikhati hain.", stats: [["Shakl", "Taar ke chaaron taraf gol chakre"], ["Paas", "Taakatwar (lines ghani)"], ["Door", "Kamzor (lines door-door)"], ["Disha", "Right-hand thumb rule se"]] },
+                compass: { emoji: "🧭", name: "Compass", nick: "Laal-neeli sui", desc: "Compass ki sui hamesha wahan ke magnetic field ki DISHA mein ghoom jaati hai.\n\nLaal sira = North pole.\n\nDekhte raho — jab aap current ulta karte ho, sui bhi ghoom kar doosri taraf ho jaati hai. Oersted ne bilkul yahi dekha tha!\n\nAur yahi wajah hai ki do field lines kabhi kaat nahi sakti — kyunki ek jagah rakhi sui do taraf ek saath nahi ghoom sakti.", stats: [["Laal sira", "North pole"], ["Kya dikhati hai", "Wahan field ki disha"], ["Current ulta", "sui bhi palat jaati hai"]] },
+                loop: { emoji: "⭕", name: "Loop", nick: "Ek pheera", desc: "Taar ko ek gol loop mein mod dene par kamaal ho jaata hai: loop ke HAR HISSE ka field, loop ke BEECH mein ek hi disha mein banta hai.\n\nIsliye sab jud kar ek taakatwar field ban jaata hai, aur loop ek chhote magnet jaisa vyavhaar karne lagta hai — ek taraf N, doosri taraf S.", stats: [["Beech mein field", "Taakatwar aur ek disha mein"], ["Loop ka vyavhaar", "Chhote magnet jaisa"], ["Zyada pheere", "utna zyada field"]] },
+                solenoid: { emoji: "🌀", name: "Solenoid", nick: "Bahut saare pheere", desc: "Ek naali par bahut saare pheere lapetne se solenoid banta hai.\n\nUske ANDAR ka field seedha, ek jaisa (uniform) aur bahut taakatwar hota hai. Bahar se wo bilkul BAR MAGNET jaisa dikhta hai — ek sira N, doosra S.\n\nAur sabse badi baat: ise switch se chalu-band kiya ja sakta hai. Andar loha daal do toh ELECTROMAGNET ban jaata hai.", stats: [["Andar ka field", "Seedha aur uniform"], ["Bahar se dikhta", "Bar magnet jaisa"], ["N kaunsa sira", "Right-hand rule se"], ["Loha daalo", "Electromagnet ban jaata hai"]] },
+                poles: { emoji: "🔴", name: "N aur S pole", nick: "Laal aur neela", desc: "Solenoid aur loop ke do sire magnet ke poles ki tarah kaam karte hain.\n\nLAAL = North, NEELA = South.\n\nKaunsa sira N hoga? Seedhe haath ki ungliyan CURRENT ke bahne ki disha mein mod kar solenoid ko pakdo — aapka ANGOOTHA jis taraf hoga, wahi N pole hai.\n\nCurrent ulta karo — dono poles bhi aapas mein badal jaate hain!", stats: [["Laal", "North pole"], ["Neela", "South pole"], ["Kaise pata karein", "Right-hand rule"], ["Current ulta", "poles bhi palat jaate hain"]] }
+            },
+            controls: [
+                { id: "mode", label: "🔀 Kya dekhna hai:  0 = Seedha taar   1 = Loop   2 = Solenoid", min: 0, max: 2, step: 1, value: 0, on: function (v, ctx) { ctx.model.setMode(v); } },
+                { id: "dir", label: "🔄 Current ULTA karo  (0 = seedha, 1 = ulta)", min: 0, max: 1, step: 1, value: 0, on: function (v, ctx) { ctx.model.setDir(v === 1 ? -1 : 1); } },
+                { id: "play", label: "▶️ Apne aap chalao  (0 = rok do, 1 = chal raha hai)", min: 0, max: 1, step: 1, value: 1, on: function (v, ctx) { ctx.model.playing = (v === 1); } }
+            ],
+
+            build: function (ctx) {
+                var T = ctx.THREE, P = ctx.pivot, M = ctx.model;
+                M.mode = 0; M.dir = 1; M.playing = true;
+
+                var rim = new T.DirectionalLight(0xc4b5fd, 0.5); rim.position.set(-8, 8, 8); ctx.scene.add(rim);
+
+                /* ---------- labels ---------- */
+                function label(text, hex, w) {
+                    var cv = document.createElement('canvas'); cv.width = 512; cv.height = 128;
+                    var sp = new T.Sprite(new T.SpriteMaterial({ map: new T.CanvasTexture(cv), transparent: true, depthTest: false }));
+                    sp.userData.cv = cv; sp.scale.set(w || 9, (w || 9) * 0.25, 1);
+                    P.add(sp); paint(sp, text, hex); return sp;
+                }
+                function paint(sp, text, hex) {
+                    var cv = sp.userData.cv, c = cv.getContext && cv.getContext('2d');
+                    if (c) {
+                        c.clearRect(0, 0, 512, 128);
+                        c.font = 'bold 72px system-ui, sans-serif';
+                        c.textAlign = 'center'; c.textBaseline = 'middle';
+                        c.lineWidth = 13; c.strokeStyle = 'rgba(2,8,15,.94)'; c.strokeText(text, 256, 64);
+                        c.fillStyle = hex; c.fillText(text, 256, 64);
+                    }
+                    if (sp.material.map) sp.material.map.needsUpdate = true;
+                }
+                M.paint = paint;
+
+                /* ================= STRAIGHT WIRE =================
+                   Wire runs along Y. Field circles it in the XZ plane.
+                   Right-hand thumb rule: B direction = Î x r̂ .
+                   With Î = +y and r̂ = +x that gives -z, so seen from +z
+                   the circulation is CLOCKWISE for upward current.       */
+                var straight = new T.Group(); P.add(straight);
+                var wire = new T.Mesh(new T.CylinderGeometry(0.6, 0.6, 46, 16), ctx.mat(C_WIRE));
+                straight.add(wire); ctx.addPart(wire, 'wire');
+
+                M.rings = [];
+                [5, 9, 13.5].forEach(function (R, ri) {
+                    var g = new T.Mesh(new T.TorusGeometry(R, 0.16, 8, 60), ctx.mat(C_FIELD, { transparent: true, opacity: 0.75 - ri * 0.13 }));
+                    g.rotation.x = Math.PI / 2;                 /* lie flat, wire through the middle */
+                    straight.add(g); ctx.addPart(g, 'field');
+                    var beads = [];
+                    for (var b = 0; b < 4; b++) {
+                        var m = new T.Mesh(new T.SphereGeometry(0.52, 10, 8), ctx.mat(0xe9d5ff));
+                        m.material.emissive.setHex(C_FIELD);
+                        straight.add(m); beads.push(m);
+                    }
+                    M.rings.push({ R: R, mesh: g, beads: beads, y: 0 });
+                });
+                /* three stacked copies so the field looks like it fills the length */
+                M.ringStacks = [-11, 0, 11];
+
+                /* current pulses along the wire */
+                M.wirePulses = [];
+                for (var w = 0; w < 8; w++) {
+                    var p = new T.Mesh(new T.SphereGeometry(0.62, 10, 8), ctx.mat(0xfffbeb));
+                    p.material.emissive.setHex(C_PULSE);
+                    straight.add(p); M.wirePulses.push(p);
+                }
+
+                /* ================= LOOP ================= */
+                var loopGrp = new T.Group(); P.add(loopGrp); loopGrp.visible = false;
+                var loopR = 9;
+                var loopWire = new T.Mesh(new T.TorusGeometry(loopR, 0.6, 10, 60), ctx.mat(C_WIRE));
+                loopGrp.add(loopWire); ctx.addPart(loopWire, 'loop');
+                M.loopPulses = [];
+                for (var lp = 0; lp < 10; lp++) {
+                    var q = new T.Mesh(new T.SphereGeometry(0.6, 10, 8), ctx.mat(0xfffbeb));
+                    q.material.emissive.setHex(C_PULSE);
+                    loopGrp.add(q); M.loopPulses.push(q);
+                }
+                /* field through the middle, shown as arrows along the axis */
+                M.loopField = [];
+                for (var lf = 0; lf < 5; lf++) {
+                    var seg = new T.Mesh(new T.CylinderGeometry(0.2, 0.2, 6, 8), ctx.mat(C_FIELD));
+                    seg.rotation.x = Math.PI / 2;
+                    loopGrp.add(seg); ctx.addPart(seg, 'field');
+                    M.loopField.push(seg);
+                }
+
+                /* ================= SOLENOID ================= */
+                var solGrp = new T.Group(); P.add(solGrp); solGrp.visible = false;
+                var SOL_R = 6, SOL_LEN = 30, TURNS = 9;
+                var coilPts = [];
+                for (var c2 = 0; c2 <= TURNS * 24; c2++) {
+                    var f = c2 / (TURNS * 24), a = f * Math.PI * 2 * TURNS;
+                    coilPts.push(new T.Vector3(Math.cos(a) * SOL_R, Math.sin(a) * SOL_R, -SOL_LEN / 2 + f * SOL_LEN));
+                }
+                var coil = new T.Mesh(new T.TubeGeometry(new T.CatmullRomCurve3(coilPts), 400, 0.42, 8, false), ctx.mat(C_WIRE));
+                solGrp.add(coil); ctx.addPart(coil, 'solenoid');
+                var core = new T.Mesh(new T.CylinderGeometry(3.4, 3.4, SOL_LEN + 6, 20), ctx.mat(C_CORE, { transparent: true, opacity: 0.55 }));
+                core.rotation.x = Math.PI / 2; solGrp.add(core); ctx.addPart(core, 'solenoid');
+                M.solPulses = [];
+                for (var sp2 = 0; sp2 < 14; sp2++) {
+                    var s2 = new T.Mesh(new T.SphereGeometry(0.58, 10, 8), ctx.mat(0xfffbeb));
+                    s2.material.emissive.setHex(C_PULSE);
+                    solGrp.add(s2); M.solPulses.push(s2);
+                }
+                M.solCurve = new T.CatmullRomCurve3(coilPts);
+                /* uniform field inside, drawn as arrows along the axis */
+                M.solField = [];
+                for (var sf = 0; sf < 6; sf++) {
+                    var sg = new T.Mesh(new T.CylinderGeometry(0.22, 0.22, 7, 8), ctx.mat(C_FIELD));
+                    sg.rotation.x = Math.PI / 2;
+                    solGrp.add(sg); ctx.addPart(sg, 'field');
+                    M.solField.push(sg);
+                }
+                /* the two poles */
+                function poleBox(colour) {
+                    var m = new T.Mesh(new T.BoxGeometry(7, 7, 3.5), ctx.mat(colour, { transparent: true, opacity: 0.55 }));
+                    solGrp.add(m); ctx.addPart(m, 'poles'); return m;
+                }
+                M.poleA = poleBox(C_N); M.poleB = poleBox(C_S);
+                M.lPoleA = label('N', '#f87171', 5); M.lPoleB = label('S', '#93c5fd', 5);
+
+                /* ---------- compass ---------- */
+                var comp = new T.Group();
+                var dial = new T.Mesh(new T.CylinderGeometry(2.6, 2.6, 0.5, 22), ctx.mat(0xe2e8f0));
+                dial.rotation.x = Math.PI / 2; comp.add(dial);
+                var nHalf = new T.Mesh(new T.ConeGeometry(0.7, 2.4, 10), ctx.mat(C_N));
+                nHalf.position.y = 1.2; comp.add(nHalf);
+                var sHalf = new T.Mesh(new T.ConeGeometry(0.7, 2.4, 10), ctx.mat(C_S));
+                sHalf.position.y = -1.2; sHalf.rotation.z = Math.PI; comp.add(sHalf);
+                comp.userData.needle = [nHalf, sHalf];
+                P.add(comp); ctx.addPart(comp, 'compass');
+                M.comp = comp;
+                M.lComp = label('COMPASS', '#e2e8f0', 9);
+
+                M.lTitle = label('SEEDHA TAAR', '#c4b5fd', 15);
+                M.lTitle.position.set(0, 24, 0);
+
+                var NAMES = ['SEEDHA TAAR', 'LOOP (ek pheera)', 'SOLENOID'];
+
+                M.draw = function () {
+                    straight.visible = (M.mode === 0);
+                    loopGrp.visible = (M.mode === 1);
+                    solGrp.visible = (M.mode === 2);
+                    M.poleA.visible = M.poleB.visible = (M.mode === 2);
+                    M.lPoleA.visible = M.lPoleB.visible = (M.mode === 2);
+                    M.paint(M.lTitle, NAMES[M.mode], '#c4b5fd');
+
+                    if (M.mode === 2) {
+                        /* right-hand rule: reversing the current swaps N and S */
+                        var zN = M.dir > 0 ? (SOL_LEN / 2 + 5) : -(SOL_LEN / 2 + 5);
+                        var zS = -zN;
+                        M.poleA.position.set(0, 0, zN); M.poleB.position.set(0, 0, zS);
+                        M.lPoleA.position.set(0, 9, zN); M.lPoleB.position.set(0, 9, zS);
+                    }
+                    /* compass sits beside whatever is on screen */
+                    M.comp.position.set(M.mode === 0 ? 16 : 0, M.mode === 0 ? 0 : -15, M.mode === 0 ? 0 : 0);
+                    M.lComp.position.set(M.comp.position.x, M.comp.position.y - 5, M.comp.position.z);
+                    M.hud();
+                };
+
+                /* ---------- status strip ---------- */
+                var bar = null;
+                if (document.body && document.body.appendChild) {
+                    bar = document.createElement('div');
+                    bar.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:64px;z-index:6;' +
+                        'background:rgba(9,20,30,.9);border:1px solid rgba(255,255,255,.14);border-radius:999px;' +
+                        'padding:9px 20px;color:#e2e8f0;font:700 13.5px system-ui,sans-serif;white-space:nowrap;' +
+                        'pointer-events:none;max-width:94vw;overflow:hidden;text-overflow:ellipsis';
+                    document.body.appendChild(bar);
+                }
+                M.hud = function () {
+                    if (!bar) return;
+                    var d = M.dir > 0 ? 'UPAR / aage' : 'NEECHE / peeche';
+                    var t;
+                    if (M.mode === 0) {
+                        t = 'Current <span style="color:#fde047">' + d + '</span> &nbsp;→&nbsp; field taar ke chaaron taraf '
+                          + '<span style="color:#c4b5fd">' + (M.dir > 0 ? 'ek disha' : 'ULTI disha') + '</span> mein ghoom raha hai'
+                          + ' &nbsp;→&nbsp; <span style="color:#f87171">compass bhi usi taraf</span>';
+                    } else if (M.mode === 1) {
+                        t = 'LOOP &nbsp;→&nbsp; beech mein saara field <span style="color:#c4b5fd">ek hi disha</span> mein jud jaata hai'
+                          + ' &nbsp;→&nbsp; loop ek <span style="color:#fde047">chhote magnet</span> jaisa ban gaya';
+                    } else {
+                        t = 'SOLENOID &nbsp;→&nbsp; andar field <span style="color:#c4b5fd">seedha aur ek jaisa</span>'
+                          + ' &nbsp;→&nbsp; <span style="color:#f87171">N</span> is taraf, <span style="color:#93c5fd">S</span> us taraf'
+                          + ' &nbsp;— bilkul <span style="color:#fde047">bar magnet</span> jaisa';
+                    }
+                    bar.innerHTML = t;
+                };
+
+                M.setMode = function (v) { M.mode = v; M.draw(); ctx.selectKey(v === 0 ? 'field' : v === 1 ? 'loop' : 'solenoid'); };
+                M.setDir = function (d) { M.dir = d; M.draw(); ctx.selectKey('field'); };
+                M.draw();
+            },
+
+            onFrame: function (t, ctx) {
+                var M = ctx.model;
+                if (!M.draw) return;
+                var sp = M.playing ? 1 : 0;
+                var dir = M.dir;
+
+                if (M.mode === 0) {
+                    /* current pulses run along the wire (+y when dir=+1) */
+                    M.wirePulses.forEach(function (p, i) {
+                        var ph = ((i / M.wirePulses.length + t * 0.16 * sp) % 1 + 1) % 1;
+                        p.position.set(0, (dir > 0 ? -23 + ph * 46 : 23 - ph * 46), 0);
+                    });
+                    /* field beads circle each ring.
+                       B = I x r.  For I = +y, at r = +x the field is -z, which seen
+                       from +z is CLOCKWISE, so the angle must DECREASE with time. */
+                    M.rings.forEach(function (ring, ri) {
+                        M.ringStacks.forEach(function (yOff, si) {
+                            if (si === 1) { ring.mesh.position.y = yOff; }
+                        });
+                        ring.beads.forEach(function (b, bi) {
+                            var a = (bi / ring.beads.length) * Math.PI * 2 - dir * t * 0.55 * sp;
+                            b.position.set(Math.cos(a) * ring.R, 0, Math.sin(a) * ring.R);
+                        });
+                    });
+                    /* compass sits east of the wire, so B there is -z (into the screen)
+                       when the current is upward; the needle lies along that. */
+                    M.comp.rotation.z = 0;
+                    M.comp.rotation.x = 0;
+                    M.comp.rotation.y = dir > 0 ? Math.PI / 2 : -Math.PI / 2;
+                } else if (M.mode === 1) {
+                    M.loopPulses.forEach(function (p, i) {
+                        var ph = ((i / M.loopPulses.length + dir * t * 0.13 * sp) % 1 + 1) % 1;
+                        var a = ph * Math.PI * 2;
+                        p.position.set(Math.cos(a) * 9, Math.sin(a) * 9, 0);
+                    });
+                    M.loopField.forEach(function (s, i) {
+                        var ph = ((i / M.loopField.length + t * 0.14 * sp) % 1 + 1) % 1;
+                        s.position.set(0, 0, dir * (-14 + ph * 28));
+                    });
+                    M.comp.rotation.y = 0;
+                    M.comp.rotation.z = dir > 0 ? 0 : Math.PI;
+                } else {
+                    M.solPulses.forEach(function (p, i) {
+                        var ph = ((i / M.solPulses.length + dir * t * 0.07 * sp) % 1 + 1) % 1;
+                        var pt = M.solCurve.getPoint(ph);
+                        if (pt) p.position.set(pt.x, pt.y, pt.z);
+                    });
+                    M.solField.forEach(function (s, i) {
+                        var ph = ((i / M.solField.length + t * 0.13 * sp) % 1 + 1) % 1;
+                        s.position.set(0, 0, dir * (-17 + ph * 34));
+                    });
+                    M.comp.rotation.y = 0;
+                    M.comp.rotation.z = dir > 0 ? Math.PI / 2 : -Math.PI / 2;
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

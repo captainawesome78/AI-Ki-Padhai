@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Electromagnet Explorer | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #052e16, #15803d); color: #dcfce7; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #86efac; text-decoration: none; border: 1px solid rgba(134,239,172,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 940px; margin: 0 auto; padding: 18px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 16px; margin-bottom: 13px; }
+        .card h3 { color: #fff; font-size: 12.5px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .05em; }
+        .slider { margin-bottom: 12px; }
+        .slider label { display: block; font-size: 13.5px; color: #86efac; margin-bottom: 6px; font-weight: 600; }
+        .slider label b { color: #fff; }
+        input[type=range] { width: 100%; accent-color: #4ade80; height: 26px; }
+        .cores { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 10px; }
+        .cores button { flex: 1; min-width: 106px; border: 1px solid rgba(134,239,172,.3); background: rgba(0,0,0,.25); color: #86efac; padding: 10px 8px; border-radius: 9px; font-size: 12.5px; cursor: pointer; font-weight: 700; }
+        .cores button.on { background: #22c55e; color: #052e16; border-color: #22c55e; }
+        .stage { background: #0b1220; border-radius: 14px; padding: 8px; overflow-x: auto; }
+        svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+        .res { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-top: 13px; }
+        .rbox { background: rgba(0,0,0,.3); border-radius: 11px; padding: 12px; text-align: center; }
+        .rbox .t { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: #86efac; margin-bottom: 5px; }
+        .rbox .v { font-size: 18px; font-weight: 800; color: #fff; font-family: 'Courier New', monospace; }
+        .note { font-size: 14px; line-height: 1.85; background: rgba(0,0,0,.3); border-radius: 11px; padding: 14px; margin-top: 13px; border-left: 4px solid #22c55e; }
+        .note b { color: #fff; }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="solenoid.html">← Back to Lesson</a>
+        <div class="title">🔩 Electromagnet Explorer</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <div class="slider">
+                <label id="tlab"></label>
+                <input type="range" id="turns" min="5" max="60" step="5" value="20" oninput="setT(this.value)">
+            </div>
+            <div class="slider">
+                <label id="ilab"></label>
+                <input type="range" id="cur" min="0" max="5" step="0.5" value="2" oninput="setI(this.value)">
+            </div>
+            <h3 style="margin-top:14px">Core (andar kya hai)</h3>
+            <div class="cores" id="cores"></div>
+        </div>
+
+        <div class="card">
+            <h3>Kitna taakatwar bana?</h3>
+            <div class="stage" id="stage"></div>
+            <div class="res">
+                <div class="rbox"><div class="t">Pheere (turns)</div><div class="v" id="rt">—</div></div>
+                <div class="rbox"><div class="t">Current</div><div class="v" id="ri">—</div></div>
+                <div class="rbox"><div class="t">Core</div><div class="v" id="rc">—</div></div>
+                <div class="rbox"><div class="t">Taakat</div><div class="v" id="rs">—</div></div>
+            </div>
+            <div class="note" id="note"></div>
+        </div>
+    </div>
+
+    <script>
+        /* Field of a solenoid: B = mu * n * I.  Strength therefore rises in
+           direct proportion to BOTH the turns and the current, and jumps hugely
+           when a soft-iron core is used (its relative permeability is large). */
+        var CORES = [
+            { n: 'Hawa (khaali)', mu: 1, hex: '#64748b' },
+            { n: 'Lakdi', mu: 1, hex: '#a16207' },
+            { n: 'Soft iron', mu: 200, hex: '#94a3b8' }
+        ];
+        var turns = 20, cur = 2, ci = 0;
+
+        function strength() { return turns * cur * CORES[ci].mu; }
+        function pins() { return Math.min(40, Math.round(strength() / 22)); }
+
+        var W = 860, H = 320;
+
+        function draw() {
+            var s = strength(), np = pins(), c = CORES[ci];
+            var on = cur > 0;
+            var g = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Electromagnet lifting pins">';
+            g += '<rect x="0" y="0" width="' + W + '" height="' + H + '" fill="#0b1220"/>';
+
+            /* the core */
+            g += '<rect x="250" y="70" width="230" height="54" rx="7" fill="' + c.hex + '" opacity=".5" stroke="' + c.hex + '" stroke-width="2.5"/>';
+            g += '<text x="365" y="103" text-anchor="middle" font-size="13" font-weight="800" fill="#e2e8f0">' + c.n + '</text>';
+
+            /* the coil - number of visible turns tracks the slider */
+            var shown = Math.max(4, Math.round(turns / 4));
+            for (var k = 0; k < shown; k++) {
+                var x = 258 + k * (214 / shown);
+                g += '<ellipse cx="' + x + '" cy="97" rx="7" ry="34" fill="none" stroke="#f59e0b" stroke-width="' + (on ? 4 : 2.5) + '" opacity="' + (on ? 1 : .45) + '"/>';
+            }
+            g += '<line x1="180" y1="97" x2="256" y2="97" stroke="#f59e0b" stroke-width="3.5" opacity="' + (on ? 1 : .45) + '"/>';
+            g += '<line x1="474" y1="97" x2="560" y2="97" stroke="#f59e0b" stroke-width="3.5" opacity="' + (on ? 1 : .45) + '"/>';
+
+            /* battery */
+            g += '<rect x="120" y="80" width="46" height="34" rx="4" fill="#fbbf24"/>';
+            g += '<text x="143" y="103" text-anchor="middle" font-size="12" font-weight="800" fill="#78350f">' + cur.toFixed(1) + 'A</text>';
+            g += '<line x1="120" y1="97" x2="100" y2="97" stroke="#334155" stroke-width="3"/>';
+            g += '<line x1="560" y1="97" x2="600" y2="97" stroke="#334155" stroke-width="3"/>';
+            g += '<line x1="600" y1="97" x2="600" y2="180" stroke="#334155" stroke-width="3"/>';
+            g += '<line x1="600" y1="180" x2="100" y2="180" stroke="#334155" stroke-width="3"/>';
+            g += '<line x1="100" y1="180" x2="100" y2="97" stroke="#334155" stroke-width="3"/>';
+
+            /* field lines - more of them, and brighter, when stronger */
+            var lines = Math.min(5, Math.round(s / 900) + (on ? 1 : 0));
+            for (var f = 1; f <= lines; f++) {
+                var spread = 20 + f * 20;
+                g += '<path d="M480 97 Q' + (560 + f*14) + ' ' + (97 - spread) + ' 365 ' + (97 - spread - 10)
+                   + ' Q' + (170 - f*14) + ' ' + (97 - spread) + ' 250 97" fill="none" stroke="#8b5cf6" stroke-width="2" opacity="' + (0.75 - f*0.1) + '"/>';
+            }
+
+            /* pins hanging from the end */
+            for (var p = 0; p < np; p++) {
+                var row = Math.floor(p / 8), col = p % 8;
+                var px = 300 + col * 20, py = 140 + row * 22;
+                g += '<line x1="' + px + '" y1="' + py + '" x2="' + (px + 3) + '" y2="' + (py + 17) + '" stroke="#cbd5e1" stroke-width="3"/>';
+                g += '<circle cx="' + px + '" cy="' + py + '" r="3" fill="#e2e8f0"/>';
+            }
+            if (np === 0) {
+                g += '<text x="365" y="170" text-anchor="middle" font-size="13" font-weight="800" fill="#64748b">'
+                   + (on ? 'Ek bhi pin nahi uthi — bahut kamzor' : 'Current band — koi magnet nahi') + '</text>';
+            } else {
+                g += '<text x="365" y="' + (150 + Math.ceil(np/8)*22 + 16) + '" text-anchor="middle" font-size="13" font-weight="800" fill="#4ade80">'
+                   + np + ' pin uth gayi' + (np === 1 ? '' : 'n') + '!</text>';
+            }
+            /* strength meter */
+            var frac = Math.min(1, s / 6000);
+            g += '<rect x="120" y="268" width="620" height="26" rx="13" fill="rgba(0,0,0,.5)" stroke="#334155" stroke-width="2"/>';
+            g += '<rect x="122" y="270" width="' + (616 * frac) + '" height="22" rx="11" fill="' + (frac > 0.66 ? '#22c55e' : frac > 0.3 ? '#eab308' : '#ef4444') + '"/>';
+            g += '<text x="430" y="286" text-anchor="middle" font-size="12" font-weight="800" fill="#f8fafc">TAAKAT</text>';
+            g += '</svg>';
+            document.getElementById('stage').innerHTML = g;
+
+            document.getElementById('rt').textContent = turns;
+            document.getElementById('ri').textContent = cur.toFixed(1) + ' A';
+            document.getElementById('rc').textContent = c.n;
+            document.getElementById('rs').textContent = Math.round(s);
+            document.getElementById('tlab').innerHTML = 'Pheere (turns): <b>' + turns + '</b>';
+            document.getElementById('ilab').innerHTML = 'Current: <b>' + cur.toFixed(1) + ' A</b>' + (cur === 0 ? ' — band hai!' : '');
+
+            var t;
+            if (cur === 0) {
+                t = '📌 <b>Current zero hai — toh magnet bhi zero.</b> Yahi electromagnet ki sabse badi khoobi hai: ise <b>switch se chalu-band</b> kiya ja sakta hai. Permanent magnet ke saath ye kabhi mumkin nahi.<br><br>💡 Isiliye kabaad ke maidan wala bada magnet <b>electromagnet</b> hi hota hai — warna gaadi ko <b>chhodne</b> ka koi tareeka hi nahi hota!';
+            } else if (ci === 2) {
+                var withoutCore = turns * cur;
+                t = '🔩 <b>Soft iron ka core</b> laga hai — aur yahi sabse bada farak karta hai. Bina core ke isi coil ki taakat sirf <b>' + Math.round(withoutCore) + '</b> hoti; core ke saath wo <b>' + Math.round(s) + '</b> hai — lagbhag <b>200 guna</b>!<br><br>'
+                  + '❓ <b>Soft iron hi kyun, steel kyun nahi?</b> Kyunki soft iron current band hote hi apna magnetism <b>turant chhod</b> deta hai. Steel hamesha ke liye magnet ban jaata aur band karne par bhi chipka rehta — jo electromagnet ke liye bekaar hai.';
+            } else {
+                t = '📌 Abhi core <b>' + c.n + '</b> hai, jo magnetic nahi hai — isliye field bahut <b>kamzor</b> hai. Taakat sirf <b>' + Math.round(s) + '</b>.<br><br>'
+                  + '💡 <b>Soft iron</b> chunkar dekho — taakat lagbhag <b>200 guna</b> badh jaayegi aur pinein uthne lagengi!';
+            }
+            t += '<br><br>⚙️ <b>Teen tareeke taakat badhaane ke:</b> pheere badhaao, current badhaao, aur soft iron ka core daalo. '
+               + 'Abhi ke haal mein taakat = <b>' + turns + ' pheere × ' + cur.toFixed(1) + ' A × ' + CORES[ci].mu + ' (core) = ' + Math.round(s) + '</b>.';
+            document.getElementById('note').innerHTML = t;
+        }
+
+        function drawCores() {
+            var b = document.getElementById('cores'); b.innerHTML = '';
+            CORES.forEach(function (c, k) {
+                var el = document.createElement('button');
+                el.textContent = c.n;
+                el.className = (k === ci) ? 'on' : '';
+                el.onclick = function () { ci = k; drawCores(); draw(); };
+                b.appendChild(el);
+            });
+        }
+        function setT(v) { turns = parseInt(v, 10); draw(); }
+        function setI(v) { cur = parseFloat(v); draw(); }
+        drawCores(); draw();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ghar Ka Circuit Simulator | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #4a044e, #9d174d); color: #fce7f3; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #f9a8d4; text-decoration: none; border: 1px solid rgba(249,168,212,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 940px; margin: 0 auto; padding: 18px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 16px; margin-bottom: 13px; }
+        .card h3 { color: #fff; font-size: 12.5px; margin-bottom: 11px; text-transform: uppercase; letter-spacing: .05em; }
+        .apps { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 9px; }
+        .app { border: 1.5px solid rgba(255,255,255,.18); background: rgba(0,0,0,.28); border-radius: 11px; padding: 11px; cursor: pointer; text-align: center; }
+        .app.on { background: rgba(34,197,94,.25); border-color: #22c55e; }
+        .app .e { font-size: 22px; }
+        .app .n { font-size: 13px; font-weight: 800; color: #fff; margin-top: 3px; }
+        .app .w { font-size: 11.5px; color: #f9a8d4; }
+        .toggles { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 14px; }
+        .toggles button { flex: 1; min-width: 150px; border: 1.5px solid rgba(255,255,255,.2); background: rgba(0,0,0,.3); color: #fce7f3; padding: 11px 8px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 13px; }
+        .toggles button.danger { background: #ef4444; color: #fff; border-color: #ef4444; }
+        .toggles button.warn { background: #f59e0b; color: #451a03; border-color: #f59e0b; }
+        .stage { background: #0b1220; border-radius: 14px; padding: 8px; overflow-x: auto; }
+        svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+        .res { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-top: 13px; }
+        .rbox { background: rgba(0,0,0,.3); border-radius: 11px; padding: 12px; text-align: center; }
+        .rbox .t { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: #f9a8d4; margin-bottom: 5px; }
+        .rbox .v { font-size: 18px; font-weight: 800; color: #fff; font-family: 'Courier New', monospace; }
+        .note { font-size: 14px; line-height: 1.85; background: rgba(0,0,0,.3); border-radius: 11px; padding: 14px; margin-top: 13px; border-left: 4px solid #f472b6; }
+        .note b { color: #fff; }
+        .note.bad { border-left-color: #ef4444; background: rgba(127,29,29,.35); }
+        .note.warn { border-left-color: #f59e0b; background: rgba(120,53,15,.35); }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="domestic-circuits.html">← Back to Lesson</a>
+        <div class="title">🏠 Ghar Ka Circuit Simulator</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <h3>1. Upkaran chalu karo (dabao)</h3>
+            <div class="apps" id="apps"></div>
+            <div class="toggles">
+                <button id="tShort" onclick="toggleShort()">💥 Short circuit karo</button>
+                <button id="tEarth" onclick="toggleEarth()">🛡️ Earthing hatao</button>
+                <button id="tFuse" onclick="resetFuse()">🔧 Fuse badlo / reset</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>2. Kya ho raha hai</h3>
+            <div class="stage" id="stage"></div>
+            <div class="res">
+                <div class="rbox"><div class="t">Kul power</div><div class="v" id="rp">—</div></div>
+                <div class="rbox"><div class="t">Kul current</div><div class="v" id="ri">—</div></div>
+                <div class="rbox"><div class="t">Fuse rating</div><div class="v" id="rf">15 A</div></div>
+                <div class="rbox"><div class="t">Haalat</div><div class="v" id="rs">—</div></div>
+            </div>
+            <div class="note" id="note"></div>
+        </div>
+    </div>
+
+    <script>
+        var V = 220, FUSE = 15;
+        var APPS = [
+            { e: '💡', n: 'LED bulb', w: 9, on: true, metal: false },
+            { e: '🌀', n: 'Pankha', w: 75, on: true, metal: false },
+            { e: '📺', n: 'TV', w: 100, on: false, metal: false },
+            { e: '🧊', n: 'Fridge', w: 150, on: false, metal: true },
+            { e: '👕', n: 'Iron', w: 1000, on: false, metal: true },
+            { e: '🔥', n: 'Heater', w: 2000, on: false, metal: true },
+            { e: '🚿', n: 'Geyser', w: 2000, on: false, metal: true }
+        ];
+        var shorted = false, earthed = true, fuseBlown = false;
+
+        function totalW() { var s = 0; APPS.forEach(function (a) { if (a.on) s += a.w; }); return s; }
+        function totalI() { return shorted ? 999 : totalW() / V; }
+
+        function draw() {
+            var W = totalW(), I = totalI();
+            if (I > FUSE) fuseBlown = true;
+            var live = !fuseBlown;
+
+            var g = '<svg viewBox="0 0 860 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="House circuit with fuse and earthing">';
+            g += '<rect x="0" y="0" width="860" height="300" fill="#0b1220"/>';
+            /* supply */
+            g += '<rect x="20" y="120" width="70" height="60" rx="7" fill="#334155" stroke="#94a3b8" stroke-width="2"/>';
+            g += '<text x="55" y="146" text-anchor="middle" font-size="11" font-weight="800" fill="#e2e8f0">SUPPLY</text>';
+            g += '<text x="55" y="164" text-anchor="middle" font-size="12" font-weight="800" fill="#fbbf24">220 V</text>';
+            /* fuse */
+            var fx = 150;
+            g += '<rect x="' + fx + '" y="118" width="66" height="34" rx="5" fill="' + (fuseBlown ? '#7f1d1d' : '#1e293b') + '" stroke="' + (fuseBlown ? '#ef4444' : '#94a3b8') + '" stroke-width="2.5"/>';
+            if (fuseBlown) {
+                g += '<line x1="' + (fx+8) + '" y1="135" x2="' + (fx+26) + '" y2="135" stroke="#ef4444" stroke-width="3"/>';
+                g += '<line x1="' + (fx+40) + '" y1="135" x2="' + (fx+58) + '" y2="135" stroke="#ef4444" stroke-width="3"/>';
+                g += '<text x="' + (fx+33) + '" y="110" text-anchor="middle" font-size="15">💥</text>';
+            } else {
+                g += '<line x1="' + (fx+8) + '" y1="135" x2="' + (fx+58) + '" y2="135" stroke="#94a3b8" stroke-width="3"/>';
+            }
+            g += '<text x="' + (fx+33) + '" y="168" text-anchor="middle" font-size="10.5" font-weight="800" fill="' + (fuseBlown ? '#f87171' : '#94a3b8') + '">FUSE ' + FUSE + ' A</text>';
+            /* live rail */
+            var railCol = live ? '#dc2626' : '#475569';
+            g += '<line x1="90" y1="135" x2="' + fx + '" y2="135" stroke="' + railCol + '" stroke-width="5"/>';
+            g += '<line x1="' + (fx+66) + '" y1="135" x2="820" y2="135" stroke="' + railCol + '" stroke-width="5"/>';
+            g += '<text x="828" y="131" text-anchor="end" font-size="10" font-weight="800" fill="' + railCol + '">LIVE</text>';
+            /* neutral rail */
+            g += '<line x1="90" y1="240" x2="820" y2="240" stroke="#0f172a" stroke-width="5"/>';
+            g += '<line x1="90" y1="240" x2="90" y2="180" stroke="#0f172a" stroke-width="5"/>';
+            g += '<text x="828" y="236" text-anchor="end" font-size="10" font-weight="800" fill="#64748b">NEUTRAL</text>';
+            /* appliances hanging between the rails */
+            var onList = APPS.filter(function (a) { return a.on; });
+            onList.forEach(function (a, i) {
+                var x = 280 + i * 88;
+                if (x > 790) return;
+                g += '<line x1="' + x + '" y1="135" x2="' + x + '" y2="175" stroke="' + railCol + '" stroke-width="2.5"/>';
+                g += '<line x1="' + x + '" y1="205" x2="' + x + '" y2="240" stroke="#0f172a" stroke-width="2.5"/>';
+                g += '<rect x="' + (x-26) + '" y="175" width="52" height="30" rx="5" fill="' + (live ? '#1e293b' : '#0f172a') + '" stroke="' + (live ? '#f472b6' : '#334155') + '" stroke-width="2"/>';
+                g += '<text x="' + x + '" y="196" text-anchor="middle" font-size="15">' + a.e + '</text>';
+                g += '<text x="' + x + '" y="222" text-anchor="middle" font-size="9.5" fill="' + (live ? '#f9a8d4' : '#475569') + '">' + a.w + ' W</text>';
+            });
+            /* short circuit bridge */
+            if (shorted) {
+                g += '<line x1="235" y1="135" x2="235" y2="240" stroke="#ef4444" stroke-width="6"/>';
+                g += '<text x="235" y="120" text-anchor="middle" font-size="17">⚡</text>';
+                g += '<text x="235" y="262" text-anchor="middle" font-size="10.5" font-weight="800" fill="#f87171">SHORT!</text>';
+            }
+            /* earthing */
+            if (earthed) {
+                g += '<line x1="700" y1="205" x2="700" y2="262" stroke="#16a34a" stroke-width="4"/>';
+                g += '<g stroke="#16a34a" stroke-width="3"><line x1="682" y1="262" x2="718" y2="262"/><line x1="688" y1="270" x2="712" y2="270"/><line x1="694" y1="278" x2="706" y2="278"/></g>';
+                g += '<text x="746" y="268" font-size="10.5" font-weight="800" fill="#4ade80">EARTH ✓</text>';
+            } else {
+                g += '<text x="700" y="268" text-anchor="middle" font-size="11" font-weight="800" fill="#f87171">⚠️ EARTHING NAHI</text>';
+            }
+            g += '</svg>';
+            document.getElementById('stage').innerHTML = g;
+
+            document.getElementById('rp').textContent = W + ' W';
+            document.getElementById('ri').textContent = shorted ? 'bahut zyada' : I.toFixed(2) + ' A';
+            document.getElementById('rf').textContent = FUSE + ' A';
+            document.getElementById('rs').textContent = fuseBlown ? 'FUSE UDA' : (I > FUSE * 0.8 ? 'KHATRA' : 'THEEK');
+
+            var note = document.getElementById('note'), t, cls = 'note';
+            if (fuseBlown && shorted) {
+                cls = 'note bad';
+                t = '💥 <b>SHORT CIRCUIT — aur fuse ud gaya.</b><br><br>'
+                  + 'Live aur neutral seedhe chhoo gaye. Ab current ko upkaran se guzarne ki zaroorat hi nahi — use ek <b>bahut chhota raasta</b> mil gaya jiski resistance lagbhag <b>zero</b> hai.<br><br>'
+                  + 'Ohm\'s law: <b>I = V/R</b>. R lagbhag zero → current <b>bahut bahut zyada</b>.<br><br>'
+                  + '✅ <b>Par fuse ne apna kaam kar diya:</b> H = I²Rt se wo turant pighla aur poori line <b>kaat</b> di. Agar fuse na hota toh yahi garmi <b>taar</b> mein hoti — aur ghar mein <b>aag</b> lag jaati.<br><br>'
+                  + '⚠️ Yahi wajah hai ki fuse ki jagah <b>mota copper taar</b> daalna itna khatarnaak hai — wo pighlega hi nahi.';
+            } else if (fuseBlown) {
+                cls = 'note bad';
+                t = '💥 <b>OVERLOADING — fuse ud gaya.</b><br><br>'
+                  + 'Aapne kul <b>' + W + ' W</b> ka load chala diya. Current = P/V = ' + W + '/220 = <b>' + (W/V).toFixed(2) + ' A</b>, jo fuse ki <b>' + FUSE + ' A</b> ki seema se zyada hai.<br><br>'
+                  + 'Saare upkaran <b>parallel</b> mein hain — isliye har naye upkaran ke saath kul resistance <b>ghatti</b> hai aur current <b>badhta</b> jaata hai.<br><br>'
+                  + '✅ Fuse ne line kaat kar taar ko <b>garam hone se bacha liya</b>.<br><br>'
+                  + '💡 Kuch bhaari upkaran band karke "Fuse badlo" dabao.';
+            } else if (I > FUSE * 0.8) {
+                cls = 'note warn';
+                t = '⚠️ <b>Khatre ke kareeb!</b> Kul load <b>' + W + ' W</b>, current <b>' + I.toFixed(2) + ' A</b> — aur fuse sirf <b>' + FUSE + ' A</b> ka hai.<br><br>'
+                  + 'Ek aur bhaari upkaran chalate hi fuse <b>ud jaayega</b>. Aur agar fuse na hota, toh taar <b>garam</b> hone lagta.<br><br>'
+                  + '💡 Isiliye ek hi socket par heater, geyser aur iron ek saath nahi chalate.';
+            } else if (!earthed) {
+                cls = 'note warn';
+                t = '🛡️ <b>Earthing hata di gayi hai — ye khatarnaak hai.</b><br><br>'
+                  + 'Abhi current theek hai (<b>' + I.toFixed(2) + ' A</b>), toh fuse nahi udega. Par socho: agar <b>fridge, iron ya geyser</b> ke andar ka live taar ghis kar uski <b>metal body</b> se chhoo jaaye?<br><br>'
+                  + 'Body poori <b>220 V par "live"</b> ho jaayegi. Aur zameen tak jaane ka <b>ek hi raasta</b> bachega — <b>aapka shareer</b>.<br><br>'
+                  + '✅ Earthing ke saath: current mote hare taar se seedhe <b>zameen</b> mein chala jaata (kyunki uski resistance aapke shareer se bahut kam hai), aur fuse bhi turant ud jaata.<br><br>'
+                  + '⚠️ Isiliye teen-pin plug ki <b>earth pin kabhi mat todo</b>.';
+            } else {
+                t = '✅ <b>Sab theek chal raha hai.</b><br><br>'
+                  + 'Kul load <b>' + W + ' W</b> → current = P/V = ' + W + '/220 = <b>' + I.toFixed(2) + ' A</b>, jo fuse ki ' + FUSE + ' A ki seema se kaafi kam hai.<br><br>'
+                  + 'Saare upkaran <b>parallel</b> mein jude hain — isliye har ek ko poora <b>220 V</b> mil raha hai aur har ek ka apna switch hai.<br><br>'
+                  + '💡 <b>Ab ye aazmao:</b> heater aur geyser dono chalu karo, ya "Short circuit" dabao — aur dekho fuse kab aur kyun udta hai.';
+            }
+            note.className = cls; note.innerHTML = t;
+
+            document.getElementById('tShort').className = shorted ? 'danger' : '';
+            document.getElementById('tEarth').className = earthed ? '' : 'warn';
+            document.getElementById('tEarth').textContent = earthed ? '🛡️ Earthing hatao' : '🛡️ Earthing wapas lagao';
+            drawApps();
+        }
+
+        function drawApps() {
+            var box = document.getElementById('apps'); box.innerHTML = '';
+            APPS.forEach(function (a, i) {
+                var d = document.createElement('div');
+                d.className = 'app' + (a.on ? ' on' : '');
+                d.innerHTML = '<div class="e">' + a.e + '</div><div class="n">' + a.n + '</div><div class="w">' + a.w + ' W' + (a.metal ? ' • metal' : '') + '</div>';
+                d.onclick = function () { a.on = !a.on; draw(); };
+                box.appendChild(d);
+            });
+        }
+        function toggleShort() { shorted = !shorted; draw(); }
+        function toggleEarth() { earthed = !earthed; draw(); }
+        function resetFuse() { fuseBlown = false; shorted = false; draw(); }
+        draw();
+    </script>
+</body>
+
+</html>
