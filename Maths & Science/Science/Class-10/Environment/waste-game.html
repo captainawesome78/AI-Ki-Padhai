@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kachra Segregation Game | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #451a03, #b45309); color: #fef3c7; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.32); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #fcd34d; text-decoration: none; border: 1px solid rgba(252,211,77,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 800px; margin: 0 auto; padding: 18px; }
+        .card { background: rgba(255,255,255,.08); border-radius: 16px; padding: 18px; margin-bottom: 13px; }
+        .score { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+        .sbox { flex: 1; min-width: 92px; background: rgba(0,0,0,.3); border-radius: 11px; padding: 11px; text-align: center; }
+        .sbox .t { font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; color: #fcd34d; }
+        .sbox .v { font-size: 21px; font-weight: 800; color: #fff; }
+        .item { text-align: center; padding: 20px 10px; }
+        .item .e { font-size: 62px; }
+        .item .n { font-size: 21px; font-weight: 800; color: #fff; margin-top: 6px; }
+        .bins { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 11px; margin-top: 16px; }
+        .bin { border: 2.5px solid; border-radius: 13px; padding: 15px 10px; cursor: pointer; text-align: center; background: rgba(0,0,0,.3); }
+        .bin.green { border-color: #16a34a; } .bin.blue { border-color: #2563eb; } .bin.red { border-color: #dc2626; }
+        .bin .e { font-size: 30px; }
+        .bin .n { font-size: 14px; font-weight: 800; margin-top: 4px; }
+        .bin.green .n { color: #4ade80; } .bin.blue .n { color: #60a5fa; } .bin.red .n { color: #f87171; }
+        .bin .s { font-size: 10.5px; color: #fde68a; margin-top: 3px; }
+        .bin.ok { background: rgba(34,197,94,.3); } .bin.no { background: rgba(239,68,68,.3); }
+        .fb { margin-top: 15px; padding: 15px; border-radius: 12px; font-size: 14.5px; line-height: 1.9; display: none; }
+        .fb.show { display: block; }
+        .fb.win { background: rgba(34,197,94,.22); border-left: 4px solid #22c55e; }
+        .fb.lose { background: rgba(239,68,68,.22); border-left: 4px solid #ef4444; }
+        .fb b { color: #fff; }
+        .btns { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+        .btns button { flex: 1; min-width: 130px; border: none; padding: 13px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 15px; }
+        .nxt { background: #f59e0b; color: #451a03; }
+        .rst { background: transparent; color: #fcd34d; border: 1px solid rgba(252,211,77,.4); }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="waste-management.html">← Back to Lesson</a>
+        <div class="title">🗑️ Kachra Segregation (prathakkaran) Game</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <div class="score">
+                <div class="sbox"><div class="t">Cheez</div><div class="v" id="sQ">1</div></div>
+                <div class="sbox"><div class="t">Sahi</div><div class="v" id="sR" style="color:#4ade80">0</div></div>
+                <div class="sbox"><div class="t">Galat</div><div class="v" id="sW" style="color:#f87171">0</div></div>
+                <div class="sbox"><div class="t">Streak</div><div class="v" id="sS" style="color:#fbbf24">0</div></div>
+            </div>
+
+            <div class="item">
+                <div class="e" id="ie"></div>
+                <div class="n" id="in"></div>
+            </div>
+
+            <div class="bins">
+                <div class="bin green" id="b0" onclick="pick(0)">
+                    <div class="e">🌱</div><div class="n">HARA</div><div class="s">geela / biodegradable</div>
+                </div>
+                <div class="bin blue" id="b1" onclick="pick(1)">
+                    <div class="e">♻️</div><div class="n">NEELA</div><div class="s">sookha / recyclable</div>
+                </div>
+                <div class="bin red" id="b2" onclick="pick(2)">
+                    <div class="e">☣️</div><div class="n">LAAL</div><div class="s">khatarnaak kachra</div>
+                </div>
+            </div>
+
+            <div class="fb" id="fb"></div>
+            <div class="btns">
+                <button class="nxt" onclick="nextItem()">→ Agli cheez</button>
+                <button class="rst" onclick="resetAll()">↺ Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* bin: 0 = green (wet/biodegradable), 1 = blue (dry/recyclable), 2 = red (hazardous)
+           time = realistic decomposition time in nature */
+        var ITEMS = [
+            { e: '🍌', n: 'Kele ka chhilka',   bin: 0, time: '2-5 hafte',      why: 'Ye biodegradable hai — bacteria ise kuch hafton mein hi tod dete hain. Isse achhi khaad banti hai.' },
+            { e: '🍎', n: 'Seb ka gudda',      bin: 0, time: 'lagbhag 2 mahine', why: 'Bacha hua khaana aur phal ke tukde hare dabbe mein — inse compost banti hai.' },
+            { e: '🍵', n: 'Chai ki patti',     bin: 0, time: '2-3 hafte',      why: 'Chai ki patti bahut achhi khaad banti hai. Gamle mein daal do — paudhe khush!' },
+            { e: '🍂', n: 'Sookhe patte',      bin: 0, time: '1-3 mahine',     why: 'Patte compost ke liye zaroori "sookhi parat" hain — ye badbu bhi rokte hain.' },
+            { e: '🥚', n: 'Ande ka chhilka',   bin: 0, time: '3 saal',         why: 'Biodegradable hai, aur usme calcium hota hai jo mitti ke liye achha hai. Thoda samay zaroor lagta hai.' },
+            { e: '🥤', n: 'Plastic ki botal',  bin: 1, time: 'lagbhag 450 saal', why: 'Non-biodegradable! Par recycle ho sakti hai — isliye neele dabbe mein. Aaj phenki hui botal aapke par-par-pote ke zamaane tak rahegi.' },
+            { e: '🛍️', n: 'Plastic ki thaili', bin: 1, time: '10-1000 saal',   why: 'Sabse badi samasya. Isse achha hai ki <b>lo hi mat</b> — kapde ka thaila le kar jao.' },
+            { e: '📰', n: 'Akhbaar',           bin: 1, time: '2-5 mahine',      why: 'Kaagaz biodegradable bhi hai, par use <b>recycle</b> karna behtar hai — usse naye pedh kaatne ki zaroorat kam hoti hai.' },
+            { e: '🍾', n: 'Kaanch ki botal',   bin: 1, time: 'lagbhag kabhi nahi', why: 'Kaanch prakriti mein lagbhag kabhi nahi galta — par wo <b>100% recyclable</b> hai, baar-baar. Isliye neela dabba.' },
+            { e: '🥫', n: 'Tin ka dabba',      bin: 1, time: '50-100 saal',     why: 'Metal recycle ho sakti hai, aur usse nayi metal khodne ki zaroorat kam padti hai.' },
+            { e: '📦', n: 'Gatta (cardboard)', bin: 1, time: '2 mahine',        why: 'Recycle karo. Ya box ko dobara istemaal kar lo — wo aur bhi achha hai.' },
+            { e: '🔋', n: 'Purani battery',    bin: 2, time: '100+ saal',       why: 'KHATARNAAK! Isme paara aur seesa jaise zeher hote hain jo mitti aur bhoojal mein mil jaate hain. Kabhi aam kachre mein mat daalo.' },
+            { e: '💊', n: 'Purani dawaai',     bin: 2, time: 'alag-alag',       why: 'Dawaai ko kachre mein ya naali mein mat daalo — wo paani mein mil kar jeevon ko nuksaan pahunchati hai. Chemist ko wapas do.' },
+            { e: '💡', n: 'CFL bulb',          bin: 2, time: '-',               why: 'CFL bulb mein <b>paara (mercury)</b> hota hai. Toot gaya toh wo hawa mein mil jaata hai. Isliye laal dabba.' },
+            { e: '📱', n: 'Purana phone',      bin: 2, time: '-',               why: 'Ye <b>e-waste</b> hai. Isme keemti metal bhi hain aur zeher bhi. Isko khaas e-waste collection centre par do.' },
+            { e: '💉', n: 'Injection ki sui',  bin: 2, time: '-',               why: 'Sankraman ka khatra — ye <b>biomedical waste</b> hai aur iska nipatara khaas tareeke se hota hai.' },
+            { e: '🦴', n: 'Haddi',             bin: 0, time: '1-4 saal',        why: 'Haddi biodegradable hai, par galne mein samay lagta hai. Compost mein daalne se badbu aur jaanwar aa sakte hain — isliye kai jagah ise alag rakhte hain.' },
+            { e: '👕', n: 'Purana sooti kapda', bin: 0, time: '1-5 mahine',     why: 'Sooti kapda biodegradable hai. Par sabse achha? Kisi zaroortmand ko <b>de do</b> — phenko hi mat.' }
+        ];
+        var BINS = ['HARA (geela)', 'NEELA (sookha)', 'LAAL (khatarnaak)'];
+        var cur = null, qn = 1, right = 0, wrong = 0, streak = 0, answered = false, order = [], idx = 0;
+
+        function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+
+        function nextItem() {
+            if (idx >= order.length) { order = shuffle(ITEMS.slice()); idx = 0; }
+            cur = order[idx++]; qn++;
+            render();
+        }
+        function render() {
+            document.getElementById('ie').textContent = cur.e;
+            document.getElementById('in').textContent = cur.n;
+            for (var i = 0; i < 3; i++) document.getElementById('b' + i).className = 'bin ' + ['green','blue','red'][i];
+            document.getElementById('fb').className = 'fb';
+            document.getElementById('sQ').textContent = qn - 1;
+            answered = false;
+        }
+        function pick(b) {
+            if (answered) return;
+            answered = true;
+            var ok = (b === cur.bin);
+            if (ok) { right++; streak++; } else { wrong++; streak = 0; }
+            document.getElementById('sR').textContent = right;
+            document.getElementById('sW').textContent = wrong;
+            document.getElementById('sS').textContent = streak;
+            document.getElementById('b' + cur.bin).className += ' ok';
+            if (!ok) document.getElementById('b' + b).className += ' no';
+
+            var f = document.getElementById('fb');
+            f.className = 'fb show ' + (ok ? 'win' : 'lose');
+            f.innerHTML = (ok ? '✅ <b>Bilkul sahi!</b>' : '❌ <b>Sahi jawab: ' + BINS[cur.bin] + '</b>')
+                + '<br><br>' + cur.why
+                + '<br><br>⏳ <b>Prakriti mein galne ka samay: ' + cur.time + '</b>'
+                + (streak >= 3 && ok ? '<br><br>🔥 <b>' + streak + ' sahi lagataar!</b>' : '');
+        }
+        function resetAll() { qn = 1; right = 0; wrong = 0; streak = 0; order = shuffle(ITEMS.slice()); idx = 0;
+            document.getElementById('sR').textContent = 0; document.getElementById('sW').textContent = 0;
+            document.getElementById('sS').textContent = 0; nextItem(); }
+        order = shuffle(ITEMS.slice()); nextItem();
+    </script>
+</body>
+
+</html>

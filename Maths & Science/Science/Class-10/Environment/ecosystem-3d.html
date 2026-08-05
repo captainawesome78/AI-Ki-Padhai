@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Living Ecosystem | AIkiPadhai</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="../sci-3d.js"></script>
+</head>
+
+<body>
+    <script>
+        var C_SUN = 0xfde047, C_PROD = 0x22c55e, C_HERB = 0xeab308,
+            C_CARN = 0xf97316, C_TOP = 0xdc2626, C_HEAT = 0xef4444, C_DEC = 0x8b5cf6;
+
+        var E0 = 10000;                     /* joule at the producers */
+        var LEVELS = [
+            { n: 'PRODUCERS', sub: 'ghaas, paudhe', emoji: '🌿', col: C_PROD, y: -12, w: 22 },
+            { n: 'HERBIVORES', sub: 'hiran, tiddi', emoji: '🦌', col: C_HERB, y: -1, w: 15 },
+            { n: 'CARNIVORES', sub: 'mendhak, saanp', emoji: '🐍', col: C_CARN, y: 10, w: 9 },
+            { n: 'TOP CARNIVORE', sub: 'baaz, sher', emoji: '🦅', col: C_TOP, y: 21, w: 5 }
+        ];
+
+        Sci3D({
+            title: "🌳 3D Living Ecosystem",
+            back: { href: "energy-flow.html", label: "Back to Lesson" },
+            pickHint: false,
+            intro: {
+                name: "Ecosystem — chalta hua",
+                desc: "Sab apne aap chal raha hai. Sooraj se energy ghaas mein aati hai, aur chamakti gendon ke roop mein upar chadhti hai. Dhyaan se dekho: har level par sirf 10% gendein UPAR jaati hain — baaki 90% LAAL hokar garmi ki tarah bikhar jaati hain. Isiliye pyramid upar jaate-jaate itna patla ho jaata hai. Aur 'Kisi jeev ko hatao' slider se koi ek level hatao — dekho uske upar ka sab kuch bhookha mar jaata hai."
+            },
+            camZ: 62,
+            data: {
+                sun: { emoji: "☀️", name: "Sooraj", nick: "Saari energy ka srot", desc: "Ecosystem ki HAR energy yahin se aati hai. Paudhe photosynthesis se ise pakadte hain.\n\nAur yahi wajah hai ki ecosystem ko HAR ROZ nayi dhoop chahiye — kyunki energy ghoomti nahi, wo ek taraf bahkar garmi bankar khatam ho jaati hai.", stats: [["Kya deta hai", "Poori energy"], ["Kaun pakadta hai", "Sirf producers"], ["Har roz zaroori?", "Haan"]] },
+                producers: { emoji: "🌿", name: "Producers", nick: "Trophic level 1", desc: "Hare paudhe aur kaai. Ye EK MAATR jeev hain jo sooraj se seedhe energy le sakte hain.\n\nInke bina poora ecosystem ruk jaata hai — isiliye har food chain producer se hi shuru hoti hai.\n\nYahan inke paas poori 10,000 J energy hai.", stats: [["Trophic level", "1"], ["Energy", "10,000 J (100%)"], ["Khaana", "Khud banate hain"], ["Bina inke", "Poora system band"]] },
+                herbivores: { emoji: "🦌", name: "Herbivores", nick: "Trophic level 2", desc: "Shaakahari jaanwar — hiran, gaay, tiddi, khargosh. Inhe 'primary consumer' bhi kehte hain.\n\nInhe producers ki energy ka sirf 10% milta hai — yani 10,000 J mein se sirf 1,000 J.\n\nBaaki 9,000 J kahan gaya? Saans lene, chalne aur shareer garam rakhne mein — garmi bankar ud gaya.", stats: [["Trophic level", "2"], ["Energy", "1,000 J (10%)"], ["Khaate hain", "Sirf paudhe"], ["Khoya", "9,000 J garmi mein"]] },
+                carnivores: { emoji: "🐍", name: "Carnivores", nick: "Trophic level 3", desc: "Maansahari jaanwar — mendhak, saanp, chhoti machhli. 'Secondary consumer'.\n\nAb energy sirf 100 J bachi — shuruaati ka 1%!\n\nIsiliye kisi bhi jungle mein saanp aur mendhak, hiran se BAHUT KAM hote hain. Ye ittefaq nahi, 10% ke niyam ka seedha ganit hai.", stats: [["Trophic level", "3"], ["Energy", "100 J (1%)"], ["Khaate hain", "Herbivores"], ["Ginti", "Herbivores se bahut kam"]] },
+                top: { emoji: "🦅", name: "Top Carnivore", nick: "Trophic level 4", desc: "Sabse upar wala shikaari — baaz, sher, bagula. Inhe 'apex predator' kehte hain.\n\nEnergy ab sirf 10 J bachi — shuruaati ka 0.1%!\n\nAur isiliye SHER KO KOI NAHI KHAATA — uske upar ek aur level ke liye energy bachti hi nahi. Yahi wajah hai ki food chain 4-5 level se lambi nahi hoti.", stats: [["Trophic level", "4"], ["Energy", "10 J (0.1%)"], ["Inhe kaun khaata", "Koi nahi"], ["Kyun", "Aage energy hi nahi bachi"]] },
+                heat: { emoji: "🔥", name: "Garmi (khoi hui energy)", nick: "Laal gendein", desc: "Har level par 90% energy GARMI bankar hamesha ke liye nikal jaati hai.\n\nKahan jaati hai?\n• Saans lene (respiration) mein — sabse zyada\n• Chalne, daudne, shikaar karne mein\n• Shareer ka taapmaan banaye rakhne mein\n• Mal-mutra aur bina khaaye hisson mein\n\nYe energy WAPAS NAHI aati. Isiliye kehte hain energy ka bahav EK TARFA hai.", stats: [["Har level par", "90% khoya"], ["Kahan", "Zyadatar saans lene mein"], ["Wapas aati hai?", "Kabhi nahi"], ["Isliye", "Roz nayi dhoop chahiye"]] },
+                decomposers: { emoji: "🍄", name: "Decomposers", nick: "Baingani — sabse zaroori", desc: "Bacteria aur fungi. Ye mare hue jeevon aur kachre ko todkar POSHAK ELEMENT wapas mitti mein bhejte hain.\n\nDhyaan do: energy ek taraf bahti hai, PAR poshak element GHOOMTE hain — aur wo chakra inhi se poora hota hai.\n\nAgar ye na hote toh mitti kuch hi saal mein bekaar ho jaati aur prithvi par jeevan ruk jaata.", stats: [["Kaun", "Bacteria, fungi"], ["Kaam", "Poshak element wapas mitti mein"], ["Energy", "Ghoomti nahi"], ["Poshak element", "GHOOMTE hain"]] }
+            },
+            controls: [
+                { id: "remove", label: "❌ Kisi jeev ko hatao:  0 = koi nahi   1 = producers   2 = herbivores   3 = carnivores", min: 0, max: 3, step: 1, value: 0, on: function (v, ctx) { ctx.model.setRemoved(v); } },
+                { id: "play", label: "▶️ Apne aap chalao  (0 = rok do, 1 = chal raha hai)", min: 0, max: 1, step: 1, value: 1, on: function (v, ctx) { ctx.model.playing = (v === 1); } }
+            ],
+
+            build: function (ctx) {
+                var T = ctx.THREE, P = ctx.pivot, M = ctx.model;
+                M.removed = 0; M.playing = true;
+
+                var rim = new T.DirectionalLight(0xbbf7d0, 0.5); rim.position.set(-8, 10, 8); ctx.scene.add(rim);
+
+                function label(text, hex, w) {
+                    var cv = document.createElement('canvas'); cv.width = 512; cv.height = 128;
+                    var sp = new T.Sprite(new T.SpriteMaterial({ map: new T.CanvasTexture(cv), transparent: true, depthTest: false }));
+                    sp.userData.cv = cv; sp.scale.set(w || 9, (w || 9) * 0.25, 1);
+                    P.add(sp); paint(sp, text, hex); return sp;
+                }
+                function paint(sp, text, hex) {
+                    var cv = sp.userData.cv, c = cv.getContext && cv.getContext('2d');
+                    if (c) {
+                        c.clearRect(0, 0, 512, 128);
+                        c.font = 'bold 70px system-ui, sans-serif';
+                        c.textAlign = 'center'; c.textBaseline = 'middle';
+                        c.lineWidth = 13; c.strokeStyle = 'rgba(2,8,15,.94)'; c.strokeText(text, 256, 64);
+                        c.fillStyle = hex; c.fillText(text, 256, 64);
+                    }
+                    if (sp.material.map) sp.material.map.needsUpdate = true;
+                }
+                M.paint = paint;
+
+                /* ---------- the sun ---------- */
+                var sun = new T.Mesh(new T.SphereGeometry(4.2, 22, 18), ctx.mat(C_SUN));
+                sun.material.emissive.setHex(0xca8a04);
+                sun.position.set(-26, 30, 0); P.add(sun); ctx.addPart(sun, 'sun');
+                M.sun = sun;
+                M.lSun = label('SOORAJ', '#fde047', 10);
+                M.lSun.position.set(-26, 36, 0);
+
+                /* ---------- the pyramid slabs ---------- */
+                M.tiers = [];
+                LEVELS.forEach(function (L, i) {
+                    var slab = new T.Mesh(new T.BoxGeometry(L.w * 2, 7, 10), ctx.mat(L.col, { transparent: true, opacity: 0.85 }));
+                    slab.position.set(0, L.y, 0);
+                    P.add(slab);
+                    ctx.addPart(slab, ['producers', 'herbivores', 'carnivores', 'top'][i]);
+                    var lab = label(L.n, '#f8fafc', L.w * 0.95);
+                    lab.position.set(0, L.y + 0.6, 5.6);
+                    var eng = label('', '#f8fafc', L.w * 0.8);
+                    eng.position.set(L.w + 13, L.y, 0);
+                    M.tiers.push({ L: L, slab: slab, lab: lab, eng: eng });
+                });
+
+                /* ---------- decomposers off to one side ---------- */
+                var dec = new T.Mesh(new T.SphereGeometry(3.4, 18, 14), ctx.mat(C_DEC, { transparent: true, opacity: 0.8 }));
+                dec.position.set(-32, -12, 0); P.add(dec); ctx.addPart(dec, 'decomposers');
+                M.dec = dec;
+                M.lDec = label('DECOMPOSERS', '#c4b5fd', 13);
+                M.lDec.position.set(-32, -19, 0);
+
+                /* ---------- energy packets moving up ---------- */
+                M.packets = [];
+                for (var k = 0; k < 40; k++) {
+                    var p = new T.Mesh(new T.SphereGeometry(0.7, 10, 8), ctx.mat(0xfffbeb));
+                    p.material.emissive.setHex(C_SUN);
+                    p.visible = false; P.add(p);
+                    M.packets.push({ mesh: p, seg: 0, ph: Math.random() });
+                }
+                /* ---------- heat packets escaping sideways ---------- */
+                M.heats = [];
+                for (var h = 0; h < 54; h++) {
+                    var q = new T.Mesh(new T.SphereGeometry(0.55, 8, 6), ctx.mat(0xfecaca));
+                    q.material.emissive.setHex(C_HEAT);
+                    q.visible = false; P.add(q);
+                    M.heats.push({ mesh: q, lvl: h % 4, ph: Math.random() });
+                }
+                M.lHeat = label('90% GARMI BANKAR UD GAYI', '#f87171', 22);
+                M.lHeat.position.set(30, 30, 0);
+
+                /* ---------- physics: the ten percent law ---------- */
+                M.energyAt = function (level) { return E0 * Math.pow(0.10, level - 1); };
+                M.alive = function (i) {              /* i is a 0-based tier index */
+                    if (M.removed === 0) return true;
+                    /* removing level n kills n and everything above it */
+                    return (i + 1) < M.removed;
+                };
+
+                var NAMES = ['', 'PRODUCERS', 'HERBIVORES', 'CARNIVORES'];
+
+                M.draw = function () {
+                    M.tiers.forEach(function (t, i) {
+                        var live = M.alive(i);
+                        var E = M.energyAt(i + 1);
+                        t.slab.material.opacity = live ? 0.85 : 0.16;
+                        t.slab.material.color.setHex(live ? t.L.col : 0x475569);
+                        M.paint(t.lab, t.L.n + (live ? '' : '  ✗'), live ? '#f8fafc' : '#94a3b8');
+                        var txt = live ? (E >= 1 ? Math.round(E) + ' J' : E.toFixed(1) + ' J') : 'MAR GAYE';
+                        M.paint(t.eng, txt, live ? '#fde047' : '#f87171');
+                    });
+                    M.dec.material.opacity = 0.8;
+                    M.hud();
+                };
+
+                /* ---------- status strip ---------- */
+                var bar = null;
+                if (document.body && document.body.appendChild) {
+                    bar = document.createElement('div');
+                    bar.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:64px;z-index:6;' +
+                        'background:rgba(9,20,30,.9);border:1px solid rgba(255,255,255,.14);border-radius:999px;' +
+                        'padding:9px 20px;color:#e2e8f0;font:700 13.5px system-ui,sans-serif;white-space:nowrap;' +
+                        'pointer-events:none;max-width:94vw;overflow:hidden;text-overflow:ellipsis';
+                    document.body.appendChild(bar);
+                }
+                M.hud = function () {
+                    if (!bar) return;
+                    var t;
+                    if (M.removed === 0) {
+                        t = '10,000 J → <span style="color:#eab308">1,000 J</span> → <span style="color:#f97316">100 J</span> → <span style="color:#f87171">10 J</span>'
+                          + ' &nbsp;— har step par sirf <span style="color:#4ade80">10%</span> upar jaata hai';
+                    } else {
+                        var deadCount = M.tiers.filter(function (t2, i) { return !M.alive(i); }).length;
+                        t = '<span style="color:#f87171">' + NAMES[M.removed] + ' hata diye</span> &nbsp;→&nbsp; '
+                          + '<span style="color:#fca5a5">' + deadCount + ' level bhookhe mar gaye</span>'
+                          + ' &nbsp;— jo neeche hai wo upar walon ko zinda rakhta hai';
+                    }
+                    bar.innerHTML = t;
+                };
+
+                M.setRemoved = function (v) {
+                    M.removed = v; M.draw();
+                    ctx.selectKey(v === 0 ? 'heat' : ['', 'producers', 'herbivores', 'carnivores'][v]);
+                };
+                M.draw();
+            },
+
+            onFrame: function (t, ctx) {
+                var M = ctx.model;
+                if (!M.draw) return;
+                var sp = M.playing ? 1 : 0;
+
+                M.sun.scale.setScalar(1 + Math.sin(t * 1.4) * 0.05);
+
+                /* energy packets: sun -> producers, then up the tiers.
+                   Only 10% as many packets are allowed on each higher segment,
+                   which is the ten percent law made visible. */
+                var tiers = M.tiers;
+                M.packets.forEach(function (pk, i) {
+                    /* segment 0 = sun to producers, 1 = prod->herb, 2 = herb->carn, 3 = carn->top */
+                    var seg = (i < 20) ? 0 : (i < 32) ? 1 : (i < 38) ? 2 : 3;
+                    var srcAlive = seg === 0 ? M.alive(0) : M.alive(seg - 1);
+                    var dstAlive = M.alive(seg);
+                    if (!srcAlive || !dstAlive) { pk.mesh.visible = false; return; }
+
+                    var ph = ((pk.ph + t * 0.16 * sp) % 1 + 1) % 1;
+                    var ax, ay, bx, by;
+                    if (seg === 0) { ax = -26; ay = 30; bx = 0; by = tiers[0].L.y; }
+                    else { ax = 0; ay = tiers[seg - 1].L.y; bx = 0; by = tiers[seg].L.y; }
+                    var jitter = ((i * 37) % 17 - 8) * 0.7;
+                    pk.mesh.position.set(ax + (bx - ax) * ph + jitter * (seg === 0 ? 0.3 : 1),
+                                         ay + (by - ay) * ph, ((i * 13) % 9 - 4) * 0.8);
+                    pk.mesh.visible = true;
+                    pk.mesh.scale.setScalar(0.85 + Math.sin(t * 5 + i) * 0.12);
+                });
+
+                /* heat escaping sideways from each tier */
+                M.heats.forEach(function (hp, i) {
+                    if (!M.alive(hp.lvl)) { hp.mesh.visible = false; return; }
+                    var ph = ((hp.ph + t * 0.2 * sp) % 1 + 1) % 1;
+                    var L = M.tiers[hp.lvl].L;
+                    var side = (i % 2) ? 1 : -1;
+                    hp.mesh.position.set(side * (L.w + 2 + ph * 22), L.y + ph * 10, ((i * 7) % 9 - 4) * 0.7);
+                    hp.mesh.visible = true;
+                    hp.mesh.material.opacity = 1;
+                    hp.mesh.scale.setScalar(0.9 - ph * 0.4);
+                });
+
+                M.dec.scale.setScalar(1 + Math.sin(t * 0.9) * 0.07);
+            }
+        });
+    </script>
+</body>
+
+</html>

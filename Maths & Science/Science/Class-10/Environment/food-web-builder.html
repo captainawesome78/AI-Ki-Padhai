@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Food Web Builder | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #052e16, #15803d); color: #dcfce7; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #86efac; text-decoration: none; border: 1px solid rgba(134,239,172,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 940px; margin: 0 auto; padding: 18px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 16px; margin-bottom: 13px; }
+        .card h3 { color: #fff; font-size: 12.5px; margin-bottom: 11px; text-transform: uppercase; letter-spacing: .05em; }
+        .picks { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 9px; }
+        .pick { border: 1.5px solid rgba(255,255,255,.18); background: rgba(0,0,0,.28); border-radius: 11px; padding: 11px 8px; cursor: pointer; text-align: center; }
+        .pick.dead { background: rgba(127,29,29,.4); border-color: #ef4444; opacity: .75; }
+        .pick .e { font-size: 22px; }
+        .pick .n { font-size: 12.5px; font-weight: 800; color: #fff; margin-top: 3px; }
+        .pick .s { font-size: 10.5px; color: #86efac; }
+        .stage { background: #0b1220; border-radius: 14px; padding: 8px; overflow-x: auto; }
+        svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+        .btns { display: flex; gap: 10px; margin-top: 13px; flex-wrap: wrap; }
+        .btns button { flex: 1; min-width: 140px; border: none; padding: 12px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 14px; background: #22c55e; color: #052e16; }
+        .note { font-size: 14px; line-height: 1.85; background: rgba(0,0,0,.3); border-radius: 11px; padding: 14px; margin-top: 13px; border-left: 4px solid #22c55e; }
+        .note b { color: #fff; }
+        .note.bad { border-left-color: #ef4444; background: rgba(127,29,29,.35); }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="food-chain.html">← Back to Lesson</a>
+        <div class="title">🕸️ Food Web Builder</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <h3>Kisi jeev ko hatao (dabao) — aur dekho kya hota hai</h3>
+            <div class="picks" id="picks"></div>
+            <div class="btns"><button onclick="resetAll()">↺ Sabko wapas laao</button></div>
+        </div>
+
+        <div class="card">
+            <h3>Food web</h3>
+            <div class="stage" id="stage"></div>
+            <div class="note" id="note"></div>
+        </div>
+    </div>
+
+    <script>
+        /* A small but real web. eats[] lists what each species feeds on. */
+        var SP = [
+            { id: 'grass',  n: 'Ghaas',    e: '🌿', lvl: 1, x: 110, y: 250, eats: [] },
+            { id: 'crop',   n: 'Anaaj',    e: '🌾', lvl: 1, x: 300, y: 262, eats: [] },
+            { id: 'hopper', n: 'Tiddi',    e: '🦗', lvl: 2, x: 120, y: 158, eats: ['grass','crop'] },
+            { id: 'rat',    n: 'Chooha',   e: '🐁', lvl: 2, x: 320, y: 166, eats: ['crop','grass'] },
+            { id: 'rabbit', n: 'Khargosh', e: '🐇', lvl: 2, x: 500, y: 250, eats: ['grass','crop'] },
+            { id: 'frog',   n: 'Mendhak',  e: '🐸', lvl: 3, x: 200, y: 70,  eats: ['hopper'] },
+            { id: 'snake',  n: 'Saanp',    e: '🐍', lvl: 3, x: 400, y: 76,  eats: ['rat','frog'] },
+            { id: 'hawk',   n: 'Baaz',     e: '🦅', lvl: 4, x: 560, y: 140, eats: ['snake','rabbit','rat'] }
+        ];
+        var dead = {};
+
+        function alive(id) { return !dead[id]; }
+        /* a species starves if every single thing it eats is gone */
+        function starving() {
+            var out = {}, changed = true;
+            /* iterate, because a starvation can cascade upward */
+            while (changed) {
+                changed = false;
+                SP.forEach(function (s) {
+                    if (dead[s.id] || out[s.id] || s.eats.length === 0) return;
+                    var anyFood = s.eats.some(function (f) { return alive(f) && !out[f]; });
+                    if (!anyFood) { out[s.id] = true; changed = true; }
+                });
+            }
+            return out;
+        }
+        /* a species booms if the things that ate it are all gone */
+        function booming(starve) {
+            var out = {};
+            SP.forEach(function (s) {
+                if (dead[s.id] || starve[s.id]) return;
+                var preds = SP.filter(function (p) { return p.eats.indexOf(s.id) > -1; });
+                if (preds.length === 0) return;
+                var anyPred = preds.some(function (p) { return alive(p.id) && !starve[p.id]; });
+                if (!anyPred) out[s.id] = true;
+            });
+            return out;
+        }
+
+        var W = 700, H = 320;
+
+        function draw() {
+            var starve = starving(), boom = booming(starve);
+            var g = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Food web showing who eats whom">';
+            g += '<rect x="0" y="0" width="' + W + '" height="' + H + '" fill="#0b1220"/>';
+            g += '<defs><marker id="fw" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#64748b"/></marker>';
+            g += '<marker id="fwd" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#7f1d1d"/></marker></defs>';
+            /* arrows: prey -> predator */
+            SP.forEach(function (s) {
+                s.eats.forEach(function (f) {
+                    var src = SP.find(function (x) { return x.id === f; });
+                    var live = alive(s.id) && !starve[s.id] && alive(f) && !starve[f];
+                    var dx = s.x - src.x, dy = s.y - src.y, L = Math.hypot(dx, dy);
+                    var ax = src.x + dx / L * 26, ay = src.y + dy / L * 26;
+                    var bx = s.x - dx / L * 28, by = s.y - dy / L * 28;
+                    g += '<line x1="' + ax + '" y1="' + ay + '" x2="' + bx + '" y2="' + by + '" stroke="' + (live ? '#64748b' : '#7f1d1d') + '" stroke-width="' + (live ? 2.2 : 1.6) + '" opacity="' + (live ? 1 : .5) + '" marker-end="url(#' + (live ? 'fw' : 'fwd') + ')"/>';
+                });
+            });
+            var COL = { 1: '#22c55e', 2: '#eab308', 3: '#f97316', 4: '#dc2626' };
+            SP.forEach(function (s) {
+                var isDead = dead[s.id], isStarve = starve[s.id], isBoom = boom[s.id];
+                var fill = isDead ? '#7f1d1d' : isStarve ? '#991b1b' : COL[s.lvl];
+                g += '<circle cx="' + s.x + '" cy="' + s.y + '" r="26" fill="' + fill + '" opacity="' + (isDead || isStarve ? .45 : .3) + '" stroke="' + (isBoom ? '#fde047' : fill) + '" stroke-width="' + (isBoom ? 4 : 2.5) + '"/>';
+                g += '<text x="' + s.x + '" y="' + (s.y + 7) + '" text-anchor="middle" font-size="21" opacity="' + (isDead || isStarve ? .4 : 1) + '">' + s.e + '</text>';
+                g += '<text x="' + s.x + '" y="' + (s.y + 42) + '" text-anchor="middle" font-size="11" font-weight="800" fill="' + (isDead || isStarve ? '#f87171' : '#e2e8f0') + '">' + s.n + '</text>';
+                if (isDead) g += '<text x="' + s.x + '" y="' + (s.y - 32) + '" text-anchor="middle" font-size="10" font-weight="800" fill="#f87171">HATAYA</text>';
+                else if (isStarve) g += '<text x="' + s.x + '" y="' + (s.y - 32) + '" text-anchor="middle" font-size="10" font-weight="800" fill="#f87171">BHOOKHA</text>';
+                else if (isBoom) g += '<text x="' + s.x + '" y="' + (s.y - 32) + '" text-anchor="middle" font-size="10" font-weight="800" fill="#fde047">GINTI BADHI ↑</text>';
+            });
+            g += '</svg>';
+            document.getElementById('stage').innerHTML = g;
+
+            var pb = document.getElementById('picks'); pb.innerHTML = '';
+            SP.forEach(function (s) {
+                var d = document.createElement('div');
+                var st = dead[s.id] ? 'HATAYA' : starve[s.id] ? 'bhookha mar gaya' : boom[s.id] ? 'ginti badh gayi' : 'theek hai';
+                d.className = 'pick' + (dead[s.id] || starve[s.id] ? ' dead' : '');
+                d.innerHTML = '<div class="e">' + s.e + '</div><div class="n">' + s.n + '</div><div class="s">' + st + '</div>';
+                d.onclick = function () { dead[s.id] = !dead[s.id]; draw(); };
+                pb.appendChild(d);
+            });
+
+            var nDead = Object.keys(dead).filter(function (k) { return dead[k]; }).length;
+            var nStarve = Object.keys(starve).length;
+            var nBoom = Object.keys(boom).length;
+            var note = document.getElementById('note'), t, cls = 'note';
+            if (nDead === 0) {
+                t = '🕸️ <b>Poora food web saabut hai.</b> Har teer <b>khaaye jaane wale se khaane wale</b> ki taraf hai — yani energy ki disha mein.<br><br>'
+                  + 'Dhyaan do ki kai jeevon ke paas <b>ek se zyada</b> khaane ke vikalp hain. Saanp ko chooha bhi milta hai aur mendhak bhi. Yahi web ko <b>mazboot</b> banata hai.<br><br>'
+                  + '💡 Kisi bhi jeev par dabao aur dekho kya hota hai. <b>Ghaas</b> hatao — sabse bada asar wahi karega.';
+            } else {
+                cls = 'note' + (nStarve > 0 ? ' bad' : '');
+                var names = SP.filter(function (s) { return dead[s.id]; }).map(function (s) { return s.n; }).join(', ');
+                t = '❌ <b>' + names + '</b> hata diya gaya.<br><br>';
+                if (nStarve > 0) {
+                    t += '💀 <b>' + nStarve + ' aur jeev bhookhe mar gaye:</b> ' + SP.filter(function (s) { return starve[s.id]; }).map(function (s) { return s.n; }).join(', ') + '<br>'
+                       + 'Inke paas khaane ka <b>koi vikalp nahi</b> bacha.<br><br>';
+                } else {
+                    t += '✅ <b>Koi bhookha nahi mara!</b> Kyunki baaki sabke paas khaane ke <b>doosre vikalp</b> the. '
+                       + 'Yahi food web ki taakat hai — seedhi chain hoti toh sab toot jaata.<br><br>';
+                }
+                if (nBoom > 0) {
+                    t += '📈 <b>' + SP.filter(function (s) { return boom[s.id]; }).map(function (s) { return s.n; }).join(', ')
+                       + '</b> ki ginti ab tezi se <b>badhegi</b> — kyunki unhe khaane wala koi nahi bacha.<br><br>'
+                       + '⚠️ Aur agar chooha ya tiddi badh gaye, toh wo <b>fasal barbaad</b> kar denge. Isiliye kehte hain ki <b>saanp kisan ka dost hai</b>.<br><br>';
+                }
+                t += '💡 Yahi asli duniya mein hota hai — ek species hataane ka asar <b>poore jaal</b> par padta hai.';
+            }
+            note.className = cls; note.innerHTML = t;
+        }
+        function resetAll() { dead = {}; draw(); }
+        draw();
+    </script>
+</body>
+
+</html>

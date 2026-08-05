@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Biomagnification Simulator | AIkiPadhai</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: linear-gradient(160deg, #4a044e, #9d174d); color: #fce7f3; min-height: 100vh; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,.3); flex-wrap: wrap; gap: 10px; }
+        .topbar a.back { color: #f9a8d4; text-decoration: none; border: 1px solid rgba(249,168,212,.4); padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+        .title { font-size: 18px; font-weight: 800; color: #fff; }
+        .wrap { max-width: 900px; margin: 0 auto; padding: 18px; }
+        .card { background: rgba(255,255,255,.07); border-radius: 16px; padding: 16px; margin-bottom: 13px; }
+        .card h3 { color: #fff; font-size: 12.5px; margin-bottom: 11px; text-transform: uppercase; letter-spacing: .05em; }
+        .slider label { display: block; font-size: 13.5px; color: #f9a8d4; margin-bottom: 7px; font-weight: 600; }
+        .slider label b { color: #fff; }
+        input[type=range] { width: 100%; accent-color: #f472b6; height: 26px; }
+        .presets { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 10px; }
+        .presets button { flex: 1; min-width: 120px; border: 1px solid rgba(249,168,212,.3); background: rgba(0,0,0,.25); color: #f9a8d4; padding: 9px 8px; border-radius: 9px; font-size: 12.5px; cursor: pointer; font-weight: 700; }
+        .presets button:hover { background: rgba(255,255,255,.14); }
+        .stage { background: #0b1220; border-radius: 14px; padding: 8px; overflow-x: auto; }
+        svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+        .tbl { width: 100%; border-collapse: collapse; margin-top: 13px; font-size: 13.5px; }
+        .tbl th { text-align: left; padding: 9px; color: #f9a8d4; font-size: 11px; text-transform: uppercase; border-bottom: 1px solid rgba(249,168,212,.3); }
+        .tbl td { padding: 9px; border-bottom: 1px solid rgba(255,255,255,.07); }
+        .tbl .num { font-family: 'Courier New', monospace; font-weight: 800; text-align: right; }
+        .note { font-size: 14px; line-height: 1.85; background: rgba(0,0,0,.3); border-radius: 11px; padding: 14px; margin-top: 13px; border-left: 4px solid #f472b6; }
+        .note b { color: #fff; }
+        .note.bad { border-left-color: #ef4444; background: rgba(127,29,29,.35); }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a class="back" href="biomagnification.html">← Back to Lesson</a>
+        <div class="title">☠️ Biomagnification Simulator</div>
+        <span style="width:60px"></span>
+    </div>
+    <div class="wrap">
+        <div class="card">
+            <div class="slider">
+                <label id="clab"></label>
+                <input type="range" id="conc" min="1" max="60" step="1" value="3" oninput="setC(this.value)">
+            </div>
+            <div class="presets">
+                <button onclick="jump(1)">Bahut kam (0.001)</button>
+                <button onclick="jump(3)">Thoda sa (0.003)</button>
+                <button onclick="jump(10)">Madhyam (0.010)</button>
+                <button onclick="jump(30)">Zyada (0.030)</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Zeher food chain mein upar chadhta hua</h3>
+            <div class="stage" id="stage"></div>
+            <table class="tbl" id="tbl"></table>
+            <div class="note" id="note"></div>
+        </div>
+    </div>
+
+    <script>
+        /* Poison does not break down, so its CONCENTRATION multiplies by about 10
+           at each trophic level - exactly the inverse of the ten percent law. */
+        var LEVELS = [
+            { n: 'Paani + plankton', e: '🦠', col: '#38bdf8' },
+            { n: 'Chhoti machhli',   e: '🐟', col: '#22c55e' },
+            { n: 'Badi machhli',     e: '🐠', col: '#eab308' },
+            { n: 'Bagula / pakshi',  e: '🦅', col: '#ef4444' }
+        ];
+        var SAFE = 0.5;                     /* rough level above which harm shows */
+        var c0units = 3;                    /* slider is in thousandths of a ppm */
+
+        function base() { return c0units / 1000; }
+        function conc(level) { return base() * Math.pow(10, level - 1); }
+
+        var W = 840, H = 330;
+
+        function draw() {
+            var g = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Poison concentrating up the food chain">';
+            g += '<rect x="0" y="0" width="' + W + '" height="' + H + '" fill="#0b1220"/>';
+            var rows = [270, 196, 122, 48];
+            var widths = [700, 520, 340, 180];
+            LEVELS.forEach(function (L, i) {
+                var c = conc(i + 1), y = rows[i], w = widths[i], x = (W - w) / 2;
+                var danger = c > SAFE;
+                g += '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="52" rx="9" fill="' + L.col + '" opacity="' + (danger ? 0.30 : 0.22) + '" stroke="' + (danger ? '#ef4444' : L.col) + '" stroke-width="' + (danger ? 3 : 2) + '"/>';
+                g += '<text x="' + (x + 30) + '" y="' + (y + 34) + '" font-size="22">' + L.e + '</text>';
+                g += '<text x="' + (x + 64) + '" y="' + (y + 24) + '" font-size="12.5" font-weight="800" fill="#f8fafc">' + L.n + '</text>';
+                g += '<text x="' + (x + 64) + '" y="' + (y + 42) + '" font-size="11" fill="#cbd5e1">Trophic level ' + (i + 1) + '</text>';
+                g += '<text x="' + (x + w - 16) + '" y="' + (y + 26) + '" text-anchor="end" font-size="14" font-weight="800" fill="' + (danger ? '#f87171' : '#fde047') + '">' + c.toFixed(3) + ' ppm</text>';
+                g += '<text x="' + (x + w - 16) + '" y="' + (y + 43) + '" text-anchor="end" font-size="10.5" fill="' + (danger ? '#fca5a5' : '#94a3b8') + '">' + (danger ? '⚠️ KHATRE SE ZYADA' : Math.pow(10, i) + '× shuruaat se') + '</text>';
+                /* poison dots - count grows with the level */
+                var dots = Math.min(26, Math.round(2 * Math.pow(2, i)));
+                for (var d = 0; d < dots; d++) {
+                    var dx = x + 70 + ((d * 53) % Math.max(40, w - 190));
+                    var dy = y + 12 + ((d * 17) % 34);
+                    g += '<circle cx="' + dx + '" cy="' + dy + '" r="' + (2 + i * 0.6) + '" fill="#dc2626" opacity="' + (0.4 + i * 0.16) + '"/>';
+                }
+                if (i < 3) {
+                    g += '<line x1="' + (W / 2) + '" y1="' + y + '" x2="' + (W / 2) + '" y2="' + (rows[i + 1] + 52) + '" stroke="#f472b6" stroke-width="3" marker-end="url(#bm)"/>';
+                    g += '<text x="' + (W / 2 + 12) + '" y="' + (y - 8) + '" font-size="11" font-weight="800" fill="#f9a8d4">×10</text>';
+                }
+            });
+            g += '<defs><marker id="bm" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#f472b6"/></marker></defs>';
+            g += '</svg>';
+            document.getElementById('stage').innerHTML = g;
+
+            var h = '<tr><th>Trophic level</th><th>Kaun</th><th class="num">Concentration</th><th class="num">Shuruaat se</th></tr>';
+            LEVELS.forEach(function (L, i) {
+                var c = conc(i + 1), danger = c > SAFE;
+                h += '<tr><td>' + (i + 1) + '</td><td>' + L.e + ' ' + L.n + '</td>'
+                   + '<td class="num" style="color:' + (danger ? '#f87171' : '#fde047') + '">' + c.toFixed(3) + ' ppm</td>'
+                   + '<td class="num" style="color:#f9a8d4">' + Math.pow(10, i) + '×</td></tr>';
+            });
+            document.getElementById('tbl').innerHTML = h;
+            document.getElementById('clab').innerHTML = 'Paani mein pesticide: <b>' + base().toFixed(3) + ' ppm</b> — slider ghumao';
+
+            var top = conc(4), note = document.getElementById('note');
+            var t = '📌 Paani mein sirf <b>' + base().toFixed(3) + ' ppm</b> pesticide tha — itna kam ki koi jaanch bhi shayad na kare.<br><br>'
+                  + 'Par har level par zeher <b>10 guna</b> ho jaata hai, kyunki wo <b>tootta nahi</b> aur har jeev <b>bahut saara</b> khaata hai.<br><br>'
+                  + 'Sabse upar wale pakshi mein wo <b>' + top.toFixed(3) + ' ppm</b> ban gaya — yani <b>1000 guna</b>.';
+            if (top > SAFE) {
+                note.className = 'note bad';
+                t += '<br><br>☠️ <b>Ye khatre ke star se upar hai.</b> Is haal mein pakshi ke ande ke chhilke patle ho sakte hain, uski reproduction kshamata girti hai, aur wo mar bhi sakta hai — bilkul waise hi jaise DDT se baaz aur ugle khatam hone lage the.';
+            } else {
+                note.className = 'note';
+                t += '<br><br>💡 Abhi sabse upar bhi star kaafi kam hai. Par slider badhao — aur dekho ki paani mein <b>bahut thoda sa</b> badhne par bhi sabse upar wala <b>khatre mein</b> aa jaata hai.';
+            }
+            t += '<br><br>🔄 <b>Yaad rakho:</b> ENERGY upar jaate-jaate <b>ghatti</b> hai (10% ka niyam), par ZEHER upar jaate-jaate <b>badhta</b> hai. Dono <b>ulti disha</b> mein chalte hain.<br><br>'
+               + '👨‍👩‍👧 Aur insaan aksar <b>sabse upar</b> hota hai — isliye sabse zyada khatra hume hi hai.';
+            note.innerHTML = t;
+        }
+
+        function setC(v) { c0units = parseInt(v, 10); draw(); }
+        function jump(v) { c0units = v; document.getElementById('conc').value = v; draw(); }
+        draw();
+    </script>
+</body>
+
+</html>
